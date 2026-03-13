@@ -17,7 +17,9 @@ npx skills add mystenlabs/skills --all
 
 ## Skills
 
-No skills published yet. Check back soon or watch this repo for updates.
+| Skill | Description |
+|-------|-------------|
+| [move](./move/) | Move smart contract development on Sui — syntax, object model, design patterns, and standard library. |
 
 ## Repo Structure
 
