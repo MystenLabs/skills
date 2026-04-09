@@ -39,6 +39,28 @@ Supporting files (anything that isn't `SKILL.md`) are bundled with the skill but
 
 ## Contributing
 
+### Quick start
+
+```bash
+# Copy the template
+cp -r template/ your-skill-name/
+
+# Edit the skill definition
+$EDITOR your-skill-name/SKILL.md
+
+# Add supporting reference files
+touch your-skill-name/setup.md
+touch your-skill-name/core.md
+touch your-skill-name/patterns.md
+touch your-skill-name/examples.md
+
+# Add evals
+mkdir your-skill-name/evals
+touch your-skill-name/evals/evals.json
+```
+
+### Steps
+
 1. Create a new directory under the repo root: `your-skill-name/`
 2. Add a `SKILL.md` with frontmatter:
 
@@ -50,12 +72,51 @@ description: What this skill does and when to use it. Be specific — this is wh
 ```
 
 3. Add supporting files to the same directory as needed
-4. Open a PR
+4. Add evals to `your-skill-name/evals/evals.json` (see [Evals](#evals) below)
+5. Open a PR
 
-A few things that make skills work well:
-- **Description as a trigger rule**, not a title — include the contexts and keywords that should activate it
-- **`SKILL.md` for the core workflow** — move reference material, large docs, and examples into separate files
-- **One skill per capability** — if it has a meaningfully different trigger, it should be its own skill
+### Checklist
+
+- [ ] Replace `name` and `description` in SKILL.md frontmatter
+- [ ] Write a clear opening paragraph describing what the skill covers
+- [ ] Create reference files for each section listed under "Reference files"
+- [ ] Update the routing guide table to match your actual reference files
+- [ ] Edit or remove the "Sui-specific reminders" section as needed
+- [ ] Add evals to validate the skill produces correct output
+- [ ] Open a PR
+
+### Evals
+
+Every new skill must include evals. Evals verify that the skill produces correct, reliable output and prevent regressions as the skill evolves. PRs without evals will not be merged.
+
+Place an `evals/evals.json` file in your skill directory:
+
+```json
+[
+  {
+    "id": "your-skill-basic",
+    "prompt": "A realistic prompt a user would give the agent",
+    "expected_output": "Description of what correct output looks like",
+    "expectations": [
+      "Specific thing the output must include or satisfy",
+      "Another requirement"
+    ]
+  }
+]
+```
+
+When writing evals:
+- Cover the core use cases your skill is designed to handle
+- Use realistic prompts that match how a user would actually invoke the skill
+- Include edge cases where the skill's domain has common pitfalls
+- Each eval should test a distinct capability — avoid redundant prompts
+
+### Tips
+
+- **Description is a trigger rule.** The `description` field in frontmatter determines when agents activate your skill. Write it like a conditional: "Use when X, Y, or Z."
+- **SKILL.md routes, reference files teach.** Keep SKILL.md short — it tells the agent which files to load. Put the actual knowledge in reference files.
+- **One skill per capability.** If two things have meaningfully different triggers, they should be separate skills.
+- **Sui-first.** Assume the user is building on Sui. Call out where Sui differs from other chains or general-purpose patterns.
 
 ## Resources
 
