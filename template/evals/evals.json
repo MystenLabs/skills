@@ -2,6 +2,10 @@
   {
     "id": "your-skill-basic",
     "prompt": "A realistic prompt a user would give the agent",
+    "sources": [
+        "link-to-docs.com (description of what to get from those docs)",
+        "docs.sui.io/references/framework/* (sui, std, bridge, system framework API reference)"
+    ],
     "expected_output": "Description of what correct output looks like",
     "expectations": [
       "Specific thing the output must include or satisfy",
