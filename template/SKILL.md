@@ -24,6 +24,12 @@ confusing Sui with other chains, misunderstanding the object model).
 This skill routes to focused reference files. Load only the ones relevant to the
 current task.
 
+All patterns in this skill are derived from:
+  https://sdk.mystenlabs.com/sui
+
+If unsure about any API, fetch the relevant page before answering.
+Do not guess or extrapolate from other SDKs.
+
 ---
 
 ## Reference files
