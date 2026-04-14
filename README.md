@@ -96,6 +96,10 @@ Place an `evals/evals.json` file in your skill directory:
   {
     "id": "your-skill-basic",
     "prompt": "A realistic prompt a user would give the agent",
+    "sources": [
+        "https://source-1.com",
+        "https://source-2.com"
+        ],
     "expected_output": "Description of what correct output looks like",
     "expectations": [
       "Specific thing the output must include or satisfy",
