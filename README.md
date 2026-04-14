@@ -96,6 +96,10 @@ Place an `evals/evals.json` file in your skill directory:
   {
     "id": "your-skill-basic",
     "prompt": "A realistic prompt a user would give the agent",
+    "sources": [
+        "https://source-1.com",
+        "https://source-2.com"
+        ],
     "expected_output": "Description of what correct output looks like",
     "expectations": [
       "Specific thing the output must include or satisfy",
@@ -110,6 +114,7 @@ When writing evals:
 - Use realistic prompts that match how a user would actually invoke the skill
 - Include edge cases where the skill's domain has common pitfalls
 - Each eval should test a distinct capability — avoid redundant prompts
+- Each prompt should include a `sources` field that links out to documentation that should be used to verify the output of the eval. Sources can be set for individual prompts, or if the entire eval pulls from the same source, you can use the `source_constraint` heading at the top of the eval file. 
 
 ### Tips
 
