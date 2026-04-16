@@ -1,0 +1,24 @@
+[
+  {
+    "id": "your-skill-basic",
+    "prompt": "A realistic prompt a user would give the agent",
+    "sources": [
+        "link-to-docs.com (description of what to get from those docs)",
+        "docs.sui.io/references/framework/* (sui, std, bridge, system framework API reference)"
+    ],
+    "expected_output": "Description of what correct output looks like",
+    "expectations": [
+      "Specific thing the output must include or satisfy",
+      "Another requirement"
+    ]
+  },
+  {
+    "id": "your-skill-edge-case",
+    "prompt": "A prompt that targets a common pitfall or edge case in this domain",
+    "expected_output": "Description of what correct output looks like",
+    "expectations": [
+      "The output avoids the common mistake",
+      "The output follows the skill's rules"
+    ]
+  }
+]
