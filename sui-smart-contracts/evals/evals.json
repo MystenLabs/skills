@@ -1,0 +1,21 @@
+[
+  {
+    "id": "move-set-up-amm",
+    "prompt": "Help me set up a standard AMM style smart contract with move.  It should support: creating a liquidity pool for two coin types, adding and removing liquidity (minting/burning LP tokens), swapping between the two coins using the constant product formula (x * y = k), and a fee mechanism (e.g. 0.3% swap fee). Don't write tests yet",
+    "expected_output": "A complete Move package with Move.toml and at least one module implementing: Pool struct (shared object), LP token (via Coin), add_liquidity, remove_liquidity, and swap functions. Code should compile with `sui move build` and follow Move idioms.",
+    "expectations": [
+      "Move.toml uses edition = \"2024\" (https://move-book.com/guides/code-quality-checklist#use-right-edition)",
+      "Move.toml does not list Sui or MoveStdlib as explicit dependencies (they are implicit in Sui 1.45+) (https://move-book.com/guides/code-quality-checklist#implicit-framework-dependency)",
+      "Module declaration uses single-line syntax without curly braces (e.g. `module pkg::amm;`) (https://move-book.com/guides/code-quality-checklist#using-module-label)",
+      "Does not use `public entry` — functions are either `public` or `entry` but not both (https://move-book.com/guides/code-quality-checklist#using-module-label)",
+      "add_liquidity and remove_liquidity follow pure function pattern (return values to caller, not transfer to sender internally — burns to @0x0 for minimum liquidity locking are acceptable) (https://move-book.com/guides/code-quality-checklist#write-composable-functions-for-ptbs)",
+      "Events should be named in past tense (https://move-book.com/guides/code-quality-checklist#events-should-be-named-in-past-tense)",
+      "Error constants use EPascalCase naming (e.g. EInsufficientLiquidity) (https://move-book.com/guides/code-quality-checklist#error-constants-are-in-epascalcase)",
+      "Function parameters are in the correct order (https://move-book.com/guides/code-quality-checklist#objects-go-first-except-for-clock)",
+      "Does not use legacy Coin operations (https://move-book.com/guides/code-quality-checklist#objects-go-first-except-for-clock)", 
+      "Doc comments start with `///` and logic comments start with `//` (https://move-book.com/guides/code-quality-checklist#comments)", 
+      "ctx.sender() used instead of tx_context::sender(ctx) (https://move-book.com/guides/code-quality-checklist#ctx-has-sender)",
+      "Code compiles successfully with sui move build — no type errors or resource-linearity violations"
+    ]
+  }
+]
