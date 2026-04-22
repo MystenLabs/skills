@@ -1,0 +1,291 @@
+# Building PTBs with the TypeScript SDK
+
+How to construct, sign, serialize, and execute PTBs with `@mysten/sui/transactions`.
+
+Source: https://docs.sui.io/guides/developer/sui-101/building-ptb · https://sdk.mystenlabs.com/typescript/transaction-building
+
+## Setup
+
+```ts
+import { Transaction, Inputs } from '@mysten/sui/transactions';
+import { SuiClient, getFullnodeUrl } from '@mysten/sui/client';
+
+const tx = new Transaction();
+const client = new SuiClient({ url: getFullnodeUrl('mainnet') });
+```
+
+## Inputs
+
+### Object inputs
+
+```ts
+tx.object(objectId)                     // by string ID; SDK resolves version via RPC
+tx.object(Inputs.ObjectRef({            // fully-specified (owned / immutable), offline-buildable
+  objectId, version, digest,
+}))
+tx.object(Inputs.SharedObjectRef({      // fully-specified shared
+  objectId, initialSharedVersion, mutable,
+}))
+tx.object(Inputs.ReceivingRef({         // fully-specified receiving
+  objectId, version, digest,
+}))
+
+// System object helpers:
+tx.object.system()
+tx.object.clock()
+tx.object.random()
+tx.object.denyList()
+tx.object.option({ type: '0x123::m::T', value: '0xabc' })  // helper for Option<Object>
+```
+
+**When wrapping is required:** for `moveCall` arguments that mix pure and object inputs, always wrap object IDs with `tx.object(id)` so the SDK knows which call-arg kind to emit. Many other methods accept raw string IDs directly.
+
+### Pure inputs
+
+Typed helpers (preferred):
+```ts
+tx.pure.u8(255)
+tx.pure.u16(n) ; tx.pure.u32(n) ; tx.pure.u64(n) ; tx.pure.u128(n) ; tx.pure.u256(n)
+tx.pure.bool(true)
+tx.pure.address('0x...')
+tx.pure.string('hello')
+tx.pure.vector('u8', [1, 2, 3])
+tx.pure.option('u64', 42)      // Option<u64> = Some(42)
+tx.pure.option('u64', null)    // Option<u64> = None
+```
+
+Generic form:
+```ts
+tx.pure('u64', 100)
+tx.pure('vector<u8>', [1, 2, 3])
+tx.pure('option<u8>', 1)
+```
+
+Raw BCS:
+```ts
+import { bcs } from '@mysten/sui/bcs';
+tx.pure(bcs.U64.serialize(100))
+tx.pure(bcs.vector(bcs.U8).serialize([1, 2, 3]))
+// Or raw Uint8Array — used directly:
+tx.pure(new Uint8Array([0, 1, 2]))
+```
+
+### The gas coin
+
+`tx.gas` references the `GasCoin` argument. Usage rules:
+- Valid as any arg position, but **must be by reference** unless passed to `transferObjects` (value) or used as the source of `splitCoins` (mutable borrow).
+- `tx.splitCoins(tx.gas, [tx.pure.u64(amount)])` — most common pattern: derive an owned `Coin<SUI>` from gas.
+- `tx.mergeCoins(tx.gas, [tx.object(extra1), tx.object(extra2)])` — consolidate owned SUI into the gas coin before using it.
+
+## Commands — TS SDK signatures
+
+```ts
+tx.splitCoins(coin, amounts)
+//   coin:    tx.gas | tx.object(id) | prior result
+//   amounts: Arg[] (u64 pure or result)
+//   returns: destructurable result (one coin per amount)
+
+tx.mergeCoins(destination, sources)
+//   returns: nothing meaningful
+
+tx.transferObjects(objects, recipient)
+//   objects:   Arg[]
+//   recipient: Arg (address pure or result)
+
+tx.moveCall({
+  target: 'pkg::module::function',
+  arguments?: Arg[],
+  typeArguments?: string[],
+})
+//   returns: destructurable result (per Move fn signature)
+
+tx.makeMoveVec({ type?: string, elements: Arg[] })
+//   type required for empty vectors or non-object element types
+//   returns: single vector value
+
+tx.publish({ modules: number[][], dependencies: string[] })
+//   returns: UpgradeCap
+
+tx.upgrade({ modules, dependencies, packageId, ticket })
+//   returns: UpgradeReceipt
+```
+
+## Result chaining
+
+Each command returns a destructurable/indexable result:
+
+```ts
+// Single-return: destructure
+const [coin] = tx.splitCoins(tx.gas, [tx.pure.u64(100)]);
+tx.transferObjects([coin], tx.pure.address(to));
+
+// Multi-return: destructure
+const [nft1, nft2] = tx.moveCall({ target: '0xpkg::mint::two' });
+tx.transferObjects([nft1, nft2], tx.pure.address(to));
+
+// Or index into the result
+const minted = tx.moveCall({ target: '0xpkg::mint::two' });
+tx.transferObjects([minted[0], minted[1]], tx.pure.address(to));
+
+// Pass the whole result when a single value is expected
+const hero = tx.moveCall({ target: '0x123::hero::mint_hero' });
+const sword = tx.moveCall({ target: '0x123::hero::new_sword', arguments: [tx.pure.u64(10)] });
+tx.moveCall({ target: '0x123::hero::equip_sword', arguments: [hero, sword] });
+```
+
+## Sender and gas configuration
+
+```ts
+tx.setSender(senderAddress);        // required if building offline or sending kind-only
+tx.setGasPrice(gasPrice);           // default: network reference gas price
+tx.setGasBudget(gasBudgetMist);     // default: auto (SDK dry-runs and picks)
+tx.setGasPayment([                  // default: auto (all coins at sender not used as inputs)
+  { objectId, version, digest },
+  ...
+]);
+tx.setGasOwner(sponsorAddress);     // for sponsored txs — gas coins owned by someone else
+```
+
+### Defaults — leave them alone when a wallet signs
+
+The SDK:
+- Sets `gas price` to the network's reference gas price.
+- **Dry-runs the PTB** to auto-derive `gas budget`.
+- Selects gas payment coins (all SUI coins at the sender not used as inputs). Multiple coins get merged into the 0-index coin during execution; the others are deleted.
+
+For user-signed transactions in apps, **don't set these** — let the wallet handle it. See "App ↔ wallet handoff" below.
+
+### Batch transfers pattern
+
+```ts
+interface Transfer { to: string; amount: number }
+const transfers: Transfer[] = getTransfers();
+
+const tx = new Transaction();
+const coins = tx.splitCoins(
+  tx.gas,
+  transfers.map(t => tx.pure.u64(t.amount)),
+);
+transfers.forEach((t, i) => {
+  tx.transferObjects([coins[i]], tx.pure.address(t.to));
+});
+```
+
+One PTB replaces N transactions — cheaper, atomic, equivocation-free.
+
+## Building, serializing, rehydrating
+
+```ts
+// Normal build: SDK resolves input versions via RPC
+const bytes = await tx.build({ client });
+
+// Kind-only (for sponsored flows — no gas data)
+const kindBytes = await tx.build({ client, onlyTransactionKind: true });
+
+// Offline build: all inputs must be fully-specified (Inputs.ObjectRef/SharedObjectRef/ReceivingRef)
+// and gas data must be set manually. setSender is required.
+const offlineBytes = await tx.build();
+
+// Rehydrate
+const tx2 = Transaction.from(bytes);           // full tx
+const tx3 = Transaction.fromKind(kindBytes);   // kind-only; set sender + gas data before building
+```
+
+## App ↔ wallet handoff — use `serialize`, not `build`
+
+In frontend code that hands a PTB to a wallet:
+
+```ts
+// App code:
+const tx = new Transaction();
+tx.transferObjects([tx.object(nftId)], tx.pure.address(recipient));
+await wallet.signTransaction({ transaction: tx });  // pass Transaction instance
+
+// The wallet adapter internally does:
+sendToWalletContext({ transaction: input.transaction.serialize() });
+// And the wallet does:
+const userTx = Transaction.from(input.transaction);
+userTx.setSender(walletAddress);
+// wallet builds bytes (picks gas, sets budget via dry-run), signs, executes.
+```
+
+**Why not `build`:** if the app calls `tx.build()` and hands bytes to the wallet, the wallet cannot do gas coin selection or budget dry-running on the caller's behalf. Use `tx.serialize()` (or pass the `Transaction` instance) so the wallet controls gas logic.
+
+## Sponsored transactions
+
+Flow:
+1. **App** builds the PTB kind-only.
+2. **Sponsor service** rehydrates, fills gas, signs as gas owner.
+3. **User** signs as sender.
+4. Either party submits the dual-signed bytes (user is safer — submitting via sponsor allows censorship).
+
+```ts
+// App:
+const tx = new Transaction();
+tx.moveCall({ /* ... */ });
+const kindBytes = await tx.build({ client, onlyTransactionKind: true });
+sendToSponsor(kindBytes);
+
+// Sponsor:
+const sponsored = Transaction.fromKind(kindBytes);
+sponsored.setSender(userAddress);
+sponsored.setGasOwner(sponsorAddress);
+sponsored.setGasPayment(sponsorCoins);   // [{ objectId, version, digest }]
+const sponsorSigned = await sponsorSigner.signTransaction(sponsored);
+sendBackToUser(sponsorSigned);
+
+// User signs (over the same TransactionData, including GasData) and submits.
+```
+
+Both parties sign over the **entire TransactionData** including `GasData`. Signing only parts lets a malicious full node substitute gas data. See `equivocation.md` for how to defend the gas station against client equivocation.
+
+## Signing & executing
+
+```ts
+const result = await client.signAndExecuteTransaction({
+  signer: keypair,
+  transaction: tx,
+  options: {
+    showObjectChanges: true,
+    showBalanceChanges: true,
+    showEffects: true,
+  },
+});
+
+if (result.effects?.status?.status !== 'success') {
+  throw new Error(`Tx failed: ${result.effects?.status?.error}`);
+}
+
+// Ensure the RPC you'll read from next has indexed these effects
+await client.waitForTransaction({ digest: result.digest });
+```
+
+**Always check status.** A transaction can execute (validators accept it) but still fail at the Move level (assertion, insufficient gas budget, etc.). Inspect `effects.status`.
+
+## Dry-running and dev-inspect
+
+```ts
+// Dry-run: full execution against current state, no signature required
+const dry = await client.dryRunTransactionBlock({
+  transactionBlock: await tx.build({ client }),
+});
+
+// Dev-inspect: like dry-run but also returns result values
+const inspect = await client.devInspectTransactionBlock({
+  transactionBlock: tx,
+  sender: senderAddress,
+});
+```
+
+Use `devInspectTransactionBlock` when you need return values from a view-like Move call without publishing a custom view function.
+
+## Checklist for a PTB ready to ship
+
+- Inputs: either `tx.object(stringId)` (online) or `Inputs.*Ref` (offline); pure values typed.
+- No shared object passed to `transferObjects`.
+- Every non-`drop` result either consumed or transferred.
+- `tx.gas` only by value in `transferObjects`; otherwise `splitCoins`/`mergeCoins`/borrow.
+- Multi-return `moveCall` results destructured or indexed.
+- For user-signed flows: no `setGasBudget`/`setGasPrice`/`setGasPayment`, no `tx.build()` before handing to wallet — use `tx.serialize()` or pass the `Transaction` directly.
+- For sponsored flows: `build({ onlyTransactionKind: true })` → sponsor `setSender`/`setGasOwner`/`setGasPayment` → both signatures over full `TransactionData`.
+- `waitForTransaction` before reading mutated state from the same client.
