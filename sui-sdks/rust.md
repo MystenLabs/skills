@@ -1,6 +1,6 @@
 # Sui Rust SDK
 
-Source: https://github.com/MystenLabs/sui-rust-sdk · https://docs.rs/sui-transaction-builder · https://mystenlabs.github.io/sui-rust-sdk/
+Source: https://github.com/MystenLabs/sui-rust-sdk · https://docs.rs/sui-transaction-builder · https://mystenlabs.github.io/sui-rust-sdk/sui_transaction_builder/
 
 ## Which Rust SDK
 
