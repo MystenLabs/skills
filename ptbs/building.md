@@ -2,7 +2,7 @@
 
 How to construct, sign, serialize, and execute PTBs with `@mysten/sui/transactions`.
 
-Source: https://docs.sui.io/guides/developer/sui-101/building-ptb · https://sdk.mystenlabs.com/typescript/transaction-building
+Source: https://docs.sui.io/develop/transactions/ptbs/building-ptb · https://sdk.mystenlabs.com/typescript/transaction-building/basics
 
 ## Setup
 

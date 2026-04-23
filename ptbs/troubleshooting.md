@@ -2,7 +2,7 @@
 
 Common errors from failing PTBs, with causes and fixes.
 
-Source: https://docs.sui.io/references/testing-debugging/common-errors · https://docs.sui.io/concepts/transactions/prog-txn-blocks
+Source: https://docs.sui.io/develop/testing-debugging/common-errors · https://docs.sui.io/concepts/transactions/prog-txn-blocks
 
 ## `UnusedValueWithoutDrop { result_idx, secondary_idx }`
 

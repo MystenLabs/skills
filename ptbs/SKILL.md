@@ -16,10 +16,10 @@ This skill routes to focused reference files. Load only the ones relevant to the
 
 All patterns in this skill are derived from:
 - https://docs.sui.io/concepts/transactions/prog-txn-blocks
-- https://docs.sui.io/guides/developer/sui-101/building-ptb
+- https://docs.sui.io/develop/transactions/ptbs/building-ptb
 - https://docs.sui.io/references/ptb-commands
 - https://docs.sui.io/concepts/sui-architecture/epochs (equivocation)
-- https://sdk.mystenlabs.com/typescript/transaction-building
+- https://sdk.mystenlabs.com/typescript/transaction-building/basics
 
 If unsure about any API, method signature, or error message, fetch the relevant page before answering. Do not guess or extrapolate from Ethereum, Solana, or other chains — PTBs have no direct analog.
 

@@ -2,7 +2,7 @@
 
 Equivocation is the **single biggest footgun** for any code that submits Sui transactions concurrently. It locks owned objects (including gas coins) until the next epoch — ~24h on mainnet/testnet, ~1h on devnet.
 
-Source: https://docs.sui.io/concepts/sui-architecture/epochs · https://docs.sui.io/guides/developer/sui-101/avoid-equivocation · https://docs.sui.io/concepts/transactions/sponsored-transactions
+Source: https://docs.sui.io/concepts/sui-architecture/epochs · https://docs.sui.io/develop/sui-architecture/epochs · https://docs.sui.io/develop/transaction-payment/sponsor-txn
 
 ## What it is
 

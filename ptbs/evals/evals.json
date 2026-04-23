@@ -3,7 +3,7 @@
     "id": "ptbs-basic-transfer",
     "prompt": "Using the Sui TypeScript SDK, write a function that transfers 100 MIST to the address 0xabc... from the connected wallet in a single transaction. Show me the code.",
     "sources": [
-      "https://docs.sui.io/guides/developer/sui-101/building-ptb",
+      "https://docs.sui.io/develop/transactions/ptbs/building-ptb",
       "https://sdk.mystenlabs.com/typescript/transaction-building/basics"
     ],
     "expected_output": "A TypeScript snippet that imports Transaction from '@mysten/sui/transactions', creates a Transaction, splits the specified amount off tx.gas (not a separately-fetched coin), transfers that new coin to the recipient address, and hands the Transaction off to the wallet via signTransaction/signAndExecuteTransaction. Should not call setGasBudget / setGasPrice / setGasPayment (let the wallet handle gas). Should use typed pure helpers (tx.pure.u64, tx.pure.address).",
@@ -21,7 +21,7 @@
     "prompt": "I need to airdrop variable amounts of SUI to 400 recipients. What's the best way to do this on Sui?",
     "sources": [
       "https://docs.sui.io/concepts/transactions/prog-txn-blocks",
-      "https://docs.sui.io/guides/developer/sui-101/building-ptb",
+      "https://docs.sui.io/develop/transactions/ptbs/building-ptb",
       "https://docs.sui.io/concepts/sui-architecture/epochs"
     ],
     "expected_output": "Recommendation to use a single PTB containing 400 splitCoins + transferObjects pairs against tx.gas, since a PTB supports up to 1024 commands and batching prevents equivocation risk inherent in submitting 400 separate transactions. Includes example code using tx.splitCoins(tx.gas, amounts.map(...)) and a loop calling tx.transferObjects per recipient.",
@@ -55,7 +55,7 @@
     "prompt": "I'm building a backend service that processes incoming webhook events and, for each event, submits a Sui transaction that updates a shared counter object and pays a small reward in SUI from a service-owned address. Requests come in concurrently. What do I need to watch out for and how should I structure the submission?",
     "sources": [
       "https://docs.sui.io/concepts/sui-architecture/epochs",
-      "https://docs.sui.io/guides/developer/sui-101/avoid-equivocation",
+      "https://docs.sui.io/develop/sui-architecture/epochs",
       "https://sdk.mystenlabs.com/typescript/executors"
     ],
     "expected_output": "Explanation of equivocation risk on the service's gas coin when concurrent requests sign against the same owned-object version. Recommends either (a) SerialTransactionExecutor from @mysten/sui/transactions if throughput allows, or (b) ParallelTransactionExecutor with a gas coin pool for higher throughput. Notes that the shared counter is not itself the equivocation risk (shared objects are consensus-ordered) — the owned gas coin is.",
@@ -71,9 +71,9 @@
     "id": "ptbs-sponsored-transaction-flow",
     "prompt": "Explain how to build a sponsored transaction where my app constructs the PTB, a sponsor service pays the gas, and the user signs as sender. Show the code on all three sides.",
     "sources": [
-      "https://docs.sui.io/concepts/transactions/sponsored-transactions",
+      "https://docs.sui.io/develop/transaction-payment/sponsor-txn",
       "https://sdk.mystenlabs.com/typescript/transaction-building/sponsored-transactions",
-      "https://docs.sui.io/guides/developer/sui-101/building-ptb"
+      "https://docs.sui.io/develop/transactions/ptbs/building-ptb"
     ],
     "expected_output": "Three code blocks. (1) App: constructs Transaction, builds kind-only bytes with tx.build({ client, onlyTransactionKind: true }), sends to sponsor. (2) Sponsor: rehydrates with Transaction.fromKind(kindBytes), setSender(userAddress), setGasOwner(sponsorAddress), setGasPayment([…]), signs. (3) User signs over the resulting TransactionData (full data including GasData) and submits. Explanation notes both signatures cover the full TransactionData including GasData, and recommends submitting directly to a full node rather than via the sponsor.",
     "expectations": [
@@ -90,7 +90,7 @@
     "prompt": "Review this PTB for bugs:\n\n```ts\nconst tx = new Transaction();\ntx.moveCall({\n  target: '0xpkg::vault::deposit',\n  arguments: [tx.object(vaultId), tx.gas],\n});\ntx.transferObjects([tx.gas], tx.pure.address(recipient));\n```",
     "sources": [
       "https://docs.sui.io/concepts/transactions/prog-txn-blocks",
-      "https://docs.sui.io/guides/developer/sui-101/building-ptb"
+      "https://docs.sui.io/develop/transactions/ptbs/building-ptb"
     ],
     "expected_output": "Identifies two bugs. (1) tx.gas is passed by value to the deposit moveCall where the function probably expects Coin<SUI> (or &mut Coin<SUI>) — tx.gas can only be used by reference, never by value, except in transferObjects. The fix is to splitCoins off tx.gas first: const [payment] = tx.splitCoins(tx.gas, [tx.pure.u64(amount)]); and pass payment. (2) Even after fixing, if deposit takes the coin by value the gas coin would be consumed and the subsequent transferObjects([tx.gas], ...) would reference a moved value. Corrected version uses splitCoins for a payment coin and either leaves gas alone or transfers it separately.",
     "expectations": [
@@ -104,7 +104,7 @@
     "id": "ptbs-unused-value-error",
     "prompt": "My PTB fails with error 'UnusedValueWithoutDrop { result_idx: 1, secondary_idx: 0 }'. My code is:\n\n```ts\nconst tx = new Transaction();\ntx.moveCall({ target: '0xpkg::game::start_round', arguments: [tx.object(gameId)] });\ntx.moveCall({ target: '0xpkg::game::mint_ticket', arguments: [tx.object(gameId)] });\n```\n\nWhat's wrong and how do I fix it?",
     "sources": [
-      "https://docs.sui.io/references/testing-debugging/common-errors",
+      "https://docs.sui.io/develop/testing-debugging/common-errors",
       "https://docs.sui.io/concepts/transactions/prog-txn-blocks"
     ],
     "expected_output": "Explains that command index 1 (mint_ticket) returns a value without the drop ability (a Ticket object, likely with key + store). Every non-drop value in a PTB must be consumed — transferred, destroyed, or passed into another command. Fix: capture the result and transferObjects it to the sender (or a specified recipient), or pass it into a subsequent moveCall that consumes it.",
