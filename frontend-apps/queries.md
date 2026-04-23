@@ -31,7 +31,7 @@ function Balance() {
 
 ## Paginated queries
 
-`client.core.list*` methods return pages with `hasNextPage` + `nextCursor`. Use TanStack's `useInfiniteQuery`:
+`client.core.list*` methods return a single nullable `cursor` field — iterate while it's non-null. The response shape also contains the results under a method-specific key: `objects` for `listOwnedObjects`, `coins` for `listCoins`, `dynamicFields` for `listDynamicFields`, etc. Use TanStack's `useInfiniteQuery`:
 
 ```tsx
 import { useCurrentClient, useCurrentAccount } from '@mysten/dapp-kit-react';
@@ -47,15 +47,16 @@ function OwnedNFTs() {
       client.core.listOwnedObjects({
         owner: account!.address,
         cursor: pageParam,
-        type: '0xPKG::nft::NFT',
+        filter: { StructType: '0xPKG::nft::NFT' },   // type filter goes under `filter`
         include: { content: true },
+        limit: 50,
       }),
     initialPageParam: undefined,
-    getNextPageParam: (lastPage) => (lastPage.hasNextPage ? lastPage.nextCursor : undefined),
+    getNextPageParam: (lastPage) => lastPage.cursor ?? undefined,
     enabled: !!account,
   });
 
-  const all = data?.pages.flatMap((p) => p.data) ?? [];
+  const all = data?.pages.flatMap((p) => p.objects) ?? [];
   return (
     <>
       {all.map((o) => <NFTCard key={o.objectId} object={o} />)}
@@ -75,17 +76,21 @@ All hang off `client.core`:
 
 | Method | Returns |
 |---|---|
-| `getObject({ objectId, include })` | single object |
-| `getObjects({ objectIds, include })` | multiple objects |
-| `listOwnedObjects({ owner, type?, cursor?, include? })` | paginated owned objects |
-| `listCoins({ owner, coinType?, cursor? })` | paginated coin objects |
-| `listBalances({ owner })` | array of per-coin-type balances |
-| `listDynamicFields({ parent, cursor? })` | paginated dynamic fields |
-| `getDynamicField({ parent, name })` | single dynamic field |
-| `getTransaction({ digest, include })` | single transaction |
-| `simulateTransaction({ transaction, sender })` | dry-run result |
+| `getObject({ objectId, include })` | `{ object }` |
+| `getObjects({ objectIds, include })` | `{ objects }` |
+| `listOwnedObjects({ owner, filter?, cursor?, limit?, include? })` | `{ objects, cursor }` |
+| `listCoins({ owner, coinType?, cursor?, limit? })` | `{ coins, cursor }` |
+| `listBalances({ owner })` | `{ balances }` |
+| `listDynamicFields({ parentId, cursor?, limit? })` | `{ dynamicFields, cursor }` |
+| `getDynamicField({ parentId, name })` | `{ dynamicField }` |
+| `getCoinMetadata({ coinType })` | `{ coinMetadata }` |
+| `getTransaction({ digest, include })` | `{ Transaction, FailedTransaction }` |
+| `simulateTransaction({ transaction, include })` | simulation result |
 
-`include` flags replace v1's `show*`: `{ effects: true, events: true, balanceChanges: true, objectTypes: true, content: true, ... }`.
+**Include options** — keys differ by method:
+- **Objects**: `content`, `previousTransaction`, `json`, `objectBcs`, `display`.
+- **Transactions**: `effects`, `events`, `balanceChanges`, `transaction`, `bcs`.
+- **Simulate**: adds `commandResults`.
 
 ## Cache invalidation after transactions
 
