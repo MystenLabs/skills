@@ -17,7 +17,7 @@ First file to load when a user describes what they want to do. Pick the right da
 | Use case | Primary surface | Rationale |
 |---|---|---|
 | Show a user's SUI balance | gRPC (`client.core.listBalances`) | Single-entity read; built-in indexing |
-| Show a user's owned NFTs | gRPC (`client.core.listOwnedObjects`) with `type` filter | Paginated, type-indexed |
+| Show a user's owned NFTs | gRPC (`client.core.listOwnedObjects({ owner, filter: { StructType } })`) | Paginated, type-indexed |
 | Show details of a specific object | gRPC (`client.core.getObject`) | Point lookup |
 | Show recent transactions by an address | gRPC (list transactions) OR GraphQL | gRPC for simple, GraphQL if joining with object changes |
 | Wallet transaction history across time | GraphQL | Needs time-range filter + relational join to effects |

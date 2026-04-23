@@ -35,11 +35,13 @@ The `SuiGrpcClient` exposes these typed services (protobuf-defined):
 
 | Service | Purpose |
 |---|---|
-| `ledgerService` | Object reads, transaction reads, checkpoint reads, balance/coin listings |
-| `transactionExecutionService` | Submit transactions, dry-run, simulate |
+| `ledgerService` | Transaction reads, epoch / checkpoint info |
+| `stateService` | Owned-objects listing, dynamic field listing, object state reads |
+| `transactionExecutionService` | Submit transactions |
 | `movePackageService` | Inspect published Move modules, functions, types |
-| `nameService` | SuiNS lookups |
-| `subscriptionService` | Streaming subscriptions (effects, events) |
+| `nameService` | SuiNS lookups (reverse / forward) |
+| `signatureVerificationService` | Verify a signature against a message |
+| `subscriptionService` | Streaming subscriptions (where available) |
 
 The **Core API** (`client.core.*`) is a higher-level facade that works identically across `SuiGrpcClient`, `SuiJsonRpcClient`, and `SuiGraphQLClient` for the common CRUD-ish reads.
 
@@ -55,26 +57,37 @@ const client = new SuiGrpcClient({
 
 // High-level Core API
 await client.core.getObject({ objectId: '0x...', include: { content: true } });
-await client.core.getObjects({ objectIds: [...] });
-await client.core.listOwnedObjects({ owner: '0x...', type: '0xpkg::nft::NFT' });
-await client.core.listCoins({ owner: '0x...', coinType: '0x2::sui::SUI' });
+await client.core.getObjects({ objectIds: [...], include: { content: true } });
+await client.core.listOwnedObjects({
+  owner: '0x...',
+  filter: { StructType: '0xpkg::nft::NFT' },   // type filter goes under filter
+  limit: 50,
+});
+await client.core.listCoins({ owner: '0x...', coinType: '0x2::sui::SUI', limit: 50 });
 await client.core.listBalances({ owner: '0x...' });
-await client.core.listDynamicFields({ parent: '0x...' });
-await client.core.getDynamicField({ parent: '0x...', name });
+await client.core.listDynamicFields({ parentId: '0x...', limit: 50 });   // parentId, not parent
+await client.core.getDynamicField({ parentId: '0x...', name });
 await client.core.getTransaction({ digest, include: { effects: true, events: true } });
-await client.core.simulateTransaction({ transaction: tx, sender });
+await client.core.simulateTransaction({ transaction: tx });
 await client.core.executeTransaction({ transaction: bytes, signatures: [...] });
 
 // Low-level services (when you need protobuf directly)
-await client.ledgerService.getObject({ objectId: '0x...' });
+await client.ledgerService.getTransaction({ digest: '0x...' });
+await client.stateService.listOwnedObjects({ owner: '0x...', objectType: '0x2::coin::Coin<0x2::sui::SUI>' });
+await client.stateService.listDynamicFields({ parent: '0x...' });
 await client.movePackageService.getFunction({
   packageId: '0x2', moduleName: 'coin', name: 'transfer',
 });
 await client.nameService.reverseLookupName({ address: '0x...' });
 ```
 
-`include` flags replace v1's `options: { show*: true }`:
-- `effects`, `events`, `balanceChanges`, `objectTypes`, `content`, `bcs`, `transaction`.
+`include` flags replace v1's `options: { show*: true }`. Flags differ by method:
+
+- **Object reads** (`getObject`, `getObjects`, `listOwnedObjects`): `content`, `previousTransaction`, `json`, `objectBcs`, `display`.
+- **Transaction reads** (`getTransaction`, `waitForTransaction`): `effects`, `events`, `balanceChanges`, `transaction`, `bcs`.
+- **Simulation** (`simulateTransaction`): adds `commandResults`.
+
+Default fields on every object response: `objectId`, `version`, `digest`, `owner`, `type`.
 
 ## Rust — `sui-rpc` crate
 
@@ -166,7 +179,7 @@ try {
 ## Performance tips
 
 - **Batch via `getObjects` when you have many IDs** rather than looping `getObject`.
-- **Paginate eagerly** — default page sizes are small. For bulk operations, iterate until `!hasNextPage`.
+- **Paginate eagerly** — core `list*` methods return `{ ..., cursor }`. Iterate while `cursor` is non-null, passing it back as the next request's `cursor`.
 - **Reuse the client.** Creating a new `SuiGrpcClient` per request opens a new connection.
 - **Dry-run before signing for gas budget.** Saves failed txs.
 - **Use subscriptions over polling** where possible.
@@ -174,7 +187,10 @@ try {
 ## Common mistakes
 
 - Using v1 method names: `client.getObject`, `client.getCoins`, `client.getOwnedObjects` — all v1 JSON-RPC. v2 is `client.core.getObject`, `client.core.listCoins`, `client.core.listOwnedObjects`.
-- Using `options: { showEffects: true }` — v1. v2 is `include: { effects: true }`.
+- Using `options: { showEffects: true }` — v1. v2 is `include: { effects: true }`. Note that `include` option keys differ by method — see the table above.
+- Passing `type: '0xpkg::m::T'` to `listOwnedObjects` — wrong. Type filters go under `filter: { StructType: '0xpkg::m::T' }`.
+- Passing `parent:` to `listDynamicFields` — wrong. It's `parentId:`.
+- Using `lastPage.hasNextPage` / `lastPage.nextCursor` on core API results — core `list*` methods return a single `cursor` field (null when done). `hasNextPage` / `pageInfo` is the GraphQL shape, not Core API.
 - Using `getFullnodeUrl` helper — v1 (only for JSON-RPC). For gRPC, pass the URL directly as `baseUrl`.
 - Instantiating `SuiClient` — removed in v2. Use `SuiGrpcClient`.
 - Checking `result.effects?.status?.status` — v1. v2 uses `$kind` discriminant.
