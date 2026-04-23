@@ -113,9 +113,9 @@ txn = SyncTransaction(client=client)
 
 ### List owned objects (paginated)
 
-| TS | `await client.core.listOwnedObjects({ owner });` |
+| TS | `await client.core.listOwnedObjects({ owner, filter: { StructType }, limit: 50 });` |
 |---|---|
-| Rust | `client.ledger_service().list_owned_objects(...).await` |
+| Rust | `client.state_service().list_owned_objects(owner, object_type).await` |
 | Python | `client.get_owned_objects(owner='0x...')` |
 
 ### List balances

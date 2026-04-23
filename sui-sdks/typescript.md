@@ -142,18 +142,27 @@ All common data access methods live under `client.core`:
 ```ts
 await client.core.getObject({ objectId, include: { content: true } });
 await client.core.getObjects({ objectIds: [...], include: { content: true } });
-await client.core.listOwnedObjects({ owner });           // paginated
-await client.core.listCoins({ owner, coinType });        // paginated
+await client.core.listOwnedObjects({
+  owner,
+  filter: { StructType: '0xpkg::nft::NFT' },   // type filter goes under `filter`
+  limit: 50,
+});
+await client.core.listCoins({ owner, coinType, limit: 50 });
 await client.core.listBalances({ owner });
-await client.core.listDynamicFields({ parent });         // paginated
-await client.core.getDynamicField({ parent, name });
+await client.core.listDynamicFields({ parentId, limit: 50 });   // parentId, not parent
+await client.core.getDynamicField({ parentId, name });
+await client.core.getCoinMetadata({ coinType });
 await client.core.getTransaction({ digest, include: {...} });
-await client.core.simulateTransaction({ transaction: tx, sender });
+await client.core.simulateTransaction({ transaction: tx });
 await client.core.executeTransaction({ transaction: bytes, signatures: [...], include: {...} });
 ```
 
-**Include options** (replaces v1's `options: { show*: true }`):
-`effects`, `events`, `balanceChanges`, `objectTypes`, `transaction`, `bcs`, `content`.
+Pagination: core `list*` methods return a single nullable `cursor`. Iterate while non-null, passing it back as the next call's `cursor`.
+
+**Include options** (replaces v1's `options: { show*: true }`). Keys differ by method:
+- Object reads (`getObject`, `getObjects`, `listOwnedObjects`): `content`, `previousTransaction`, `json`, `objectBcs`, `display`.
+- Transaction reads (`getTransaction`, `waitForTransaction`): `effects`, `events`, `balanceChanges`, `transaction`, `bcs`.
+- Simulation (`simulateTransaction`): adds `commandResults`.
 
 ## Execution
 
