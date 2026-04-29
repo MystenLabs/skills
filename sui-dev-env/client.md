@@ -69,7 +69,9 @@ Development on Testnet and Devnet requires SUI tokens for gas. Tokens on these n
 
 | Method | How |
 |---|---|
+| CLI | `sui client faucet` (requests tokens for the active address on the active network) |
 | Web faucet | Visit `faucet.sui.io`, enter your address, select network, click Request SUI |
+| TypeScript SDK | `requestSuiFromFaucetV2()` from `@mysten/sui/faucet` |
 | Discord | Join the Sui Discord, use `!faucet <ADDRESS>` in `#devnet-faucet` or `#testnet-faucet` |
 | Community faucets | N1Stake faucet, SuiLearn faucet (separate rate limits) |
 

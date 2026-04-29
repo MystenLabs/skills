@@ -20,6 +20,8 @@ Sui supports:
 curl -sSfL https://raw.githubusercontent.com/MystenLabs/suiup/main/install.sh | sh
 ```
 
+**Windows note:** The `curl | sh` command requires a Unix shell. On Windows, use WSL (Windows Subsystem for Linux) to run the command above, or install through Chocolatey instead (see alternative methods below).
+
 After installing suiup, install the Sui CLI targeting a specific network:
 
 ```bash

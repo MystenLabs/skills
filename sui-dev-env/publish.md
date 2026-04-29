@@ -46,6 +46,22 @@ sui client call --package <PACKAGE_ID> --module greeting --function new
 sui client object <OBJECT_ID>
 ```
 
+### Upgrading a published package
+
+Published packages are immutable, but you can upgrade by publishing a new version linked to the original. The `UpgradeCap` object controls upgrade authority.
+
+```bash
+sui client upgrade --upgrade-capability <CAP_ID>
+```
+
+Upgrade policies restrict what can change:
+
+- **Compatible:** Functions can be added but not removed. Struct layouts cannot change.
+- **Additive:** New modules can be added, but existing modules cannot change.
+- **Dependency-only:** Only dependency versions can be updated.
+
+You can restrict the `UpgradeCap` in the same PTB as the publish command (for example, calling `only_additive_upgrades` on it immediately). Once restricted, you cannot widen the policy. You can also transfer the `UpgradeCap` to a multisig address or destroy it entirely to make the package permanently immutable.
+
 ### Publishing to multiple networks
 
 To publish to a different network (for example, from Testnet to Devnet), switch environments and publish again. Each network gives the package a different ID. The `Published.toml` file tracks published addresses per environment.
