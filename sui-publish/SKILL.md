@@ -93,24 +93,6 @@ sui client publish --serialize-output
 
 This outputs base64 transaction bytes instead of executing.
 
-## Running a local network
-
-Localnet runs a full Sui network on your machine for offline development.
-
-```bash
-sui start --with-faucet --force-regenesis
-```
-
-This starts a local validator, faucet, and fullnode. The local faucet is available at `127.0.0.1:5003/gas` or `127.0.0.1:9123/gas`.
-
-Switch to localnet:
-
-```bash
-sui client switch --env localnet
-```
-
-Localnet resets on restart (with `--force-regenesis`). Use it for rapid iteration and unit testing without depending on external networks.
-
 ## Dry runs and transaction debugging
 
 A dry run simulates a transaction without submitting it to the network. Use dry runs to:
