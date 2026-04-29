@@ -5,6 +5,7 @@
     {
       "id": 1,
       "prompt": "How can I install Sui?",
+      "reference_files": ["setup.md"],
       "expected_output": "Step-by-step installation instructions starting with suiup as the recommended method, plus alternatives for different platforms.",
       "expectations": [
         "The response recommends suiup as the primary installation method",
@@ -23,6 +24,7 @@
     {
       "id": 2,
       "prompt": "My sui --version shows 1.67.3 but the latest is 1.69. I installed via suiup. How do I update?",
+      "reference_files": ["setup.md"],
       "expected_output": "Instructions for updating AND switching Sui via suiup, explaining the two-step process.",
       "expectations": [
         "The response provides the update command: suiup update sui@testnet (or sui@mainnet depending on their target)",
@@ -40,6 +42,7 @@
     {
       "id": 3,
       "prompt": "I get this error when building: '[NOTE] Updating dependencies for testnet environment because Move.toml has been changed. Packages with old dependencies found.' What's wrong?",
+      "reference_files": ["setup.md", "move-project.md"],
       "expected_output": "An explanation that the CLI version is behind the network, with the correct update and switch commands.",
       "expectations": [
         "The response identifies this as a CLI version mismatch with the target network",
@@ -55,6 +58,7 @@
     {
       "id": 4,
       "prompt": "I get 'Cannot upgrade package without having a published id'. I already published it before. What's going on?",
+      "reference_files": ["move-project.md", "publish.md"],
       "expected_output": "An explanation of the v1.63 package management migration and how Published.toml tracks published addresses.",
       "expectations": [
         "The response explains that this error relates to the new package management system introduced in Sui CLI v1.63",
@@ -70,6 +74,7 @@
     {
       "id": 5,
       "prompt": "I get 'error[E13001]: feature is not supported in specified edition' when I use 'public struct'. How do I fix this?",
+      "reference_files": ["move-project.md"],
       "expected_output": "An explanation that the public struct syntax requires edition = 2024 in Move.toml.",
       "expectations": [
         "The response identifies that the public struct syntax is a Move 2024 feature",
@@ -84,6 +89,7 @@
     {
       "id": 6,
       "prompt": "How do I get SUI tokens for testing? Where is the faucet?",
+      "reference_files": ["client.md"],
       "expected_output": "Multiple faucet methods including web, CLI, Discord, and SDK, with the official URL.",
       "expectations": [
         "The response provides the official faucet URL: faucet.sui.io",
@@ -100,6 +106,7 @@
     {
       "id": 7,
       "prompt": "How do I create a wallet and fund it with the devnet faucet using only the CLI?",
+      "reference_files": ["client.md"],
       "expected_output": "Step-by-step CLI commands from first-time setup through funded address.",
       "expectations": [
         "The response starts with sui client (or sui client -y) to trigger first-time configuration",
@@ -117,6 +124,7 @@
     {
       "id": 8,
       "prompt": "How do I publish a Move package for the first time? What do I get back?",
+      "reference_files": ["publish.md"],
       "expected_output": "The publish command, prerequisites, and what the transaction returns.",
       "expectations": [
         "The response includes the command: sui client publish",
@@ -133,6 +141,7 @@
     {
       "id": 9,
       "prompt": "I published to Testnet but now I want to publish a fresh copy to Devnet for development. How do I publish it again to another package ID?",
+      "reference_files": ["publish.md", "client.md"],
       "expected_output": "Instructions for publishing to a different environment, explaining that each network gives a separate package ID.",
       "expectations": [
         "The response explains that each network gives the package a separate, independent package ID",
@@ -149,6 +158,7 @@
     {
       "id": 10,
       "prompt": "How do I upgrade a published Move contract on Sui? What's the process?",
+      "reference_files": ["publish.md"],
       "expected_output": "The full upgrade workflow including UpgradeCap, policies, and the CLI command.",
       "expectations": [
         "The response explains that published packages are immutable but can be upgraded by publishing a new version",
@@ -165,6 +175,7 @@
     {
       "id": 11,
       "prompt": "How do I write and run tests for a Sui Move module? What testing tools are available?",
+      "reference_files": ["build-test.md"],
       "expected_output": "An explanation of the test framework, test_scenario, running tests, and coverage.",
       "expectations": [
         "The response shows the sui move test command for running tests",
@@ -182,6 +193,7 @@
     {
       "id": 12,
       "prompt": "How do I install and set up Move Analyzer for VS Code?",
+      "reference_files": ["build-test.md"],
       "expected_output": "Installation via suiup plus VS Code extension setup.",
       "expectations": [
         "The response provides the install command: suiup install move-analyzer",
@@ -196,6 +208,7 @@
     {
       "id": 13,
       "prompt": "I get 'Cannot find gas coin for signer address' when trying to execute a transaction. What's wrong?",
+      "reference_files": ["client.md"],
       "expected_output": "An explanation of gas coin issues and how to check and fix them.",
       "expectations": [
         "The response explains that the error means the address has no SUI coin objects with sufficient balance for gas",
@@ -211,6 +224,7 @@
     {
       "id": 14,
       "prompt": "My dry run is failing on a transaction. What should I check to debug it?",
+      "reference_files": ["publish.md"],
       "expected_output": "A checklist of common dry run failure causes and debugging steps.",
       "expectations": [
         "The response mentions checking that all object IDs are correct and exist on the target network",
@@ -226,6 +240,7 @@
     {
       "id": 15,
       "prompt": "How do I start and use a local Sui network for development?",
+      "reference_files": ["publish.md"],
       "expected_output": "The localnet start command, faucet access, and how to switch to it.",
       "expectations": [
         "The response includes the command: sui start --with-faucet --force-regenesis (or similar)",
@@ -241,6 +256,7 @@
     {
       "id": 16,
       "prompt": "How do I set up a React frontend for my Sui Move package? What packages do I need?",
+      "reference_files": ["frontend.md"],
       "expected_output": "The required packages, scaffold command, and basic setup for a Sui dApp with wallet connection.",
       "expectations": [
         "The response mentions @mysten/dapp-kit for React components and hooks",
@@ -257,6 +273,7 @@
     {
       "id": 17,
       "prompt": "How do I serialize a transaction to send to another party for signing, like for a multisig upgrade?",
+      "reference_files": ["publish.md"],
       "expected_output": "Instructions for using --serialize-unsigned-transaction or --serialize-output to generate base64 transaction bytes for offline signing.",
       "expectations": [
         "The response mentions the --serialize-unsigned-transaction or --serialize-output flag on sui client commands",
@@ -271,6 +288,7 @@
     {
       "id": 18,
       "prompt": "What's the correct Move.toml format? I'm confused about [addresses] vs [environments] and Sui dependencies. I keep getting build errors.",
+      "reference_files": ["move-project.md"],
       "expected_output": "An explanation of the current Move.toml format: no explicit Sui dependency, no [addresses], optional [environments].",
       "expectations": [
         "The response explains that the Sui framework dependency is resolved automatically and should NOT be specified in [dependencies]",
@@ -287,6 +305,7 @@
     {
       "id": 19,
       "prompt": "I published my package and got objects back. How do I find the package ID and the objects created by init functions?",
+      "reference_files": ["publish.md", "client.md"],
       "expected_output": "Instructions for finding the package ID and init-created object IDs from the publish transaction output.",
       "expectations": [
         "The response explains that the package ID appears in the publish transaction output under created objects",
@@ -302,6 +321,7 @@
     {
       "id": 20,
       "prompt": "Never sign two concurrent transactions that touch the same owned object — I keep hearing this. What happens if I do? How do I avoid it?",
+      "reference_files": [],
       "expected_output": "An explanation of equivocation, object locking until epoch end, and strategies to avoid it.",
       "expectations": [
         "The response explains that signing two concurrent transactions on the same owned object causes equivocation",
@@ -317,6 +337,7 @@
     {
       "id": 21,
       "prompt": "I ran suiup update sui@testnet and it says it downloaded v1.70.2, but sui --version still shows v1.62.0. What's going on?",
+      "reference_files": ["setup.md"],
       "expected_output": "An explanation that suiup update downloads but doesn't switch, and the correct command to activate the new version.",
       "expectations": [
         "The response explains that suiup update downloads the new version but does not make it the active default",
@@ -332,6 +353,7 @@
     {
       "id": 22,
       "prompt": "I get a 'client/server api version mismatch' warning when running sui client commands. Client is 1.62.0 and server is 1.70.2. How do I fix this?",
+      "reference_files": ["setup.md"],
       "expected_output": "An explanation that the CLI version is behind the network and needs to be updated and switched.",
       "expectations": [
         "The response explains that this warning means the locally installed Sui CLI is older than the network version",
@@ -346,6 +368,7 @@
     {
       "id": 23,
       "prompt": "I installed move-analyzer with suiup but the 'move-analyzer' command isn't found. What do I need to do?",
+      "reference_files": ["setup.md", "build-test.md"],
       "expected_output": "An explanation that suiup install downloads but may not set the default, and suiup switch is needed.",
       "expectations": [
         "The response explains that after suiup install, the binary may not be set as the active default",
@@ -360,6 +383,7 @@
     {
       "id": 24,
       "prompt": "I get 'Dependency Sui is a legacy system name and cannot be used' when I run sui move build. My Move.toml has Sui = { git = \"https://github.com/MystenLabs/sui.git\", subdir = \"crates/sui-framework/packages/sui-framework\", rev = \"framework/testnet\" }. What's wrong?",
+      "reference_files": ["move-project.md"],
       "expected_output": "An explanation that the git-based Sui dependency is no longer valid and should be removed.",
       "expectations": [
         "The response explains that the Sui framework dependency is now resolved automatically by the CLI and should not be specified in Move.toml",

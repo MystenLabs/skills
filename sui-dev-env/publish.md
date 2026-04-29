@@ -1,0 +1,81 @@
+# Publishing, Deploying & Local Network
+
+> **Source constraint:** All information sourced exclusively from [docs.sui.io](https://docs.sui.io).
+
+## Publishing a package
+
+### Pre-publish checklist
+
+1. Verify your active environment: `sui client active-env`
+2. Verify you have SUI tokens: `sui client balance`
+3. Build successfully: `sui move build`
+
+### Publish
+
+```bash
+sui client publish
+```
+
+This deploys the package to the active network and returns:
+
+- A unique **package ID** (use this for all future interactions)
+- An **UpgradeCap** object (sent to your address, controls future upgrades)
+- Object IDs for anything created during `init` functions
+
+### After publishing
+
+The `published-at` field is automatically added to your `Published.toml`. To interact with the published package:
+
+```bash
+# Call a function
+sui client call --package <PACKAGE_ID> --module greeting --function new
+
+# Query an object
+sui client object <OBJECT_ID>
+```
+
+### Publishing to multiple networks
+
+To publish to a different network (for example, from Testnet to Devnet), switch environments and publish again. Each network gives the package a different ID. The `Published.toml` file tracks published addresses per environment.
+
+### Serializing for external signing
+
+To generate transaction bytes for signing by another party (for example, a multisig):
+
+```bash
+sui client publish --serialize-output
+```
+
+This outputs base64 transaction bytes instead of executing.
+
+## Running a local network
+
+Localnet runs a full Sui network on your machine for offline development.
+
+```bash
+sui start --with-faucet --force-regenesis
+```
+
+This starts a local validator, faucet, and fullnode. The local faucet is available at `127.0.0.1:5003/gas` or `127.0.0.1:9123/gas`.
+
+Switch to localnet:
+
+```bash
+sui client switch --env localnet
+```
+
+Localnet resets on restart (with `--force-regenesis`). Use it for rapid iteration and unit testing without depending on external networks.
+
+## Dry runs and transaction debugging
+
+A dry run simulates a transaction without submitting it to the network. Use dry runs to:
+
+- Estimate gas costs before execution.
+- Verify that a transaction succeeds before asking a user to sign.
+- Debug failing transactions by inspecting the error before spending gas.
+
+Wallets (like Slush) automatically perform dry runs before presenting a transaction for signing. If a dry run fails, the wallet shows an error instead of prompting.
+
+From the TypeScript SDK, use `devInspectTransactionBlock` to dry-run a transaction programmatically. From the CLI, the `--dry-run` flag simulates execution.
+
+When debugging a dry run failure: check that all object IDs are correct, the object versions are current, the sender has sufficient gas, and the function arguments match the expected types.
