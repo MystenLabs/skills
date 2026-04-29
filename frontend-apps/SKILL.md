@@ -72,7 +72,8 @@ If unsure about any API, fetch from the relevant page — do not extrapolate fro
 | Migrating from `@mysten/dapp-kit` (no suffix) | setup + limitations + all as needed |
 | Why is my UI stale after a tx? | transactions + queries |
 | Dealing with SSR / Next.js | setup + limitations |
-| Full code review of a dApp | **all reference files** |
+| Full code review of a dApp | **all reference files** + the code-review checklist below |
+| "Review this code" / "what's wrong with this snippet" | the code-review checklist below + relevant reference files |
 
 ## Skill Content
 
@@ -97,6 +98,44 @@ If unsure about any API, fetch from the relevant page — do not extrapolate fro
 8. **Pass the `Transaction` instance (or `tx.serialize()`) to the wallet, not `await tx.build(...)` bytes.** The wallet needs to own gas selection. Exception: sponsored flows that use `tx.build({ client, onlyTransactionKind: true })` — see `ptbs` skill.
 9. **Check `result.$kind === 'FailedTransaction'` (or `result.FailedTransaction`).** Don't assume success. Don't use v1's `result.effects?.status?.status`.
 10. **Wallet-gated UI must client-render.** SSR without a client-side guard renders wallet buttons before wallets are detectable. Use `'use client'` / dynamic imports / effect-based hydration.
+
+### Code-review checklist
+
+When the user asks you to review a code snippet, do not stop at the first 2–3 issues you spot. Walk this checklist explicitly and call out **every** match. Browser Sui code typically has 5–10 issues stacked in a single component because it was copied from a v1 tutorial.
+
+**Imports / packages**
+- `@mysten/sui.js` (anywhere) — frozen v1 package; replace with `@mysten/sui`.
+- `@mysten/dapp-kit` (no suffix) — deprecated JSON-RPC-only package; replace with `@mysten/dapp-kit-react` (React) or `@mysten/dapp-kit-core` (other frameworks).
+- `import { SuiClient }` — v1 client; replace with `SuiGrpcClient` from `@mysten/sui/grpc` (or `useCurrentClient()` inside components).
+- `import { TransactionBlock }` — renamed to `Transaction` in v2.
+
+**Removed hooks (any of these = bug)**
+- `useSuiClientQuery`, `useSuiClientInfiniteQuery`, `useSuiClientContext`, `useSuiClient` — replace with `useCurrentClient()` + TanStack `useQuery` / `useInfiniteQuery`.
+- `useSignAndExecuteTransaction` (mutation hook) — replace with `useDAppKit().signAndExecuteTransaction(...)` called imperatively in event handlers.
+- `useConnectWallet`, `useDisconnectWallet` — replace with `useDAppKit().connectWallet()` / `disconnectWallet()`.
+
+**Provider stack**
+- `SuiClientProvider` + `WalletProvider` (the v1 three-provider stack) — replace with `createDAppKit(...)` + `<DAppKitProvider>`. `QueryClientProvider` from TanStack is still allowed.
+
+**Client construction inside components**
+- `new SuiClient(...)` / `new SuiGrpcClient(...)` inside a component body — breaks network switching and re-creates a client per render. Use `useCurrentClient()`.
+- Missing `enabled: !!account` on queries that need a connected wallet — fires on undefined owner and errors.
+
+**Transaction construction**
+- `tx.pure(value)` (untyped) — replace with the typed helper matching the Move type: `tx.pure.u64(n)`, `tx.pure.address(addr)`, `tx.pure.string(s)`, etc.
+- `tx.build()` before handing to the wallet — defeats wallet gas selection. Pass the `Transaction` instance (or `tx.serialize()`).
+
+**Execute / wait / status**
+- `signAndExecuteTransactionBlock(...)` (v1 method) — replace with `signAndExecuteTransaction(...)`.
+- `{ transactionBlock: tx }` parameter shape — replace with `{ transaction: tx }`.
+- `result.effects?.status?.status === 'success'` — v1 shape; replace with `result.$kind !== 'FailedTransaction'` (or check `result.FailedTransaction`).
+- `result.digest` direct access — on success the digest is at `result.Transaction.digest`; on failure there's no digest.
+- Cache invalidation immediately after execute — must `await client.waitForTransaction({ digest })` first, then `queryClient.invalidateQueries(...)`.
+
+**SSR / Next.js**
+- Wallet-aware component without `'use client'` — wallet detection uses browser-only APIs.
+
+After walking the list, count the distinct issues you found. If it's fewer than 5 on a typical multi-line snippet pulled from an outdated tutorial, re-read the snippet — you almost certainly missed something.
 
 ### Common mistakes
 
