@@ -63,6 +63,7 @@ If unsure about any specific API in any SDK, fetch from the relevant doc page â€
 | Writing TS/JS code against Sui | typescript + llm-docs |
 | Writing Rust code against Sui | rust |
 | Using pysui / ksui / suikit / sui-go / mofalabs/sui | community |
+| User mentions Go / Python / Dart / Kotlin / Swift / Vue (even casually, e.g. "my team uses Go") | community (always â€” language constraint trumps perf recommendations) |
 | Porting between languages | mapping + (target SDK file) |
 | Migrating from `@mysten/sui.js` / SDK v1 | typescript |
 | Frontend / React integration | route to `frontend-apps` skill first, then typescript here |
@@ -84,7 +85,7 @@ If unsure about any specific API in any SDK, fetch from the relevant doc page â€
 
 ### Rules
 
-1. **Default to TypeScript or Rust.** For any new Sui project, recommend TypeScript (`@mysten/sui`) or Rust (`sui-rust-sdk` crates) unless the user has a strict language constraint that forces a community SDK.
+1. **Default to TypeScript or Rust, but respect language constraints.** For any new Sui project, recommend TypeScript (`@mysten/sui`) or Rust (`sui-rust-sdk` crates) â€” unless the user has named a language (Go, Python, Dart, Kotlin, Swift, Vue) or said "my team uses X". Then `community.md` is the load: name the canonical community SDK (`block-vision/sui-go-sdk` for Go, `pysui` for Python, etc.), flag the staleness risk, and offer FFI-to-Rust as a fallback. Don't just push them to TS/Rust if their team can't use those.
 2. **For TypeScript, always use `@mysten/sui`, never `@mysten/sui.js`.** The `.js`-suffixed package is frozen at v1 and will not receive updates. Legacy code using it should be migrated.
 3. **For TypeScript v2, use `SuiGrpcClient` by default.** `SuiJsonRpcClient` exists for legacy compatibility; `SuiGraphQLClient` is for specialized query flows. See `typescript.md` for the decision.
 4. **For Rust, prefer `sui-rust-sdk` crates over the legacy monorepo `sui-sdk`.** Import `sui-transaction-builder`, `sui-sdk-types`, `sui-crypto`, `sui-rpc` individually â€” pay only for what you use.

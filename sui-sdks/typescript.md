@@ -250,6 +250,8 @@ const bytes = await tx.build();
 
 Full migration guide: fetch `https://sdk.mystenlabs.com/sui/migrations/sui-2.0/llms.txt` for the complete list.
 
+**Migration rule:** when migrating a v1 snippet, do not migrate only the lines visible. v1 codebases almost always also use the execution / waiting / status APIs even if not shown. Surface the full set of likely-related migrations (signing, waiting, status check, options→include) alongside the migrated snippet so the user can update the rest of their file in one pass. A "complete" migration that leaves `signAndExecuteTransactionBlock` or `result.effects?.status?.status` intact elsewhere in the project is a half-migration that will break.
+
 | v1 | v2 |
 |---|---|
 | `@mysten/sui.js` | `@mysten/sui` |
