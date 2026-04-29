@@ -1,3 +1,14 @@
+---
+name: sui-install
+description: >
+  Installing, updating, and managing Sui CLI versions with suiup. Use this skill
+  when the user needs to install Sui, update to a newer version, switch between
+  network-specific versions, resolve "command not found" or version mismatch errors,
+  install additional toolchain components (Walrus, MVR, Move Analyzer), or
+  troubleshoot suiup commands. Also use when the user sees "client/server api
+  version mismatch" warnings or asks about suiup install, update, switch, or show.
+---
+
 # Setup & Installation
 
 > **Source constraint:** All information sourced exclusively from [docs.sui.io](https://docs.sui.io).
@@ -110,7 +121,7 @@ The `client/server api version mismatch` warning in CLI output means your local 
 
 ### Optional additional tools
 
-Install these only when the user explicitly asks for the tool. They are not part of the default hello-world setup or publish workflow.
+Install these only when the user explicitly asks for the tool. They are not part of default setup.
 
 ```bash
 suiup install move-analyzer   # Move Language Server

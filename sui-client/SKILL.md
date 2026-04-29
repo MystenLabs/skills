@@ -1,3 +1,15 @@
+---
+name: sui-client
+description: >
+  Sui CLI client configuration, address management, and token acquisition. Use this
+  skill when the user needs to configure the Sui client for the first time, manage
+  environments or addresses, switch networks, get faucet tokens, check balances,
+  recover keys from a recovery phrase, merge coin objects, or look up transactions
+  on explorers. Also use when the user sees "Cannot find gas coin for signer
+  address" errors or asks about sui client commands, client.yaml, sui.keystore,
+  SuiVision, or Suiscan.
+---
+
 # Client Configuration & Tokens
 
 > **Source constraint:** All information sourced exclusively from [docs.sui.io](https://docs.sui.io).
@@ -98,3 +110,9 @@ Or use explorers: SuiVision (`suivision.xyz`) or Suiscan (`suiscan.xyz`).
 ## Explorers and data tools
 
 Use SuiVision (`suivision.xyz`) or Suiscan (`suiscan.xyz`) to inspect transactions, objects, addresses, and token balances. Sui provides a GraphQL RPC for rich data queries per network. Use `sui replay` (CLI built-in) to locally re-execute past transactions for debugging.
+
+## Rules
+
+- Never sign two concurrent transactions that touch the same owned object. This causes equivocation and locks the object until the current epoch ends (approximately 24 hours on Mainnet). This applies to owned objects specifically, not shared objects. To avoid it, wait for each transaction to finalize before submitting the next, or use independent objects for concurrent operations.
+- Submit writes and reads to the same fullnode for consistency.
+- Let wallets manage gas budget, gas price, and coin selection. Do not hardcode gas budgets in frontends.

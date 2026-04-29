@@ -1,3 +1,15 @@
+---
+name: sui-move-project
+description: >
+  Move project setup and configuration on Sui. Use this skill when the user needs
+  to create a Move project, configure Move.toml, resolve dependency or build errors,
+  set up the canonical sui-stack-hello-world project, use MVR dependencies, or
+  migrate from old Move.toml formats. Also use when the user sees errors about
+  "legacy system name", "old dependencies", "Cannot upgrade package without having
+  a published id", edition mismatches, or asks about Move.toml, Published.toml,
+  Move.lock, or the [environments] section.
+---
+
 # Move Project Setup
 
 > **Source constraint:** All information sourced exclusively from [docs.sui.io](https://docs.sui.io), [move-book.com](https://move-book.com), and [MystenLabs/sui-stack-hello-world](https://github.com/MystenLabs/sui-stack-hello-world).
@@ -85,17 +97,6 @@ suiup install mvr
 
 You can use MVR package names in `Move.toml` dependencies instead of git URLs. This provides versioned, auditable dependencies resolved through the onchain registry.
 
-### Using the starter project
-
-For a full-stack project with both Move and frontend:
-
-```bash
-git clone https://github.com/MystenLabs/sui-stack-hello-world.git
-cd sui-stack-hello-world/move/hello-world
-```
-
-The frontend already exists in `sui-stack-hello-world/ui`. Do not scaffold a second app inside the repository.
-
 ### Common dependency and build issues
 
 - **"Dependency 'Sui' is a legacy system name":** Remove the `Sui = { git = "..." }` line from `[dependencies]`. The current CLI resolves the Sui framework automatically. This error occurs when using the old git-based dependency format.
@@ -104,3 +105,9 @@ The frontend already exists in `sui-stack-hello-world/ui`. Do not scaffold a sec
 - **"Could not determine the correct dependencies":** The build requires a `--build-env` flag or an `[environments]` section in `Move.toml`. Add the `[environments]` section with your target chain IDs.
 - **Edition mismatch:** If you get errors about `public struct` syntax, set `edition = "2024"` in `Move.toml`. The `legacy` edition does not support Move 2024 features like public struct visibility.
 - **Old Move.toml format:** If you are using the pre-v1.63 format with `[addresses]` and `published-at` inside `Move.toml`, migrate to the new format: remove `[addresses]`, add `[environments]`, and let the toolchain manage `Published.toml`.
+
+## Rules
+
+- Use `public(package)` visibility for non-library functions. `public` function signatures cannot be deleted or modified in upgrades.
+- Struct definitions cannot be deleted, modified, or have abilities added through upgrades.
+- Objects cannot exceed 256 KB. Avoid ever-growing vectors inside objects.

@@ -1,3 +1,14 @@
+---
+name: sui-publish
+description: >
+  Publishing, upgrading, and deploying Sui Move packages. Use this skill when the
+  user needs to publish a package, upgrade a published package, deploy to multiple
+  networks, serialize transactions for multisig signing, run a local Sui network
+  (localnet), or debug dry run failures. Also use when the user asks about sui
+  client publish, sui client upgrade, UpgradeCap, upgrade policies, Published.toml,
+  --serialize-output, localnet, devInspectTransactionBlock, or --dry-run.
+---
+
 # Publishing, Deploying & Local Network
 
 > **Source constraint:** All information sourced exclusively from [docs.sui.io](https://docs.sui.io) and [MystenLabs/sui-stack-hello-world](https://github.com/MystenLabs/sui-stack-hello-world).
@@ -65,6 +76,12 @@ You can restrict the `UpgradeCap` in the same PTB as the publish command (for ex
 ### Publishing to multiple networks
 
 To publish to a different network (for example, from Testnet to Devnet), switch environments and publish again. Each network gives the package a different ID. The `Published.toml` file tracks published addresses per environment.
+
+Before publishing to a new network, ensure you have tokens for that network:
+
+- **Testnet / Devnet:** Free tokens through `sui client faucet`, the web faucet at `faucet.sui.io`, Discord (`!faucet <ADDRESS>` in `#testnet-faucet` or `#devnet-faucet`), or the TypeScript SDK (`requestSuiFromFaucetV2()`).
+- **Localnet:** Free tokens from the local faucet at `127.0.0.1:5003/gas` or `127.0.0.1:9123/gas` (started with `sui start --with-faucet`).
+- **Mainnet:** SUI tokens with real monetary value. Acquire through exchanges or transfers. No faucet available.
 
 ### Serializing for external signing
 

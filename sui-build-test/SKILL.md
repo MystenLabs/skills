@@ -1,3 +1,13 @@
+---
+name: sui-build-test
+description: >
+  Building, testing, and IDE setup for Sui Move. Use this skill when the user needs
+  to build Move code, write or run tests, set up Move Analyzer or other editor
+  tooling, debug test failures, check code coverage, or configure code formatting.
+  Also use when the user asks about sui move build, sui move test, test_scenario,
+  Move Trace Debugger, coverage reports, or the Move Analyzer VS Code extension.
+---
+
 # Building, Testing & IDE Setup
 
 > **Source constraint:** All information sourced exclusively from [docs.sui.io](https://docs.sui.io) and [move-book.com](https://move-book.com).
@@ -8,13 +18,15 @@
 
 Move Analyzer is the official Language Server providing code completion, go-to-definition, diagnostics, and hover documentation.
 
-Do not install or switch Move Analyzer as part of the default hello-world setup. Install it only when the user asks for IDE or language-server setup.
+Do not install or switch Move Analyzer as part of default project setup. Install it only when the user asks for IDE or language-server setup.
 
 ```bash
 suiup install move-analyzer
 ```
 
 Then install the "Move Analyzer" extension in VS Code. It activates automatically for `.move` files.
+
+If the `move-analyzer` command is not found after installation, run `suiup switch move-analyzer@testnet` to make it the active default. Verify with `suiup show`.
 
 ### Code formatting
 
