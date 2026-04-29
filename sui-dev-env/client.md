@@ -77,6 +77,16 @@ Development on Testnet and Devnet requires SUI tokens for gas. Tokens on these n
 
 Faucets are rate-limited. If you hit a limit, wait or try a different faucet.
 
+### Coin management
+
+If you have many small SUI coin objects but no single coin large enough for gas, merge them:
+
+```bash
+sui client merge-coin --primary-coin <LARGE_COIN_ID> --coin-to-merge <SMALL_COIN_ID>
+```
+
+Alternatively, use a programmable transaction block to merge multiple coins in one operation.
+
 ### Verify balance
 
 ```bash

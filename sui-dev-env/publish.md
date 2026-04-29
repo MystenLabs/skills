@@ -106,4 +106,4 @@ Wallets (like Slush) automatically perform dry runs before presenting a transact
 
 From the TypeScript SDK, use `devInspectTransactionBlock` to dry-run a transaction programmatically. From the CLI, the `--dry-run` flag simulates execution.
 
-When debugging a dry run failure: check that all object IDs are correct, the object versions are current, the sender has sufficient gas, and the function arguments match the expected types.
+When debugging a dry run failure: check that all object IDs are correct, the object versions are current, the sender has sufficient gas, the function arguments match the expected types, and the active environment (`sui client active-env`) matches the network where the package is published.

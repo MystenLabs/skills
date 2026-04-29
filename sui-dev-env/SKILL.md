@@ -93,7 +93,7 @@ For requests like "set up a Sui developer environment and deploy a simple app/pa
 
 These critical constraints apply across all tasks:
 
-- Never sign two concurrent transactions that touch the same owned object. This causes equivocation and locks the object until epoch end.
+- Never sign two concurrent transactions that touch the same owned object. This causes equivocation and locks the object until the current epoch ends (approximately 24 hours on Mainnet). This applies to owned objects specifically, not shared objects. To avoid it, wait for each transaction to finalize before submitting the next, or use independent objects for concurrent operations.
 - Use `vector`-backed collections (VecMap, VecSet) only for known maximum sizes of 1,000 items or fewer. Use Table, Bag, or other dynamic-field-backed collections for larger or unbounded data.
 - Objects cannot exceed 256 KB. Avoid ever-growing vectors inside objects.
 - Use `public(package)` visibility for non-library functions. `public` function signatures cannot be deleted or modified in upgrades.
