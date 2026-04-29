@@ -1,8 +1,20 @@
 # Publishing, Deploying & Local Network
 
-> **Source constraint:** All information sourced exclusively from [docs.sui.io](https://docs.sui.io).
+> **Source constraint:** All information sourced exclusively from [docs.sui.io](https://docs.sui.io) and [MystenLabs/sui-stack-hello-world](https://github.com/MystenLabs/sui-stack-hello-world).
 
 ## Publishing a package
+
+### Canonical hello-world publish flow
+
+For the full-stack starter, publish the existing hello-world package only:
+
+```bash
+cd sui-stack-hello-world/move/hello-world
+sui move build
+sui client publish
+```
+
+Use the package ID from the publish output to update `sui-stack-hello-world/ui/src/constants.ts` (`TESTNET_HELLO_WORLD_PACKAGE_ID`). Do not publish a separate counter package, and do not create a second project directory.
 
 ### Pre-publish checklist
 

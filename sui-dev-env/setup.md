@@ -106,7 +106,9 @@ sui --version                  # confirm the new version
 
 The `client/server api version mismatch` warning in CLI output means your local CLI is older than the network. Update and switch to fix it.
 
-### Installing additional tools
+### Optional additional tools
+
+Install these only when the user explicitly asks for the tool. They are not part of the default hello-world setup or publish workflow.
 
 ```bash
 suiup install move-analyzer   # Move Language Server

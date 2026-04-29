@@ -1,6 +1,6 @@
 # Frontend Setup with dApp Kit
 
-> **Source constraint:** All information sourced exclusively from [docs.sui.io](https://docs.sui.io).
+> **Source constraint:** All information sourced exclusively from [docs.sui.io](https://docs.sui.io) and [MystenLabs/sui-stack-hello-world](https://github.com/MystenLabs/sui-stack-hello-world).
 
 ## Prerequisites
 
@@ -8,19 +8,27 @@
 - A published Move package on Testnet
 - A browser wallet (Slush Wallet recommended)
 
-## Scaffold a new app
+## Use the existing hello-world UI
 
-```bash
-npm create @mysten/dapp
+For the canonical full-stack workflow, do not run `npm create @mysten/dapp`. The hello-world repository already contains a Vite React app in `ui/`.
+
+After publishing `move/hello-world`, update the package ID constant:
+
+```ts
+export const TESTNET_HELLO_WORLD_PACKAGE_ID = "<PACKAGE_ID>";
 ```
 
-Or manually set up with:
+Then run the existing app:
 
 ```bash
-pnpm add @mysten/dapp-kit @mysten/sui @tanstack/react-query
+cd sui-stack-hello-world/ui
+pnpm install
+pnpm dev
 ```
 
 ## Key packages
+
+For the hello-world app, use the repository's existing `ui/package.json` as the source of truth. Do not add a second scaffold just to get these packages.
 
 | Package | Purpose |
 |---|---|
@@ -30,7 +38,7 @@ pnpm add @mysten/dapp-kit @mysten/sui @tanstack/react-query
 
 ## Configuration and usage
 
-1. Store your package ID in a `constants.ts` file.
+1. Store your package ID in the existing `ui/src/constants.ts` file.
 2. Set up network config using the SDK's `getFullnodeUrl` function.
 3. Use `<ConnectButton />` from dApp Kit for wallet connection.
 4. Use the `useSignAndExecuteTransaction` hook to construct PTBs and sign through the wallet.

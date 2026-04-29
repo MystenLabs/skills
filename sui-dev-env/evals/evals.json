@@ -1,6 +1,6 @@
 {
   "skill_name": "sui-dev-environment",
-  "source_constraint": "All expected outputs and expectations are grounded exclusively in docs.sui.io and move-book.com. Graders should flag any claims sourced from third-party blogs, tutorials, or unofficial documentation.",
+  "source_constraint": "All expected outputs and expectations are grounded exclusively in docs.sui.io, move-book.com, and the MystenLabs/sui-stack-hello-world repository. Graders should flag any claims sourced from third-party blogs, tutorials, or unofficial documentation.",
   "evals": [
     {
       "id": 1,
@@ -256,18 +256,21 @@
     {
       "id": 16,
       "prompt": "How do I set up a React frontend for my Sui Move package? What packages do I need?",
-      "reference_files": ["frontend.md"],
-      "expected_output": "The required packages, scaffold command, and basic setup for a Sui dApp with wallet connection.",
+      "reference_files": ["frontend.md", "move-project.md"],
+      "expected_output": "For the hello-world workflow, instructions to use the existing ui app in sui-stack-hello-world, update constants.ts with the package ID, and run it with pnpm.",
       "expectations": [
         "The response mentions @mysten/dapp-kit for React components and hooks",
         "The response mentions @mysten/sui as the core TypeScript SDK",
         "The response mentions @tanstack/react-query as a required peer dependency",
-        "The response mentions npm create @mysten/dapp as the scaffolding command",
+        "The response directs hello-world users to the existing sui-stack-hello-world/ui app",
+        "The response says not to run npm create @mysten/dapp inside the hello-world project",
+        "The response tells the user to update ui/src/constants.ts with the published package ID",
         "The response mentions pnpm as the recommended package manager",
         "The response mentions the ConnectButton component for wallet connection"
       ],
       "sources": [
-        "https://docs.sui.io/getting-started/onboarding/app-frontends"
+        "https://docs.sui.io/getting-started/onboarding/app-frontends",
+        "https://github.com/MystenLabs/sui-stack-hello-world"
       ]
     },
     {
@@ -394,6 +397,27 @@
       ],
       "sources": [
         "https://docs.sui.io/guides/developer/sui-101/move-package-management"
+      ]
+    },
+    {
+      "id": 25,
+      "prompt": "Use this skill to set up a Sui developer environment and deploy a simple full-stack app.",
+      "reference_files": ["SKILL.md", "setup.md", "client.md", "move-project.md", "build-test.md", "publish.md", "frontend.md"],
+      "expected_output": "A single-project workflow using MystenLabs/sui-stack-hello-world, publishing move/hello-world, then wiring the existing ui app to the new package ID.",
+      "expectations": [
+        "The response uses exactly one project root cloned from https://github.com/MystenLabs/sui-stack-hello-world",
+        "The response publishes the package from sui-stack-hello-world/move/hello-world",
+        "The response updates sui-stack-hello-world/ui/src/constants.ts with the published hello-world package ID",
+        "The response runs the existing frontend from sui-stack-hello-world/ui with pnpm install and pnpm dev",
+        "The response does not create or deploy a counter package",
+        "The response does not run sui move new for the end-to-end hello-world workflow",
+        "The response does not run npm create @mysten/dapp inside the hello-world repository",
+        "The response does not install, update, or switch Move Analyzer unless the user explicitly asks for IDE or language-server setup"
+      ],
+      "sources": [
+        "https://github.com/MystenLabs/sui-stack-hello-world",
+        "https://docs.sui.io/getting-started/onboarding/sui-install",
+        "https://docs.sui.io/getting-started/onboarding/configure-sui-client"
       ]
     }
   ]

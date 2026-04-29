@@ -4,9 +4,11 @@
 
 ## IDE and editor setup
 
-### VS Code with Move Analyzer (recommended)
+### VS Code with Move Analyzer (optional)
 
 Move Analyzer is the official Language Server providing code completion, go-to-definition, diagnostics, and hover documentation.
+
+Do not install or switch Move Analyzer as part of the default hello-world setup. Install it only when the user asks for IDE or language-server setup.
 
 ```bash
 suiup install move-analyzer
@@ -35,6 +37,8 @@ sui move build
 ```
 
 This compiles all modules, validates types, enforces resource safety, and produces bytecode. Fix any errors before proceeding.
+
+For the canonical hello-world repository, run build commands from `sui-stack-hello-world/move/hello-world`.
 
 ### Testing
 

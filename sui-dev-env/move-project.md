@@ -1,10 +1,32 @@
 # Move Project Setup
 
-> **Source constraint:** All information sourced exclusively from [docs.sui.io](https://docs.sui.io) and [move-book.com](https://move-book.com).
+> **Source constraint:** All information sourced exclusively from [docs.sui.io](https://docs.sui.io), [move-book.com](https://move-book.com), and [MystenLabs/sui-stack-hello-world](https://github.com/MystenLabs/sui-stack-hello-world).
 
 ## Creating a Move project
 
+### Canonical full-stack hello-world project
+
+For an end-to-end Sui developer environment with Move and frontend, use the Sui Stack hello-world repository as the single project root:
+
+```bash
+git clone https://github.com/MystenLabs/sui-stack-hello-world.git
+cd sui-stack-hello-world
+```
+
+Use this existing layout:
+
+```
+sui-stack-hello-world/
+├── move/
+│   └── hello-world/   # publish this Move package
+└── ui/                # run this existing frontend
+```
+
+Do not run `sui move new`, do not create a counter package, and do not run `npm create @mysten/dapp` for this workflow. If current Sui tooling requires a package-management migration, keep the change inside `move/hello-world` and continue deploying the hello-world package.
+
 ### New project from scratch
+
+Use this only when the user explicitly wants a standalone Move package rather than the full-stack hello-world app.
 
 ```bash
 sui move new my_project
@@ -72,11 +94,7 @@ git clone https://github.com/MystenLabs/sui-stack-hello-world.git
 cd sui-stack-hello-world/move/hello-world
 ```
 
-For frontend scaffolding:
-
-```bash
-npm create @mysten/dapp
-```
+The frontend already exists in `sui-stack-hello-world/ui`. Do not scaffold a second app inside the repository.
 
 ### Common dependency and build issues
 
