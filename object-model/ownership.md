@@ -1,6 +1,6 @@
 # Ownership Types and Versioning
 
-Every object on Sui has exactly one of five ownership types. The ownership type determines who can use the object, whether it goes through consensus, and how it behaves in transactions.
+Every object on Sui has exactly one of four ownership types. The ownership type determines who can use the object, whether it goes through consensus, and how it behaves in transactions.
 
 ## Address-owned objects
 
@@ -35,10 +35,6 @@ When unwrapped, the object regains direct access and retains its original ID.
 Wrapping requires the child object to have the `store` ability (so it can be stored inside the parent). Wrapping and unwrapping can happen within the same transaction.
 
 Use wrapping for tight coupling: when a child should only be accessible through its parent (equipment inside a character, items inside a chest).
-
-## Party objects
-
-Owned by a specified party at transfer time and versioned by consensus. Combines ownership assignment with consensus-based versioning. Used for specialized multi-party coordination.
 
 ## Object versioning
 

@@ -28,7 +28,7 @@ This skill routes to focused reference files. Load only the ones relevant to the
 ### ownership — Ownership Types and Versioning
 **Path:** `ownership.md`
 **Load when:** asking about ownership types (address-owned, shared, immutable, wrapped), choosing between shared and owned, parallel execution, consensus, Mysticeti, fastpath, object versioning, Lamport timestamps, or frontend access to shared objects.
-**Covers:** all five ownership types with consensus implications, shared object access mode optimization, frontend PTB access pattern, wrapped object behavior, Lamport timestamp versioning, fastpath vs consensus versioning.
+**Covers:** all four ownership types with consensus implications, shared object access mode optimization, frontend PTB access pattern, wrapped object behavior, Lamport timestamp versioning, fastpath vs consensus versioning.
 
 ### transfers — Transferring and Deleting Objects
 **Path:** `transfers.md`
@@ -108,20 +108,21 @@ public struct Sword has key, store {
 
 ## Move abilities and objects
 
-| Ability | What it controls | Effect on objects |
-|---|---|---|
-| `key` | The struct is a Sui object. Must have `id: UID` as first field. | Required for all onchain objects. |
-| `store` | The struct can be stored inside other objects, and transferred by any module using `public_transfer`. | Without it, only the defining module can transfer the object. Adding `store` permanently removes the ability to enforce custom transfer rules. |
-| `copy` | The struct can be duplicated. | Rarely used on objects. Used for configs, event data, or read-only values. |
-| `drop` | The struct can be silently discarded at end of scope. | Rarely used on objects. Useful for ephemeral receipts. Objects without `drop` must be explicitly unpacked to destroy. |
+| Ability | What it controls |
+|---|---|
+| `key` | The struct is a Sui object. Must have `id: UID` as first field. Required for all onchain objects. |
+| `store` | The struct can be stored inside other objects, and transferred by any module using `public_transfer`. Without it, only the defining module can transfer the object. Adding `store` permanently removes the ability to enforce custom transfer rules. |
+| `copy` | The struct can be duplicated. **Cannot be used on objects** — `UID` lacks `copy`, so any struct with `key` cannot have `copy`. Used only on non-object structs (configs, event data, read-only values). |
+| `drop` | The struct can be silently discarded at end of scope. **Cannot be used on objects** — `UID` lacks `drop`, so any struct with `key` cannot have `drop`. Used only on non-object structs (ephemeral receipts, events). Objects must always be explicitly unpacked to destroy. |
 
-### Common ability combinations
+### Object ability combinations
+
+Because `UID` has neither `copy` nor `drop`, objects (structs with `key`) can only combine `key` and `store`:
 
 - **`has key`:** Only the defining module can transfer, share, or freeze. Use for custom transfer rules.
 - **`has key, store`:** Any module can transfer, share, freeze, or wrap. Use for freely composable assets. Once `store` is granted, you cannot re-add custom transfer restrictions.
-- **`has key, store, drop`:** Rare. The object can be silently discarded.
 
-### Structs without `key`
+### Non-object struct combinations (no `key`)
 
 - **`has store`:** Can be stored as a field inside an object. Cannot exist independently.
 - **`has copy, drop`:** A plain data struct for events, intermediate values, and configs.

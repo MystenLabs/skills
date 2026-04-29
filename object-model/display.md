@@ -58,6 +58,6 @@ After adding or modifying display properties, you must call `update_version()` t
 
 ## Key rules
 
-- One `Display<T>` per type per package. You cannot create multiple Display objects for the same type from the same package.
+- Multiple `Display<T>` objects can be created for the same type, but only the most recently updated one is used by the full node for rendering. In practice, create one and update it as needed.
 - The `Publisher` object is the access control mechanism. Only the package that defines a type can create its Display.
 - Display objects have `key` and `store`, so they can be transferred to other addresses for management.

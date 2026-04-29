@@ -9,7 +9,7 @@ Deep reference for the Sui object model: ownership types, object abilities, dyna
 | Object structure | ID, version (Lamport timestamps), owner field, transaction digest, BCS format, object reference types (ID / versioned ID / full ref) |
 | Defining objects in Move | `key` + `id: UID`, `object::new(ctx)`, `ctx.fresh_object_address()` |
 | Move abilities and objects | `key`, `store`, `copy`, `drop` effects on objects, common combinations, structs without `key` (store-only, copy+drop, no abilities / hot potato) |
-| Ownership types | Address-owned (fastpath), shared (Mysticeti consensus, read-only optimization), immutable/frozen, wrapped, party objects |
+| Ownership types | Address-owned (fastpath), shared (Mysticeti consensus, read-only optimization), immutable/frozen, wrapped |
 | Transferring objects | Module-restricted vs public (6 core functions), custom transfer rules, `store` tradeoff, transfer-to-object with `Receiving<T>`, `receive` vs `public_receive` |
 | Deleting objects | Unpacking pattern, `object::delete(id)`, handling complex fields, dynamic field cleanup warning |
 | Dynamic fields | `dynamic_field` vs `dynamic_object_field`, field naming, core API (add/borrow/borrow_mut/remove/exists_), external visibility differences |
