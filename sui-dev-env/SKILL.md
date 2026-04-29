@@ -58,7 +58,7 @@ For requests like "set up a Sui developer environment and deploy a simple app/pa
 **Covers:** pre-publish checklist, `sui client publish`, UpgradeCap, multi-network publishing, `--serialize-output`, localnet setup, dry runs, `devInspectTransactionBlock`.
 
 ### frontend — Frontend Setup with dApp Kit
-**Path:** `frontend.md`
+**Path:** https://github.com/MystenLabs/skills/blob/37f67aa0e27447fab59ed168945f3dbd5e94f380/frontend-apps/SKILL.md
 **Load when:** using the Sui Stack hello-world frontend, connecting a wallet, using dApp Kit hooks, or integrating the TypeScript SDK in a web app.
 **Covers:** prerequisites, the existing `ui/` app in `sui-stack-hello-world`, key packages, ConnectButton, package ID configuration, and running the Vite dev server.
 
