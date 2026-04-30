@@ -1,0 +1,63 @@
+{
+  "skill_name": "sui-client",
+  "source_constraint": "All expected outputs and expectations are grounded exclusively in docs.sui.io.",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "How do I get SUI tokens for testing? Where is the faucet?",
+      "expected_output": "Multiple faucet methods including web, CLI, Discord, and SDK, with the official URL.",
+      "expectations": [
+        "The response provides the official faucet URL: faucet.sui.io",
+        "The response mentions the CLI method: sui client faucet",
+        "The response mentions the Discord method: !faucet <ADDRESS> in #devnet-faucet or #testnet-faucet",
+        "The response mentions the TypeScript SDK method: requestSuiFromFaucetV2",
+        "The response states that Devnet and Testnet tokens are free and have no monetary value",
+        "The response mentions rate limiting and suggests trying alternative faucets if the limit is hit"
+      ],
+      "sources": ["https://docs.sui.io/getting-started/onboarding/get-coins"]
+    },
+    {
+      "id": 2,
+      "prompt": "How do I create a wallet and fund it with the devnet faucet using only the CLI?",
+      "expected_output": "Step-by-step CLI commands from first-time setup through funded address.",
+      "expectations": [
+        "The response starts with sui client (or sui client -y) to trigger first-time configuration",
+        "The response mentions that this creates a new key pair, address, and recovery phrase",
+        "The response warns to save the recovery phrase immediately as it is only displayed once",
+        "The response shows how to switch to devnet: sui client switch --env devnet",
+        "The response shows how to request tokens: sui client faucet",
+        "The response shows how to verify: sui client balance or sui client gas"
+      ],
+      "sources": [
+        "https://docs.sui.io/getting-started/onboarding/configure-sui-client",
+        "https://docs.sui.io/getting-started/onboarding/get-coins"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "I get 'Cannot find gas coin for signer address' when trying to execute a transaction. What's wrong?",
+      "expected_output": "An explanation of gas coin issues and how to check and fix them.",
+      "expectations": [
+        "The response explains that the error means the address has no SUI coin objects with sufficient balance for gas",
+        "The response suggests checking balance with sui client balance or sui client gas",
+        "The response suggests getting tokens from the faucet if the balance is zero",
+        "The response mentions that if the user has many small coin objects, they may need to merge them",
+        "The response does not suggest unrelated fixes like changing code or redeploying"
+      ],
+      "sources": ["https://docs.sui.io/getting-started/onboarding/get-coins"]
+    },
+    {
+      "id": 4,
+      "prompt": "Never sign two concurrent transactions that touch the same owned object — I keep hearing this. What happens if I do? How do I avoid it?",
+      "expected_output": "An explanation of equivocation, object locking until epoch end, and strategies to avoid it.",
+      "expectations": [
+        "The response explains that signing two concurrent transactions on the same owned object causes equivocation",
+        "The response explains that equivocation locks the object until the current epoch ends (approximately 24 hours on Mainnet)",
+        "The response recommends using independent objects for concurrent operations or waiting for transaction completion before submitting the next",
+        "The response mentions that this applies to owned objects specifically, not shared objects",
+        "The response does not downplay the severity — this is a real foot-gun that can lock assets for hours"
+      ],
+      "sources": ["https://docs.sui.io/getting-started/dev-cheat-sheet"]
+    }
+  ]
+}
