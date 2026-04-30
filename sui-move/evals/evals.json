@@ -23,22 +23,6 @@
     },
     {
       "id": 2,
-      "prompt": "What are programmable transaction blocks (PTBs) and how do I build one?",
-      "expected_output": "An explanation of PTBs as Sui's mechanism for batching multiple commands into a single atomic transaction, with details on what operations can be composed.",
-      "expectations": [
-        "The response defines PTBs as a way to batch multiple commands into a single atomic transaction",
-        "The response explains that PTBs reduce gas costs and guarantee all-or-nothing execution",
-        "The response mentions that results from one command can be passed as input to the next within a PTB",
-        "The response lists concrete operations possible in a PTB: calling Move functions, splitting/merging coins, transferring objects, publishing packages",
-        "The response states that virtually every Sui transaction is a PTB, even single-command ones",
-        "The response does not confuse PTBs with concepts from other blockchains"
-      ],
-      "sources": [
-        "https://docs.sui.io/concepts/transactions/prog-txn-blocks"
-      ]
-    },
-    {
-      "id": 3,
       "prompt": "How do I upgrade a published Move package on Sui? What is the UpgradeCap?",
       "expected_output": "An explanation of the package upgrade process, the UpgradeCap object, upgrade policies (compatible, additive, dependency-only), and how to restrict upgrade capabilities.",
       "expectations": [
@@ -54,7 +38,7 @@
       ]
     },
     {
-      "id": 4,
+      "id": 3,
       "prompt": "What is the init function in Sui Move? Why would I use a One-Time Witness for currency creation?",
       "expected_output": "An explanation of the init function running once at publish time, and the OTW pattern proving module authority for operations like coin::create_currency.",
       "expectations": [
@@ -72,7 +56,7 @@
       ]
     },
     {
-      "id": 5,
+      "id": 4,
       "prompt": "How to get the current epoch in Sui Move using TxContext? What does ctx.epoch() return? What's the difference between ctx.epoch_timestamp_ms() and the Clock object?",
       "expected_output": "An explanation of TxContext methods for time and epoch access, plus how the Clock object differs in precision.",
       "expectations": [
@@ -89,43 +73,7 @@
       ]
     },
     {
-      "id": 6,
-      "prompt": "When should I use a Table vs VecMap vs Bag in Sui Move? What are the tradeoffs?",
-      "expected_output": "A comparison of Sui's collection types with guidance on when to use each based on collection size, type homogeneity, and performance characteristics.",
-      "expectations": [
-        "The response explains that Table is backed by dynamic fields with O(1) lookup and is the default for large/unbounded collections",
-        "The response explains that VecMap is a vector-backed map with O(n) lookup, suitable for small collections under ~100 entries",
-        "The response explains that Bag is a heterogeneous collection where values can be different types",
-        "The response mentions ObjectTable and ObjectBag as variants where values must be objects with key + store",
-        "The response mentions LinkedTable for ordered traversal or iteration",
-        "The response explains the tradeoff: Table/Bag scale well but each entry is a separate storage operation; VecMap/VecSet are cheaper for small collections",
-        "The response does not recommend VecMap for large collections"
-      ],
-      "sources": [
-        "https://docs.sui.io/concepts/dynamic-fields/tables-bags",
-        "https://move-book.com/programmability/collections.html"
-      ]
-    },
-    {
-      "id": 7,
-      "prompt": "Is there a performance difference on Sui between accessing a shared object with an immutable reference versus a mutable reference, in terms of consensus and parallelism?",
-      "expected_output": "An explanation of how shared object access mode affects consensus ordering and transaction parallelism on Sui.",
-      "expectations": [
-        "The response explains that shared objects require consensus ordering through Mysticeti",
-        "The response distinguishes between owned objects (which skip consensus) and shared objects (which require it)",
-        "The response explains that when a shared object is accessed with an immutable reference (&), the transaction marks it as read-only (mutable: false), allowing multiple read-only transactions on the same shared object to be scheduled in parallel",
-        "The response explains that when a shared object is accessed with a mutable reference (&mut), the transaction marks it as mutable: true, and consensus must sequence those transactions",
-        "The response does not claim that owned objects go through consensus",
-        "The response is technically accurate about Sui's execution model"
-      ],
-      "sources": [
-        "https://docs.sui.io/concepts/transactions/prog-txn-blocks",
-        "https://docs.sui.io/concepts/sui-architecture/consensus",
-        "https://docs.sui.io/concepts/transactions/transaction-lifecycle"
-      ]
-    },
-    {
-      "id": 8,
+      "id": 5,
       "prompt": "What are Sui Move events and how do I emit events in smart contracts? How do I subscribe to them offchain?",
       "expected_output": "An explanation of Move events including how to define event structs, emit them, and subscribe to them using the TypeScript SDK or GraphQL.",
       "expectations": [
@@ -142,7 +90,7 @@
       ]
     },
     {
-      "id": 9,
+      "id": 6,
       "prompt": "How do I create a new fungible token (currency) on Sui? What are the key coin operations like mint, burn, split, and merge?",
       "expected_output": "An explanation of the coin::create_currency flow using OTW, the role of TreasuryCap and CoinMetadata, and the standard coin operations.",
       "expectations": [
@@ -160,55 +108,7 @@
       ]
     },
     {
-      "id": 10,
-      "prompt": "What is Object Display in Sui? How do I set up display templates for my NFTs?",
-      "expected_output": "An explanation of the Object Display standard, how templates map struct fields to display properties, and the Publisher requirement.",
-      "expectations": [
-        "The response explains that Object Display defines how objects render in wallets, explorers, and apps",
-        "The response describes the template system using {field_name} syntax for field interpolation",
-        "The response mentions that a Publisher object is required to create a Display",
-        "The response lists common display properties like name, description, and image_url",
-        "The response includes a code example or describes the code pattern for creating a Display",
-        "The response mentions calling update_version() to finalize display changes"
-      ],
-      "sources": [
-        "https://docs.sui.io/standards/display",
-        "https://move-book.com/programmability/display.html"
-      ]
-    },
-    {
-      "id": 11,
-      "prompt": "How to build and execute a sponsored transaction on Sui? What is the basic flow?",
-      "expected_output": "An explanation of sponsored transactions where a third party pays gas, including the signing flow between sender and sponsor.",
-      "expectations": [
-        "The response explains that a sponsored transaction is one where a third party pays the gas fee on behalf of the sender",
-        "The response describes the dual-signing flow: the sender signs the transaction data and the sponsor signs the gas payment",
-        "The response mentions that this enables gasless user experiences",
-        "The response does not confuse sponsored transactions with other Sui concepts"
-      ],
-      "sources": [
-        "https://docs.sui.io/concepts/transactions/sponsored-transactions"
-      ]
-    },
-    {
-      "id": 12,
-      "prompt": "What is the difference between dynamic fields and dynamic object fields in Sui Move? When should I use each?",
-      "expected_output": "An explanation of both dynamic field types, their differences in storage behavior, and practical guidance on when to use each.",
-      "expectations": [
-        "The response explains that dynamic_field stores any value type as part of the parent object's storage",
-        "The response explains that dynamic_object_field stores objects (structs with key) that retain their own ID",
-        "The response explains that child objects in dynamic_object_field can be looked up independently",
-        "The response mentions use cases: variable number of fields, attaching data at runtime, map-like storage",
-        "The response does not confuse dynamic fields with regular struct fields"
-      ],
-      "sources": [
-        "https://docs.sui.io/concepts/dynamic-fields",
-        "https://move-book.com/programmability/dynamic-fields.html",
-        "https://move-book.com/programmability/dynamic-object-fields.html"
-      ]
-    },
-    {
-      "id": 13,
+      "id": 7,
       "prompt": "How do I destroy an object in Sui Move that doesn't have the drop ability?",
       "expected_output": "An explanation of how to explicitly unpack and handle each field of a struct that lacks the drop ability, including the object::delete(id) call for the UID.",
       "expectations": [
