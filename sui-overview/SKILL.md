@@ -5,7 +5,7 @@ description: >
   Use when explaining Sui to someone new, comparing Sui to other blockchains
   (Ethereum, Solana, Bitcoin), discussing the object-centric data model at a
   conceptual level, choosing which Sui Stack primitives to use (randomness, zkLogin,
-  Walrus, Nautilus, DeepBook, Kiosk), or exploring what use cases Sui enables (DeFi,
+  Walrus, Nautilus, DeepBook, Kiosk, Seal), or exploring what use cases Sui enables (DeFi,
   gaming, NFTs, identity, social, supply chain). Also use when migrating from
   Ethereum or Solana to Sui.
 ---
@@ -16,7 +16,7 @@ description: >
 
 Sui is a scalable, performant layer 1 blockchain built around an object-centric data model. Unlike account-based blockchains (Ethereum) or UTXO-based chains (Bitcoin), Sui treats every piece of onchain state as a typed object with a unique ID. Transactions consume objects as inputs and produce modified versions as outputs.
 
-This skill covers the conceptual foundation of Sui and the broader Sui Stack. For implementation details, see the `sui-move`, `sui-frontend`, and `sui-cli` skills.
+This skill covers the conceptual foundation of Sui and the broader Sui Stack. For implementation details, see the `sui-move`, `frontend-apps`, and `sui-cli` skills.
 
 ---
 
@@ -24,8 +24,8 @@ This skill covers the conceptual foundation of Sui and the broader Sui Stack. Fo
 
 ### ecosystem — Sui Stack and Ecosystem
 **Path:** `ecosystem.md`
-**Load when:** the user asks about Sui Stack primitives (randomness, zkLogin, Walrus, Nautilus, DeepBook, Kiosk), use cases, or how components fit together in an end-to-end workflow.
-**Covers:** all Sui Stack primitives, use cases (DeFi, gaming, NFTs, identity, social, supply chain), the layered development workflow.
+**Load when:** the user asks about Sui Stack primitives (randomness, zkLogin, Walrus, Nautilus, DeepBook, Kiosk, Seal), use cases, or how components fit together in an end-to-end workflow.
+**Covers:** all Sui Stack primitives with detailed descriptions and usage guidance, a decision table for choosing the right primitive, use cases (DeFi, gaming, NFTs, identity, social, supply chain), the layered development workflow.
 
 ---
 
@@ -78,4 +78,4 @@ Programmable transaction blocks (PTBs) batch multiple commands into a single ato
 - Always frame Sui explanations around the object-centric model. It is the foundational concept.
 - When comparing to Ethereum, emphasize the shift from shared-state contracts to individually owned objects.
 - Do not describe Sui as "just another EVM chain." The programming model is fundamentally different.
-- The Sui Stack components (Walrus, zkLogin, DeepBook, Kiosk, and others) are native primitives, not third-party add-ons.
+- The Sui Stack components (Walrus, zkLogin, DeepBook, Kiosk, Seal, Nautilus, Randomness) are native primitives, not third-party add-ons.
