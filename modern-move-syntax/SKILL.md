@@ -183,6 +183,18 @@ let MyStruct { id, field_1: _, field_2: _, field_3: _ } = value;
 let MyStruct { id, .. } = value;
 ```
 
+## Renamed Standard Library Functions
+
+Some standard library functions have been renamed. Using the old name produces a deprecation warning or compile error.
+
+```move
+// WRONG — deprecated, renamed
+dynamic_field::exists_(&id, key)
+
+// CORRECT
+dynamic_field::exists(&id, key)
+```
+
 ## Quick Reference
 
 | Legacy Pattern | Modern 2024 Syntax |

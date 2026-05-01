@@ -78,13 +78,34 @@ assert!(balance > 0);
 ```move
 // WRONG — separate attributes
 #[test]
-#[expected_failure(abort_code = my_app::EInvalidInput)]
+#[expected_failure(abort_code = EInvalidInput, location = my_app)]
 fun invalid_input_aborts() { /* ... */ }
 
 // CORRECT — merged on one line
-#[test, expected_failure(abort_code = my_app::EInvalidInput)]
+#[test, expected_failure(abort_code = EInvalidInput, location = my_app)]
 fun invalid_input_aborts() { /* ... */ }
 ```
+
+## `expected_failure` with `location` for cross-module aborts
+
+When the abort happens in a different module than the test, you **must** specify `location`. Without it, the test framework expects the abort to originate in the test module and the test fails.
+
+```move
+// Test module: my_package::app_tests
+// Abort happens in: my_package::app
+
+const ENotAuthorized: u64 = 0;  // mirror the constant value from app module
+
+// WRONG — no location; test fails because abort comes from `app`, not `app_tests`
+#[test, expected_failure(abort_code = ENotAuthorized)]
+fun unauthorized_call_aborts() { /* ... */ }
+
+// CORRECT — location points to the module where the abort originates
+#[test, expected_failure(abort_code = ENotAuthorized, location = app)]
+fun unauthorized_call_aborts() { /* ... */ }
+```
+
+The `location` value is just the module name (e.g., `app`), not the fully qualified path (`my_package::app`). Using the fully qualified form causes a compile error: "Unexpected module member identifier."
 
 ## Skip Cleanup in `expected_failure` Tests
 

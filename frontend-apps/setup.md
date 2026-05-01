@@ -17,6 +17,8 @@ Install (React):
 npm install @mysten/dapp-kit-react @mysten/sui @tanstack/react-query
 ```
 
+**Check current versions before installing.** `@mysten/dapp-kit-react` and `@mysten/sui` are both on major version 2.x. Run `npm view @mysten/dapp-kit-react version` and `npm view @mysten/sui version` to get the latest. Do not guess version numbers.
+
 Install (Vue / vanilla):
 ```bash
 npm install @mysten/dapp-kit-core @mysten/sui
@@ -59,7 +61,8 @@ Wrap the app:
 
 ```tsx
 // App.tsx
-import { DAppKitProvider, ConnectButton } from '@mysten/dapp-kit-react';
+import { DAppKitProvider } from '@mysten/dapp-kit-react';
+import { ConnectButton } from '@mysten/dapp-kit-react/ui';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { dAppKit } from './dapp-kit';
 

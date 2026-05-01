@@ -106,6 +106,7 @@ When the user asks you to review a code snippet, do not stop at the first 2–3 
 **Imports / packages**
 - `@mysten/sui.js` (anywhere) — frozen v1 package; replace with `@mysten/sui`.
 - `@mysten/dapp-kit` (no suffix) — deprecated JSON-RPC-only package; replace with `@mysten/dapp-kit-react` (React) or `@mysten/dapp-kit-core` (other frameworks).
+- `import { ConnectButton } from '@mysten/dapp-kit-react'` — wrong path; `ConnectButton` and `ConnectModal` are exported from `@mysten/dapp-kit-react/ui`. Using the wrong path causes a silent white screen.
 - `import { SuiClient }` — v1 client; replace with `SuiGrpcClient` from `@mysten/sui/grpc` (or `useCurrentClient()` inside components).
 - `import { TransactionBlock }` — renamed to `Transaction` in v2.
 

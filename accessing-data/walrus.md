@@ -39,6 +39,35 @@ public struct NFT has key, store {
 }
 ```
 
+### Option 1: Walrus HTTP API (simpler, no extra dependency)
+
+For basic upload/download, use the Walrus publisher and aggregator HTTP endpoints directly. This avoids adding the `@mysten/walrus` package.
+
+**Testnet endpoints:**
+- Publisher: `https://publisher.walrus-testnet.walrus.space`
+- Aggregator: `https://aggregator.walrus-testnet.walrus.space`
+
+```ts
+// Upload a blob
+const response = await fetch('https://publisher.walrus-testnet.walrus.space/v1/blobs', {
+  method: 'PUT',
+  headers: { 'Content-Type': 'application/octet-stream' },
+  body: fileBytes,  // ArrayBuffer or Blob
+});
+const result = await response.json();
+// Response shape varies: check result.newlyCreated?.blobObject?.blobId
+// or result.alreadyCertified?.blobId
+const blobId = result.newlyCreated?.blobObject?.blobId
+  ?? result.alreadyCertified?.blobId;
+
+// Download a blob
+const data = await fetch(
+  `https://aggregator.walrus-testnet.walrus.space/v1/blobs/${blobId}`
+).then(r => r.arrayBuffer());
+```
+
+### Option 2: `@mysten/walrus` SDK extension
+
 ```ts
 // TypeScript — via the @mysten/walrus extension
 import { SuiGrpcClient } from '@mysten/sui/grpc';

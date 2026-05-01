@@ -73,6 +73,31 @@ Upgrade policies restrict what can change:
 
 You can restrict the `UpgradeCap` in the same PTB as the publish command (for example, calling `only_additive_upgrades` on it immediately). Once restricted, you cannot widen the policy. You can also transfer the `UpgradeCap` to a multisig address or destroy it entirely to make the package permanently immutable.
 
+### Type anchoring after upgrades
+
+**Struct types are permanently anchored to the original package ID where they were first published.** After an upgrade, the new package gets a new ID, but all objects created by the upgraded code still have their type rooted in the original package ID.
+
+This has critical implications:
+- **Querying objects by type** (e.g., `listOwnedObjects` with a `type` filter) must use the **original** package ID.
+- **Calling functions** via `moveCall` must use the **upgraded** (latest) package ID.
+- **Frontend apps** should maintain both IDs: `ORIGINAL_PACKAGE_ID` for type queries and `PACKAGE_ID` for function calls.
+
+```ts
+// Original publish → package ID 0x1234...
+// After upgrade  → package ID 0x5678...
+
+// Query: use ORIGINAL package ID
+client.core.listOwnedObjects({
+  owner: addr,
+  type: '0x1234...::module::MyObject',  // ✅ original ID
+});
+
+// Call: use UPGRADED package ID
+tx.moveCall({
+  target: '0x5678...::module::my_function',  // ✅ upgraded ID
+});
+```
+
 ### Publishing to multiple networks
 
 To publish to a different network (for example, from Testnet to Devnet), switch environments and publish again. Each network gives the package a different ID. The `Published.toml` file tracks published addresses per environment.

@@ -47,8 +47,8 @@ function OwnedNFTs() {
       client.core.listOwnedObjects({
         owner: account!.address,
         cursor: pageParam,
-        filter: { StructType: '0xPKG::nft::NFT' },   // type filter goes under `filter`
-        include: { content: true },
+        type: '0xPKG::nft::NFT',   // type filter — use the ORIGINAL package ID (see note below)
+        include: { json: true },    // json gives parsed fields; content gives raw BCS bytes
         limit: 50,
       }),
     initialPageParam: undefined,
@@ -78,7 +78,7 @@ All hang off `client.core`:
 |---|---|
 | `getObject({ objectId, include })` | `{ object }` |
 | `getObjects({ objectIds, include })` | `{ objects }` |
-| `listOwnedObjects({ owner, filter?, cursor?, limit?, include? })` | `{ objects, cursor }` |
+| `listOwnedObjects({ owner, type?, cursor?, limit?, include? })` | `{ objects, cursor }` |
 | `listCoins({ owner, coinType?, cursor?, limit? })` | `{ coins, cursor }` |
 | `listBalances({ owner })` | `{ balances }` |
 | `listDynamicFields({ parentId, cursor?, limit? })` | `{ dynamicFields, cursor }` |
@@ -91,6 +91,39 @@ All hang off `client.core`:
 - **Objects**: `content`, `previousTransaction`, `json`, `objectBcs`, `display`.
 - **Transactions**: `effects`, `events`, `balanceChanges`, `transaction`, `bcs`.
 - **Simulate**: adds `commandResults`.
+
+## Reading object fields
+
+Use `include: { json: true }` to get a JSON representation of the object's Move struct fields. Access fields via `obj.json`:
+
+```tsx
+const result = await client.core.listOwnedObjects({
+  owner: account!.address,
+  type: `${PACKAGE_ID}::nft::NFT`,
+  include: { json: true },
+});
+
+for (const obj of result.objects) {
+  const json = obj.json as Record<string, string>;
+  console.log(json.name, json.description, json.image_url);
+}
+```
+
+Alternatively, use `include: { content: true }` to get raw BCS bytes and parse with generated types (from `@mysten/codegen`). `json` is easier for quick access; `content` is more reliable across API implementations.
+
+**Type anchoring after upgrades:** when filtering by type in `listOwnedObjects`, always use the **original** package ID where the struct was first published — not the upgraded package ID. Struct types are permanently anchored to the original package. Use the upgraded package ID only for calling functions via `moveCall`.
+
+```ts
+// ✅ Correct — original package ID for type queries
+const ORIGINAL_PACKAGE_ID = '0x1234...';  // first publish
+const UPGRADED_PACKAGE_ID = '0x5678...';  // after sui client upgrade
+
+// Query uses original ID
+client.core.listOwnedObjects({ owner, type: `${ORIGINAL_PACKAGE_ID}::nft::NFT` });
+
+// Function calls use upgraded ID
+tx.moveCall({ target: `${UPGRADED_PACKAGE_ID}::nft::mint`, ... });
+```
 
 ## Cache invalidation after transactions
 

@@ -34,9 +34,13 @@ If a tutorial or tool recommends any of the removed hooks, it's out of date.
 
 ## `ConnectButton`
 
-Drop-in wallet connection button:
+**`ConnectButton` is exported from `@mysten/dapp-kit-react/ui`**, not from the main `@mysten/dapp-kit-react` entry point. This is the most common import mistake — using the wrong path causes a silent white screen with no error.
 
 ```tsx
+// ✅ Correct import
+import { ConnectButton } from '@mysten/dapp-kit-react/ui';
+
+// ❌ Wrong — ConnectButton is NOT exported from the main entry
 import { ConnectButton } from '@mysten/dapp-kit-react';
 
 <ConnectButton />
@@ -49,6 +53,8 @@ import { ConnectButton } from '@mysten/dapp-kit-react';
   }}
 />
 ```
+
+`ConnectModal` is also exported from `@mysten/dapp-kit-react/ui`.
 
 Wallet detection is browser-only. In SSR frameworks, ensure this renders client-side (`'use client'` in Next.js).
 
@@ -119,7 +125,8 @@ Never `new SuiGrpcClient(...)` inside a component — you'd lose network switchi
 ## Wallet-gated UI
 
 ```tsx
-import { useCurrentAccount, ConnectButton } from '@mysten/dapp-kit-react';
+import { useCurrentAccount } from '@mysten/dapp-kit-react';
+import { ConnectButton } from '@mysten/dapp-kit-react/ui';
 
 function ProtectedFeature() {
   const account = useCurrentAccount();
