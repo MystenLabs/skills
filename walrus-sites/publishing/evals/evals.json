@@ -1,0 +1,92 @@
+{
+  "skill_name": "walrus-sites-publishing",
+  "source_constraint": "All facts must be verifiable against the MystenLabs/walrus-sites repo and docs.wal.app/walrus-sites/.",
+  "evals": [
+    {
+      "id": "publishing-deploy-react-app",
+      "prompt": "I built a React app with Vite. How do I deploy it to Walrus Sites on testnet?",
+      "expected_output": "Step-by-step: npm run build, then site-builder publish --epochs 30 dist/. Mentions prerequisites and that testnet requires a local portal.",
+      "expectations": [
+        "Instructs to build the frontend first (npm run build or equivalent)",
+        "Uses site-builder publish with --epochs flag and a value of 30 or higher",
+        "Points site-builder at the dist/ directory, not the source directory",
+        "Mentions suiup install site-builder for installation",
+        "Mentions that wal.app only serves mainnet, testnet needs a self-hosted portal"
+      ],
+      "sources": [
+        "https://docs.wal.app/walrus-sites/"
+      ]
+    },
+    {
+      "id": "publishing-epochs-too-low",
+      "prompt": "I used --epochs 5 when publishing my site. Is that enough?",
+      "expected_output": "No, that's far too low. Blobs expire within days. Use --epochs 30+ for testnet, 200+ or --permanent for mainnet.",
+      "expectations": [
+        "Clearly states --epochs 5 is too low and will expire quickly",
+        "Recommends --epochs 30 or higher for testnet",
+        "Recommends higher values (200+) or --permanent for mainnet",
+        "Mentions site-builder sitemap to check expiration dates",
+        "Explains that expired blobs cause the site to 404 silently"
+      ],
+      "sources": [
+        "https://docs.wal.app/walrus-sites/"
+      ]
+    },
+    {
+      "id": "publishing-spa-routing",
+      "prompt": "I have a React SPA deployed on Walrus Sites. When I navigate directly to /dashboard it shows a 404. The homepage works fine.",
+      "expected_output": "SPA routing issue. Add a routes section to ws-resources.json mapping /* to /index.html.",
+      "expectations": [
+        "Identifies this as an SPA routing issue, not a deployment bug",
+        "Explains that the portal looks up the exact path as a resource",
+        "Provides the ws-resources.json routes configuration with /* mapping to /index.html",
+        "Instructs to re-publish or update after modifying ws-resources.json"
+      ],
+      "sources": [
+        "https://docs.wal.app/walrus-sites/"
+      ]
+    },
+    {
+      "id": "publishing-update-vs-publish",
+      "prompt": "What's the difference between site-builder publish and site-builder update?",
+      "expected_output": "publish creates a new site object; update modifies an existing one using ws-resources.json. Only changed resources are re-uploaded during update.",
+      "expectations": [
+        "Explains publish creates a new site object on Sui",
+        "Explains update modifies an existing site (requires ws-resources.json with object ID)",
+        "Mentions that update only re-uploads changed resources",
+        "Notes that ws-resources.json is auto-generated on first publish"
+      ],
+      "sources": [
+        "https://github.com/MystenLabs/walrus-sites"
+      ]
+    },
+    {
+      "id": "publishing-how-to-update",
+      "prompt": "How do I update my Walrus Site after making code changes?",
+      "expected_output": "Rebuild the frontend, then run site-builder update --epochs N dist/.",
+      "expectations": [
+        "Instructs to rebuild first (npm run build)",
+        "Uses site-builder update (not publish) for subsequent deploys",
+        "Mentions that ws-resources.json contains the site object ID for updates",
+        "Includes --epochs flag to extend blob storage if needed"
+      ],
+      "sources": [
+        "https://github.com/MystenLabs/walrus-sites"
+      ]
+    },
+    {
+      "id": "publishing-debug-expired",
+      "prompt": "My Walrus Site was working yesterday but now it shows 404. I didn't change anything.",
+      "expected_output": "Blobs likely expired. Run site-builder sitemap to check expiration dates. Re-publish with higher --epochs.",
+      "expectations": [
+        "Suggests blob expiration as the likely cause",
+        "Recommends site-builder sitemap to check expiration dates",
+        "Instructs to re-publish with a higher --epochs value",
+        "Does NOT suggest code changes since the user said nothing changed"
+      ],
+      "sources": [
+        "https://docs.wal.app/walrus-sites/"
+      ]
+    }
+  ]
+}

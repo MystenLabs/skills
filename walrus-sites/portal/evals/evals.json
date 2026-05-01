@@ -1,0 +1,80 @@
+{
+  "skill_name": "walrus-sites-portal",
+  "source_constraint": "All facts must be verifiable against the MystenLabs/walrus-sites repo portal/ directory.",
+  "evals": [
+    {
+      "id": "portal-setup-testnet",
+      "prompt": "How do I set up the local portal to view my testnet Walrus Site?",
+      "expected_output": "Clone MystenLabs/walrus-sites, cd portal, bun install, copy testnet config, bun -F server start.",
+      "expectations": [
+        "Instructs to clone MystenLabs/walrus-sites (not a separate portal repo)",
+        "Instructs to install bun if not present",
+        "Instructs to run bun install in the portal/ directory",
+        "Instructs to copy portal-config.testnet.example.yaml to portal-config.yaml",
+        "Warns NOT to change original_package_id in the config",
+        "Shows the start command: bun -F server start (from the portal directory)",
+        "Mentions the URL format: <base36-id>.localhost:3000"
+      ],
+      "sources": [
+        "https://github.com/MystenLabs/walrus-sites/tree/main/portal"
+      ]
+    },
+    {
+      "id": "portal-original-package-id",
+      "prompt": "What is original_package_id in the portal config? Should I set it to my app's package ID?",
+      "expected_output": "It's the Walrus Sites framework package (site::Site type), NOT the user's app package. Don't change it.",
+      "expectations": [
+        "Clearly states it is the Walrus Sites framework package, not the user's app package",
+        "States the testnet example config already has the correct value",
+        "Warns that changing it will break all site lookups",
+        "Explains how to verify: sui client object shows objType with the correct package prefix",
+        "Does NOT instruct the user to change this value"
+      ],
+      "sources": [
+        "https://github.com/MystenLabs/walrus-sites/tree/main/portal"
+      ]
+    },
+    {
+      "id": "portal-404-troubleshooting",
+      "prompt": "I deployed my site to Walrus Sites on testnet but when I visit the URL it shows 'Page not found'. What's wrong?",
+      "expected_output": "Diagnostic checklist: check blob expiration, verify portal config, check if site object ID changed.",
+      "expectations": [
+        "Suggests running site-builder sitemap to check blob expiration dates",
+        "Explains that blobs may have expired if --epochs was too low",
+        "Mentions checking original_package_id in the portal config",
+        "Mentions that re-publishing creates a new site object with a different URL",
+        "Does NOT suggest changing original_package_id to the user's app package ID"
+      ],
+      "sources": [
+        "https://github.com/MystenLabs/walrus-sites"
+      ]
+    },
+    {
+      "id": "portal-port-conflict",
+      "prompt": "The portal won't start because something else is using port 3000. How do I fix this?",
+      "expected_output": "Find and kill the conflicting process with lsof, then restart the portal.",
+      "expectations": [
+        "Provides lsof -i :3000 or equivalent to identify the conflicting process",
+        "Shows how to kill the process",
+        "Mentions common conflicts: Vite dev server, Next.js, other Node processes",
+        "Instructs to restart the portal after freeing the port"
+      ],
+      "sources": [
+        "https://github.com/MystenLabs/walrus-sites/tree/main/portal"
+      ]
+    },
+    {
+      "id": "portal-wal-app-testnet",
+      "prompt": "Can I use my testnet Walrus Site URL on wal.app?",
+      "expected_output": "No. wal.app is mainnet only. Self-host a local portal for testnet.",
+      "expectations": [
+        "Clearly states wal.app is mainnet only",
+        "Directs the user to self-host a local portal for testnet",
+        "Does NOT provide a wal.app URL for testnet sites"
+      ],
+      "sources": [
+        "https://docs.wal.app/walrus-sites/"
+      ]
+    }
+  ]
+}

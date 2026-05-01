@@ -1,0 +1,4 @@
+*-workspace/
+.agents/
+.claude/
+skills-lock.json
