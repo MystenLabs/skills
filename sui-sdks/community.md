@@ -74,7 +74,7 @@ Other Go SDKs exist (SuiVision, Pattonkan). `block-vision` is the one listed on 
 | Maintainer | Community |
 | Use case | Vue-based dApp Kit equivalent |
 
-For React, use `@mysten/dapp-kit` instead (official, covered in the `frontend-apps` skill).
+For React, use `@mysten/dapp-kit-react` instead (official, covered in the `frontend-apps` skill). The bare `@mysten/dapp-kit` package name is the deprecated JSON-RPC-only predecessor.
 
 ## Risk checklist before choosing a community SDK
 

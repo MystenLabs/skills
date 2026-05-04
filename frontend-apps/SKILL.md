@@ -2,7 +2,8 @@
 name: frontend-apps
 description: >
   Sui frontend / dApp development with @mysten/dapp-kit-react (React) and
-  @mysten/dapp-kit-core (Vue, vanilla JS, Svelte, other frameworks). Use when
+  @mysten/dapp-kit-core (Vue, vanilla JS, Svelte, Web Components, other
+  frameworks). Use when
   building browser apps that connect Sui wallets, query on-chain state, or
   submit transactions. Covers wallet connection, network switching, transaction
   execution, query patterns with TanStack React Query, and the specific

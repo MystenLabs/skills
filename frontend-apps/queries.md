@@ -52,6 +52,7 @@ function OwnedNFTs() {
         limit: 50,
       }),
     initialPageParam: undefined,
+    // v2 returns null (not undefined) when there are no more pages; coerce to undefined so TanStack Query stops paginating.
     getNextPageParam: (lastPage) => lastPage.cursor ?? undefined,
     enabled: !!account,
   });

@@ -131,19 +131,21 @@
   },
   {
     "id": "sui-sdks-frontend-boundary",
-    "prompt": "I'm building a React frontend that lets users connect their wallet and submit a transaction. Should I use @mysten/sui, @mysten/dapp-kit, or both?",
+    "prompt": "I'm building a React frontend that lets users connect their wallet and submit a transaction. Should I use @mysten/sui, @mysten/dapp-kit-react, or both?",
     "sources": [
       "https://sdk.mystenlabs.com/dapp-kit",
       "https://sdk.mystenlabs.com/sui"
     ],
-    "expected_output": "Explains both are needed. @mysten/dapp-kit handles wallet connection, React hooks (useCurrentAccount, useSignAndExecuteTransaction, useSuiClient), and UI components. The underlying Transaction construction uses @mysten/sui's Transaction class — dapp-kit wraps submission. The pattern: build the Transaction with @mysten/sui, hand it to a dapp-kit hook for wallet signing. Notes that dapp-kit is the React-specific layer; for Vue use SuiFansCN/suiue (community); for vanilla JS the core-package handles everything.",
+    "expected_output": "Explains both are needed. @mysten/dapp-kit-react handles wallet connection, React hooks, and UI components. The underlying Transaction construction uses @mysten/sui's Transaction class — dApp Kit wraps submission. The pattern: build the Transaction with @mysten/sui, hand it to a dApp Kit hook for wallet signing. Routes the user to the frontend-apps skill for hook-level details (which hooks exist, how to wire them). Notes that dApp Kit is the React-specific layer; for Vue/vanilla/Svelte use @mysten/dapp-kit-core.",
     "expectations": [
-      "Recommends BOTH @mysten/sui (transaction construction) AND @mysten/dapp-kit (wallet + hooks)",
-      "Mentions specific dapp-kit hooks like useCurrentAccount, useSignAndExecuteTransaction, useSuiClient",
-      "Explains the role separation: @mysten/sui for Transaction/client, dapp-kit for wallet + React bindings",
-      "Notes that dapp-kit wraps submission, it doesn't replace @mysten/sui's Transaction",
+      "Recommends BOTH @mysten/sui (transaction construction) AND @mysten/dapp-kit-react (wallet + hooks)",
+      "Mentions that dApp Kit provides React hooks for wallet connection, signing, and client access (specific hook names belong to the frontend-apps skill)",
+      "Routes the user to the frontend-apps skill for React hook details",
+      "Explains the role separation: @mysten/sui for Transaction/client, dApp Kit for wallet + React bindings",
+      "Notes that dApp Kit wraps submission, it doesn't replace @mysten/sui's Transaction",
       "Does NOT tell the user they can pick one or the other (both are needed for React wallet flow)",
-      "Does NOT confuse dapp-kit with @mysten/sui as if they were alternatives"
+      "Does NOT confuse dApp Kit with @mysten/sui as if they were alternatives",
+      "Does NOT recommend the bare @mysten/dapp-kit package (deprecated JSON-RPC predecessor)"
     ]
   }
 ]

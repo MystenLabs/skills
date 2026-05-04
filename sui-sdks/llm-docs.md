@@ -44,7 +44,7 @@ When recommending a pattern, mention you verified it against `node_modules/@myst
 
 All modern `@mysten/*` packages, including:
 - `@mysten/sui` — core SDK
-- `@mysten/dapp-kit` — React wallet integration
+- `@mysten/dapp-kit-react` — React wallet integration (`@mysten/dapp-kit-core` for non-React)
 - `@mysten/kiosk`
 - `@mysten/suins`
 - `@mysten/deepbook-v3`
