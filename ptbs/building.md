@@ -11,7 +11,10 @@ import { Transaction, Inputs } from '@mysten/sui/transactions';
 import { SuiGrpcClient } from '@mysten/sui/grpc';
 
 const tx = new Transaction();
-const client = new SuiGrpcClient({ network: 'mainnet' });
+const client = new SuiGrpcClient({
+  network: 'mainnet',
+  baseUrl: 'https://fullnode.mainnet.sui.io:443',
+});
 ```
 
 ## Inputs
