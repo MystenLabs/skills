@@ -8,10 +8,10 @@ Source: https://docs.sui.io/develop/transactions/ptbs/building-ptb · https://sd
 
 ```ts
 import { Transaction, Inputs } from '@mysten/sui/transactions';
-import { SuiClient, getFullnodeUrl } from '@mysten/sui/client';
+import { SuiGrpcClient } from '@mysten/sui/grpc';
 
 const tx = new Transaction();
-const client = new SuiClient({ url: getFullnodeUrl('mainnet') });
+const client = new SuiGrpcClient({ network: 'mainnet' });
 ```
 
 ## Inputs

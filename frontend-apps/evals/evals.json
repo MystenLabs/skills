@@ -51,14 +51,14 @@
       "https://sdk.mystenlabs.com/dapp-kit/getting-started/react",
       "https://sdk.mystenlabs.com/sui"
     ],
-    "expected_output": "A React component using useCurrentClient + useCurrentAccount + useInfiniteQuery from @tanstack/react-query. queryFn calls client.core.listOwnedObjects with owner, cursor from pageParam, and type filter. getNextPageParam returns lastPage.nextCursor when hasNextPage. Uses enabled: !!account. Flattens pages to render. Load more button calls fetchNextPage.",
+    "expected_output": "A React component using useCurrentClient + useCurrentAccount + useInfiniteQuery from @tanstack/react-query. queryFn calls client.core.listOwnedObjects with owner, cursor from pageParam, and type filter. getNextPageParam returns lastPage.cursor when non-null, undefined otherwise (the v2 API uses a single nullable cursor field, not nextCursor/hasNextPage). Uses enabled: !!account. Flattens pages to render. Load more button calls fetchNextPage.",
     "expectations": [
       "Uses useInfiniteQuery from @tanstack/react-query (NOT useSuiClientInfiniteQuery which is removed)",
       "Uses useCurrentClient (NOT useSuiClient)",
       "Calls client.core.listOwnedObjects (v2 Core API), NOT client.getOwnedObjects",
       "Passes the type filter to listOwnedObjects",
       "Uses cursor / pageParam pattern with initialPageParam and getNextPageParam",
-      "getNextPageParam returns lastPage.nextCursor when hasNextPage is true, undefined otherwise",
+      "getNextPageParam returns lastPage.cursor when non-null, undefined otherwise (v2 uses a single nullable cursor, not nextCursor/hasNextPage)",
       "enabled: !!account guards the query until wallet is connected",
       "Flattens data.pages to render the full list",
       "Load more button calls fetchNextPage and disables when isFetchingNextPage"
