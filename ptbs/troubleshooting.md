@@ -21,15 +21,15 @@ Source: https://docs.sui.io/develop/testing-debugging/common-errors · https://d
 
 ## `"Failed to sign transaction by a quorum of validators because one or more of its objects is reserved for another transaction."`
 
-**Cause:** the object is locked by a competing in-flight transaction.
+**Cause:** another inflight transaction is already using an object version your transaction also needs. If enough validators have already reserved that object version for a different transaction, your transaction cannot also reserve it.
 
-**Fix:** wait for the other tx to finalize. If you submitted both, you're about to equivocate — stop the second submission. See `equivocation.md`.
+**Fix:** wait for the first transaction to finish, then rebuild or re-sign your transaction so it uses the latest object references. For related operations, combine them into one PTB. For parallel execution, use SDK helpers (`SerialTransactionExecutor`, `ParallelTransactionExecutor`) that manage gas coins and object dependencies.
 
 ## `"Failed to sign transaction … objects is equivocated until the next epoch."`
 
-**Cause:** two conflicting transactions already signed by different validator groups. Object is locked until epoch end.
+**Cause:** competing transactions used the same mutable owned object version and validator reservations were split so that no transaction could obtain quorum. The affected object version is unavailable until the next epoch.
 
-**Fix:** no in-epoch recovery. Use `sui-tool locked-object --rescue` if less than a majority locked it; otherwise wait (~24h on mainnet). Then prevent recurrence — see `equivocation.md`.
+**Fix:** wait for the next epoch (~24h on mainnet), then rebuild the transaction using current object references. Avoid submitting multiple concurrent transactions that use the same mutable owned object version. Use independent owned objects for parallel work, combine related operations into one PTB, or use SDK helpers that manage gas coins and object dependencies.
 
 ## `"No valid gas coins found for the transaction."`
 

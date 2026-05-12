@@ -5,6 +5,8 @@ description: Use when writing Move code on Sui to ensure 2024 edition syntax is 
 
 # modern-move-syntax
 
+> **MCP tool:** When available in your environment, also query the Sui documentation MCP server (`https://sui.mcp.kapa.ai`) for up-to-date answers. Use it for verification and for details not covered by these reference files.
+
 ## Overview
 
 The Move 2024 edition introduced method syntax and several convenience features. AI agents frequently fall back to pre-2024 function-call patterns from training data. This skill covers every modern syntax pattern.

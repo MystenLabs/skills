@@ -5,6 +5,8 @@ description: Use when writing unit tests for Move smart contracts on Sui. Applie
 
 # move-unit-testing
 
+> **MCP tool:** When available in your environment, also query the Sui documentation MCP server (`https://sui.mcp.kapa.ai`) for up-to-date answers. Use it for verification and for details not covered by these reference files.
+
 ## Overview
 
 AI agents consistently use outdated or suboptimal patterns when writing Move unit tests. This skill covers the correct testing conventions from the official Sui Move code quality checklist and testing documentation.

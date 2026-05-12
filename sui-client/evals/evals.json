@@ -41,23 +41,22 @@
         "The response explains that the error means the address has no SUI coin objects with sufficient balance for gas",
         "The response suggests checking balance with sui client balance or sui client gas",
         "The response suggests getting tokens from the faucet if the balance is zero",
-        "The response mentions that if the user has many small coin objects, they may need to merge them",
+        "The response mentions that if the user has many small coin objects, they may need to merge them using sui client ptb",
         "The response does not suggest unrelated fixes like changing code or redeploying"
       ],
       "sources": ["https://docs.sui.io/getting-started/onboarding/get-coins"]
     },
     {
       "id": 4,
-      "prompt": "Never sign two concurrent transactions that touch the same owned object — I keep hearing this. What happens if I do? How do I avoid it?",
-      "expected_output": "An explanation of equivocation, object locking until epoch end, and strategies to avoid it.",
+      "prompt": "How do I merge coins and transfer SUI from the CLI?",
+      "expected_output": "Examples using sui client ptb for coin merging and transfers, not legacy helpers.",
       "expectations": [
-        "The response explains that signing two concurrent transactions on the same owned object causes equivocation",
-        "The response explains that equivocation locks the object until the current epoch ends (approximately 24 hours on Mainnet)",
-        "The response recommends using independent objects for concurrent operations or waiting for transaction completion before submitting the next",
-        "The response mentions that this applies to owned objects specifically, not shared objects",
-        "The response does not downplay the severity — this is a real foot-gun that can lock assets for hours"
+        "The response uses sui client ptb --merge-coins for merging, not sui client merge-coin",
+        "The response uses sui client ptb --split-coins and --transfer-objects for transfers, not sui client transfer",
+        "The response explains that sui client ptb is the preferred CLI method for all transaction operations",
+        "The response mentions that legacy single-purpose commands may be deprecated"
       ],
-      "sources": ["https://docs.sui.io/getting-started/dev-cheat-sheet"]
+      "sources": ["https://docs.sui.io/references/cli/client"]
     }
   ]
 }

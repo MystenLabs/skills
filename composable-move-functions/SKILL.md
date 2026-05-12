@@ -5,6 +5,8 @@ description: Use when writing Move functions on Sui, especially public APIs. App
 
 # composable-move-functions
 
+> **MCP tool:** When available in your environment, also query the Sui documentation MCP server (`https://sui.mcp.kapa.ai`) for up-to-date answers. Use it for verification and for details not covered by these reference files.
+
 ## Overview
 
 Sui transactions can chain multiple function calls in a single Programmable Transaction Block (PTB). Functions that transfer objects internally instead of returning them break this composability. This skill covers how to design functions that work well in PTBs.

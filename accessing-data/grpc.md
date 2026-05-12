@@ -16,8 +16,9 @@ From the docs: *"gRPC has built-in support for code generation, allowing you to 
 
 ## When not to use
 
-- Multi-entity joins / historical filtered queries. → Use GraphQL RPC.
+- Multi-entity joins / historical filtered queries / filtered pagination over historical transactions and events. → Use GraphQL RPC.
 - App-specific analytics over millions of events. → Use a custom indexer.
+- Historical data beyond full-node retention. → gRPC full nodes do **not** fall back to the Archival Store. Use GraphQL RPC (which can route to archival when the operator configures it), or query the Archival Service gRPC endpoint directly (e.g., `archive.mainnet.sui.io:443`). The Archival Service exposes the same `LedgerService` API, so you can reuse your gRPC client — just change the endpoint URL.
 
 ## Endpoint URLs
 

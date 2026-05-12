@@ -174,7 +174,7 @@ transfers.forEach((t, i) => {
 });
 ```
 
-One PTB replaces N transactions — cheaper, atomic, equivocation-free.
+One PTB replaces N transactions — cheaper and atomic.
 
 ## Building, serializing, rehydrating
 
@@ -240,7 +240,7 @@ sendBackToUser(sponsorSigned);
 // User signs (over the same TransactionData, including GasData) and submits.
 ```
 
-Both parties sign over the **entire TransactionData** including `GasData`. Signing only parts lets a malicious full node substitute gas data. See `equivocation.md` for how to defend the gas station against client equivocation.
+Both parties sign over the **entire TransactionData** including `GasData`. Signing only parts lets a malicious full node substitute gas data.
 
 ## Signing & executing
 

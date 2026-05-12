@@ -38,6 +38,8 @@ let val: V = dynamic_field::remove(&mut parent.id, name);
 let exists: bool = dynamic_field::exists_(&parent.id, name);
 ```
 
+Use plain function calls (`dynamic_field::add`, `table::add`, etc.) instead of receiver syntax for dynamic field and collection operations.
+
 Replace `dynamic_field` with `dynamic_object_field` for object fields. The API is identical.
 
 Accessing a nonexistent field aborts the transaction. Adding a field with a name that already exists (same name and type) also aborts.

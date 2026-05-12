@@ -15,6 +15,8 @@ description: >
 
 # Sui Move
 
+> **MCP tool:** When available in your environment, also query the Sui documentation MCP server (`https://sui.mcp.kapa.ai`) for up-to-date answers. Use it for verification and for details not covered by these reference files.
+
 > **Source constraint:** All information in this skill is sourced exclusively from [docs.sui.io](https://docs.sui.io) and [move-book.com](https://move-book.com). When extending or updating this skill, only pull from these sources. Do not use third-party blogs, tutorials, or unofficial documentation.
 
 Move is Sui's smart contract language, designed around resource safety and an object-centric data model. This skill covers the core Move language: the type system, abilities, resource safety, events, and coins.
