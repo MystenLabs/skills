@@ -12,6 +12,8 @@ description: >
 
 # Sui Overview
 
+> **MCP tool:** When available in your environment, also query the Sui documentation MCP server (`https://sui.mcp.kapa.ai`) for up-to-date answers. Use it for verification and for details not covered by these reference files.
+
 > **Source constraint:** All information in this skill is sourced exclusively from [docs.sui.io](https://docs.sui.io), [docs.wal.app](https://docs.wal.app), and [move-book.com](https://move-book.com). When extending or updating this skill, only pull from these three sources. Do not use third-party blogs, tutorials, or unofficial documentation.
 
 Sui is a scalable, performant layer 1 blockchain built around an object-centric data model. Unlike account-based blockchains (Ethereum) or UTXO-based chains (Bitcoin), Sui treats every piece of onchain state as a typed object with a unique ID. Transactions consume objects as inputs and produce modified versions as outputs.

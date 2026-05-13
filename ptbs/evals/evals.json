@@ -24,11 +24,10 @@
       "https://docs.sui.io/develop/transactions/ptbs/building-ptb",
       "https://docs.sui.io/concepts/sui-architecture/epochs"
     ],
-    "expected_output": "Recommendation to use a single PTB containing 400 splitCoins + transferObjects pairs against tx.gas, since a PTB supports up to 1024 commands and batching prevents equivocation risk inherent in submitting 400 separate transactions. Includes example code using tx.splitCoins(tx.gas, amounts.map(...)) and a loop calling tx.transferObjects per recipient.",
+    "expected_output": "Recommendation to use a single PTB containing 400 splitCoins + transferObjects pairs against tx.gas, since a PTB supports up to 1024 commands and batching is cheaper and atomic compared to submitting 400 separate transactions. Includes example code using tx.splitCoins(tx.gas, amounts.map(...)) and a loop calling tx.transferObjects per recipient.",
     "expectations": [
       "Recommends a single PTB over 400 individual transactions",
       "Mentions the 1024-command PTB limit (not 400 or some other incorrect number)",
-      "Mentions that batching avoids equivocation risk on the gas coin",
       "Example code uses tx.splitCoins(tx.gas, …) — not fetching a separate Coin<SUI>",
       "Example iterates over recipients using an index into the splitCoins result (e.g., coins[i])",
       "Does NOT suggest using transfer::transfer — uses tx.transferObjects"
@@ -51,23 +50,6 @@
     ]
   },
   {
-    "id": "ptbs-equivocation-backend",
-    "prompt": "I'm building a backend service that processes incoming webhook events and, for each event, submits a Sui transaction that updates a shared counter object and pays a small reward in SUI from a service-owned address. Requests come in concurrently. What do I need to watch out for and how should I structure the submission?",
-    "sources": [
-      "https://docs.sui.io/concepts/sui-architecture/epochs",
-      "https://docs.sui.io/develop/sui-architecture/epochs",
-      "https://sdk.mystenlabs.com/typescript/executors"
-    ],
-    "expected_output": "Explanation of equivocation risk on the service's gas coin when concurrent requests sign against the same owned-object version. Recommends either (a) SerialTransactionExecutor from @mysten/sui/transactions if throughput allows, or (b) ParallelTransactionExecutor with a gas coin pool for higher throughput. Notes that the shared counter is not itself the equivocation risk (shared objects are consensus-ordered) — the owned gas coin is.",
-    "expectations": [
-      "Identifies the gas coin (or any owned object) as the equivocation risk, not the shared counter",
-      "Correctly explains that shared objects are not subject to client equivocation because consensus orders them",
-      "Recommends SerialTransactionExecutor or ParallelTransactionExecutor from @mysten/sui — not a naive mutex around client.signAndExecuteTransaction (or if mentioning a mutex, still recommends the executor as the real fix)",
-      "Mentions that equivocation locks the object until the end of the current epoch (~24h on mainnet)",
-      "Does NOT recommend retrying failed txs without refreshing gas coin state — that compounds the problem"
-    ]
-  },
-  {
     "id": "ptbs-sponsored-transaction-flow",
     "prompt": "Explain how to build a sponsored transaction where my app constructs the PTB, a sponsor service pays the gas, and the user signs as sender. Show the code on all three sides.",
     "sources": [
@@ -81,8 +63,7 @@
       "Sponsor side uses Transaction.fromKind — NOT Transaction.from",
       "Sponsor sets setSender, setGasOwner, and setGasPayment",
       "Mentions both signatures must cover the full TransactionData including GasData",
-      "Recommends user (or either party) submits directly to a full node, not via the sponsor, to avoid censorship",
-      "Flags client-equivocation risk on the gas station's coin and recommends per-user gas coin isolation"
+      "Recommends user (or either party) submits directly to a full node, not via the sponsor, to avoid censorship"
     ]
   },
   {

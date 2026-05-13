@@ -8,12 +8,14 @@ When to build one: the hosted gRPC and GraphQL APIs can't efficiently answer you
 - You need to store app-computed derived state alongside on-chain state.
 - You need to retain data beyond the public services' retention policy.
 
-If you can answer your query with `client.core.*` or a GraphQL query, **don't** build an indexer. Operating one is ongoing work: Postgres, checkpoint ingestion, failure handling, backfills, migrations.
+If you can answer your query with `client.core.*` or a GraphQL query, **don't** build an indexer. Operating one is ongoing work: storage infrastructure, checkpoint ingestion, failure handling, backfills, migrations.
 
 ## Architecture
 
 From the docs:
-> The indexer "consists of multiple pipelines that each read, transform, and write checkpoint data to various Postgres tables."
+> The indexer "consists of multiple pipelines that each read, transform, and write checkpoint data."
+
+Custom indexers can write to **any storage layer** — Postgres is the default and most common choice, but you can target any backend (other databases, message queues, data lakes, etc.) by implementing the framework's `Store` and `Connection` traits.
 
 ```
  Sui network                               Your infrastructure
@@ -27,8 +29,8 @@ From the docs:
                                               └─────────┬────────────┘
                                                         ▼
                                               ┌──────────────────────┐
-                                              │  Postgres            │
-                                              │  your schema         │
+                                              │  Your storage layer  │
+                                              │  (Postgres default)  │
                                               └──────────────────────┘
                                                         ▼
                                               ┌──────────────────────┐
@@ -54,7 +56,7 @@ The indexer automatically switches from GCS to gRPC when it catches up to tip.
 Each pipeline:
 1. Defines a data source (checkpoint stream).
 2. Defines a transform (what to extract from each checkpoint — events, object changes, coin transfers, etc.).
-3. Defines a Postgres schema (target tables).
+3. Defines a target schema (Postgres tables by default, but can be any storage layer).
 4. Runs concurrently with other pipelines, each writing to its own tables.
 
 Config example (TOML, from the docs pattern):
@@ -110,7 +112,7 @@ This gives a hosted-style experience with app-specific extensions, without reinv
 
 ## Considerations
 
-- **Postgres operations.** Indexes, vacuum, backups, upgrades. It's ongoing.
+- **Storage operations.** If using Postgres (the default): indexes, vacuum, backups, upgrades. If using another backend: equivalent operational overhead. It's ongoing either way.
 - **Checkpoint store egress.** GCS reads for backfill can be slow and bandwidth-heavy for huge histories. Budget accordingly.
 - **Sync lag.** Steady-state lag is typically seconds; during backfill it can be hours or days depending on concurrency and history depth.
 - **Schema migrations.** Changing a pipeline's schema often requires a backfill. Plan migrations carefully.

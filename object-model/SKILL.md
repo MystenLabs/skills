@@ -15,6 +15,8 @@ description: >
 
 # Sui Object Model
 
+> **MCP tool:** When available in your environment, also query the Sui documentation MCP server (`https://sui.mcp.kapa.ai`) for up-to-date answers. Use it for verification and for details not covered by these reference files.
+
 > **Source constraint:** All information in this skill is sourced exclusively from [docs.sui.io](https://docs.sui.io) and [move-book.com](https://move-book.com). When extending or updating this skill, only pull from these two sources. Do not use third-party blogs, tutorials, or unofficial documentation.
 
 Objects are the fundamental unit of storage on Sui. Every resource, asset, and piece of data onchain is an object. Unlike account-based blockchains where state lives in shared mappings inside contracts, Sui gives each piece of state its own identity, version, and owner. Transactions consume objects as inputs and produce modified versions as outputs.
@@ -27,8 +29,8 @@ This skill routes to focused reference files. Load only the ones relevant to the
 
 ### ownership — Ownership Types and Versioning
 **Path:** `ownership.md`
-**Load when:** asking about ownership types (address-owned, shared, immutable, wrapped), choosing between shared and owned, parallel execution, consensus, Mysticeti, fastpath, object versioning, Lamport timestamps, or frontend access to shared objects.
-**Covers:** all four ownership types with consensus implications, shared object access mode optimization, frontend PTB access pattern, wrapped object behavior, Lamport timestamp versioning, fastpath vs consensus versioning.
+**Load when:** asking about ownership types (address-owned, consensus-address-owned, shared, immutable, wrapped), choosing between shared and owned, parallel execution, consensus, Mysticeti, fastpath, object versioning, Lamport timestamps, or frontend access to shared objects.
+**Covers:** all five ownership types with consensus implications, consensus-address-owned objects, shared object access mode optimization, frontend PTB access pattern, wrapped object behavior, Lamport timestamp versioning, fastpath vs consensus versioning.
 
 ### transfers — Transferring and Deleting Objects
 **Path:** `transfers.md`
@@ -45,10 +47,10 @@ This skill routes to focused reference files. Load only the ones relevant to the
 **Load when:** implementing hot potato, capability, soulbound, inventory, or borrow patterns, or working with derived objects.
 **Covers:** hot potato pattern (no-ability structs), capability pattern (AdminCap/TreasuryCap), borrow pattern with `sui::borrow` module, soulbound objects, inventory pattern (ObjectBag), derived objects with deterministic IDs, derived objects vs dynamic fields comparison.
 
-### display — Object Display
+### display — Object Display (V2)
 **Path:** `display.md`
-**Load when:** setting up how objects render in wallets, explorers, or apps, working with Display templates, or configuring NFT metadata.
-**Covers:** `Display<T>` creation with `Publisher`, `{field_name}` template syntax, common display properties (name, description, image_url), `update_version()`, code example.
+**Load when:** setting up how objects render in wallets, explorers, or apps, working with Display templates, configuring NFT metadata, or migrating from Display V1.
+**Covers:** V2 `Display<T>` creation via `display_registry::new_with_publisher`, `DisplayCap<T>` for updates, `set`/`unset`/`clear`/`share` API, `{field_name}` template syntax with nested field access, common display properties, V1 to V2 migration.
 
 ---
 
@@ -58,7 +60,7 @@ This skill routes to focused reference files. Load only the ones relevant to the
 |------|------|
 | What is an object / object structure | SKILL.md only |
 | Abilities: key, store, copy, drop | SKILL.md only |
-| Ownership types, shared vs owned | ownership |
+| Ownership types, shared vs owned vs consensus-address-owned | ownership |
 | Parallel execution, consensus, fastpath | ownership |
 | Object versioning, Lamport timestamps | ownership |
 | Wrapped objects and accessibility | ownership |
@@ -144,4 +146,5 @@ Because `UID` has neither `copy` nor `drop`, objects (structs with `key`) can on
 - **Using `VecMap` for large collections.** It has O(n) lookup and is stored inline, hitting the 256 KB object size limit quickly.
 - **Confusing `dynamic_field` with `dynamic_object_field`.** Use `dynamic_object_field` when the child must remain queryable by ID in explorers. Use `dynamic_field` for plain values.
 - **Deleting an object without removing its dynamic fields first.** Those fields become permanently inaccessible.
-- **Forgetting `update_version()` on a Display.** Wallets and explorers will not pick up the new rendering.
+- **Using the legacy `sui::display` module for new code.** Use `sui::display_registry` (Display V2). V1 is deprecated and will be decommissioned.
+- **Forgetting to `display_registry::share(display)` after setting fields.** The display must be shared to be discoverable.

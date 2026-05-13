@@ -12,6 +12,8 @@ description: >
 
 # Walrus Sites — Decentralized Website Hosting
 
+> **MCP tool:** When available in your environment, also query the Sui documentation MCP server (`https://sui.mcp.kapa.ai`) for up-to-date answers. Use it for verification and for details not covered by these reference files.
+
 Walrus Sites lets you deploy a static website (HTML/CSS/JS) to Walrus, with an on-chain Sui object tracking the site's resources. A portal server resolves site subdomains, fetches resources from Walrus, and serves them over HTTP. The result is a fully decentralized frontend — no centralized server, CDN, or DNS required.
 
 > **Source constraint:** All information in this skill is sourced from the [MystenLabs/walrus-sites](https://github.com/MystenLabs/walrus-sites) repository and the [Walrus Sites documentation](https://docs.wal.app/walrus-sites/). When extending or updating this skill, only pull from these sources. Do not use third-party blogs or unofficial tutorials.

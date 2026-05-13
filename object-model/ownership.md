@@ -1,6 +1,6 @@
 # Ownership Types and Versioning
 
-Every object on Sui has exactly one of four ownership types. The ownership type determines who can use the object, whether it goes through consensus, and how it behaves in transactions.
+Every object on Sui has one of five ownership types. The ownership type determines who can use the object, whether it goes through consensus, and how it behaves in transactions.
 
 ## Address-owned objects
 
@@ -9,6 +9,22 @@ Owned by a specific 32-byte address. Only that address can use the object as a t
 Address-owned objects skip consensus entirely (fastpath). This gives them the lowest latency and highest throughput. Most transactions on Sui (transfers, personal asset management, single-player game moves) touch only owned objects and execute in parallel.
 
 The tradeoff: only one address can use the object. If multiple users need access, use a shared object instead.
+
+## Consensus-address-owned objects (party objects)
+
+A hybrid between address-owned and shared objects. A consensus-address-owned object is owned by a single address but sequenced and versioned through consensus instead of the fastpath. APIs expose this ownership with a `ConsensusAddressOwner` owner variant.
+
+Party objects are the public Move-facing way to create this ownership form. They are created using `sui::transfer::party_transfer` or `sui::transfer::public_party_transfer`, and use the `sui::party::Party` type (currently restricted to `party::single_owner` for single-address ownership).
+
+Key differences from address-owned:
+- **Multiple inflight transactions.** Unlike address-owned objects, which only allow a single inflight transaction per object version, party objects can be used by multiple inflight transactions at the same time. This makes them useful for pipelining multiple transactions against the same object.
+- **Consensus sequencing.** Transactions are ordered through consensus, not the fastpath. This adds latency compared to address-owned objects.
+
+Key differences from shared objects:
+- **Single-address ownership.** Only the owning address can use the object — unlike shared objects which are accessible to anyone.
+- **Can be transferred and wrapped.** Party objects can be transferred to and from other ownership types and wrapped inside other objects. Shared objects cannot.
+
+Use party objects when you want single-owner access control with consensus sequencing, for example to allow multiple inflight transactions against the same logical object without fastpath version locking. If an object is only used with other party or shared objects, converting it to a party object has no additional performance cost.
 
 ## Shared objects
 
@@ -46,7 +62,7 @@ Only the most recent version is accessible to active transactions. Historical ve
 
 ### Versioning and ownership
 
-- **Fastpath (owned/immutable) objects:** Version is updated without consensus. Lowest latency. The transaction must lock the exact current version as input.
-- **Consensus (shared) objects:** Version is updated through consensus ordering. Adds latency but enables multi-party access without offchain coordination.
+- **Fastpath (owned/immutable) objects:** Version is updated without consensus. Lowest latency. The transaction must use the exact current version as input. Coordinate offchain access or use a consensus object instead if frequent concurrent use is needed.
+- **Consensus (shared/party) objects:** Version is updated through consensus ordering. Adds latency but enables concurrent access without version locking issues.
 - **Wrapped objects:** Version increments when the parent is modified, maintaining unique (ID, version) pairs. While wrapped, the object is not directly accessible by version.
 - **Dynamic fields:** Version increments when the field is modified, following Lamport timestamps like regular objects.

@@ -14,6 +14,8 @@ description: >
 
 # Sui Frontend / dApp Kit
 
+> **MCP tool:** When available in your environment, also query the Sui documentation MCP server (`https://sui.mcp.kapa.ai`) for up-to-date answers. Use it for verification and for details not covered by these reference files.
+
 Browser Sui apps fail for a consistent set of reasons:
 
 1. **Wrong package.** `@mysten/dapp-kit` (no suffix) is the legacy JSON-RPC-only package — **deprecated**. New code uses `@mysten/dapp-kit-react` or `@mysten/dapp-kit-core`.

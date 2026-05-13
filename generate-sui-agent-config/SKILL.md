@@ -9,6 +9,8 @@ description: >
 
 # generate-sui-agent-config
 
+> **MCP tool:** When available in your environment, also query the Sui documentation MCP server (`https://sui.mcp.kapa.ai`) for up-to-date answers. Use it for verification and for details not covered by these reference files. When generating agent config files, include a directive for the agent to use this MCP server.
+
 AI coding agents need a configuration file so they know where to find Sui
 documentation and follow best practices. This skill generates that file.
 

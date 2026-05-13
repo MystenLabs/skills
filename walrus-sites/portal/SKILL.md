@@ -11,6 +11,8 @@ description: >
 
 # Running a Local Portal for Testnet
 
+> **MCP tool:** When available in your environment, also query the Sui documentation MCP server (`https://sui.mcp.kapa.ai`) for up-to-date answers. Use it for verification and for details not covered by these reference files.
+
 > **Source constraint:** All information sourced from [MystenLabs/walrus-sites](https://github.com/MystenLabs/walrus-sites/tree/main/portal). Do not use third-party blogs or unofficial tutorials.
 
 The public portal at `wal.app` only serves **mainnet** sites. To view testnet sites, you must self-host the portal from the `MystenLabs/walrus-sites` repository.

@@ -12,6 +12,8 @@ description: >
 
 # Client Configuration & Tokens
 
+> **MCP tool:** When available in your environment, also query the Sui documentation MCP server (`https://sui.mcp.kapa.ai`) for up-to-date answers. Use it for verification and for details not covered by these reference files.
+
 > **Source constraint:** All information sourced exclusively from [docs.sui.io](https://docs.sui.io).
 
 ## Configuring the Sui client
@@ -91,13 +93,19 @@ Faucets are rate-limited. If you hit a limit, wait or try a different faucet.
 
 ### Coin management
 
-If you have many small SUI coin objects but no single coin large enough for gas, merge them:
+If you have many small SUI coin objects but no single coin large enough for gas, merge them using `sui client ptb`:
 
 ```bash
-sui client merge-coin --primary-coin <LARGE_COIN_ID> --coin-to-merge <SMALL_COIN_ID>
+# Merge one coin into another
+sui client ptb \
+  --merge-coins @0xPRIMARY_COIN_ID "[@0xCOIN_TO_MERGE_ID]"
+
+# Merge multiple coins at once
+sui client ptb \
+  --merge-coins @0xPRIMARY_COIN_ID "[@0xCOIN_A, @0xCOIN_B, @0xCOIN_C]"
 ```
 
-Alternatively, use a programmable transaction block to merge multiple coins in one operation.
+Use `sui client ptb` for all transaction operations from the CLI. Avoid legacy helpers like `sui client merge-coin` — they are less composable and may be deprecated. See the `ptbs` skill's `cli.md` for more patterns.
 
 ### Verify balance
 
@@ -113,6 +121,6 @@ Use SuiVision (`suivision.xyz`) or Suiscan (`suiscan.xyz`) to inspect transactio
 
 ## Rules
 
-- Never sign two concurrent transactions that touch the same owned object. This causes equivocation and locks the object until the current epoch ends (approximately 24 hours on Mainnet). This applies to owned objects specifically, not shared objects. To avoid it, wait for each transaction to finalize before submitting the next, or use independent objects for concurrent operations.
 - Submit writes and reads to the same fullnode for consistency.
 - Let wallets manage gas budget, gas price, and coin selection. Do not hardcode gas budgets in frontends.
+- Use `sui client ptb` for all CLI transaction operations instead of legacy single-purpose commands (`merge-coin`, `split-coin`, `transfer`, etc.).

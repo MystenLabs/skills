@@ -2,9 +2,9 @@
 
 Source: https://docs.sui.io/concepts/data-access/graphql-rpc
 
-**Beta.** Official notice: *"Beta release of GraphQL RPC Server and General-purpose Indexer."* Expect occasional API churn.
+**Generally available.** GraphQL RPC is production-ready with no expectation of breaking schema changes.
 
-Reads from three backing stores:
+Reads from three backing stores and also supports transaction submission and dry-run:
 1. The **General-Purpose Indexer**'s Postgres (primary source — indexed, filterable).
 2. A **full node** (live tip-of-chain reads the indexer hasn't caught up to).
 3. The **Archival Store** (historical data pruned from full nodes).
@@ -28,8 +28,7 @@ Typical fit:
 
 ## When not to use
 
-- Real-time / streaming. → gRPC.
-- Transaction submission. → gRPC (`transactionExecutionService`).
+- Real-time / streaming subscriptions. → gRPC (GraphQL does not support subscriptions yet; this will change in the coming months).
 - Ultra-low-latency trading. → gRPC.
 - App-specific analytics over millions of rows. → Custom indexer (`sui-indexer-alt`).
 
@@ -41,7 +40,7 @@ Typical fit:
 | Testnet | `https://graphql.testnet.sui.io/graphql` |
 | Devnet | `https://graphql.devnet.sui.io/graphql` |
 
-Verify current URLs at the source page — beta endpoints occasionally move.
+The public endpoints are rate-limited and provided as a public good. Production apps should use a provider endpoint or operate their own GraphQL stack.
 
 ## TypeScript — `SuiGraphQLClient`
 
@@ -141,7 +140,7 @@ One round trip, three related entity types.
 query { object(address: "0x...", version: 42) { ... } }
 ```
 
-For versions that full nodes have pruned, the server falls back to the Archival Store automatically.
+For versions that full nodes have pruned, the server routes to the Archival Store when the GraphQL operator has configured it.
 
 ## Pagination — cursor-based
 
@@ -163,11 +162,53 @@ do {
 } while (cursor);
 ```
 
-## Beta caveats
+## Transaction execution
 
-- Schema may change. Pin your client to a specific `@mysten/sui` version and check release notes when upgrading.
-- Some query shapes supported on gRPC are still being backported to GraphQL.
+GraphQL is not read-only. Use `Mutation.executeTransaction` to submit transactions and `Query.simulateTransaction` to preview effects without committing.
+
+### Execute a transaction
+
+```graphql
+mutation ($tx: String!, $sigs: [String!]!) {
+  executeTransaction(txBytes: $tx, signatures: $sigs) {
+    effects {
+      status
+      checkpoint { sequenceNumber }
+    }
+  }
+}
+```
+
+Select fields from `effects` in the same mutation to read execution results immediately without waiting for a separate indexed query.
+
+### Simulate a transaction
+
+```graphql
+query ($tx: JSON!) {
+  simulateTransaction(transaction: $tx, checksEnabled: true, doGasSelection: true) {
+    effects {
+      status
+      gasEffects { gasSummary { computationCost storageCost } }
+    }
+  }
+}
+```
+
+## Read-after-write consistency
+
+Queries nested under `executeTransaction` or `simulateTransaction` are evaluated in a special scope that exists just after the executed/simulated transaction, without requiring indexing. This means **execution-attached or simulation-attached queries can often provide consistent read-after-write results immediately**, as long as the requested fields do not require indexed history.
+
+If you only need data returned by transaction effects, prefer selecting it in the same GraphQL request instead of submitting the transaction and then waiting for a separately indexed follow-up query.
+
+Limitations in execution-attached scope:
+- Live object set queries are not available (they rely on indexed data).
+- Queries that paginate through history are not available (the system cannot determine where in the history the transaction falls before indexing).
+
+## Operational notes
+
 - Rate limits on public endpoints can be tight. Run your own General-Purpose Indexer for production-scale traffic.
+- GraphQL currently supports filtered pagination over historical transactions and events that gRPC does not yet offer.
+- Archival routing is operator-configured: the GraphQL service routes supported historical point lookups to Archival when the operator has set it up. Without archival configuration, retention is limited to the Postgres database's retention policy.
 
 ## Relationship to the indexer
 
@@ -178,9 +219,7 @@ GraphQL RPC doesn't exist without the General-Purpose Indexer. If you need a que
 
 ## Common mistakes
 
-- **Using GraphQL RPC for tx submission.** It's read-only. Submit via gRPC (`transactionExecutionService`).
-- **Using it for real-time.** GraphQL doesn't push. Use gRPC subscriptions.
+- **Using it for real-time subscriptions.** GraphQL doesn't push (yet). Use gRPC subscriptions for streaming.
 - **Importing from `@mysten/sui/graphql/schemas/latest`** — v1. v2 is `@mysten/sui/graphql/schema`.
 - **Treating pagination as offset-based.** GraphQL uses cursors. Don't pass integer offsets.
 - **Over-fetching by selecting every field.** GraphQL's whole point is "ask for only what you need." Trim queries to the fields actually used.
-- **Building production-critical flows on a beta endpoint without a fallback plan.** Have a migration path to gRPC or a custom indexer.

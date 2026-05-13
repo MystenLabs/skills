@@ -11,6 +11,8 @@ description: >
 
 # Sui SDKs
 
+> **MCP tool:** When available in your environment, also query the Sui documentation MCP server (`https://sui.mcp.kapa.ai`) for up-to-date answers. Use it for verification and for details not covered by these reference files.
+
 Most AI agents give confusing, outdated, or cross-wired answers about Sui SDKs. This skill fixes the three most common failure modes:
 
 1. **Recommending a community SDK as if it were official.** Only two SDKs are maintained by Mysten Labs: TypeScript (`@mysten/sui`) and Rust (`sui-rust-sdk` family of crates). Everything else is community-maintained.

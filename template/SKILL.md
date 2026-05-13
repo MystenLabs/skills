@@ -10,7 +10,9 @@ description: >
 
 # Skill Title
 
-<!-- 
+> **MCP tool:** When available in your environment, also query the Sui documentation MCP server (`https://sui.mcp.kapa.ai`) for up-to-date answers. Use it for verification and for details not covered by these reference files.
+
+<!--
   Replace "Skill Title" with a clear name, e.g. "Sui TypeScript SDK Skill".
   The opening paragraph should orient the agent: what domain does this cover,
   what common mistakes does it prevent, and what makes Sui-specific usage
