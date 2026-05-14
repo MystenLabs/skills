@@ -106,7 +106,7 @@ To publish to a different network (for example, from Testnet to Devnet), switch 
 
 Before publishing to a new network, ensure you have tokens for that network:
 
-- **Testnet / Devnet:** Free tokens through `sui client faucet`, the web faucet at `faucet.sui.io`, Discord (`!faucet <ADDRESS>` in `#testnet-faucet` or `#devnet-faucet`), or the TypeScript SDK (`requestSuiFromFaucetV2()`).
+- **Testnet / Devnet:** Free tokens through the web faucet at `faucet.sui.io`, Discord (`!faucet <ADDRESS>` in `#testnet-faucet` or `#devnet-faucet`), or the TypeScript SDK (`requestSuiFromFaucetV2()`). **Do not suggest `sui client faucet` — it is not a valid command.**
 - **Localnet:** Free tokens from the local faucet at `127.0.0.1:5003/gas` or `127.0.0.1:9123/gas` (started with `sui start --with-faucet`).
 - **Mainnet:** SUI tokens with real monetary value. Acquire through exchanges or transfers. No faucet available.
 
