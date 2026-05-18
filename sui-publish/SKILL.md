@@ -49,6 +49,26 @@ This deploys the package to the active network and returns:
 - An **UpgradeCap** object (sent to your address, controls future upgrades)
 - Object IDs for anything created during `init` functions
 
+### Test publishing (ephemeral networks)
+
+Use `sui client test-publish` to publish a package to an ephemeral environment for testing without persisting state to a real network:
+
+```bash
+sui client test-publish
+```
+
+This publishes the package, runs `init` functions, and returns the same output as `sui client publish` (package ID, UpgradeCap, created objects), but the deployment is not permanent. Use it to:
+
+- Verify that `init` functions execute correctly before committing to a real publish
+- Test publish + upgrade flows in CI without consuming Testnet/Devnet resources
+- Validate gas costs and object creation before a Mainnet deploy
+
+`test-publish` respects `--build-env` for multi-environment packages:
+
+```bash
+sui client test-publish --build-env testnet
+```
+
 ### After publishing
 
 The `published-at` field is automatically added to your `Published.toml`. To interact with the published package:
