@@ -85,9 +85,24 @@ mainnet = "35834a8a"
 After publishing, the toolchain creates or updates:
 
 - **`Published.toml`:** Tracks your published package addresses per environment. Contains `published-at` and `upgrade-capability-id` values for each network.
-- **`Move.lock`:** Locks resolved dependency versions. Commit this to version control.
+- **`Move.lock`:** Auto-generated lock file that pins every resolved dependency to a specific git revision and records manifest digests. **Do not edit manually.** Commit this to version control.
 
 To publish to a different environment (for example, after publishing to Testnet, now deploying to Devnet), switch environments and publish again. Each network gives the package a separate ID. The `Published.toml` tracks both.
+
+### Inspecting Move.lock
+
+`Move.lock` contains one `[pinned.<env>.<Dependency>]` section per resolved dependency per environment. Each section records the git source, revision, manifest digest, and dependency graph. Example:
+
+```toml
+[pinned.testnet.Sui]
+source = { git = "https://github.com/MystenLabs/sui.git", subdir = "crates/sui-framework/packages/sui-framework", rev = "73dd2c..." }
+use_environment = "testnet"
+manifest_digest = "7AFB6669..."
+deps = { MoveStdlib = "MoveStdlib" }
+```
+
+- If `Move.lock` pins a different environment than you expect, or revisions look outdated, delete `Move.lock` and run `sui move build` to regenerate it.
+- If you see build errors after switching networks or updating the CLI, deleting `Move.lock` and rebuilding often resolves stale-lock issues.
 
 ### Using MVR dependencies
 
@@ -97,7 +112,20 @@ The Move Registry (MVR) is an onchain package manager for Sui. Install it with:
 suiup install mvr
 ```
 
-You can use MVR package names in `Move.toml` dependencies instead of git URLs. This provides versioned, auditable dependencies resolved through the onchain registry.
+Add an MVR dependency using the CLI:
+
+```bash
+mvr add @org/package --network testnet
+```
+
+Or declare it directly in `Move.toml`:
+
+```toml
+[dependencies]
+suins = { r.mvr = "@suins/core" }
+```
+
+The `r.mvr` key tells the resolver to look up the package in the onchain Move Registry instead of fetching from a git URL. Prefer MVR dependencies over git URLs when the package is published to the registry — they are versioned, auditable, and do not depend on git history.
 
 ### Common dependency and build issues
 
