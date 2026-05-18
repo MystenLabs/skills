@@ -160,6 +160,104 @@ fun mint_returns_correct_value() {
 
 **When to use `tx_context::dummy()`:** pure function tests, single-operation tests, anything that just needs a ctx to create objects.
 
+## `test_scenario` for Multi-Transaction and Authorization Tests
+
+Use `test_scenario` when you need to simulate multiple transactions, different senders, shared objects, or test `init` functions. The core API:
+
+| Function | Purpose |
+|---|---|
+| `test_scenario::begin(@addr)` | Start a scenario with `@addr` as the first sender |
+| `scenario.next_tx(@addr)` | Advance to a new transaction with `@addr` as sender |
+| `scenario.take_from_sender<T>()` | Take an owned object sent to the current sender |
+| `scenario.return_to_sender(obj)` | Return an owned object to the current sender |
+| `scenario.take_shared<T>()` | Take a shared object by type |
+| `test_scenario::return_shared(obj)` | Return a shared object |
+| `scenario.has_most_recent_for_sender<T>()` | Check if sender has an object of type `T` |
+| `scenario.end()` | Finalize the scenario (must be called in non-aborting tests) |
+
+### Success test — create and verify
+
+```move
+#[test]
+fun owner_can_update_item() {
+    let owner = @0xA;
+    let mut scenario = test_scenario::begin(owner);
+
+    // Tx 1: create an item (transferred to owner inside create_item)
+    app::create_item(b"sword".to_string(), scenario.ctx());
+
+    // Tx 2: owner takes the item and updates it
+    scenario.next_tx(owner);
+    let mut item = scenario.take_from_sender<Item>();
+    app::set_name(&mut item, b"great sword".to_string());
+    assert_eq!(app::name(&item), b"great sword".to_string());
+    scenario.return_to_sender(item);
+
+    scenario.end();
+}
+```
+
+### Unauthorized caller test
+
+```move
+#[test, expected_failure(abort_code = app::ENotOwner, location = app)]
+fun non_owner_cannot_update_item() {
+    let owner = @0xA;
+    let attacker = @0xB;
+    let mut scenario = test_scenario::begin(owner);
+
+    // Tx 1: owner creates a shared item
+    app::create_shared_item(b"shield".to_string(), scenario.ctx());
+
+    // Tx 2: attacker tries to update it — should abort
+    scenario.next_tx(attacker);
+    let mut item = scenario.take_shared<Item>();
+    app::admin_update(&mut item, b"hacked".to_string(), scenario.ctx());
+    // no cleanup — test aborts above
+}
+```
+
+### Shared object test
+
+```move
+#[test]
+fun shared_counter_increments() {
+    let mut scenario = test_scenario::begin(@0xA);
+
+    // Tx 1: create and share
+    app::create_counter(scenario.ctx());
+
+    // Tx 2: anyone can increment
+    scenario.next_tx(@0xB);
+    let mut counter = scenario.take_shared<Counter>();
+    app::increment(&mut counter);
+    assert_eq!(app::value(&counter), 1);
+    test_scenario::return_shared(counter);
+
+    scenario.end();
+}
+```
+
+### Testing `init` functions
+
+```move
+#[test]
+fun init_creates_admin_cap() {
+    let mut scenario = test_scenario::begin(@0xA);
+
+    // init is called automatically for the first tx in begin()
+    // if the module has an init function — but in tests you call it explicitly:
+    app::init_for_testing(scenario.ctx());
+
+    scenario.next_tx(@0xA);
+    assert!(scenario.has_most_recent_for_sender<AdminCap>());
+
+    scenario.end();
+}
+```
+
+Note: modules typically expose a `init_for_testing` or `test_init` helper since `init` itself is not directly callable in tests. Use `#[test_only]` to gate these helpers.
+
 ## Use `test_utils::destroy` for Cleanup
 
 Use the standard `test_utils::destroy` function to clean up test objects. Do not write custom `destroy_for_testing` functions.
