@@ -84,6 +84,43 @@ const digest = result.Transaction.digest;
 
 Do **not** use v1's `result.effects?.status?.status === 'success'` — that shape is gone.
 
+## Using package IDs in transactions
+
+Import `PACKAGE_IDS` and `ORIGINAL_PACKAGE_IDS` from your setup file (see `setup.md`) and use them with the current network:
+
+```tsx
+import { useCurrentNetwork } from '@mysten/dapp-kit-react';
+import { PACKAGE_IDS, ORIGINAL_PACKAGE_IDS } from './dapp-kit';
+
+function MintButton() {
+  const dAppKit = useDAppKit();
+  const network = useCurrentNetwork();
+
+  async function handleMint() {
+    const packageId = PACKAGE_IDS[network];
+    const tx = new Transaction();
+    tx.moveCall({
+      target: `${packageId}::nft::mint`,
+      arguments: [tx.pure.string('My NFT')],
+    });
+    await dAppKit.signAndExecuteTransaction({ transaction: tx });
+  }
+  // ...
+}
+```
+
+For type-filtered queries after a package upgrade, use `ORIGINAL_PACKAGE_IDS`:
+
+```ts
+const originalId = ORIGINAL_PACKAGE_IDS[network];
+const objects = await client.core.listOwnedObjects({
+  owner: account.address,
+  filter: { StructType: `${originalId}::nft::NFT` },
+});
+```
+
+See `sui-publish` skill → "Type anchoring after upgrades" for why the original ID is needed for type queries.
+
 ## Handing PTBs to the wallet
 
 **Pass the `Transaction` instance directly.** dApp Kit serializes it and forwards to the wallet, which selects gas coins and sets budget via dry-run.

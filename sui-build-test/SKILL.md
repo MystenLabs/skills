@@ -21,6 +21,23 @@ This compiles all modules, validates types, enforces resource safety, and produc
 
 For the canonical hello-world repository, run build commands from `sui-stack-hello-world/move/hello-world`.
 
+### `--build-env` flag
+
+When a package has an `[environments]` section in `Move.toml` with multiple networks, use `--build-env` to target a specific environment:
+
+```bash
+sui move build --build-env testnet
+sui move build --build-env mainnet
+```
+
+This resolves dependencies and package addresses for the specified environment. Without `--build-env`, the build uses the default environment or may fail with "Could not determine the correct dependencies" if multiple environments are defined and no default is set.
+
+The `--build-env` flag also applies to `sui move test`:
+
+```bash
+sui move test --build-env testnet
+```
+
 ### Debugging
 
 - **Move Trace Debugger:** Step-through debugger for Move execution traces with variable inspection.

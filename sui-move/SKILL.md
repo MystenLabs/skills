@@ -29,8 +29,8 @@ This skill routes to focused reference files. Load only the ones relevant to the
 
 ### move — Move Language Fundamentals
 **Path:** `move.md`
-**Load when:** writing Move code, working with abilities, TxContext, time/Clock, init functions, One-Time Witness, packages, modules, structs, or resource safety.
-**Covers:** the four abilities and common combinations, TxContext methods, Clock object, init functions, OTW pattern, packages and upgrades, modules, structs, resource safety and object destruction, a worked Greeting example.
+**Load when:** writing Move code, working with abilities, TxContext, time/Clock, init functions, One-Time Witness, packages, modules, structs, resource safety, access control patterns, admin rotation, deny lists, or security review.
+**Covers:** the four abilities and common combinations, TxContext methods, Clock object, init functions, OTW pattern, packages and upgrades, modules, structs, resource safety and object destruction, a worked Greeting example, admin rotation (two-step transfer), regulated coins and deny lists, security review checklist.
 
 ### events-coins — Events and Coins
 **Path:** `events-coins.md`
@@ -75,6 +75,7 @@ This skill routes to focused reference files. Load only the ones relevant to the
 | Setting up Move.toml | `sui-move-project/` skill |
 | Writing a complete smart contract | move + events-coins + `object-model/` + `naming-conventions/` + `modern-move-syntax/` |
 | Code review | move + events-coins + `composable-move-functions/` + `naming-conventions/` + `modern-move-syntax/` |
+| Security review / access control audit | move + `object-model/` (patterns) + events-coins |
 
 ---
 

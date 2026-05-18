@@ -13,19 +13,29 @@ Move on Sui has specific naming conventions that differ from what AI agents typi
 
 All patterns sourced from https://move-book.com/guides/code-quality-checklist
 
-## Error Constants: EPascalCase
+## Error Constants: EPascalCase with `#[error]`
 
 Error constants MUST use PascalCase with an `E` prefix. Do NOT use SCREAMING_SNAKE_CASE.
+
+Use the `#[error]` attribute to attach human-readable messages to error constants. When an abort occurs, the message is included in the error output, making debugging much easier for users and support.
 
 ```move
 // WRONG
 const NOT_AUTHORIZED: u64 = 0;
 const INSUFFICIENT_BALANCE: u64 = 1;
 
-// CORRECT
+// CORRECT — with #[error] for readable abort messages
+#[error]
+const ENotAuthorized: vector<u8> = b"Caller is not authorized to perform this action";
+#[error]
+const EInsufficientBalance: vector<u8> = b"Insufficient balance for this operation";
+
+// Also valid — u64 without #[error] (less informative on abort)
 const ENotAuthorized: u64 = 0;
 const EInsufficientBalance: u64 = 1;
 ```
+
+When using `#[error]`, the constant type is `vector<u8>` (a byte string message) instead of `u64`. The compiler assigns numeric codes automatically. Prefer `#[error]` for all new code — it produces clearer error output in explorers, wallets, and logs.
 
 ## Regular Constants: ALL_CAPS
 

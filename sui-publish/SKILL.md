@@ -4,9 +4,11 @@ description: >
   Publishing, upgrading, and deploying Sui Move packages. Use this skill when the
   user needs to publish a package, upgrade a published package, deploy to multiple
   networks, serialize transactions for multisig signing, run a local Sui network
-  (localnet), or debug dry run failures. Also use when the user asks about sui
-  client publish, sui client upgrade, UpgradeCap, upgrade policies, Published.toml,
-  --serialize-output, localnet, devInspectTransactionBlock, or --dry-run.
+  (localnet), prepare for Mainnet launch, monitor production deployments, or debug
+  dry run failures. Also use when the user asks about sui client publish, sui client
+  upgrade, UpgradeCap, upgrade policies, Published.toml, --serialize-output, localnet,
+  mainnet launch checklist, gas estimation, multisig publishing, production monitoring,
+  rollback, incident response, devInspectTransactionBlock, or --dry-run.
 ---
 
 # Publishing, Deploying & Local Network
@@ -47,6 +49,26 @@ This deploys the package to the active network and returns:
 - An **UpgradeCap** object (sent to your address, controls future upgrades)
 - Object IDs for anything created during `init` functions
 
+### Test publishing (ephemeral networks)
+
+Use `sui client test-publish` to publish a package to an ephemeral environment for testing without persisting state to a real network:
+
+```bash
+sui client test-publish
+```
+
+This publishes the package, runs `init` functions, and returns the same output as `sui client publish` (package ID, UpgradeCap, created objects), but the deployment is not permanent. Use it to:
+
+- Verify that `init` functions execute correctly before committing to a real publish
+- Test publish + upgrade flows in CI without consuming Testnet/Devnet resources
+- Validate gas costs and object creation before a Mainnet deploy
+
+`test-publish` respects `--build-env` for multi-environment packages:
+
+```bash
+sui client test-publish --build-env testnet
+```
+
 ### After publishing
 
 The `published-at` field is automatically added to your `Published.toml`. To interact with the published package:
@@ -67,13 +89,50 @@ Published packages are immutable, but you can upgrade by publishing a new versio
 sui client upgrade --upgrade-capability <CAP_ID>
 ```
 
+#### Finding your UpgradeCap
+
+The `UpgradeCap` object ID is needed for every upgrade. There are several ways to find it:
+
+1. **Published.toml** (preferred): After publishing, the toolchain records the cap ID in `Published.toml` under the `upgrade-capability` field for each environment.
+2. **Query owned objects**: List all `UpgradeCap` objects owned by the publish address:
+   ```bash
+   sui client objects --type 0x2::package::UpgradeCap
+   ```
+3. **Publish transaction output**: The original `sui client publish` output includes the `UpgradeCap` object ID in the created objects list.
+4. **Explorer**: Search for your address on SuiVision (`suivision.xyz`) or Suiscan (`suiscan.xyz`) and filter owned objects by type `0x2::package::UpgradeCap`.
+
+#### Upgrade policies
+
 Upgrade policies restrict what can change:
 
-- **Compatible:** Functions can be added but not removed. Struct layouts cannot change.
-- **Additive:** New modules can be added, but existing modules cannot change.
-- **Dependency-only:** Only dependency versions can be updated.
+- **Compatible** (default): The most permissive policy. See detailed rules below.
+- **Additive:** New modules can be added, but existing modules cannot change at all.
+- **Dependency-only:** Only dependency versions can be updated. No code changes.
 
 You can restrict the `UpgradeCap` in the same PTB as the publish command (for example, calling `only_additive_upgrades` on it immediately). Once restricted, you cannot widen the policy. You can also transfer the `UpgradeCap` to a multisig address or destroy it entirely to make the package permanently immutable.
+
+#### Compatible upgrade rules (detailed)
+
+Under the **compatible** policy, these changes are **allowed**:
+
+- Add new functions (public or private)
+- Add new modules
+- Change function implementations (body)
+- Add new struct types
+- Change private/friend function signatures
+
+These changes **break compatibility** and will be rejected:
+
+- Remove or rename an existing module
+- Remove or rename a public function
+- Change a public function's signature (parameters, return types, type parameters)
+- Remove, rename, or reorder struct fields
+- Change the type of a struct field
+- Add or remove struct abilities (`key`, `store`, `copy`, `drop`)
+- Remove a struct type entirely
+- Change a struct's type parameters
+
+Before upgrading, review your diff against these rules. The `sui client upgrade` command will reject incompatible changes at build time with a descriptive error.
 
 ### Type anchoring after upgrades
 
@@ -121,6 +180,87 @@ sui client publish --serialize-output
 
 This outputs base64 transaction bytes instead of executing.
 
+## Mainnet launch checklist
+
+Use this checklist when preparing a package for Mainnet publishing. Every item should be verified before executing the publish transaction.
+
+### 1. Tests and coverage
+
+Run the full test suite and confirm all tests pass:
+
+```bash
+sui move test
+```
+
+For coverage reporting (if your project requires a threshold):
+
+```bash
+sui move test --coverage
+sui move coverage summary
+```
+
+Fix any failing tests before proceeding. Do not publish untested code to Mainnet.
+
+### 2. Dependencies and addresses
+
+- Verify `Move.toml` uses `edition = "2024"` and has no legacy `[addresses]` section or git-based Sui framework dependency.
+- Confirm `[environments]` includes a `mainnet` entry with the correct chain ID.
+- If using MVR dependencies (`{ r.mvr = "@org/package" }`), verify they resolve on Mainnet.
+- Run `sui move build` to confirm clean compilation with no warnings.
+
+### 3. Upgrade policy decision
+
+Decide your upgrade policy **before** publishing — you cannot widen it later:
+
+| Policy | What you can change | When to use |
+|---|---|---|
+| **Compatible** (default) | Add functions, add modules, update implementations. Cannot remove functions or change struct layouts. | Most packages — gives flexibility for bug fixes while preserving type safety. |
+| **Additive** | Add new modules only. Existing modules are frozen. | Packages where you want to extend functionality but guarantee existing code never changes. |
+| **Dependency-only** | Only update dependency versions. | Nearly-finalized packages that should only track framework updates. |
+| **Immutable** | Nothing. Package is permanently frozen. | Fully audited packages where immutability is a trust guarantee (e.g., token contracts). |
+
+To restrict the policy in the same transaction as publish, include a `moveCall` to `sui::package::only_additive_upgrades`, `only_dep_upgrades`, or `make_immutable` on the `UpgradeCap` in your publish PTB.
+
+### 4. Gas estimation
+
+Mainnet SUI has real monetary value. Estimate gas before publishing:
+
+```bash
+sui client publish --dry-run
+```
+
+The dry-run output includes `computationCost`, `storageCost`, and `storageRebate`. The total gas required is `computationCost + storageCost - storageRebate`. Ensure your address holds enough SUI to cover this amount plus a margin.
+
+### 5. Signer and custody plan
+
+Decide who controls the publish address and the `UpgradeCap`:
+
+- **Single signer:** Simplest. One key publishes and holds the `UpgradeCap`. Suitable for personal projects or early-stage development.
+- **Multisig:** For teams or high-value packages. Create a multisig address, publish using `--serialize-output`, and have the required signers sign offline. Transfer the `UpgradeCap` to the multisig address in the same PTB as publish.
+- **Immutable on publish:** If no upgrades will ever be needed, destroy the `UpgradeCap` in the publish PTB (`sui::package::make_immutable`). This removes custody concerns entirely.
+
+For multisig publishing:
+
+```bash
+# Generate unsigned transaction bytes
+sui client publish --serialize-output
+
+# Each signer signs the bytes, then combine and execute
+```
+
+### 6. Final pre-publish verification
+
+Before executing the publish transaction on Mainnet:
+
+- [ ] `sui client active-env` returns `mainnet`
+- [ ] `sui client balance` shows sufficient SUI for gas (check dry-run estimate)
+- [ ] `sui move build` succeeds with no warnings
+- [ ] `sui move test` passes with all tests green
+- [ ] `Move.toml` has correct `edition`, no legacy format
+- [ ] Upgrade policy is decided and restriction call is included in the PTB (if applicable)
+- [ ] Signer key or multisig is ready
+- [ ] You have verified the package on Testnet first — same code, same tests, same publish flow
+
 ## Dry runs and transaction debugging
 
 A dry run simulates a transaction without submitting it to the network. Use dry runs to:
@@ -134,3 +274,67 @@ Wallets (like Slush) automatically perform dry runs before presenting a transact
 From the TypeScript SDK, use `devInspectTransactionBlock` to dry-run a transaction programmatically. From the CLI, the `--dry-run` flag simulates execution.
 
 When debugging a dry run failure: check that all object IDs are correct, the object versions are current, the sender has sufficient gas, the function arguments match the expected types, and the active environment (`sui client active-env`) matches the network where the package is published.
+
+## Production monitoring
+
+Sui packages are immutable once published, so monitoring is critical — you cannot hotfix a live contract, only publish an upgrade.
+
+### What to monitor
+
+| Signal | How | Why |
+|---|---|---|
+| Failed transactions involving your package | Subscribe to transaction effects via gRPC streaming, filter by package ID | Detects Move aborts, gas failures, or unexpected reverts in production |
+| Gas spend | Track `gasUsed` from transaction effects | Catch unexpectedly expensive operations or gas drain attacks |
+| Event emission | Subscribe to events by type (`{packageId}::module::EventName`) via gRPC streaming | Core business telemetry — mints, transfers, admin actions, deny list changes |
+| Object creation/deletion rates | Query or subscribe to object changes filtered by your types | Detect abnormal activity (mass minting, object spam) |
+| Admin/cap usage | Filter events for capability-gated actions | Detect unauthorized or unexpected admin operations |
+| Shared object contention | Monitor transaction latency for shared-object transactions | High contention degrades UX; may need object sharding |
+
+### Implementation
+
+Use gRPC streaming subscriptions for real-time monitoring:
+
+```ts
+for await (const event of client.subscriptionService.subscribeEvents({
+  filter: { MoveEventModule: { package: PACKAGE_ID, module: 'my_module' } },
+})) {
+  // Forward to your monitoring stack (Grafana, Datadog, PagerDuty, etc.)
+}
+```
+
+For historical analysis, run a custom indexer (`sui-indexer-alt`) that writes relevant events and transaction effects to your own database. See the `accessing-data` skill's `indexers.md`.
+
+Emit events for every security-critical action in your Move code — admin changes, configuration updates, deny list modifications, object deletions. Events are the only way offchain systems can observe these actions.
+
+## Rollback and incident response
+
+**Sui packages cannot be rolled back.** Published bytecode is immutable. There is no `revert` or `rollback` command. Recovery means publishing a forward-fix upgrade.
+
+### If a bad upgrade is published
+
+1. **Assess scope.** Determine which functions are affected. Existing objects created by prior versions are still valid — their types are anchored to the original package ID.
+2. **Publish a fix upgrade immediately.** Write the corrected code, run tests, dry-run on Testnet, then `sui client upgrade` on Mainnet. The new package ID replaces the old one for all future calls.
+3. **Update frontends.** Point `PACKAGE_IDS` to the new (fixed) package ID. Type queries still use `ORIGINAL_PACKAGE_IDS`.
+4. **Communicate.** If the bug affected user-facing behavior, notify users through your app's channels.
+
+### If the UpgradeCap is compromised
+
+An attacker with the `UpgradeCap` can publish arbitrary code under your package. Mitigation:
+
+- **If you still hold the cap:** Immediately restrict it (`only_dep_upgrades` or `make_immutable`) to prevent further malicious upgrades.
+- **If the attacker holds the cap:** You cannot recover upgrade authority. Publish a new package, migrate users, and communicate the migration. This is why multisig custody of the `UpgradeCap` matters for production packages.
+
+### If a shared object is corrupted
+
+A buggy function may write invalid state to a shared object. Since shared objects are mutable by any transaction:
+
+- **If you can upgrade:** Publish an upgrade with a repair function that fixes the corrupted state. Gate it behind an `AdminCap`.
+- **If the package is immutable:** The only option is to deploy a new package with a migration function that reads the old object's data (if accessible) and creates corrected objects.
+
+### Prevention checklist
+
+- [ ] `UpgradeCap` held by multisig or restricted to `additive` / `dep_only`
+- [ ] All upgrades tested on Testnet with the same code, same publish flow
+- [ ] Admin actions emit events for monitoring
+- [ ] Critical shared objects have repair functions gated behind capabilities
+- [ ] Frontend can switch package IDs without a redeploy (environment config, not hardcoded)

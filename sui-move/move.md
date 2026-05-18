@@ -2,6 +2,8 @@
 
 Move is Sui's smart contract language. It is platform-agnostic and designed around resource safety. Smart contracts on Sui are called Move packages.
 
+For the complete language reference, see [The Move Book](https://move-book.com).
+
 ## Move abilities
 
 Every struct in Move has a set of abilities that control what you can do with it. There are four abilities:
@@ -175,3 +177,103 @@ Key patterns in this example:
 - `object::new(ctx)` generates a unique ID for the new object.
 - `transfer::share_object()` places the object in shared global storage so any address can interact with it.
 - `&mut Greeting` is a mutable reference, allowing modification without violating resource safety.
+
+## Access control patterns
+
+### Admin rotation (two-step transfer)
+
+Never transfer an `AdminCap` directly to a new address in one step — if the recipient address is wrong, the cap is lost forever. Use a two-step pattern:
+
+```move
+public struct AdminTransferRequest has key {
+    id: UID,
+    new_admin: address,
+}
+
+/// Step 1: current admin proposes a transfer
+public fun propose_admin_transfer(
+    cap: &AdminCap,
+    new_admin: address,
+    ctx: &mut TxContext,
+) {
+    transfer::transfer(AdminTransferRequest {
+        id: object::new(ctx),
+        new_admin,
+    }, new_admin);
+}
+
+/// Step 2: new admin accepts and receives the cap
+public fun accept_admin_transfer(
+    cap: AdminCap,
+    request: AdminTransferRequest,
+    ctx: &mut TxContext,
+) {
+    let AdminTransferRequest { id, new_admin } = request;
+    assert!(ctx.sender() == new_admin);
+    id.delete();
+    transfer::transfer(cap, new_admin);
+}
+```
+
+The new admin must actively call `accept_admin_transfer`, proving they control the target address. If the request is never accepted, the cap stays with the original admin.
+
+### Deny lists (regulated coins)
+
+Sui provides a system-level `DenyList` shared object (`0x403`) for regulated coins. Use `coin::create_regulated_currency` instead of `coin::create_currency` to enable address-based transfer restrictions:
+
+```move
+use sui::coin;
+use sui::deny_list::DenyList;
+
+public struct MY_TOKEN has drop {}
+
+fun init(otw: MY_TOKEN, ctx: &mut TxContext) {
+    let (treasury_cap, deny_cap, metadata) = coin::create_regulated_currency(
+        otw, 9, b"TKN", b"Token", b"A regulated token", option::none(), ctx,
+    );
+    transfer::public_transfer(treasury_cap, ctx.sender());
+    transfer::public_transfer(deny_cap, ctx.sender());
+    transfer::public_freeze_object(metadata);
+}
+
+/// Add an address to the deny list (requires DenyCap)
+public fun block_address(
+    deny_list: &mut DenyList,
+    deny_cap: &mut DenyCap<MY_TOKEN>,
+    addr: address,
+    ctx: &mut TxContext,
+) {
+    coin::deny_list_v2_add(deny_list, deny_cap, addr, ctx);
+}
+
+/// Remove an address from the deny list
+public fun unblock_address(
+    deny_list: &mut DenyList,
+    deny_cap: &mut DenyCap<MY_TOKEN>,
+    addr: address,
+    ctx: &mut TxContext,
+) {
+    coin::deny_list_v2_remove(deny_list, deny_cap, addr, ctx);
+}
+```
+
+Key points:
+- `create_regulated_currency` returns an additional `DenyCap<T>` alongside the `TreasuryCap`.
+- The `DenyCap` authorizes adding/removing addresses from the deny list. Custody of the `DenyCap` is as important as the `TreasuryCap`.
+- Denied addresses cannot receive the coin type in any transaction. The restriction is enforced at the validator level.
+- The `DenyList` object at `0x403` is a system shared object. Reference it from TypeScript with `tx.object.denyList()`.
+
+For custom (non-coin) deny lists, store a `Table<address, bool>` or `VecSet<address>` in a shared object and check it in your entry functions.
+
+### Security review checklist
+
+When reviewing a Move package's access control:
+
+1. **Capability custody.** Where is each cap (`AdminCap`, `TreasuryCap`, `DenyCap`, `UpgradeCap`) created? Where does it end up? Is it transferred to `ctx.sender()` in `init`, or is it shared/wrapped? Can it be transferred to a new owner, and if so, through what mechanism?
+2. **Shared object entry points.** Every `public` or `entry` function that takes a `&mut SharedObject` is callable by any address. Verify that each one either (a) checks a capability, (b) checks `ctx.sender()` against a stored admin address, or (c) is intentionally permissionless.
+3. **`entry` vs `public` visibility.** `entry` functions are only callable as the first command in a PTB (not composable). `public` functions are callable from other Move code and PTBs. Prefer `public` for composability, but be aware that `public` functions can be called by any other package.
+4. **Admin rotation.** Is there a way to transfer admin authority? If so, does it use a two-step pattern? A single-step transfer risks permanent loss if the recipient address is wrong.
+5. **Deny list / blocklist.** For regulated tokens, is `create_regulated_currency` used? Is the `DenyCap` custody secured? For custom deny lists, are blocked addresses checked in all relevant entry points?
+6. **Event emission.** Are security-critical actions (admin changes, deny list modifications, object deletions, configuration updates) emitting events? Events are the only way for offchain monitoring to detect these actions.
+7. **Object deletion.** Can shared objects be deleted? If so, who can delete them? Deleting a shared object with dynamic fields renders those fields permanently inaccessible.
+8. **Upgrade policy.** Is the `UpgradeCap` held by a multisig or has the package been made immutable? An unrestricted `UpgradeCap` held by a single key means the entire package can be rewritten.

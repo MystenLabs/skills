@@ -42,6 +42,18 @@ const GRPC_URLS: Record<string, string> = {
   devnet:  'https://fullnode.devnet.sui.io:443',
 };
 
+// Package IDs per network — update after each publish/upgrade
+export const PACKAGE_IDS: Record<string, string> = {
+  testnet: '0x...', // from sui client publish on testnet
+  mainnet: '0x...', // from sui client publish on mainnet
+};
+
+// For type queries after upgrades, keep the original package ID
+export const ORIGINAL_PACKAGE_IDS: Record<string, string> = {
+  testnet: '0x...', // first publish ID (never changes)
+  mainnet: '0x...',
+};
+
 export const dAppKit = createDAppKit({
   networks: ['testnet', 'mainnet'],
   defaultNetwork: 'testnet',

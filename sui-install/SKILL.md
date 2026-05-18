@@ -68,6 +68,7 @@ suiup show                   # list all installed binaries and their default sta
 | `update` | `suiup update sui@testnet` | Download the latest version (does NOT switch to it) |
 | `switch` | `suiup switch sui@testnet` | Set the latest installed version for a network as the active default |
 | `show` | `suiup show` | List all installed binaries with versions and defaults |
+| `status` | `suiup status` | Show which installed binaries have updates available and the command to update them |
 | `self update` | `suiup self update` | Update suiup itself |
 
 The `switch` command takes a `binary@network` argument (for example, `sui@testnet`, `walrus@testnet`, `move-analyzer@testnet`). It does not accept separate positional arguments like `suiup switch sui testnet v1.70.2`.

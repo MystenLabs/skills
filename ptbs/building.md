@@ -242,6 +242,8 @@ sendBackToUser(sponsorSigned);
 
 Both parties sign over the **entire TransactionData** including `GasData`. Signing only parts lets a malicious full node substitute gas data.
 
+**Sponsor safety note:** The sender can use `GasCoin` (which belongs to the sponsor) within the PTB — for example, splitting SUI from it or passing it to `transferObjects`. Sponsors should validate the PTB before signing to ensure the gas coin is not drained for non-gas purposes. Reject PTBs that pass `tx.gas` by value to anything other than the final transfer, or use `coinWithBalance` intents instead of raw gas coin access.
+
 ## Signing & executing
 
 ```ts
