@@ -4,10 +4,11 @@ description: >
   Publishing, upgrading, and deploying Sui Move packages. Use this skill when the
   user needs to publish a package, upgrade a published package, deploy to multiple
   networks, serialize transactions for multisig signing, run a local Sui network
-  (localnet), prepare for Mainnet launch, or debug dry run failures. Also use when
-  the user asks about sui client publish, sui client upgrade, UpgradeCap, upgrade
-  policies, Published.toml, --serialize-output, localnet, mainnet launch checklist,
-  gas estimation, multisig publishing, devInspectTransactionBlock, or --dry-run.
+  (localnet), prepare for Mainnet launch, monitor production deployments, or debug
+  dry run failures. Also use when the user asks about sui client publish, sui client
+  upgrade, UpgradeCap, upgrade policies, Published.toml, --serialize-output, localnet,
+  mainnet launch checklist, gas estimation, multisig publishing, production monitoring,
+  rollback, incident response, devInspectTransactionBlock, or --dry-run.
 ---
 
 # Publishing, Deploying & Local Network
@@ -253,3 +254,67 @@ Wallets (like Slush) automatically perform dry runs before presenting a transact
 From the TypeScript SDK, use `devInspectTransactionBlock` to dry-run a transaction programmatically. From the CLI, the `--dry-run` flag simulates execution.
 
 When debugging a dry run failure: check that all object IDs are correct, the object versions are current, the sender has sufficient gas, the function arguments match the expected types, and the active environment (`sui client active-env`) matches the network where the package is published.
+
+## Production monitoring
+
+Sui packages are immutable once published, so monitoring is critical — you cannot hotfix a live contract, only publish an upgrade.
+
+### What to monitor
+
+| Signal | How | Why |
+|---|---|---|
+| Failed transactions involving your package | Subscribe to transaction effects via gRPC streaming, filter by package ID | Detects Move aborts, gas failures, or unexpected reverts in production |
+| Gas spend | Track `gasUsed` from transaction effects | Catch unexpectedly expensive operations or gas drain attacks |
+| Event emission | Subscribe to events by type (`{packageId}::module::EventName`) via gRPC streaming | Core business telemetry — mints, transfers, admin actions, deny list changes |
+| Object creation/deletion rates | Query or subscribe to object changes filtered by your types | Detect abnormal activity (mass minting, object spam) |
+| Admin/cap usage | Filter events for capability-gated actions | Detect unauthorized or unexpected admin operations |
+| Shared object contention | Monitor transaction latency for shared-object transactions | High contention degrades UX; may need object sharding |
+
+### Implementation
+
+Use gRPC streaming subscriptions for real-time monitoring:
+
+```ts
+for await (const event of client.subscriptionService.subscribeEvents({
+  filter: { MoveEventModule: { package: PACKAGE_ID, module: 'my_module' } },
+})) {
+  // Forward to your monitoring stack (Grafana, Datadog, PagerDuty, etc.)
+}
+```
+
+For historical analysis, run a custom indexer (`sui-indexer-alt`) that writes relevant events and transaction effects to your own database. See the `accessing-data` skill's `indexers.md`.
+
+Emit events for every security-critical action in your Move code — admin changes, configuration updates, deny list modifications, object deletions. Events are the only way offchain systems can observe these actions.
+
+## Rollback and incident response
+
+**Sui packages cannot be rolled back.** Published bytecode is immutable. There is no `revert` or `rollback` command. Recovery means publishing a forward-fix upgrade.
+
+### If a bad upgrade is published
+
+1. **Assess scope.** Determine which functions are affected. Existing objects created by prior versions are still valid — their types are anchored to the original package ID.
+2. **Publish a fix upgrade immediately.** Write the corrected code, run tests, dry-run on Testnet, then `sui client upgrade` on Mainnet. The new package ID replaces the old one for all future calls.
+3. **Update frontends.** Point `PACKAGE_IDS` to the new (fixed) package ID. Type queries still use `ORIGINAL_PACKAGE_IDS`.
+4. **Communicate.** If the bug affected user-facing behavior, notify users through your app's channels.
+
+### If the UpgradeCap is compromised
+
+An attacker with the `UpgradeCap` can publish arbitrary code under your package. Mitigation:
+
+- **If you still hold the cap:** Immediately restrict it (`only_dep_upgrades` or `make_immutable`) to prevent further malicious upgrades.
+- **If the attacker holds the cap:** You cannot recover upgrade authority. Publish a new package, migrate users, and communicate the migration. This is why multisig custody of the `UpgradeCap` matters for production packages.
+
+### If a shared object is corrupted
+
+A buggy function may write invalid state to a shared object. Since shared objects are mutable by any transaction:
+
+- **If you can upgrade:** Publish an upgrade with a repair function that fixes the corrupted state. Gate it behind an `AdminCap`.
+- **If the package is immutable:** The only option is to deploy a new package with a migration function that reads the old object's data (if accessible) and creates corrected objects.
+
+### Prevention checklist
+
+- [ ] `UpgradeCap` held by multisig or restricted to `additive` / `dep_only`
+- [ ] All upgrades tested on Testnet with the same code, same publish flow
+- [ ] Admin actions emit events for monitoring
+- [ ] Critical shared objects have repair functions gated behind capabilities
+- [ ] Frontend can switch package IDs without a redeploy (environment config, not hardcoded)
