@@ -4,9 +4,10 @@ description: >
   Publishing, upgrading, and deploying Sui Move packages. Use this skill when the
   user needs to publish a package, upgrade a published package, deploy to multiple
   networks, serialize transactions for multisig signing, run a local Sui network
-  (localnet), or debug dry run failures. Also use when the user asks about sui
-  client publish, sui client upgrade, UpgradeCap, upgrade policies, Published.toml,
-  --serialize-output, localnet, devInspectTransactionBlock, or --dry-run.
+  (localnet), prepare for Mainnet launch, or debug dry run failures. Also use when
+  the user asks about sui client publish, sui client upgrade, UpgradeCap, upgrade
+  policies, Published.toml, --serialize-output, localnet, mainnet launch checklist,
+  gas estimation, multisig publishing, devInspectTransactionBlock, or --dry-run.
 ---
 
 # Publishing, Deploying & Local Network
@@ -120,6 +121,87 @@ sui client publish --serialize-output
 ```
 
 This outputs base64 transaction bytes instead of executing.
+
+## Mainnet launch checklist
+
+Use this checklist when preparing a package for Mainnet publishing. Every item should be verified before executing the publish transaction.
+
+### 1. Tests and coverage
+
+Run the full test suite and confirm all tests pass:
+
+```bash
+sui move test
+```
+
+For coverage reporting (if your project requires a threshold):
+
+```bash
+sui move test --coverage
+sui move coverage summary
+```
+
+Fix any failing tests before proceeding. Do not publish untested code to Mainnet.
+
+### 2. Dependencies and addresses
+
+- Verify `Move.toml` uses `edition = "2024"` and has no legacy `[addresses]` section or git-based Sui framework dependency.
+- Confirm `[environments]` includes a `mainnet` entry with the correct chain ID.
+- If using MVR dependencies (`{ r.mvr = "@org/package" }`), verify they resolve on Mainnet.
+- Run `sui move build` to confirm clean compilation with no warnings.
+
+### 3. Upgrade policy decision
+
+Decide your upgrade policy **before** publishing — you cannot widen it later:
+
+| Policy | What you can change | When to use |
+|---|---|---|
+| **Compatible** (default) | Add functions, add modules, update implementations. Cannot remove functions or change struct layouts. | Most packages — gives flexibility for bug fixes while preserving type safety. |
+| **Additive** | Add new modules only. Existing modules are frozen. | Packages where you want to extend functionality but guarantee existing code never changes. |
+| **Dependency-only** | Only update dependency versions. | Nearly-finalized packages that should only track framework updates. |
+| **Immutable** | Nothing. Package is permanently frozen. | Fully audited packages where immutability is a trust guarantee (e.g., token contracts). |
+
+To restrict the policy in the same transaction as publish, include a `moveCall` to `sui::package::only_additive_upgrades`, `only_dep_upgrades`, or `make_immutable` on the `UpgradeCap` in your publish PTB.
+
+### 4. Gas estimation
+
+Mainnet SUI has real monetary value. Estimate gas before publishing:
+
+```bash
+sui client publish --dry-run
+```
+
+The dry-run output includes `computationCost`, `storageCost`, and `storageRebate`. The total gas required is `computationCost + storageCost - storageRebate`. Ensure your address holds enough SUI to cover this amount plus a margin.
+
+### 5. Signer and custody plan
+
+Decide who controls the publish address and the `UpgradeCap`:
+
+- **Single signer:** Simplest. One key publishes and holds the `UpgradeCap`. Suitable for personal projects or early-stage development.
+- **Multisig:** For teams or high-value packages. Create a multisig address, publish using `--serialize-output`, and have the required signers sign offline. Transfer the `UpgradeCap` to the multisig address in the same PTB as publish.
+- **Immutable on publish:** If no upgrades will ever be needed, destroy the `UpgradeCap` in the publish PTB (`sui::package::make_immutable`). This removes custody concerns entirely.
+
+For multisig publishing:
+
+```bash
+# Generate unsigned transaction bytes
+sui client publish --serialize-output
+
+# Each signer signs the bytes, then combine and execute
+```
+
+### 6. Final pre-publish verification
+
+Before executing the publish transaction on Mainnet:
+
+- [ ] `sui client active-env` returns `mainnet`
+- [ ] `sui client balance` shows sufficient SUI for gas (check dry-run estimate)
+- [ ] `sui move build` succeeds with no warnings
+- [ ] `sui move test` passes with all tests green
+- [ ] `Move.toml` has correct `edition`, no legacy format
+- [ ] Upgrade policy is decided and restriction call is included in the PTB (if applicable)
+- [ ] Signer key or multisig is ready
+- [ ] You have verified the package on Testnet first — same code, same tests, same publish flow
 
 ## Dry runs and transaction debugging
 
