@@ -58,16 +58,21 @@ id.delete();
 
 ## String Literals
 
-Use byte string method syntax, not `std::string::utf8()`.
+Use quoted string literals directly, not `std::string::utf8()` or byte-string conversion.
 
 ```move
 // WRONG
 use std::string;
 let s = string::utf8(b"hello");
 
-// CORRECT
+// ALSO WRONG — unnecessary conversion
 let s = b"hello".to_string();
-let ascii = b"hello".to_ascii_string();
+
+// CORRECT — direct string literals (2024 edition)
+let s = "hello";                    // String (UTF-8)
+let ascii = "hello";                // also works for ASCII strings
+let s = b"hello".to_string();      // still valid but prefer quoted form
+let ascii = b"hello".to_ascii_string(); // explicit ASCII when needed
 ```
 
 ## Vector Literals and Methods
@@ -133,8 +138,20 @@ while (i < 32) {
     i = i + 1;
 };
 
-// CORRECT
+// CORRECT — do! macro
 32u8.do!(|_| do_action());
+```
+
+### Range-based loops
+
+```move
+// Iterate over a numeric range
+let mut sum = 0;
+10u64.do!(|i| { sum = sum + i });  // i goes 0..9
+
+// With index for more complex logic
+let mut results = vector[];
+5u64.do!(|i| results.push_back(i * i));  // [0, 1, 4, 9, 16]
 ```
 
 ### Vector iteration
@@ -197,6 +214,60 @@ dynamic_field::exists_(&id, key)
 dynamic_field::exists(&id, key)
 ```
 
+## Positional Fields (Tuple Structs)
+
+Structs can use positional fields instead of named fields:
+
+```move
+// Named fields (traditional)
+public struct Wrapper has copy, drop, store { value: u64 }
+
+// Positional fields (2024 edition)
+public struct Wrapper(u64) has copy, drop, store;
+
+// Access by position
+let w = Wrapper(42);
+let val = w.0;
+```
+
+Positional structs are useful for newtype wrappers and dynamic field keys (see `naming-conventions` skill).
+
+## Public Structs
+
+The `public` keyword on structs controls visibility of the struct's fields. Without `public`, fields are module-private — only the defining module can construct or destructure the struct.
+
+```move
+// Fields visible only within this module
+struct Config has key { id: UID, admin: address }
+
+// Fields visible to other modules
+public struct Token has key, store { id: UID, value: u64 }
+```
+
+Use `public` when other modules need to read fields or construct/destructure the struct. Omit it for encapsulation.
+
+## Enums
+
+Move 2024 supports enum types:
+
+```move
+public enum Color {
+    Red,
+    Green,
+    Blue,
+    Custom(u8, u8, u8),
+}
+
+public fun is_red(c: &Color): bool {
+    match (c) {
+        Color::Red => true,
+        _ => false,
+    }
+}
+```
+
+Enums can have variants with positional fields, named fields, or no fields. Use `match` expressions for exhaustive pattern matching. Enums cannot have the `key` ability — they cannot be objects directly, but they can be stored as fields inside objects.
+
 ## Quick Reference
 
 | Legacy Pattern | Modern 2024 Syntax |
@@ -207,7 +278,7 @@ dynamic_field::exists(&id, key)
 | `balance::split(&mut b, n)` | `b.split(n)` |
 | `tx_context::sender(ctx)` | `ctx.sender()` |
 | `object::delete(id)` | `id.delete()` |
-| `string::utf8(b"x")` | `b"x".to_string()` |
+| `string::utf8(b"x")` | `"x"` (or `b"x".to_string()`) |
 | `vector::empty()` | `vector[]` |
 | `vector::push_back(&mut v, x)` | `v.push_back(x)` |
 | `vector::length(&v)` | `v.length()` |

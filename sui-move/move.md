@@ -2,6 +2,8 @@
 
 Move is Sui's smart contract language. It is platform-agnostic and designed around resource safety. Smart contracts on Sui are called Move packages.
 
+For the complete language reference, see [The Move Book](https://move-book.com).
+
 ## Move abilities
 
 Every struct in Move has a set of abilities that control what you can do with it. There are four abilities:

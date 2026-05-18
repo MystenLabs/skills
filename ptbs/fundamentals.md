@@ -50,10 +50,11 @@ The same pure bytes can be used at multiple compatible types if they deserialize
 Commands reference values via four `Argument` kinds:
 
 - **`Input(u16)`** — input at index `u16` in the `inputs` vector.
-- **`GasCoin`** — the SUI coin paying for gas. Special rules:
+- **`GasCoin`** — the SUI coin paying for gas. **Always present in every transaction**, even when using address-balance payment. When paying with address balances, an ephemeral gas coin is created for the transaction and deleted at the end if not transferred. Special rules:
   - Can be used by `&` or `&mut` anywhere.
-  - Can be passed by value **only** to `TransferObjects` (or `sui::coin::send_funds`).
+  - Can be passed by value **only** to `TransferObjects` (or `sui::coin::send_funds` once available).
   - To get an owned `Coin<SUI>` from the gas coin, split it first: `SplitCoins(GasCoin, [amount])`.
+  - In sponsored transactions, the **sender** can still use the GasCoin (which belongs to the sponsor). Sponsors should validate submitted PTBs to ensure the gas coin is not misused.
 - **`Result(u16)`** — shorthand for `NestedResult(i, 0)`. Valid only when command `i` has exactly one return value.
 - **`NestedResult(u16, u16)`** — `(command_index, result_index_within_that_command)`.
 
@@ -92,6 +93,8 @@ tx.moveCall({ target: `0x123::hero::equip_sword`, arguments: [hero, sword] });
 3. **Max gas budget (in MIST) is withdrawn from the gas coin.** Unused gas is refunded at end of execution, even if the gas coin changed owners.
 
 ### Argument usage rules
+
+These rules are **inferred by the runtime** from the Move function signatures being called. The PTB itself does not specify whether an argument is passed by reference, mutable reference, or value — the system determines this from the target function's parameter types.
 
 For each argument position:
 - **`&mut T` expected** — mutable borrow. Fails if any other borrow is outstanding.

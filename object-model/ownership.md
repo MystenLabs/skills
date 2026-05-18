@@ -6,13 +6,13 @@ Every object on Sui has one of five ownership types. The ownership type determin
 
 Owned by a specific 32-byte address. Only that address can use the object as a transaction input. Created through `transfer::transfer()` or `transfer::public_transfer()`.
 
-Address-owned objects skip consensus entirely (fastpath). This gives them the lowest latency and highest throughput. Most transactions on Sui (transfers, personal asset management, single-player game moves) touch only owned objects and execute in parallel.
+All transactions go through consensus on Sui. However, transactions touching only address-owned objects benefit from optimized consensus handling, giving them the lowest latency and highest throughput. Most transactions on Sui (transfers, personal asset management, single-player game moves) touch only owned objects and execute in parallel.
 
-The tradeoff: only one address can use the object. If multiple users need access, use a shared object instead.
+The tradeoff: only one address can use the object, and only one inflight transaction per object version is allowed. If multiple users need access, use a shared object. If a single owner needs multiple inflight transactions against the same object, use a party object.
 
-## Consensus-address-owned objects (party objects)
+## Party objects
 
-A hybrid between address-owned and shared objects. A consensus-address-owned object is owned by a single address but sequenced and versioned through consensus instead of the fastpath. APIs expose this ownership with a `ConsensusAddressOwner` owner variant.
+Party objects are a newer ownership form that combines single-address ownership with consensus sequencing. The underlying mechanism is called "consensus-address-owned," which is a special case of the broader party object concept (still in development as a full feature). APIs expose this ownership with a `ConsensusAddressOwner` owner variant.
 
 Party objects are the public Move-facing way to create this ownership form. They are created using `sui::transfer::party_transfer` or `sui::transfer::public_party_transfer`, and use the `sui::party::Party` type (currently restricted to `party::single_owner` for single-address ownership).
 
@@ -54,7 +54,7 @@ Use wrapping for tight coupling: when a child should only be accessible through 
 
 ## Object versioning
 
-Object versions use Lamport timestamps. When a transaction touches multiple objects, all of them receive the same new version: `1 + max(version of all input objects)`.
+Object versions use a system similar to Lamport timestamps, referred to as Lamport versioning. When a transaction touches multiple objects, all of them receive the same new version: `1 + max(version of all input objects)`.
 
 Example: if a transaction modifies an object at version 5 using a gas coin at version 3, both the object and the gas coin become version 6.
 
@@ -62,7 +62,7 @@ Only the most recent version is accessible to active transactions. Historical ve
 
 ### Versioning and ownership
 
-- **Fastpath (owned/immutable) objects:** Version is updated without consensus. Lowest latency. The transaction must use the exact current version as input. Coordinate offchain access or use a consensus object instead if frequent concurrent use is needed.
-- **Consensus (shared/party) objects:** Version is updated through consensus ordering. Adds latency but enables concurrent access without version locking issues.
+- **Address-owned / immutable objects:** Benefit from optimized consensus handling with lowest latency. The transaction must use the exact current version as input, and only one inflight transaction per object version is allowed. Coordinate offchain access or use a party/shared object if frequent concurrent use is needed.
+- **Shared / party objects:** Sequenced through full consensus ordering. Enables concurrent access — multiple inflight transactions can touch the same object without version locking issues.
 - **Wrapped objects:** Version increments when the parent is modified, maintaining unique (ID, version) pairs. While wrapped, the object is not directly accessible by version.
 - **Dynamic fields:** Version increments when the field is modified, following Lamport timestamps like regular objects.
