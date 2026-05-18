@@ -68,13 +68,50 @@ Published packages are immutable, but you can upgrade by publishing a new versio
 sui client upgrade --upgrade-capability <CAP_ID>
 ```
 
+#### Finding your UpgradeCap
+
+The `UpgradeCap` object ID is needed for every upgrade. There are several ways to find it:
+
+1. **Published.toml** (preferred): After publishing, the toolchain records the cap ID in `Published.toml` under the `upgrade-capability` field for each environment.
+2. **Query owned objects**: List all `UpgradeCap` objects owned by the publish address:
+   ```bash
+   sui client objects --type 0x2::package::UpgradeCap
+   ```
+3. **Publish transaction output**: The original `sui client publish` output includes the `UpgradeCap` object ID in the created objects list.
+4. **Explorer**: Search for your address on SuiVision (`suivision.xyz`) or Suiscan (`suiscan.xyz`) and filter owned objects by type `0x2::package::UpgradeCap`.
+
+#### Upgrade policies
+
 Upgrade policies restrict what can change:
 
-- **Compatible:** Functions can be added but not removed. Struct layouts cannot change.
-- **Additive:** New modules can be added, but existing modules cannot change.
-- **Dependency-only:** Only dependency versions can be updated.
+- **Compatible** (default): The most permissive policy. See detailed rules below.
+- **Additive:** New modules can be added, but existing modules cannot change at all.
+- **Dependency-only:** Only dependency versions can be updated. No code changes.
 
 You can restrict the `UpgradeCap` in the same PTB as the publish command (for example, calling `only_additive_upgrades` on it immediately). Once restricted, you cannot widen the policy. You can also transfer the `UpgradeCap` to a multisig address or destroy it entirely to make the package permanently immutable.
+
+#### Compatible upgrade rules (detailed)
+
+Under the **compatible** policy, these changes are **allowed**:
+
+- Add new functions (public or private)
+- Add new modules
+- Change function implementations (body)
+- Add new struct types
+- Change private/friend function signatures
+
+These changes **break compatibility** and will be rejected:
+
+- Remove or rename an existing module
+- Remove or rename a public function
+- Change a public function's signature (parameters, return types, type parameters)
+- Remove, rename, or reorder struct fields
+- Change the type of a struct field
+- Add or remove struct abilities (`key`, `store`, `copy`, `drop`)
+- Remove a struct type entirely
+- Change a struct's type parameters
+
+Before upgrading, review your diff against these rules. The `sui client upgrade` command will reject incompatible changes at build time with a descriptive error.
 
 ### Type anchoring after upgrades
 
