@@ -127,6 +127,48 @@ const bytes = await client.walrus.readBlob({ blobId });
 - **Highly-interactive structured state** — if Move needs to read and reason about the data, it has to fit in an object. Walrus blobs are opaque bytes from Move's perspective.
 - **Tiny metadata.** A 1 KB string belongs in a Move object. Walrus has per-blob overhead.
 
+## Wiring Walrus blob IDs into Object Display
+
+Store the blob ID in a struct field, then use the Walrus aggregator URL in the Display template to make wallets and explorers render the image directly:
+
+```move
+use sui::display_registry;
+
+public struct NFT has key, store {
+    id: UID,
+    name: String,
+    walrus_blob_id: String,
+}
+
+fun init(otw: MY_NFT, ctx: &mut TxContext) {
+    let publisher = package::claim(otw, ctx);
+
+    let (mut d, cap) = display_registry::new_with_publisher<NFT>(
+        &mut display_registry::borrow_mut(),
+        &mut publisher,
+        ctx,
+    );
+    display_registry::set(&mut d, &cap,
+        b"name".to_string(), b"{name}".to_string());
+    display_registry::set(&mut d, &cap,
+        b"image_url".to_string(),
+        b"https://aggregator.walrus-testnet.walrus.space/v1/blobs/{walrus_blob_id}".to_string());
+    display_registry::share(d);
+
+    transfer::public_transfer(cap, ctx.sender());
+    transfer::public_transfer(publisher, ctx.sender());
+}
+```
+
+The `{walrus_blob_id}` placeholder is replaced at display time with the object's field value, producing a full aggregator URL that wallets fetch directly.
+
+For mainnet, use the mainnet aggregator URL. The aggregator endpoint is read-only and free — no authentication or WAL tokens needed for reads.
+
+The end-to-end flow:
+1. Upload media to Walrus (HTTP API or `@mysten/walrus` SDK) → get `blobId`
+2. Mint the NFT with `walrus_blob_id` set to the returned `blobId`
+3. Display template resolves `{walrus_blob_id}` → aggregator serves the image
+
 ## Common mistakes
 
 - **"Put the image in the NFT."** NFTs should hold the *blob ID*, not the image bytes. Images go to Walrus; the Move object references them.
