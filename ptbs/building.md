@@ -80,6 +80,19 @@ tx.pure(new Uint8Array([0, 1, 2]))
 - `tx.splitCoins(tx.gas, [tx.pure.u64(amount)])` — most common pattern: derive an owned `Coin<SUI>` from gas.
 - `tx.mergeCoins(tx.gas, [tx.object(extra1), tx.object(extra2)])` — consolidate owned SUI into the gas coin before using it.
 
+**`InsufficientCoinBalance` when splitting from gas:** the gas coin must cover both the split amount *and* the gas budget. If the user's gas coin has 0.5 SUI and you split 0.45 SUI, there may not be enough left for gas (~0.01 SUI). The wallet selects gas budget via dry-run, but cannot increase the coin's balance. Surface this error to users with the amount they need and suggest the faucet (testnet) or merging coins.
+
+**Use `BigInt` for large MIST amounts.** When coin amounts come from JSON responses (e.g. a listing price fetched from chain), they parse as `number` or `string`. Always wrap with `BigInt(amount)` to avoid silent precision loss:
+
+```ts
+// ✅ Safe for any MIST value
+const coins = tx.splitCoins(tx.gas, [BigInt(listing.price)]);
+tx.moveCall({ target: '...::buy', arguments: [coins[0]] });
+
+// ⚠️ Risky — JS number precision loss above 2^53
+const coins = tx.splitCoins(tx.gas, [listing.price]);
+```
+
 ## Commands — TS SDK signatures
 
 ```ts
@@ -121,6 +134,10 @@ Each command returns a destructurable/indexable result:
 // Single-return: destructure
 const [coin] = tx.splitCoins(tx.gas, [tx.pure.u64(100)]);
 tx.transferObjects([coin], tx.pure.address(to));
+
+// Single-return: index (equivalent)
+const coins = tx.splitCoins(tx.gas, [BigInt(price)]);
+tx.moveCall({ target: '...::buy', arguments: [coins[0]] });
 
 // Multi-return: destructure
 const [nft1, nft2] = tx.moveCall({ target: '0xpkg::mint::two' });

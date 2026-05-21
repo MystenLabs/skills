@@ -39,8 +39,9 @@ function ActionButton() {
       }
 
       // Wait for indexing, then invalidate caches
+      // Note: useCurrentClient() returns ClientWithCoreApi — use client.core for methods
       const digest = result.Transaction.digest;
-      await client.waitForTransaction({ digest });
+      await client.core.waitForTransaction({ digest });
       await queryClient.invalidateQueries({ queryKey: ['balance', account.address] });
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Unknown error');
@@ -211,10 +212,10 @@ tx signed → wallet returns digest → fullnode finalizes (fast)
 await dAppKit.signAndExecuteTransaction(...);
 await queryClient.invalidateQueries(...);  // BAD
 
-// ✅ Wait first
+// ✅ Wait first (use client.core — that's what useCurrentClient returns)
 const result = await dAppKit.signAndExecuteTransaction(...);
 if (result.$kind === 'FailedTransaction') throw new Error(...);
-await client.waitForTransaction({ digest: result.Transaction.digest });
+await client.core.waitForTransaction({ digest: result.Transaction.digest });
 await queryClient.invalidateQueries(...);  // GOOD
 ```
 
@@ -223,7 +224,8 @@ await queryClient.invalidateQueries(...);  // GOOD
 | Symptom | Cause | Fix |
 |---|---|---|
 | User rejects in wallet | normal | Catch and show a "cancelled" state — not an error |
-| "Insufficient gas" | wallet has too little SUI | UX: surface the address and amount, suggest faucet (testnet) or exchange (mainnet) |
+| "Insufficient gas" | wallet has too little SUI for gas budget | UX: surface the address and amount, suggest faucet (testnet) or exchange (mainnet) |
+| `InsufficientCoinBalance` (command 0) | `splitCoins` from gas requests more than the gas coin can cover after reserving for gas budget — the gas coin must cover payment + gas | Reduce price, merge coins first, or tell the user how much SUI they need (price + ~0.01 SUI for gas) |
 | "Nothing to execute" | PTB has no effective commands | Check you actually added commands to `tx` before signing |
 | Tx executes but fails Move assertion | Move code aborted | Catch `result.FailedTransaction`, surface the error message verbatim |
 | Tx succeeds but UI doesn't update | missing `waitForTransaction` / `invalidateQueries` | Add both, in that order |

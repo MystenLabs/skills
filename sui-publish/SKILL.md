@@ -81,6 +81,22 @@ sui client call --package <PACKAGE_ID> --module greeting --function new
 sui client object <OBJECT_ID>
 ```
 
+### "Your package is already published" error
+
+If you see this error when running `sui client publish`, it means `Published.toml` already has an entry for your active environment. This happens when iterating on a package during development.
+
+To publish a fresh copy (new package ID, new `init` objects):
+
+```bash
+rm Published.toml Move.lock
+sui move build
+sui client publish
+```
+
+Deleting `Move.lock` is necessary because it can also cache the published state. After the fresh publish, both files are regenerated with the new package address.
+
+To **upgrade** the existing package instead of deploying a new one, use `sui client upgrade` (see below).
+
 ### Upgrading a published package
 
 Published packages are immutable, but you can upgrade by publishing a new version linked to the original. The `UpgradeCap` object controls upgrade authority.

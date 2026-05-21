@@ -9,7 +9,7 @@ Source: https://sdk.mystenlabs.com/dapp-kit/getting-started/react
 | `useCurrentAccount()` | `UiWalletAccount \| null` | Connected address; null-check always required |
 | `useCurrentWallet()` | `UiWallet \| null` | Connected wallet (name, icon, accounts list) |
 | `useWalletConnection()` | `{ status, wallet, account, ... }` | Full connection state incl. `connecting` / `reconnecting` |
-| `useCurrentNetwork()` | active network string | Read current network |
+| `useCurrentNetwork()` | `string` (e.g. `'testnet'`) — not a tuple | Read current network |
 | `useCurrentClient()` | `SuiGrpcClient` for current network | Passing to TanStack Query / imperative calls |
 | `useDAppKit()` | the dApp Kit instance | Imperative actions: `signAndExecuteTransaction`, `connectWallet`, `switchNetwork`, etc. |
 | `useWallets()` | `UiWallet[]` | List detected wallets (custom wallet menu) |

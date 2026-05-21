@@ -78,7 +78,7 @@ All hang off `client.core`:
 | Method | Returns |
 |---|---|
 | `getObject({ objectId, include })` | `{ object }` |
-| `getObjects({ objectIds, include })` | `{ objects }` |
+| `getObjects({ objectIds, include })` | `{ objects }` — elements can be `Object` or `Error` (see note below) |
 | `listOwnedObjects({ owner, type?, cursor?, limit?, include? })` | `{ objects, cursor }` |
 | `listCoins({ owner, coinType?, cursor?, limit? })` | `{ coins, cursor }` |
 | `listBalances({ owner })` | `{ balances }` |
@@ -111,6 +111,26 @@ for (const obj of result.objects) {
 ```
 
 Alternatively, use `include: { content: true }` to get raw BCS bytes and parse with generated types (from `@mysten/codegen`). `json` is easier for quick access; `content` is more reliable across API implementations.
+
+### `getObjects` returns `(Object | Error)[]`
+
+When batch-fetching with `getObjects`, individual entries can be `Error` instances (e.g. if an object was deleted or the ID is invalid). Always narrow the type before accessing fields:
+
+```ts
+const { objects } = await client.core.getObjects({
+  objectIds: ids,
+  include: { json: true },
+});
+
+const valid = objects
+  .filter((o): o is Exclude<typeof o, Error> => !(o instanceof Error) && !!o.json)
+  .map((o) => ({
+    objectId: o.objectId,
+    name: String((o.json as Record<string, unknown>).name ?? ''),
+  }));
+```
+
+Without this guard, TypeScript will error on `o.json` and `o.objectId` because `Error` has neither property.
 
 **Type anchoring after upgrades:** when filtering by type in `listOwnedObjects`, always use the **original** package ID where the struct was first published — not the upgraded package ID. Struct types are permanently anchored to the original package. Use the upgraded package ID only for calling functions via `moveCall`.
 
@@ -147,7 +167,7 @@ function MintButton() {
     if (result.$kind === 'FailedTransaction') throw new Error('Mint failed');
 
     // ✅ Wait for indexing BEFORE invalidating
-    await client.waitForTransaction({ digest: result.Transaction.digest });
+    await client.core.waitForTransaction({ digest: result.Transaction.digest });
 
     await queryClient.invalidateQueries({ queryKey: ['balance', account?.address] });
     await queryClient.invalidateQueries({ queryKey: ['owned-nfts', account?.address] });
