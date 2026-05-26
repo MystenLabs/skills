@@ -56,9 +56,9 @@ Objects have one of four ownership types:
 
 This ownership model is what enables Sui's parallel execution: transactions on non-overlapping owned objects execute in parallel without consensus. For example, coin transfers between addresses, single-player game actions, and personal asset management all operate on owned objects and can run concurrently. Only shared-object transactions (like interacting with a DEX pool or a shared marketplace) go through Mysticeti consensus ordering.
 
-## Move and resource safety
+## Move instead of Solidity
 
-Sui uses the Move programming language for smart contracts. Move enforces resource safety at compile time: objects cannot be duplicated or silently dropped. This differs from Ethereum, where the EVM prices operations through gas to prevent abuse. In Move, invalid resource handling is a compilation error, not a runtime cost.
+Sui uses the Move programming language instead of Solidity. Move enforces resource safety at compile time: objects cannot be duplicated or silently dropped. This is fundamentally different from Ethereum's approach, where the EVM uses gas-based pricing to prevent abuse at runtime. In Move, invalid resource handling is a compilation error, not a runtime cost. Ethereum developers must unlearn the gas-as-safety-mechanism mindset — on Sui, the compiler prevents resource misuse before code ever runs.
 
 ## Programmable transaction blocks
 

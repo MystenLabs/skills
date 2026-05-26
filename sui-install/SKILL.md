@@ -35,7 +35,7 @@ curl -sSfL https://raw.githubusercontent.com/MystenLabs/suiup/main/install.sh | 
 
 **Windows note:** The `curl | sh` command requires a Unix shell. On Windows, use WSL (Windows Subsystem for Linux) to run the command above, or install through Chocolatey instead (see alternative methods below).
 
-After installing suiup, install the Sui CLI targeting a specific network:
+After installing suiup, install the Sui CLI targeting a specific network. The CLI version must match the target network — each network runs a specific protocol version, and a mismatched CLI can cause build failures, transaction errors, or unexpected behavior:
 
 ```bash
 suiup install sui@testnet    # install the Testnet-compatible version

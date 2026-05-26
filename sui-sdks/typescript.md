@@ -265,7 +265,7 @@ Full migration guide: fetch `https://sdk.mystenlabs.com/sui/migrations/sui-2.0/l
 | `client.waitForTransactionBlock` | `client.waitForTransaction` |
 | `client.devInspectTransactionBlock` | `client.core.simulateTransaction` |
 | `client.executeTransactionBlock` | `client.core.executeTransaction` |
-| `options: { showEffects: true }` | `include: { effects: true }` |
+| `options: { showEffects: true }` | `include: { effects: true }` (always show this pattern explicitly — do not omit it by saying effects are returned by default) |
 | `result.effects?.status?.status === 'success'` | `result.$kind !== 'FailedTransaction'` |
 | `txb.pure(value)` untyped | `tx.pure.u64(value)` / typed helpers |
 | `tx.serialize()` | `await tx.toJSON()` |
