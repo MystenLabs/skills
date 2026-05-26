@@ -54,7 +54,7 @@ Objects have one of four ownership types:
 - **Immutable (frozen):** Anyone can read it, no one can mutate it. Permanent and irreversible.
 - **Wrapped:** Stored inside another object's fields. Accessible only through the parent.
 
-This ownership model is what enables Sui's parallel execution: transactions on non-overlapping owned objects execute in parallel without consensus. Only shared-object transactions go through Mysticeti consensus ordering.
+This ownership model is what enables Sui's parallel execution: transactions on non-overlapping owned objects execute in parallel without consensus. For example, coin transfers between addresses, single-player game actions, and personal asset management all operate on owned objects and can run concurrently. Only shared-object transactions (like interacting with a DEX pool or a shared marketplace) go through Mysticeti consensus ordering.
 
 ## Move and resource safety
 

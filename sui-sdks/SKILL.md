@@ -78,7 +78,7 @@ If unsure about any specific API in any SDK, fetch from the relevant doc page â€
 
 ### Key concepts
 
-- **Two officially-supported SDKs.** TypeScript (`@mysten/sui`) and Rust (`sui-rust-sdk` crates). Both are maintained by Mysten Labs and updated alongside protocol changes.
+- **Two officially-supported SDKs.** TypeScript (`@mysten/sui`) and Rust (`sui-rust-sdk` crates). Both are maintained by Mysten Labs and updated alongside protocol changes. For performance-critical paths in non-Rust languages, `sui-rust-sdk` can be called via FFI (Foreign Function Interface) from Python, Go, Swift, etc., giving those languages access to the official SDK without relying on community wrappers.
 - **Everything else is community.** Python (`pysui`), Go (`block-vision/sui-go-sdk`), Dart (`mofalabs/sui`), Kotlin (`mcxross/ksui`), Swift (`opendive/suikit`), Vue (`SuiFansCN/suiue`). They typically lag protocol updates and feature coverage varies. Treat them as best-effort.
 - **The TS SDK has two client generations.** v1 used `SuiClient` + `@mysten/sui.js`. v2 uses `SuiGrpcClient` / `SuiJsonRpcClient` / `SuiGraphQLClient` from `@mysten/sui`. JSON-RPC is deprecated; gRPC is recommended for new code.
 - **The Rust SDK has two generations.** The new modular crates (`sui-sdk-types`, `sui-crypto`, `sui-rpc`, `sui-transaction-builder`) are the recommended surface. The "legacy Rust SDK" is the monolithic `sui-sdk` crate in the sui monorepo; it supports JSON-RPC with forward/backward compatibility and is still used by many existing projects, but is not the recommended target for new code.
