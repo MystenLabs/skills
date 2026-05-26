@@ -71,7 +71,7 @@ sui client test-publish --build-env testnet
 
 ### After publishing
 
-The `published-at` field is automatically added to your `Published.toml`. To interact with the published package:
+The publish transaction output lists the package ID under the **created objects** section (alongside the `UpgradeCap` and any objects created by `init` functions). The `published-at` field is also automatically added to your `Published.toml`. To interact with the published package:
 
 ```bash
 # Call a function
@@ -120,7 +120,7 @@ Upgrade policies restrict what can change:
 
 **Other UpgradeCap options:**
 - **Transfer to a multisig address** for shared upgrade governance.
-- **Destroy the UpgradeCap** (via `sui::package::make_immutable`) to make the package permanently immutable. Destroying the cap is irreversible — no one can ever upgrade the package again.
+- **Destroy the UpgradeCap** to make the package permanently immutable. Call `sui::package::make_immutable`, which consumes and destroys the `UpgradeCap` object. Once the cap is destroyed, no one can ever upgrade the package again — this is irreversible.
 
 #### Compatible upgrade rules (detailed)
 
