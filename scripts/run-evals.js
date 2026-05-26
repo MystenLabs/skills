@@ -49,7 +49,7 @@ const judgeModelFlag = args.find((a) => a.startsWith("--judge-model="))?.split("
   ?? (args.includes("--judge-model") ? args[args.indexOf("--judge-model") + 1] : null);
 
 const ROOT = resolve(dirname(new URL(import.meta.url).pathname), "..");
-const EVAL_MODEL = process.env.EVAL_MODEL ?? "claude-sonnet-4-6";
+const EVAL_MODEL = process.env.EVAL_MODEL ?? "claude-opus-4-6";
 const JUDGE_MODEL = judgeModelFlag ?? process.env.JUDGE_MODEL ?? "claude-haiku-4-5-20251001";
 const MAX_TOKENS_RESPONSE = 4096;
 const MAX_TOKENS_JUDGE = 2048;
