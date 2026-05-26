@@ -1,0 +1,15 @@
+{
+  "name": "sui-skills",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "eval": "node scripts/run-evals.js",
+    "eval:changed": "node scripts/run-evals.js --changed-only",
+    "staleness": "node scripts/check-sources.js",
+    "staleness:update": "node scripts/check-sources.js --update"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.52.0",
+    "glob": "^11.0.0"
+  }
+}

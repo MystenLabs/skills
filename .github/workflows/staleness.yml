@@ -1,0 +1,128 @@
+name: Source Staleness Check
+
+on:
+  schedule:
+    # Weekly Monday 8am UTC
+    - cron: "0 8 * * 1"
+  workflow_dispatch:
+    inputs:
+      update_baseline:
+        description: "Update the baseline hashes after checking"
+        required: false
+        type: boolean
+        default: false
+      since:
+        description: "Check monorepo commits since this date (ISO 8601)"
+        required: false
+        type: string
+
+jobs:
+  staleness:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: write
+      issues: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Check source staleness
+        id: check
+        continue-on-error: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          ARGS=""
+          if [ "${{ inputs.update_baseline }}" = "true" ]; then
+            ARGS="$ARGS --update"
+          fi
+          if [ -n "${{ inputs.since }}" ]; then
+            ARGS="$ARGS --since=${{ inputs.since }}"
+          fi
+          node scripts/check-sources.js $ARGS
+
+      - name: Open issue on staleness detected
+        if: steps.check.outcome == 'failure'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            // Check if an open staleness issue already exists
+            const { data: issues } = await github.rest.issues.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'open',
+              labels: 'staleness',
+              per_page: 1
+            });
+
+            const title = `Skill staleness detected — ${new Date().toISOString().split('T')[0]}`;
+
+            const body = [
+              '## Source Staleness Detected',
+              '',
+              'The weekly staleness check found upstream changes that may affect one or more skills.',
+              '',
+              'See the [workflow run](' + context.serverUrl + '/' + context.repo.owner + '/' + context.repo.repo + '/actions/runs/' + context.runId + ') for details.',
+              '',
+              '### Next steps',
+              '1. Review the workflow summary for which skills are affected',
+              '2. Check the changed source URLs and monorepo paths',
+              '3. Update the affected skill files if needed',
+              '4. Run `node scripts/check-sources.js --update` to reset the baseline',
+              '5. Run `node scripts/run-evals.js --skill <name>` to verify the updated skills',
+            ].join('\n');
+
+            if (issues.length > 0) {
+              // Update existing issue
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: issues[0].number,
+                body: `### Update — ${new Date().toISOString().split('T')[0]}\n\n` + body
+              });
+            } else {
+              // Create new issue
+              await github.rest.issues.create({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                title,
+                body,
+                labels: ['staleness']
+              });
+            }
+
+      - name: Notify Slack on staleness detected
+        if: steps.check.outcome == 'failure'
+        uses: slackapi/slack-github-action@v2.0.0
+        with:
+          webhook: ${{ secrets.SLACK_STALENESS_WEBHOOK_URL }}
+          webhook-type: incoming-webhook
+          payload: |
+            {
+              "text": "⚠️ Skill staleness detected",
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "⚠️ *Skill staleness detected* — upstream Sui sources have changed.\n\n<${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View workflow run>"
+                  }
+                }
+              ]
+            }
+
+      - name: Commit updated hashes
+        if: inputs.update_baseline == true
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add scripts/.source-hashes.json
+          git diff --staged --quiet || git commit -m "Update source baseline hashes" && git push

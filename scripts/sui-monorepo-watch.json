@@ -1,0 +1,76 @@
+{
+  "accessing-data": [
+    "sdk/typescript/src/clients",
+    "sdk/graphql-transport",
+    "crates/sui-indexer-alt"
+  ],
+  "composable-move-functions": [
+    "crates/sui-framework/packages/sui-framework/sources/transfer.move",
+    "crates/sui-framework/packages/sui-framework/sources/coin.move"
+  ],
+  "frontend-apps": [
+    "sdk/dapp-kit",
+    "sdk/typescript/src/transactions",
+    "sdk/typescript/src/clients"
+  ],
+  "modern-move-syntax": [
+    "crates/sui-framework/packages/move-stdlib/sources",
+    "crates/sui-framework/packages/sui-framework/sources"
+  ],
+  "move-unit-testing": [
+    "crates/sui-framework/packages/sui-framework/sources/test",
+    "crates/sui-move"
+  ],
+  "naming-conventions": [
+    "crates/sui-framework/packages/sui-framework/sources"
+  ],
+  "object-model": [
+    "crates/sui-framework/packages/sui-framework/sources/dynamic_field.move",
+    "crates/sui-framework/packages/sui-framework/sources/dynamic_object_field.move",
+    "crates/sui-framework/packages/sui-framework/sources/transfer.move",
+    "crates/sui-framework/packages/sui-framework/sources/object.move",
+    "crates/sui-types/src/object.rs"
+  ],
+  "ptbs": [
+    "sdk/typescript/src/transactions",
+    "crates/sui-types/src/programmable_transaction_builder.rs",
+    "crates/sui/src/client_ptb"
+  ],
+  "sui-build-test": [
+    "crates/sui-move",
+    "crates/sui/src/sui_commands.rs"
+  ],
+  "sui-cli": [
+    "crates/sui/src"
+  ],
+  "sui-client": [
+    "crates/sui/src/client_commands.rs",
+    "crates/sui/src/genesis_ceremony.rs"
+  ],
+  "sui-install": [
+    "crates/suiup"
+  ],
+  "sui-move": [
+    "crates/sui-framework/packages/sui-framework/sources",
+    "crates/sui-types/src/base_types.rs",
+    "crates/sui-framework/packages/sui-framework/sources/coin.move",
+    "crates/sui-framework/packages/sui-framework/sources/event.move"
+  ],
+  "sui-move-project": [
+    "crates/sui-move/src",
+    "crates/sui/src/client_commands.rs"
+  ],
+  "sui-overview": [
+    "crates/sui-framework/packages/sui-framework/sources",
+    "sdk/typescript"
+  ],
+  "sui-publish": [
+    "crates/sui/src/client_commands.rs",
+    "crates/sui-move/src",
+    "crates/sui-framework/packages/sui-framework/sources/package.move"
+  ],
+  "sui-sdks": [
+    "sdk/typescript",
+    "sdk/rust"
+  ]
+}

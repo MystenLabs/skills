@@ -1,0 +1,104 @@
+name: Skill Evals
+
+on:
+  pull_request:
+    paths:
+      - "**/SKILL.md"
+      - "**/*.md"
+      - "**/evals/evals.json"
+      - "scripts/run-evals.js"
+  workflow_dispatch:
+    inputs:
+      skill:
+        description: "Run evals for a specific skill (leave empty for all)"
+        required: false
+        type: string
+  schedule:
+    # Weekly Monday 6am UTC
+    - cron: "0 6 * * 1"
+
+jobs:
+  eval:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: read
+      pull-requests: write
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # needed for --changed-only to diff against main
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install dependencies
+        run: npm ci
+        working-directory: .
+
+      - name: Run evals (PR — changed skills only)
+        if: github.event_name == 'pull_request'
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: node scripts/run-evals.js --changed-only
+
+      - name: Run evals (scheduled — all skills)
+        if: github.event_name == 'schedule'
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: node scripts/run-evals.js
+
+      - name: Run evals (manual)
+        if: github.event_name == 'workflow_dispatch'
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          if [ -n "${{ inputs.skill }}" ]; then
+            node scripts/run-evals.js --skill "${{ inputs.skill }}"
+          else
+            node scripts/run-evals.js
+          fi
+
+      - name: Upload eval results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: eval-results
+          path: scripts/eval-results.json
+
+      - name: Comment on PR with failures
+        if: failure() && github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const resultsPath = 'scripts/eval-results.json';
+            if (!fs.existsSync(resultsPath)) return;
+
+            const results = JSON.parse(fs.readFileSync(resultsPath, 'utf-8'));
+            const failures = results.filter(r => r.status !== 'PASS');
+            if (failures.length === 0) return;
+
+            let body = '## Skill Eval Failures\n\n';
+            for (const f of failures) {
+              body += `### ${f.skill} / ${f.eval_id} — ${f.status}\n`;
+              if (f.grades) {
+                const failed = f.grades.filter(g => !g.pass);
+                for (const g of failed) {
+                  body += `- ❌ ${g.expectation}\n  - ${g.reason}\n`;
+                }
+              }
+              if (f.error) {
+                body += `- Error: ${f.error}\n`;
+              }
+              body += '\n';
+            }
+
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body
+            });
