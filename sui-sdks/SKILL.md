@@ -68,7 +68,7 @@ If unsure about any specific API in any SDK, fetch from the relevant doc page â€
 | User mentions Go / Python / Dart / Kotlin / Swift / Vue (even casually, e.g. "my team uses Go") | community (always â€” language constraint trumps perf recommendations) |
 | Porting between languages | mapping + (target SDK file) |
 | Migrating from `@mysten/sui.js` / SDK v1 | typescript |
-| Frontend / React integration | route to `frontend-apps` skill first, then typescript here |
+| Frontend / React integration | route to `frontend-apps` skill first (covers React hooks, wallet connection, query patterns), then typescript here for `Transaction` construction |
 | PTB semantics deep dive | route to `ptbs` skill, then language-specific file here |
 | Data access patterns (gRPC vs GraphQL vs indexer) | route to `accessing-data` skill |
 | Full project setup | **all reference files** (or the SDK-specific one + llm-docs) |
@@ -105,5 +105,5 @@ If unsure about any specific API in any SDK, fetch from the relevant doc page â€
 - **Confusing the two Rust SDKs.** The new `sui-rust-sdk` crates (on `crates.io` as separate crates like `sui-sdk-types` / `sui-transaction-builder` / `sui-rpc`) are distinct from the legacy `sui-sdk` crate in the sui monorepo. New code should use the former.
 - **Fetching TS docs from the web when they're installed locally.** If the project has `@mysten/sui` installed, read `node_modules/@mysten/sui/docs/llms-index.md` instead â€” it matches the installed version.
 - **Hardcoding a specific SDK version.** SDK APIs evolve. Prefer "install the latest `@mysten/sui`" and then consult the bundled docs, rather than pinning advice to a version.
-- **Recommending `@mysten/dapp-kit` for backend code.** dApp Kit is a React-oriented frontend framework. Backend or CLI code should use `@mysten/sui` directly. (Route to the `frontend-apps` skill for dApp Kit.)
+- **Recommending `@mysten/dapp-kit` for backend code.** dApp Kit is a React-oriented frontend framework. Backend or CLI code should use `@mysten/sui` directly. For React hook-level details (`useCurrentAccount`, `useSignAndExecuteTransaction`, `useSuiClientQuery`, etc.), see the `frontend-apps` skill.
 - **Using JSON-RPC as the default for any client.** JSON-RPC is deprecated for the TS SDK; the legacy Rust SDK supports it but the new Rust SDK does not. Default to gRPC.

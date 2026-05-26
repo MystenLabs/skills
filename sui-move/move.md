@@ -34,7 +34,7 @@ Abilities are enforced at compile time. You cannot add abilities to a struct aft
 - `ctx.epoch_timestamp_ms()`: The epoch start timestamp in milliseconds. Less precise than the Clock object but does not require passing an additional object.
 - `object::new(ctx)`: Generates a fresh unique ID for a new object. This is the only way to create a `UID`.
 
-`TxContext` is always the last parameter in a function signature as `ctx: &mut TxContext`. It does not need to be explicitly passed by the caller; the runtime provides it automatically.
+`TxContext` is always the last parameter in a function signature as `ctx: &mut TxContext`. The Sui runtime automatically injects it — callers (whether PTBs, CLI commands, or SDK calls) never pass `TxContext` explicitly. The runtime supplies it as the final argument behind the scenes. When you see `ctx: &mut TxContext` in a function signature, treat it as an implicit parameter that the runtime fills in, not something you provide as an input.
 
 ## Clock object
 

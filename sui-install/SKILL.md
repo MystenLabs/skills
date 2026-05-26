@@ -117,10 +117,10 @@ If the version is out of date, update and switch:
 ```bash
 suiup update sui@testnet      # download the latest version
 suiup switch sui@testnet      # make it the active default
-sui --version                  # confirm the new version
+suiup show                     # verify which version is now active
 ```
 
-The `client/server api version mismatch` warning in CLI output means your local CLI is older than the network. Update and switch to fix it.
+The `client/server api version mismatch` warning in CLI output means your local CLI is older than the network. **Do not ignore this warning** — version mismatches can cause build failures and unexpected behavior. Update and switch to fix it.
 
 ### Optional additional tools
 

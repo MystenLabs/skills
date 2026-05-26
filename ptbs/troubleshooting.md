@@ -65,7 +65,7 @@ Source: https://docs.sui.io/develop/testing-debugging/common-errors · https://d
 
 **Cause:** passed a shared object to `transferObjects`, or called `transfer::freeze_object` on it mid-PTB.
 
-**Fix:** shared objects must remain shared (or be deleted). Do not attempt to transfer them. For "unshare" patterns, the module must take the shared object, operate, and explicitly re-share before returning.
+**Fix:** shared objects have exactly two legal endings in a PTB: re-share or delete. Transferring or freezing always fails at commit. Do not include shared objects in `transferObjects`. For "unshare" patterns, the module must take the shared object by value and either re-share it or delete it before the transaction completes. Note: consuming a shared object by value permanently marks its hot-potato clique as "hot", blocking subsequent non-public `entry` calls on entangled values in that clique.
 
 ## Read-only shared object used by value
 

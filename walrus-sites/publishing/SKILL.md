@@ -164,6 +164,10 @@ site-builder update --epochs 50 dist/
 
 The `update` command extends blob storage to the new epoch count if it's longer than the current duration.
 
+## Portal access: mainnet vs testnet
+
+The public portal at `wal.app` only serves **mainnet** sites. If you are deploying to testnet, you must run a self-hosted local portal to view your site. See the `walrus-sites/portal` skill for setup instructions.
+
 ## End-to-end publish workflow
 
 ```bash
