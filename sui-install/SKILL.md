@@ -92,6 +92,8 @@ If the command returns "sui not found", run `suiup switch sui@testnet` to set th
 
 ### Keeping Sui up to date
 
+The CLI version should match the target network — each network runs a specific protocol version, and a mismatched CLI can cause build failures or transaction errors. Use the `@network` suffix to update to the correct version:
+
 ```bash
 suiup update sui@testnet     # update to latest Testnet version
 suiup update sui@mainnet     # update to latest Mainnet version
