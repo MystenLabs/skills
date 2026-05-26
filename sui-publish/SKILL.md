@@ -90,7 +90,7 @@ If you see this error when running `sui client publish`, it means `Published.tom
 
 ### Upgrading a published package
 
-Published packages are immutable, but you can upgrade by publishing a new version linked to the original. The `UpgradeCap` object controls upgrade authority.
+Published packages are immutable, but you can upgrade by publishing a new version linked to the original. The `UpgradeCap` object controls upgrade authority. You can restrict the `UpgradeCap` policy in the same PTB as the initial publish command, or destroy it entirely to make the package permanently immutable (see upgrade policies below).
 
 ```bash
 sui client upgrade --upgrade-capability <CAP_ID>
