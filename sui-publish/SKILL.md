@@ -116,7 +116,11 @@ Upgrade policies restrict what can change:
 - **Additive:** New modules can be added, but existing modules cannot change at all.
 - **Dependency-only:** Only dependency versions can be updated. No code changes.
 
-**Restricting the UpgradeCap in the same PTB as publish:** You can restrict the `UpgradeCap` in the same programmable transaction block as the `publish` command itself — for example, calling `sui::package::only_additive_upgrades` on the `UpgradeCap` immediately after publishing, all within a single atomic transaction. This is the recommended approach for locking down upgrade policy from the start. Once restricted, you cannot widen the policy. You can also transfer the `UpgradeCap` to a multisig address or destroy it entirely to make the package permanently immutable.
+**Restricting the UpgradeCap in the same PTB as publish:** You can restrict the `UpgradeCap` in the same programmable transaction block as the `publish` command itself — for example, calling `sui::package::only_additive_upgrades` on the `UpgradeCap` immediately after publishing, all within a single atomic transaction. This is the recommended approach for locking down upgrade policy from the start. Once restricted, you cannot widen the policy.
+
+**Other UpgradeCap options:**
+- **Transfer to a multisig address** for shared upgrade governance.
+- **Destroy the UpgradeCap** (via `sui::package::make_immutable`) to make the package permanently immutable. Destroying the cap is irreversible — no one can ever upgrade the package again.
 
 #### Compatible upgrade rules (detailed)
 
