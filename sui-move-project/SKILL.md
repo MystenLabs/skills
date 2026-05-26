@@ -64,11 +64,9 @@ Since Sui CLI v1.63+, the Sui framework dependency is resolved automatically. Yo
 [package]
 name = "my_project"
 edition = "2024"
-
-[dependencies]
-# Sui framework is automatically resolved — do not add it here.
-# Add only third-party or local dependencies.
 ```
+
+Do **not** add a `[dependencies]` section for the Sui framework or MoveStdlib — the 2024 edition resolves them automatically. Only add `[dependencies]` when you need third-party or local packages (e.g., MVR dependencies).
 
 The old `Sui = { git = "...", rev = "framework/testnet" }` format is a legacy system name and errors out on current CLI versions with: `Dependency 'Sui' is a legacy system name and cannot be used.`
 
@@ -79,6 +77,19 @@ The old `[addresses]` section with `my_project = "0x0"` is also no longer needed
 testnet = "4c78adac"
 mainnet = "35834a8a"
 ```
+
+### Module declaration (2024 edition)
+
+With `edition = "2024"`, use single-line module declarations — no curly braces:
+
+```move
+module my_project::my_module;
+
+// imports, structs, and functions follow at the top level
+use sui::object::UID;
+```
+
+Do **not** use the old curly-brace syntax (`module my_project::my_module { ... }`). The 2024 edition treats the entire file as the module body after the semicolon.
 
 ### Published.toml and Move.lock
 

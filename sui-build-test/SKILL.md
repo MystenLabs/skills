@@ -38,6 +38,41 @@ The `--build-env` flag also applies to `sui move test`:
 sui move test --build-env testnet
 ```
 
+## Testing
+
+```bash
+sui move test
+```
+
+### Key testing modules
+
+- **`sui::test_scenario`** — Multi-transaction, multi-sender test scenarios. Simulates realistic transaction flows with `begin`, `next_tx`, and `end`.
+- **`std::unit_test`** — Assertion macros for unit tests (`assert_eq!`, `assert_ne!`).
+
+### Code coverage
+
+Track which lines your tests exercise:
+
+```bash
+sui move test --coverage
+```
+
+View coverage results for a specific module:
+
+```bash
+sui move coverage source --module <name>
+```
+
+### Move Analyzer
+
+Install via suiup:
+
+```bash
+suiup install move-analyzer
+```
+
+Then install the **Move Analyzer** extension in VS Code. It provides code completion, go-to-definition, inline diagnostics, and hover documentation. It activates automatically for `.move` files — no additional configuration needed.
+
 ### Debugging
 
 - **Move Trace Debugger:** Step-through debugger for Move execution traces with variable inspection.
