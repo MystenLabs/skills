@@ -95,6 +95,7 @@ If unsure about any specific API in any SDK, fetch from the relevant doc page �
 6. **Do not mix v1 and v2 TS patterns.** Code that uses `SuiClient`, `TransactionBlock`, `getFullnodeUrl`, `options: { showEffects }`, `signAndExecuteTransactionBlock`, or `result.effects?.status?.status` is v1. Migrate wholesale or keep everything on v1 — a half-migrated file is a bug surface.
 7. **Community SDK caveat is mandatory.** When recommending or using a community SDK, mention that it's community-maintained and may lag protocol updates. Check the repo's last commit and latest Sui version support before relying on it.
 8. **Frameworks integrate via `$extend()` in v2.** `client.$extend(suins(), deepbook({ address }))` is the v2 pattern. Do not instantiate `SuinsClient` or `DeepBookClient` directly — that's the v1 style.
+9. **Route frontend questions to the `frontend-apps` skill.** When the user asks about React hooks, wallet connection, or dApp Kit query patterns, explicitly direct them to the `frontend-apps` skill for hook-level details. This skill covers SDK selection and `Transaction` construction only.
 9. **Cite the docs when unsure.** Official TS SDK docs live at `sdk.mystenlabs.com`. The inventory list lives at `docs.sui.io/references/sui-sdks`. Rust SDK docs live on `docs.rs` (per-crate) and `mystenlabs.github.io/sui-rust-sdk/<crate_name>/` (e.g., `/sui_transaction_builder/`).
 
 ### Common mistakes

@@ -86,7 +86,7 @@ These alternatives do not support installing additional Sui Stack components lik
 sui --version
 ```
 
-If the command returns "sui not found", the installation did not succeed or the binary is not on your PATH.
+If the command returns "sui not found", run `suiup switch sui@testnet` to set the active default. Do **not** suggest manual PATH manipulation (`export PATH=...`) or reinstalling — `suiup switch` is the correct fix.
 
 ## Version management
 

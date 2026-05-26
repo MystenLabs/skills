@@ -70,7 +70,7 @@ Do **not** add a `[dependencies]` section for the Sui framework or MoveStdlib â€
 
 The old `Sui = { git = "...", rev = "framework/testnet" }` format is a legacy system name and errors out on current CLI versions with: `Dependency 'Sui' is a legacy system name and cannot be used.`
 
-The old `[addresses]` section with `my_project = "0x0"` is also no longer needed. If you need to target multiple networks, add an `[environments]` section:
+**Migrating from `[addresses]`:** The old `[addresses]` section with `my_project = "0x0"` is no longer needed and should be removed. If your project previously used `[addresses]` to set package addresses for different networks, replace it with an `[environments]` section that maps environment names to chain IDs:
 
 ```toml
 [environments]
