@@ -228,7 +228,10 @@ Do not include any text outside the JSON array.`;
   return JSON.parse(jsonMatch[0]);
 }
 
-// ── Run all evals for a single skill (concurrently) ──────────────────
+// ── Global semaphore — limits total in-flight eval work ──────────────
+const evalSemaphore = new Semaphore(CONCURRENCY);
+
+// ── Run all evals for a single skill ─────────────────────────────────
 async function runSkillEvals(evalFile) {
   const skillDir = basename(resolve(dirname(evalFile), ".."));
   const evals = parseEvals(evalFile);
@@ -238,6 +241,7 @@ async function runSkillEvals(evalFile) {
     evals.map(async (ev, i) => {
       const evalId = ev.id ?? `${skillDir}-${i + 1}`;
 
+      await evalSemaphore.acquire();
       try {
         const work = async () => {
           const response = await generateResponse(skillContext, ev.prompt);
@@ -276,11 +280,13 @@ async function runSkillEvals(evalFile) {
             skill: skillDir,
             eval_id: evalId,
             status: "ERROR",
-            error: err.message,
+            error: err.message.slice(0, 200),
           },
           passed: 0,
           failed: 1,
         };
+      } finally {
+        evalSemaphore.release();
       }
     })
   );
@@ -317,22 +323,12 @@ async function main() {
   console.log(`\nEval runner configuration:`);
   console.log(`  Response model : ${EVAL_MODEL}`);
   console.log(`  Judge model    : ${JUDGE_MODEL}`);
-  console.log(`  Concurrency    : ${CONCURRENCY} skills in parallel`);
+  console.log(`  Concurrency    : ${CONCURRENCY} evals in parallel`);
   console.log(`  Eval timeout   : ${EVAL_TIMEOUT}ms`);
   console.log(`  Eval files     : ${evalFiles.length}\n`);
 
-  const semaphore = new Semaphore(CONCURRENCY);
-
-  const skillPromises = evalFiles.map(async (evalFile) => {
-    await semaphore.acquire();
-    try {
-      return await runSkillEvals(evalFile);
-    } finally {
-      semaphore.release();
-    }
-  });
-
-  const allSkillResults = await Promise.all(skillPromises);
+  // Launch all skills — the global evalSemaphore limits total in-flight evals
+  const allSkillResults = await Promise.all(evalFiles.map(runSkillEvals));
 
   const allResults = [];
   let totalPass = 0;
