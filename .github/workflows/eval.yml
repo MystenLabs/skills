@@ -102,3 +102,23 @@ jobs:
               repo: context.repo.repo,
               body
             });
+
+      - name: Notify Slack on eval failures
+        if: failure()
+        uses: slackapi/slack-github-action@v2.0.0
+        with:
+          webhook: ${{ secrets.SLACK_EVAL_WEBHOOK_URL }}
+          webhook-type: incoming-webhook
+          payload: |
+            {
+              "text": "❌ Skill eval failures detected",
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "❌ *Skill eval failures detected* — ${{ github.event_name == 'pull_request' && format('PR #{0}', github.event.pull_request.number) || 'scheduled run' }}\n\n<${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View workflow run>"
+                  }
+                }
+              ]
+            }
