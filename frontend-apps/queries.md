@@ -146,6 +146,48 @@ client.core.listOwnedObjects({ owner, type: `${ORIGINAL_PACKAGE_ID}::nft::NFT` }
 tx.moveCall({ target: `${UPGRADED_PACKAGE_ID}::nft::mint`, ... });
 ```
 
+## `getDynamicField` requires BCS-encoded name bytes (gRPC)
+
+The gRPC `getDynamicField` does **not** accept plain JSON values for the `name` parameter — unlike the deprecated JSON-RPC `getDynamicFieldObject` which takes `{ type, value }`. The gRPC API requires BCS-serialized bytes.
+
+**Pattern:** serialize the name with `bcs`, pass `{ type, bcs: bytes }`, then parse the BCS response value.
+
+```ts
+import { bcs } from '@mysten/sui/bcs';
+
+// ── Serialize the dynamic field name ──────────────────────────────
+// The serializer must match the Move type used as the DF key.
+
+// address key
+const addressBytes = bcs.Address.serialize('0xABC...').toBytes();
+const name = { type: 'address', bcs: addressBytes };
+
+// string key (std::string::String)
+const stringBytes = bcs.string().serialize('my_key').toBytes();
+const nameStr = { type: '0x1::string::String', bcs: stringBytes };
+
+// u64 key
+const u64Bytes = bcs.u64().serialize(42n).toBytes();
+const nameU64 = { type: 'u64', bcs: u64Bytes };
+
+// ── Call getDynamicField ──────────────────────────────────────────
+const result = await client.core.getDynamicField({
+  parentId: '0xPARENT...',
+  name,                         // { type, bcs }
+  include: { json: true },      // or { content: true } for raw BCS
+});
+
+// ── Parse the result ──────────────────────────────────────────────
+// With include.json, read fields directly:
+const value = result.dynamicField?.json;
+
+// With include.content (BCS bytes), deserialize manually:
+// const raw = result.dynamicField?.content;
+// const parsed = bcs.u64().parse(Uint8Array.from(raw));
+```
+
+**JSON-RPC difference:** the legacy `SuiJsonRpcClient.getDynamicFieldObject` accepts `{ type: 'address', value: '0xABC...' }` — plain JSON, no serialization. If you're migrating from JSON-RPC to gRPC, this is the key change.
+
 ## Cache invalidation after transactions
 
 ```tsx

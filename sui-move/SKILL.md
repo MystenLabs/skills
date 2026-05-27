@@ -29,8 +29,8 @@ This skill routes to focused reference files. Load only the ones relevant to the
 
 ### move — Move Language Fundamentals
 **Path:** `move.md`
-**Load when:** writing Move code, working with abilities, TxContext, time/Clock, init functions, One-Time Witness, packages, modules, structs, resource safety, access control patterns, admin rotation, deny lists, or security review.
-**Covers:** the four abilities and common combinations, TxContext methods, Clock object, init functions, OTW pattern, packages and upgrades, modules, structs, resource safety and object destruction, a worked Greeting example, admin rotation (two-step transfer), regulated coins and deny lists, security review checklist.
+**Load when:** writing Move code, working with abilities, TxContext, time/Clock, init functions, One-Time Witness, `internal::Permit<T>`, `type_name` deprecations, packages, modules, structs, resource safety, access control patterns, admin rotation, deny lists, security review, or advanced design patterns (ability dosing, phantom events, shared-object concurrency, receiver syntax, error attributes, `transfer::receive`, field privacy, macros).
+**Covers:** the four abilities and common combinations, TxContext methods, Clock object, init functions, OTW pattern, `internal::Permit<T>` type-level authorization, `type_name` deprecations, packages and upgrades, modules, structs, resource safety and object destruction, a worked Greeting example, admin rotation (two-step transfer), regulated coins and deny lists, security review checklist, advanced design patterns (ability dosing, phantom-type events, event denormalization, shared-object `&` vs `&mut`, receiver-syntax ordering, `#[error]` constants, `transfer::receive` privacy, field privacy, macro gotchas).
 
 ### events-coins — Events and Coins
 **Path:** `events-coins.md`
@@ -61,6 +61,8 @@ This skill routes to focused reference files. Load only the ones relevant to the
 | Writing a Move struct with abilities | move |
 | Using TxContext or the Clock object | move |
 | Writing an init function or OTW | move |
+| Using `type_name` functions | move |
+| Proving module authority with `internal::Permit<T>` | move |
 | Publishing or upgrading a package | move |
 | Destroying an object without drop | move |
 | Emitting or subscribing to events | events-coins |
@@ -76,6 +78,7 @@ This skill routes to focused reference files. Load only the ones relevant to the
 | Writing a complete smart contract | move + events-coins + `object-model/` + `naming-conventions/` + `modern-move-syntax/` |
 | Code review | move + events-coins + `composable-move-functions/` + `naming-conventions/` + `modern-move-syntax/` |
 | Security review / access control audit | move + `object-model/` (patterns) + events-coins |
+| Advanced design patterns / performance tuning | move |
 
 ---
 
