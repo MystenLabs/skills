@@ -169,14 +169,14 @@ For scripts, tests, or local development where no browser wallet is available, s
 
 ```ts
 import { Ed25519Keypair } from '@mysten/sui/keypairs/ed25519';
-import { SuiClient } from '@mysten/sui/client';
+import { SuiGrpcClient } from '@mysten/sui/grpc';
 import { Transaction } from '@mysten/sui/transactions';
 
 // From a private key or generate a new one
 const keypair = Ed25519Keypair.fromSecretKey(privateKeyBytes);
 // or: const keypair = new Ed25519Keypair();
 
-const client = new SuiClient({ url: 'https://fullnode.testnet.sui.io:443' });
+const client = new SuiGrpcClient({ url: 'https://fullnode.testnet.sui.io:443' });
 
 const tx = new Transaction();
 // ... build PTB ...

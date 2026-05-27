@@ -118,6 +118,8 @@ The pattern:
 3. **Query** from the frontend with `listOwnedObjects(owner=derived_addr)` — paginated and type-filtered, no BCS decoding needed.
 4. **Access on-chain** by passing `Receiving<T>` into a function that holds `&mut UID` of the box object, calling `transfer::public_receive` for authorized pickup.
 
+Unlike Ethereum where tokens are automatically added to a recipient's balance, objects sent to another object on Sui are not usable until explicitly received via `transfer::receive` (or `transfer::public_receive` for objects with `key + store`).
+
 ### When to use TTO vs Table
 
 | Concern | Table + shared object | TTO + derived addresses |

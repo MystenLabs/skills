@@ -120,12 +120,17 @@ unsub();
 
 ```vue
 <script setup lang="ts">
+import { computed } from 'vue';
 import { useStore } from '@nanostores/vue';
 import { Transaction } from '@mysten/sui/transactions';
 import { dAppKit } from './dapp-kit';
 
 const connection = useStore(dAppKit.stores.$connection);
 const network = useStore(dAppKit.stores.$currentNetwork);
+
+// useStore returns a Vue ref — use .value in script code.
+// Vue auto-unwraps refs in templates, so connection.account works there (no .value needed).
+const address = computed(() => connection.value.account?.address);
 
 async function handleTransfer() {
   if (!connection.value.account) return;

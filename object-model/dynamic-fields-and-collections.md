@@ -42,7 +42,9 @@ Use plain function calls (`dynamic_field::add`, `table::add`, etc.) instead of r
 
 Replace `dynamic_field` with `dynamic_object_field` for object fields. The API is identical.
 
-Accessing a nonexistent field aborts the transaction. Adding a field with a name that already exists (same name and type) also aborts.
+Accessing a nonexistent field aborts the transaction — use `exists_` to check first when the field's presence is uncertain. Adding a field with a name that already exists (same name and type) also aborts.
+
+**Warning:** Deleting an object that still has dynamic fields attached renders those fields permanently inaccessible (orphaned storage). Always remove all dynamic fields before destroying the parent object.
 
 ## Collections
 
