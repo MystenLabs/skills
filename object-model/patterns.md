@@ -53,7 +53,7 @@ Because the `Borrow` receipt has no `drop`, the caller cannot keep the cap — t
 
 ## Soulbound objects
 
-An object without `store` can only be transferred by its defining module. To make it fully non-transferable, simply do not expose any transfer function. To allow temporary borrowing with forced return, use the hot potato pattern with a `ReturnReceipt`.
+An object without `store` can only be transferred by its defining module. To make it fully non-transferable, simply do not expose any transfer function. To allow temporary borrowing with forced return, use the hot potato pattern with a `ReturnReceipt`: the module lends the soulbound object out and issues a `ReturnReceipt` hot potato (a struct with no abilities) that forces the borrower to return the object in the same PTB. If the borrower does not call the return function, the transaction aborts because the receipt cannot be stored or dropped.
 
 ## Inventory pattern
 

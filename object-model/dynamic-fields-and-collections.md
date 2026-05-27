@@ -52,6 +52,8 @@ Accessing a nonexistent field aborts the transaction. Adding a field with a name
 
 `ObjectTable<K, V>` is the same but values must be objects (`key + store`). Child objects keep their own IDs and are visible to explorers.
 
+Each Table entry is a separate dynamic field and therefore a separate storage operation. Gas cost scales linearly with the number of entries accessed in a single transaction.
+
 ```move
 let mut inventory = table::new<String, Sword>(ctx);
 table::add(&mut inventory, b"excalibur".to_string(), sword);

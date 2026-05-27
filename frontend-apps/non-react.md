@@ -144,6 +144,7 @@ async function handleTransfer() {
 </script>
 
 <template>
+  <!-- Vue auto-unwraps refs in templates, so connection.account works (no .value needed) -->
   <mysten-dapp-kit-connect-button :instance="dAppKit" />
   <div v-if="connection.account">
     <p>{{ connection.wallet?.name }}: {{ connection.account.address }}</p>
