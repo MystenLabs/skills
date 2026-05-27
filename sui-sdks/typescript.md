@@ -54,7 +54,7 @@ const gql = new SuiGraphQLClient({
 ### Which client to use
 
 - **New code**: `SuiGrpcClient`. Typed protobuf, best throughput, active surface.
-- **Existing v1 migration / JSON-RPC-only infra**: `SuiJsonRpcClient`.
+- **Existing v1 migration / JSON-RPC-only infra**: `SuiJsonRpcClient` (legacy — JSON-RPC is deprecated; use only when migrating from v1 or talking to infrastructure that only exposes JSON-RPC).
 - **Complex relational queries**: `SuiGraphQLClient` alongside one of the above.
 - **All clients share the v2 `client.core.*` API** for common data access.
 

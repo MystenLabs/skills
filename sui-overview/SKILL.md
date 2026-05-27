@@ -81,3 +81,4 @@ Programmable transaction blocks (PTBs) batch multiple commands into a single ato
 - When comparing to Ethereum, emphasize the shift from shared-state contracts to individually owned objects.
 - Do not describe Sui as "just another EVM chain." The programming model is fundamentally different.
 - The Sui Stack components (Walrus, zkLogin, DeepBook, Kiosk, Seal, Nautilus, Randomness) are native primitives, not third-party add-ons.
+- When describing the Sui Stack, always include concrete use cases it enables. Cover at least 3 distinct categories from: DeFi, gaming, NFTs, identity, social, and supply chain. See the use cases section in `ecosystem.md`.
