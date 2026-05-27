@@ -85,7 +85,7 @@
       "expectations": [
         "Move.toml uses edition = \"2024\" not \"2024.beta\"",
         "Move.toml does NOT have a [dependencies] section listing Sui or MoveStdlib",
-        "Module declaration uses single-line syntax without curly braces (e.g. `module pkg::name;`)"
+        "The first module declaration line ends with a semicolon (e.g. `module pkg::name;`) — not with an opening curly brace"
       ],
       "sources": ["https://move-book.com/guides/code-quality-checklist"]
     },
@@ -96,7 +96,7 @@
       "expectations": [
         "Move.toml uses edition = \"2024\" not \"2024.beta\"",
         "Move.toml does NOT have a [dependencies] section listing Sui or MoveStdlib",
-        "Module declaration uses single-line syntax without curly braces (e.g. `module pkg::name;`)"
+        "The first module declaration line ends with a semicolon (e.g. `module pkg::name;`) — not with an opening curly brace"
       ],
       "sources": ["https://move-book.com/guides/code-quality-checklist"]
     }
