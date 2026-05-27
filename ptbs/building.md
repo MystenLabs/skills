@@ -310,4 +310,5 @@ Use `devInspectTransactionBlock` when you need return values from a view-like Mo
 - Multi-return `moveCall` results destructured or indexed.
 - For user-signed flows: no `setGasBudget`/`setGasPrice`/`setGasPayment`, no `tx.build()` before handing to wallet — use `tx.serialize()` or pass the `Transaction` directly.
 - For sponsored flows: `build({ onlyTransactionKind: true })` → sponsor `setSender`/`setGasOwner`/`setGasPayment` → both signatures over full `TransactionData`.
+- **Check `result.effects.status` after execution.** A transaction can be accepted by validators but still fail at the Move level. Never treat a transfer (or any operation) as successful without verifying `status === 'success'`.
 - `waitForTransaction` before reading mutated state from the same client.

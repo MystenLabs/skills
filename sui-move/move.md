@@ -27,14 +27,14 @@ Abilities are enforced at compile time. You cannot add abilities to a struct aft
 
 ## TxContext
 
-`TxContext` is a special parameter available in every Move transaction. It provides access to transaction metadata:
+`TxContext` is a special parameter that the Sui runtime automatically provides as the last parameter to any Move function that declares it. Callers never pass it explicitly — the runtime injects it behind the scenes. It provides access to transaction metadata:
 
 - `ctx.sender()`: The address that submitted the transaction.
-- `ctx.epoch()`: The current epoch number (useful for time-based logic).
+- `ctx.epoch()`: The current epoch number (useful for time-based logic). Since TxContext is automatically provided by the runtime as the last parameter, you can call `ctx.epoch()` in any function that declares `ctx: &mut TxContext` without the caller needing to pass it.
 - `ctx.epoch_timestamp_ms()`: The epoch start timestamp in milliseconds. Less precise than the Clock object but does not require passing an additional object.
 - `object::new(ctx)`: Generates a fresh unique ID for a new object. This is the only way to create a `UID`.
 
-`TxContext` is always the last parameter in a function signature as `ctx: &mut TxContext`. It does not need to be explicitly passed by the caller; the runtime provides it automatically.
+`TxContext` is always the last parameter in a function signature as `ctx: &mut TxContext`. The Sui runtime automatically injects it — callers (whether PTBs, CLI commands, or SDK calls) never pass `TxContext` explicitly. The runtime supplies it as the final argument behind the scenes. When you see `ctx: &mut TxContext` in a function signature, treat it as an implicit parameter that the runtime fills in, not something you provide as an input.
 
 ## Clock object
 

@@ -56,29 +56,38 @@ my_project/
 └── Move.toml      # package manifest
 ```
 
-### Move.toml (current format)
+### Move.toml (current format — Sui CLI v1.63+)
 
-Since Sui CLI v1.63+, the Sui framework dependency is resolved automatically. You do not need to specify it in `[dependencies]`. A minimal `Move.toml` is:
+The new package management format introduced in Sui CLI v1.63 resolves the Sui framework dependency automatically. You do not need to specify it in `[dependencies]`. A minimal `Move.toml` is:
 
 ```toml
 [package]
 name = "my_project"
 edition = "2024"
-
-[dependencies]
-# Sui framework is automatically resolved — do not add it here.
-# Add only third-party or local dependencies.
 ```
 
-The old `Sui = { git = "...", rev = "framework/testnet" }` format is a legacy system name and errors out on current CLI versions with: `Dependency 'Sui' is a legacy system name and cannot be used.`
+Do **not** add a `[dependencies]` section for the Sui framework or MoveStdlib — the 2024 edition resolves them automatically. Do **not** add or suggest a `Sui = { git = "..." }` dependency line — this is a legacy format that errors out on current CLI versions. Only add `[dependencies]` when you need third-party or local packages (e.g., MVR dependencies).
 
-The old `[addresses]` section with `my_project = "0x0"` is also no longer needed. If you need to target multiple networks, add an `[environments]` section:
+**Migrating from `[addresses]`:** The old `[addresses]` section with `my_project = "0x0"` is no longer needed and should be removed. If your project previously used `[addresses]` to set package addresses for different networks, replace it with an `[environments]` section that maps environment names to chain IDs:
 
 ```toml
 [environments]
 testnet = "4c78adac"
 mainnet = "35834a8a"
 ```
+
+### Module declaration (2024 edition)
+
+With `edition = "2024"`, use single-line module declarations — no curly braces:
+
+```move
+module my_project::my_module;
+
+// imports, structs, and functions follow at the top level
+use sui::object::UID;
+```
+
+Do **not** use the old curly-brace syntax (`module my_project::my_module { ... }`). The 2024 edition treats the entire file as the module body after the semicolon.
 
 ### Published.toml and Move.lock
 
@@ -130,7 +139,7 @@ The `r.mvr` key tells the resolver to look up the package in the onchain Move Re
 ### Common dependency and build issues
 
 - **"Dependency 'Sui' is a legacy system name":** Remove the `Sui = { git = "..." }` line from `[dependencies]`. The current CLI resolves the Sui framework automatically. This error occurs when using the old git-based dependency format.
-- **"Packages with old dependencies" error:** Your CLI version does not match the network. Run `suiup update sui@testnet` then `suiup switch sui@testnet`.
+- **"Packages with old dependencies" error:** Your CLI version does not match the network. The new package management format introduced in Sui CLI v1.63 changed how dependencies are resolved. Run `suiup update sui@testnet` then `suiup switch sui@testnet` to get the latest CLI.
 - **"Cannot upgrade package without having a published id":** You need a `published-at` value in `Published.toml` to upgrade. This is created automatically after your first `sui client publish`. If you migrated from the old format, make sure the `Published.toml` file exists and contains the correct package address.
 - **"Could not determine the correct dependencies":** The build requires a `--build-env` flag or an `[environments]` section in `Move.toml`. Add the `[environments]` section with your target chain IDs.
 - **Edition mismatch:** If you get errors about `public struct` syntax, set `edition = "2024"` in `Move.toml`. The `legacy` edition does not support Move 2024 features like public struct visibility.

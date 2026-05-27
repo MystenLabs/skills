@@ -54,11 +54,11 @@ Objects have one of four ownership types:
 - **Immutable (frozen):** Anyone can read it, no one can mutate it. Permanent and irreversible.
 - **Wrapped:** Stored inside another object's fields. Accessible only through the parent.
 
-This ownership model is what enables Sui's parallel execution: transactions on non-overlapping owned objects execute in parallel without consensus. Only shared-object transactions go through Mysticeti consensus ordering.
+This ownership model is what enables Sui's parallel execution: transactions on non-overlapping owned objects execute in parallel without consensus. For example, coin transfers between addresses, single-player game actions, and personal asset management all operate on owned objects and can run concurrently. Only shared-object transactions (like interacting with a DEX pool or a shared marketplace) go through Mysticeti consensus ordering.
 
-## Move and resource safety
+## Move instead of Solidity
 
-Sui uses the Move programming language for smart contracts. Move enforces resource safety at compile time: objects cannot be duplicated or silently dropped. This differs from Ethereum, where the EVM prices operations through gas to prevent abuse. In Move, invalid resource handling is a compilation error, not a runtime cost.
+Sui uses the Move programming language instead of Solidity. Move enforces resource safety at compile time: objects cannot be duplicated or silently dropped. This is fundamentally different from Ethereum's approach, where the EVM uses gas-based pricing to prevent abuse at runtime. In Move, invalid resource handling is a compilation error, not a runtime cost. Ethereum developers must unlearn the gas-as-safety-mechanism mindset — on Sui, the compiler prevents resource misuse before code ever runs.
 
 ## Programmable transaction blocks
 
@@ -81,3 +81,4 @@ Programmable transaction blocks (PTBs) batch multiple commands into a single ato
 - When comparing to Ethereum, emphasize the shift from shared-state contracts to individually owned objects.
 - Do not describe Sui as "just another EVM chain." The programming model is fundamentally different.
 - The Sui Stack components (Walrus, zkLogin, DeepBook, Kiosk, Seal, Nautilus, Randomness) are native primitives, not third-party add-ons.
+- When describing the Sui Stack, always include concrete use cases it enables. Cover at least 3 distinct categories from: DeFi, gaming, NFTs, identity, social, and supply chain. See the use cases section in `ecosystem.md`.

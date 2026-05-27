@@ -68,7 +68,7 @@ If unsure about any specific API in any SDK, fetch from the relevant doc page â€
 | User mentions Go / Python / Dart / Kotlin / Swift / Vue (even casually, e.g. "my team uses Go") | community (always â€” language constraint trumps perf recommendations) |
 | Porting between languages | mapping + (target SDK file) |
 | Migrating from `@mysten/sui.js` / SDK v1 | typescript |
-| Frontend / React integration | route to `frontend-apps` skill first, then typescript here |
+| Frontend / React integration | route to `frontend-apps` skill first (covers React hooks, wallet connection, query patterns), then typescript here for `Transaction` construction |
 | PTB semantics deep dive | route to `ptbs` skill, then language-specific file here |
 | Data access patterns (gRPC vs GraphQL vs indexer) | route to `accessing-data` skill |
 | Full project setup | **all reference files** (or the SDK-specific one + llm-docs) |
@@ -78,7 +78,7 @@ If unsure about any specific API in any SDK, fetch from the relevant doc page â€
 
 ### Key concepts
 
-- **Two officially-supported SDKs.** TypeScript (`@mysten/sui`) and Rust (`sui-rust-sdk` crates). Both are maintained by Mysten Labs and updated alongside protocol changes.
+- **Two officially-supported SDKs.** TypeScript (`@mysten/sui`) and Rust (`sui-rust-sdk` crates). Both are maintained by Mysten Labs and updated alongside protocol changes. For performance-critical paths in non-Rust languages, `sui-rust-sdk` can be called via FFI (Foreign Function Interface) from Python, Go, Swift, etc., giving those languages access to the official SDK without relying on community wrappers.
 - **Everything else is community.** Python (`pysui`), Go (`block-vision/sui-go-sdk`), Dart (`mofalabs/sui`), Kotlin (`mcxross/ksui`), Swift (`opendive/suikit`), Vue (`SuiFansCN/suiue`). They typically lag protocol updates and feature coverage varies. Treat them as best-effort.
 - **The TS SDK has two client generations.** v1 used `SuiClient` + `@mysten/sui.js`. v2 uses `SuiGrpcClient` / `SuiJsonRpcClient` / `SuiGraphQLClient` from `@mysten/sui`. JSON-RPC is deprecated; gRPC is recommended for new code.
 - **The Rust SDK has two generations.** The new modular crates (`sui-sdk-types`, `sui-crypto`, `sui-rpc`, `sui-transaction-builder`) are the recommended surface. The "legacy Rust SDK" is the monolithic `sui-sdk` crate in the sui monorepo; it supports JSON-RPC with forward/backward compatibility and is still used by many existing projects, but is not the recommended target for new code.
@@ -87,7 +87,7 @@ If unsure about any specific API in any SDK, fetch from the relevant doc page â€
 
 ### Rules
 
-1. **Default to TypeScript or Rust, but respect language constraints.** For any new Sui project, recommend TypeScript (`@mysten/sui`) or Rust (`sui-rust-sdk` crates) â€” unless the user has named a language (Go, Python, Dart, Kotlin, Swift, Vue) or said "my team uses X". Then `community.md` is the load: name the canonical community SDK (`block-vision/sui-go-sdk` for Go, `pysui` for Python, etc.), flag the staleness risk, and offer FFI-to-Rust as a fallback. Don't just push them to TS/Rust if their team can't use those.
+1. **Default to TypeScript or Rust, but respect language constraints.** For any new Sui project, recommend TypeScript (`@mysten/sui`) or Rust (`sui-rust-sdk` crates) â€” unless the user has named a language (Go, Python, Dart, Kotlin, Swift, Vue) or said "my team uses X". Then `community.md` is the load: name the canonical community SDK (`block-vision/sui-go-sdk` for Go, `pysui` for Python, etc.), flag the staleness risk, and offer FFI-to-Rust as a fallback. **Do not recommend TypeScript or Rust as a replacement language** when the user has stated their team's language. For example, if the user says "my team uses Go", do not suggest rewriting in TypeScript â€” recommend the Go community SDK and/or Rust via FFI.
 2. **For TypeScript, always use `@mysten/sui`, never `@mysten/sui.js`.** The `.js`-suffixed package is frozen at v1 and will not receive updates. Legacy code using it should be migrated.
 3. **For TypeScript v2, use `SuiGrpcClient` by default.** `SuiJsonRpcClient` exists for legacy compatibility; `SuiGraphQLClient` is for specialized query flows. See `typescript.md` for the decision.
 4. **For Rust, prefer `sui-rust-sdk` crates over the legacy monorepo `sui-sdk`.** Import `sui-transaction-builder`, `sui-sdk-types`, `sui-crypto`, `sui-rpc` individually â€” pay only for what you use.
@@ -95,6 +95,7 @@ If unsure about any specific API in any SDK, fetch from the relevant doc page â€
 6. **Do not mix v1 and v2 TS patterns.** Code that uses `SuiClient`, `TransactionBlock`, `getFullnodeUrl`, `options: { showEffects }`, `signAndExecuteTransactionBlock`, or `result.effects?.status?.status` is v1. Migrate wholesale or keep everything on v1 â€” a half-migrated file is a bug surface.
 7. **Community SDK caveat is mandatory.** When recommending or using a community SDK, mention that it's community-maintained and may lag protocol updates. Check the repo's last commit and latest Sui version support before relying on it.
 8. **Frameworks integrate via `$extend()` in v2.** `client.$extend(suins(), deepbook({ address }))` is the v2 pattern. Do not instantiate `SuinsClient` or `DeepBookClient` directly â€” that's the v1 style.
+9. **Route frontend questions to the `frontend-apps` skill.** When the user asks about React hooks, wallet connection, or dApp Kit query patterns, explicitly direct them to the `frontend-apps` skill for hook-level details. This skill covers SDK selection and `Transaction` construction only.
 9. **Cite the docs when unsure.** Official TS SDK docs live at `sdk.mystenlabs.com`. The inventory list lives at `docs.sui.io/references/sui-sdks`. Rust SDK docs live on `docs.rs` (per-crate) and `mystenlabs.github.io/sui-rust-sdk/<crate_name>/` (e.g., `/sui_transaction_builder/`).
 
 ### Common mistakes
@@ -105,5 +106,6 @@ If unsure about any specific API in any SDK, fetch from the relevant doc page â€
 - **Confusing the two Rust SDKs.** The new `sui-rust-sdk` crates (on `crates.io` as separate crates like `sui-sdk-types` / `sui-transaction-builder` / `sui-rpc`) are distinct from the legacy `sui-sdk` crate in the sui monorepo. New code should use the former.
 - **Fetching TS docs from the web when they're installed locally.** If the project has `@mysten/sui` installed, read `node_modules/@mysten/sui/docs/llms-index.md` instead â€” it matches the installed version.
 - **Hardcoding a specific SDK version.** SDK APIs evolve. Prefer "install the latest `@mysten/sui`" and then consult the bundled docs, rather than pinning advice to a version.
-- **Recommending `@mysten/dapp-kit` for backend code.** dApp Kit is a React-oriented frontend framework. Backend or CLI code should use `@mysten/sui` directly. (Route to the `frontend-apps` skill for dApp Kit.)
+- **Recommending `@mysten/dapp-kit` for backend code.** dApp Kit is a React-oriented frontend framework. Backend or CLI code should use `@mysten/sui` directly.
+- **Providing React hook details instead of routing to the `frontend-apps` skill.** When a user asks about React hooks, wallet connection patterns, or dApp Kit query patterns, do not answer with hook-level code from this skill. Instead, explicitly tell the user: "For React hook details, see the `frontend-apps` skill." This skill covers SDK selection and `Transaction` construction only â€” the `frontend-apps` skill has the hook-level guidance.
 - **Using JSON-RPC as the default for any client.** JSON-RPC is deprecated for the TS SDK; the legacy Rust SDK supports it but the new Rust SDK does not. Default to gRPC.

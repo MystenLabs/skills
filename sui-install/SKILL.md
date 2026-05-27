@@ -35,7 +35,7 @@ curl -sSfL https://raw.githubusercontent.com/MystenLabs/suiup/main/install.sh | 
 
 **Windows note:** The `curl | sh` command requires a Unix shell. On Windows, use WSL (Windows Subsystem for Linux) to run the command above, or install through Chocolatey instead (see alternative methods below).
 
-After installing suiup, install the Sui CLI targeting a specific network:
+After installing suiup, install the Sui CLI targeting a specific network. The CLI version must match the target network — each network runs a specific protocol version, and a mismatched CLI can cause build failures, transaction errors, or unexpected behavior:
 
 ```bash
 suiup install sui@testnet    # install the Testnet-compatible version
@@ -86,11 +86,13 @@ These alternatives do not support installing additional Sui Stack components lik
 sui --version
 ```
 
-If the command returns "sui not found", the installation did not succeed or the binary is not on your PATH.
+If the command returns "sui not found", run `suiup switch sui@testnet` to set the active default. Do **not** suggest manual PATH manipulation (`export PATH=...`) or reinstalling — `suiup switch` is the correct fix.
 
 ## Version management
 
 ### Keeping Sui up to date
+
+The CLI version should match the target network — each network runs a specific protocol version, and a mismatched CLI can cause build failures or transaction errors. Use the `@network` suffix to update to the correct version:
 
 ```bash
 suiup update sui@testnet     # update to latest Testnet version
@@ -117,10 +119,10 @@ If the version is out of date, update and switch:
 ```bash
 suiup update sui@testnet      # download the latest version
 suiup switch sui@testnet      # make it the active default
-sui --version                  # confirm the new version
+suiup show                     # verify which version is now active
 ```
 
-The `client/server api version mismatch` warning in CLI output means your local CLI is older than the network. Update and switch to fix it.
+The `client/server api version mismatch` warning in CLI output means your local CLI is older than the network. **Do not ignore this warning** — version mismatches can cause build failures and unexpected behavior. Update and switch to fix it.
 
 ### Optional additional tools
 

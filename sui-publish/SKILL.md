@@ -71,7 +71,7 @@ sui client test-publish --build-env testnet
 
 ### After publishing
 
-The `published-at` field is automatically added to your `Published.toml`. To interact with the published package:
+The publish transaction output lists the package ID under the **created objects** section (alongside the `UpgradeCap` and any objects created by `init` functions). The `published-at` field is also automatically added to your `Published.toml`. To interact with the published package:
 
 ```bash
 # Call a function
@@ -85,21 +85,12 @@ sui client object <OBJECT_ID>
 
 If you see this error when running `sui client publish`, it means `Published.toml` already has an entry for your active environment. This happens when iterating on a package during development.
 
-To publish a fresh copy (new package ID, new `init` objects):
-
-```bash
-rm Published.toml Move.lock
-sui move build
-sui client publish
-```
-
-Deleting `Move.lock` is necessary because it can also cache the published state. After the fresh publish, both files are regenerated with the new package address.
-
-To **upgrade** the existing package instead of deploying a new one, use `sui client upgrade` (see below).
+- To **publish to a different network**, switch environments with `sui client switch --env <ENV>` and run `sui client publish` again. The toolchain tracks published addresses per environment in `Published.toml` automatically — do not delete `Published.toml`.
+- To **upgrade** the existing package on the same network, use `sui client upgrade` (see below).
 
 ### Upgrading a published package
 
-Published packages are immutable, but you can upgrade by publishing a new version linked to the original. The `UpgradeCap` object controls upgrade authority.
+Published packages are immutable, but you can upgrade by publishing a new version linked to the original. The `UpgradeCap` object controls upgrade authority. **Important:** you can restrict the `UpgradeCap` in the same PTB as the `publish` command — for example, publishing and immediately calling `sui::package::only_additive_upgrades` in one atomic transaction. You can also destroy it entirely to make the package permanently immutable (see upgrade policies below).
 
 ```bash
 sui client upgrade --upgrade-capability <CAP_ID>
@@ -125,7 +116,11 @@ Upgrade policies restrict what can change:
 - **Additive:** New modules can be added, but existing modules cannot change at all.
 - **Dependency-only:** Only dependency versions can be updated. No code changes.
 
-You can restrict the `UpgradeCap` in the same PTB as the publish command (for example, calling `only_additive_upgrades` on it immediately). Once restricted, you cannot widen the policy. You can also transfer the `UpgradeCap` to a multisig address or destroy it entirely to make the package permanently immutable.
+**Restricting the UpgradeCap in the same PTB as publish:** You can restrict the `UpgradeCap` in the same programmable transaction block as the `publish` command itself — for example, calling `sui::package::only_additive_upgrades` on the `UpgradeCap` immediately after publishing, all within a single atomic transaction. This is the recommended approach for locking down upgrade policy from the start. Once restricted, you cannot widen the policy.
+
+**Other UpgradeCap options:**
+- **Transfer to a multisig address** for shared upgrade governance.
+- **Destroy the UpgradeCap** to make the package permanently immutable. Call `sui::package::make_immutable`, which consumes and destroys the `UpgradeCap` object. Once the cap is destroyed, no one can ever upgrade the package again — this is irreversible.
 
 #### Compatible upgrade rules (detailed)
 
@@ -183,7 +178,7 @@ Before publishing to a new network, ensure you have tokens for that network:
 
 - **Testnet:** Free tokens through the web faucet at `faucet.sui.io`, Discord (`!faucet <ADDRESS>` in `#testnet-faucet`), or the TypeScript SDK (`requestSuiFromFaucetV2()`). **`sui client faucet` does not work on Testnet.**
 - **Devnet:** Free tokens via `sui client faucet`, the web faucet at `faucet.sui.io`, Discord (`!faucet <ADDRESS>` in `#devnet-faucet`), or the TypeScript SDK.
-- **Localnet:** Free tokens via `sui client faucet` or the local faucet at `127.0.0.1:5003/gas` or `127.0.0.1:9123/gas` (started with `sui start --with-faucet`).
+- **Localnet:** Free tokens via `sui client faucet` or the local faucet at `127.0.0.1:5003/gas` or `127.0.0.1:9123/gas` (started with `sui start --with-faucet --force-regenesis`).
 - **Mainnet:** SUI tokens with real monetary value. Acquire through exchanges or transfers. No faucet available.
 
 ### Serializing for external signing
@@ -195,6 +190,29 @@ sui client publish --serialize-output
 ```
 
 This outputs base64 transaction bytes instead of executing.
+
+## Local network (localnet)
+
+Localnet runs a full Sui network on your machine for offline development and rapid iteration. Start it with:
+
+```bash
+sui start --with-faucet --force-regenesis
+```
+
+The `--force-regenesis` flag resets all on-chain state each time the network starts, giving you a clean environment on every restart. The `--with-faucet` flag starts a local faucet so you can fund addresses.
+
+To connect the CLI to your localnet:
+
+```bash
+sui client switch --env localnet
+```
+
+Get local tokens via `sui client faucet` or by hitting the local faucet endpoint directly at `127.0.0.1:5003/gas` or `127.0.0.1:9123/gas`.
+
+Localnet is useful for:
+- Offline development without depending on Testnet/Devnet availability
+- Rapid iteration on publish and upgrade flows (reset state with each restart)
+- Testing `init` functions and object creation before deploying to a shared network
 
 ## Mainnet launch checklist
 

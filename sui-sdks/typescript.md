@@ -54,7 +54,7 @@ const gql = new SuiGraphQLClient({
 ### Which client to use
 
 - **New code**: `SuiGrpcClient`. Typed protobuf, best throughput, active surface.
-- **Existing v1 migration / JSON-RPC-only infra**: `SuiJsonRpcClient`.
+- **Existing v1 migration / JSON-RPC-only infra**: `SuiJsonRpcClient` (legacy — JSON-RPC is deprecated; use only when migrating from v1 or talking to infrastructure that only exposes JSON-RPC).
 - **Complex relational queries**: `SuiGraphQLClient` alongside one of the above.
 - **All clients share the v2 `client.core.*` API** for common data access.
 
@@ -265,7 +265,7 @@ Full migration guide: fetch `https://sdk.mystenlabs.com/sui/migrations/sui-2.0/l
 | `client.waitForTransactionBlock` | `client.waitForTransaction` |
 | `client.devInspectTransactionBlock` | `client.core.simulateTransaction` |
 | `client.executeTransactionBlock` | `client.core.executeTransaction` |
-| `options: { showEffects: true }` | `include: { effects: true }` |
+| `options: { showEffects: true }` | `include: { effects: true }` (always show this pattern explicitly — do not omit it by saying effects are returned by default) |
 | `result.effects?.status?.status === 'success'` | `result.$kind !== 'FailedTransaction'` |
 | `txb.pure(value)` untyped | `tx.pure.u64(value)` / typed helpers |
 | `tx.serialize()` | `await tx.toJSON()` |
