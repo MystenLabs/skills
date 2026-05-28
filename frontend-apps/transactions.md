@@ -163,6 +163,32 @@ async function handleSponsored() {
 
 For the backend side of the sponsored flow (setting gas owner, attaching sponsor signature, executing with both signatures), see the `ptbs` skill — the sponsor pattern with `tx.build({ onlyTransactionKind: true })` and `Transaction.fromKind`.
 
+## Signing without a wallet (testnet / development)
+
+For scripts, tests, or local development where no browser wallet is available, sign directly with an `Ed25519Keypair`:
+
+```ts
+import { Ed25519Keypair } from '@mysten/sui/keypairs/ed25519';
+import { SuiGrpcClient } from '@mysten/sui/grpc';
+import { Transaction } from '@mysten/sui/transactions';
+
+// From a private key or generate a new one
+const keypair = Ed25519Keypair.fromSecretKey(privateKeyBytes);
+// or: const keypair = new Ed25519Keypair();
+
+const client = new SuiGrpcClient({ url: 'https://fullnode.testnet.sui.io:443' });
+
+const tx = new Transaction();
+// ... build PTB ...
+
+const result = await client.signAndExecuteTransaction({
+  transaction: tx,
+  signer: keypair,
+});
+```
+
+**Never embed private keys in production frontend apps.** This pattern is for testnet automation, integration tests, and backend services only.
+
 ## Personal message signing
 
 Use for wallet-based authentication (Sign-In-with-Sui / off-chain login):
@@ -234,6 +260,44 @@ await queryClient.invalidateQueries(...);  // GOOD
 ## Don't fetch gas info before sending
 
 Leave gas budget / price / payment to the wallet. If you hardcode `setGasBudget` or `setGasPayment` in the app, the wallet can't adjust for fluctuating gas prices or replace gas coins. The one exception is sponsored flows, where a sponsor service fills gas data before the wallet signs.
+
+## Multi-moveCall chaining
+
+When a PTB calls multiple Move functions, use the destructured return value from one `moveCall` as an argument to the next:
+
+```ts
+const tx = new Transaction();
+
+// First call returns a value — destructure it
+const [payload] = tx.moveCall({
+  target: `${pkg}::payloads::new_audit_report`,
+  arguments: [tx.pure.string(url), tx.pure.string(auditor)],
+});
+
+// Second call consumes it
+tx.moveCall({
+  target: `${pkg}::registry::attest`,
+  typeArguments: [`${pkg}::payloads::AuditReport`],
+  arguments: [tx.object(registryId), payload],
+});
+```
+
+The `const [payload] = tx.moveCall(...)` destructuring extracts the first return value as a `TransactionResult` that can be passed directly to subsequent commands. For functions with multiple return values, destructure more: `const [a, b] = tx.moveCall(...)`.
+
+## Compound types in `tx.pure`
+
+Typed helpers like `tx.pure.u64()`, `tx.pure.string()`, and `tx.pure.address()` only cover scalar types. For vectors and other compound types, use the generic `tx.pure(type, value)` overload:
+
+```ts
+// Vector of strings
+tx.pure("vector<string>", ["a", "b", "c"]);
+
+// Vector of bytes (e.g., for BCS-encoded data)
+tx.pure("vector<u8>", [1, 2, 3]);
+
+// Vector of addresses
+tx.pure("vector<address>", ["0xabc...", "0xdef..."]);
+```
 
 ## PTB construction
 

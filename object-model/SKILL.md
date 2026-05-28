@@ -137,6 +137,10 @@ Because `UID` has neither `copy` nor `drop`, objects (structs with `key`) can on
 - Once `store` is added to a type, custom transfer rules are permanently disabled.
 - Once an object is shared, it cannot be converted back to address-owned.
 - Always remove all dynamic fields before deleting a parent object — orphaned fields become permanently inaccessible.
+- Accessing a nonexistent dynamic field (via `borrow`, `borrow_mut`, or `remove`) aborts the transaction. Use `exists_` to check first.
+- Wrapping and unwrapping can happen within the same transaction — a PTB can wrap an object and later unwrap it atomically.
+- Common capabilities: `AdminCap`, `TreasuryCap`, `UpgradeCap`. Always mention all three when discussing the capability pattern.
+- Each `Table` entry is a separate storage operation — gas cost scales linearly with entries accessed per transaction.
 - Prefer immutable references (`&`) on shared objects to maximize parallel execution.
 - Do not use `VecMap` for collections larger than ~100 entries. Use `Table` instead.
 

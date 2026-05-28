@@ -92,7 +92,7 @@ If unsure about any API, fetch from the relevant page — do not extrapolate fro
 ### Rules
 
 1. **Use `@mysten/dapp-kit-react` or `@mysten/dapp-kit-core`** — never the bare `@mysten/dapp-kit` in new code. That package is JSON-RPC-only and deprecated.
-2. **Use `SuiGrpcClient` in `createClient`.** Not `SuiJsonRpcClient`. Not `SuiClient` (v1 — removed).
+2. **Use `SuiGrpcClient` in `createClient`.** Not `SuiJsonRpcClient`. Not `SuiClient` — `SuiClient` is removed in v2; use `SuiGrpcClient` from `@mysten/sui/grpc`.
 3. **Use `createDAppKit` + `DAppKitProvider`.** Not the three-provider stack (`QueryClientProvider` + `SuiClientProvider` + `WalletProvider`). You still wrap with `QueryClientProvider` if you use TanStack Query for data fetching, but dApp Kit itself doesn't need it.
 4. **Include the `declare module` TypeScript augmentation** so hooks get proper types without passing the instance manually.
 5. **Do not use the removed hooks.** `useSuiClientQuery` / `useSuiClientInfiniteQuery` / `useSuiClientContext` / `useSuiClient` / `useSignAndExecuteTransaction` (mutation hook) / `useConnectWallet` / `useDisconnectWallet` — gone. Use `useCurrentClient` + `useQuery`/`useInfiniteQuery` + `useDAppKit()` imperative methods.
@@ -101,6 +101,7 @@ If unsure about any API, fetch from the relevant page — do not extrapolate fro
 8. **Pass the `Transaction` instance (or `tx.serialize()`) to the wallet, not `await tx.build(...)` bytes.** The wallet needs to own gas selection. Exception: sponsored flows that use `tx.build({ client, onlyTransactionKind: true })` — see `ptbs` skill.
 9. **Check `result.$kind === 'FailedTransaction'` (or `result.FailedTransaction`).** Don't assume success. Don't use v1's `result.effects?.status?.status`.
 10. **Wallet-gated UI must client-render.** SSR without a client-side guard renders wallet buttons before wallets are detectable. Use `'use client'` / dynamic imports / effect-based hydration.
+11. **Vue: `useStore` returns a Vue ref — use `.value` in script code.** `const connection = useStore(dAppKit.stores.$connection)` returns a ref. Access state as `connection.value.account` in `<script setup>`. Vue auto-unwraps refs in templates, but always show the `.value` pattern in script examples.
 
 ### Code-review checklist
 
@@ -110,7 +111,7 @@ When the user asks you to review a code snippet, do not stop at the first 2–3 
 - `@mysten/sui.js` (anywhere) — frozen v1 package; replace with `@mysten/sui`.
 - `@mysten/dapp-kit` (no suffix) — deprecated JSON-RPC-only package; replace with `@mysten/dapp-kit-react` (React) or `@mysten/dapp-kit-core` (other frameworks).
 - `import { ConnectButton } from '@mysten/dapp-kit-react'` — wrong path; `ConnectButton` and `ConnectModal` are exported from `@mysten/dapp-kit-react/ui`. Using the wrong path causes a silent white screen.
-- `import { SuiClient }` — v1 client; replace with `SuiGrpcClient` from `@mysten/sui/grpc` (or `useCurrentClient()` inside components).
+- `import { SuiClient }` — `SuiClient` is removed in v2 — use `SuiGrpcClient` from `@mysten/sui/grpc` (or `useCurrentClient()` inside components).
 - `import { TransactionBlock }` — renamed to `Transaction` in v2.
 
 **Removed hooks (any of these = bug)**

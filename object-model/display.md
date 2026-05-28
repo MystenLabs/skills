@@ -6,9 +6,13 @@ Object Display defines how objects render in wallets, explorers, and apps. It is
 
 ## Creating a Display
 
-Use the `sui::display_registry` module (not the legacy `sui::display`). A `Publisher` object is required. The `Publisher` proves module authority and is obtained during the module's `init` function using `package::claim(otw, ctx)`.
+Use the `sui::display_registry` module (not the legacy `sui::display`). There are two creation paths.
 
-`display_registry::new_with_publisher<T>` creates a V2 `Display<T>` and a `DisplayCap<T>`. The display has a deterministic derived ID, and the capability authorizes future updates.
+`DisplayRegistry` is a shared system object at address `0xd`. Both creation functions take a `&mut DisplayRegistry` as their first argument. Each returns a `(Display<T>, DisplayCap<T>)` pair — the display has a deterministic derived ID, and the capability authorizes future updates.
+
+### Publisher path — `new_with_publisher`
+
+Requires a `Publisher` object, which is obtained during the module's `init` function using `package::claim(otw, ctx)`. Use this when you already have a Publisher and are setting up Display at publish time.
 
 ```move
 use sui::display_registry;
@@ -26,9 +30,10 @@ public struct GameItem has key, store {
 fun init(otw: MY_NFT, ctx: &mut TxContext) {
     let publisher = package::claim(otw, ctx);
 
+    // registry is the shared DisplayRegistry at 0xd
     let (mut d, cap) = display_registry::new_with_publisher<GameItem>(
-        &mut display_registry::borrow_mut(),
-        &mut publisher,
+        registry,
+        &publisher,
         ctx,
     );
     display_registry::set(&mut d, &cap, b"name".to_string(), b"{name}".to_string());
@@ -41,11 +46,46 @@ fun init(otw: MY_NFT, ctx: &mut TxContext) {
 }
 ```
 
+### Permit path — `new`
+
+Uses `internal::Permit<T>` instead of a Publisher. Simpler because it does not require a One-Time Witness or a Publisher object — it works in any function, not just `init`.
+
+```move
+use sui::display_registry;
+use sui::internal;
+
+public struct GameItem has key, store {
+    id: UID,
+    name: String,
+    image_id: u64,
+    rarity: String,
+}
+
+// Can be called from any function — no OTW or Publisher needed
+public fun setup_display(registry: &mut DisplayRegistry, ctx: &mut TxContext) {
+    let (mut d, cap) = display_registry::new<GameItem>(
+        registry,
+        internal::permit<GameItem>(),
+        ctx,
+    );
+    display_registry::set(&mut d, &cap, b"name".to_string(), b"{name}".to_string());
+    display_registry::set(&mut d, &cap, b"image_url".to_string(), b"https://example.com/items/{image_id}.png".to_string());
+    display_registry::share(d);
+
+    transfer::public_transfer(cap, ctx.sender());
+}
+```
+
+### Retroactive Display via upgrades
+
+Because the Permit path does not require a Publisher (and therefore no OTW claimed in `init`), you can add Display to an already-published package via a compatible upgrade. Add a new public function that calls `display_registry::new<T>` with `internal::permit<T>()`, publish the upgrade, then call that function. This is useful when the original package did not set up Display at all.
+
 ## V2 API
 
 | Function | Purpose |
 |---|---|
-| `display_registry::new_with_publisher<T>(registry, publisher, ctx)` | Create a `Display<T>` and `DisplayCap<T>` for a type |
+| `display_registry::new_with_publisher<T>(registry, publisher, ctx)` | Create `Display<T>` + `DisplayCap<T>` — requires Publisher |
+| `display_registry::new<T>(registry, permit, ctx)` | Create `Display<T>` + `DisplayCap<T>` — uses `internal::Permit<T>`, no Publisher needed |
 | `display_registry::set<T>(display, cap, name, value)` | Set a display field |
 | `display_registry::unset<T>(display, cap, name)` | Remove a display field |
 | `display_registry::clear<T>(display, cap)` | Clear all display fields |
@@ -88,9 +128,25 @@ Display templates use `{field_name}` syntax. The placeholder is replaced with th
 
 Existing V1 displays were migrated to V2 in a system snapshot migration. If you need to manage a migrated display, use `migrate_v1_to_v2` only if the display was not already migrated by the snapshot. After migration, claim the `DisplayCap<T>` to update the display.
 
+## Display-mixin pattern
+
+For off-chain-primary behaviors like expiration, dependencies, or thresholds, prefer Display-field conventions over type wrappers. For example, use an `expires_at` Display field rather than wrapping objects in a `WithExpiry<T>` type:
+
+```move
+// Prefer: set an expires_at Display field
+display_registry::set(&mut d, &cap, b"expires_at".to_string(), b"{expires_at}".to_string());
+
+// Avoid: generic type wrappers for off-chain concerns
+// public struct WithExpiry<T> { inner: T, expires_at: u64 }
+// These interact badly with type resolution and don't compose well.
+```
+
+Type wrappers like `WithExpiry<T>` break type resolution (clients must know the wrapper to query the inner type) and do not compose well when multiple behaviors are needed (e.g., `WithExpiry<WithThreshold<T>>`). Use Display fields when the behavior is informational / off-chain. Use typed helpers only when on-chain enforcement is needed (e.g., a hot potato that forces expiry checks in Move).
+
 ## Key rules
 
 - Each type has exactly one `Display<T>` with a deterministic derived ID from the global `DisplayRegistry`.
-- The `DisplayCap<T>` is the access control mechanism for updating the display. The `Publisher` is used only at creation time.
+- Two creation paths: `new_with_publisher` (requires Publisher + OTW) and `new` (requires `internal::Permit<T>`, no OTW needed).
+- The `DisplayCap<T>` is the access control mechanism for updating the display. The `Publisher` is used only at creation time (and only with the Publisher path).
 - After setting fields, call `display_registry::share(display)` to make the display discoverable.
 - Do not use the legacy `sui::display` module for new code. Use `sui::display_registry`.

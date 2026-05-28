@@ -42,7 +42,11 @@ Use plain function calls (`dynamic_field::add`, `table::add`, etc.) instead of r
 
 Replace `dynamic_field` with `dynamic_object_field` for object fields. The API is identical.
 
-Accessing a nonexistent field aborts the transaction. Adding a field with a name that already exists (same name and type) also aborts.
+Accessing a nonexistent field aborts the transaction — use `exists_` to check first when the field's presence is uncertain. Adding a field with a name that already exists (same name and type) also aborts.
+
+> **Important:** Accessing a nonexistent dynamic field (via `borrow`, `borrow_mut`, or `remove`) aborts the transaction. Always use `exists_` to check before accessing a dynamic field whose presence is uncertain.
+
+**Warning:** Deleting an object that still has dynamic fields attached renders those fields permanently inaccessible (orphaned storage). Always remove all dynamic fields before destroying the parent object.
 
 ## Collections
 
@@ -51,6 +55,8 @@ Accessing a nonexistent field aborts the transaction. Adding a field with a name
 `Table<K, V>` is a homogeneous key-value map backed by dynamic fields. O(1) lookup. The default choice for large or unbounded collections.
 
 `ObjectTable<K, V>` is the same but values must be objects (`key + store`). Child objects keep their own IDs and are visible to explorers.
+
+**Each Table entry is a separate dynamic field and therefore a separate storage operation — gas cost scales linearly with the number of entries accessed per transaction.**
 
 ```move
 let mut inventory = table::new<String, Sword>(ctx);
@@ -98,6 +104,27 @@ Collections lack the `drop` ability. You must explicitly clean them up:
 | Small unique-value set | `VecSet<K>` |
 | Ordered iteration or pop from front/back | `LinkedTable<K, V>` |
 | Inventory holding arbitrary Sui objects | `ObjectBag` (heterogeneous objects) or `ObjectTable` (homogeneous objects) |
+
+## Reading collection entries from a frontend
+
+`Table<K, V>`, `ObjectTable`, `Bag`, and `ObjectBag` each have their own `UID`. Entries are stored as dynamic fields under the **collection's own UID**, not the parent struct's UID. When querying entries from a frontend, you must resolve the collection's ID first:
+
+```typescript
+// Step 1: Read the parent object to get the Table's ID
+const registry = await client.core.getObject({
+  objectId: registryId,
+  include: { json: true },
+});
+const tableId = registry.json.attestations; // Table's UID, NOT registryId
+
+// Step 2: Use the Table's ID for dynamic field lookup
+const entry = await client.core.getDynamicField({
+  parentId: tableId, // collection ID, not parent object ID
+  name: { type: "address", value: userAddr },
+});
+```
+
+A common mistake is passing the parent struct's ID directly to `getDynamicField`. This returns nothing because the entries live under the collection's own object, not the struct that contains it.
 
 ## System limits
 

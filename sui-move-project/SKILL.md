@@ -56,6 +56,38 @@ my_project/
 └── Move.toml      # package manifest
 ```
 
+### Multi-package workspace layout
+
+When a project contains more than one Move package (for example, a core library and an example or integration package), use a flat `packages/` directory with each package as a sibling:
+
+```
+my_project/
+├── packages/
+│   ├── core/
+│   │   ├── sources/
+│   │   ├── tests/
+│   │   └── Move.toml
+│   └── examples/
+│       ├── sources/
+│       ├── tests/
+│       └── Move.toml
+└── ui/
+```
+
+**Do not nest packages inside each other** (for example, placing `examples/` inside `core/sources/` or `core/tests/`). Nested package directories trigger test runner bugs such as spurious "address with no value" errors because the toolchain picks up the inner package's `Move.toml` when building the outer one.
+
+To depend on a sibling package, use a `local` path in `Move.toml`:
+
+```toml
+# packages/examples/Move.toml
+[package]
+name = "examples"
+edition = "2024"
+
+[dependencies]
+core = { local = "../core" }
+```
+
 ### Move.toml (current format — Sui CLI v1.63+)
 
 The new package management format introduced in Sui CLI v1.63 resolves the Sui framework dependency automatically. You do not need to specify it in `[dependencies]`. A minimal `Move.toml` is:

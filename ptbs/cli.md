@@ -98,6 +98,20 @@ sui client ptb \
 | Indexed result | `name.N` | `coins.0`, `coins.1` |
 | Type argument | `'<type>'` | `'0x2::sui::SUI'` |
 
+## CLI PTB syntax quick-reference
+
+| Syntax | Meaning | Example |
+|---|---|---|
+| `vector[...]` | Vector literal (not JSON `[...]`) | `vector["a", "b"]` |
+| `--assign name` | Bind the previous command's result to `name` | `--move-call ... --assign item` |
+| `[name]` | Reference a bound result in an argument | `--transfer-objects "[item]" @0xADDR` |
+| `'"my string"'` | String argument (single-quote wrapping double quotes) | `'"Hello, world!"'` |
+| `@0x...` | Object reference (object ID) | `@0xabc123` |
+| `@0x...` | Address value | `@0x1234` |
+| `@sender` | The active CLI address | `--transfer-objects "[coin]" @sender` |
+
+> **Vector syntax pitfall:** the CLI uses `vector["a", "b"]`, not JSON-style `["a", "b"]`. JSON arrays are for homogeneous numeric/object lists inside `--split-coins` and `--merge-coins` arguments; `vector[...]` is the general-purpose Move vector literal.
+
 ## Assigning results
 
 Use `--assign` to name the result of the previous command for use in subsequent commands:
@@ -155,6 +169,19 @@ sui client ptb \
   --transfer-objects "[coins.1]" @0xBOB \
   --transfer-objects "[coins.2]" @0xCHARLIE
 ```
+
+### Calling a function that returns an object
+
+When a Move function returns an object, use `--assign` to bind the result, then `--transfer-objects` to send it to an address:
+
+```bash
+sui client ptb \
+  --move-call 0xPACKAGE::weapon::forge 100u64 50u64 \
+  --assign sword \
+  --transfer-objects "[sword]" @sender
+```
+
+Without the `--transfer-objects`, the returned object has no owner and the PTB fails with `UnusedValueWithoutDrop`.
 
 ### Mint and transfer an NFT
 

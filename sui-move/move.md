@@ -23,7 +23,7 @@ Common combinations:
 - `has copy, drop`: Not an object (no `key`). A plain data struct that can be passed around freely. Used for events, configs, or intermediate values.
 - `has store`: Not an object on its own, but can be stored as a field inside an object.
 
-Abilities are enforced at compile time. You cannot add abilities to a struct after publishing.
+Abilities are enforced at compile time. You cannot add abilities to a struct after publishing — abilities are fixed at publish time. Adding an ability to an existing struct would be a non-compatible upgrade, which Sui's upgrade policy does not allow.
 
 ## TxContext
 
@@ -92,6 +92,28 @@ module my_package::my_token {
 
 OTW is required by `coin::create_currency` and other framework functions that need proof of module authority.
 
+### `internal::Permit<T>` — type-level authorization
+
+`std::internal::Permit<T>` is a stdlib primitive for proving that you are the module that defines type `T`. Create one by calling `internal::permit<T>()` — this compiles only inside the module that defines `T`.
+
+```move
+use std::internal;
+
+/// Works in any function, not just init
+public fun register_my_type(registry: &mut Registry) {
+    let permit = internal::permit<MyType>();
+    registry.add_type(permit);
+}
+```
+
+Unlike OTW (which exists only during `init`) and Publisher (which proves package-level authority), `Permit<T>` proves type-level authority and can be created in any function at any time.
+
+| Mechanism | When to use |
+|---|---|
+| OTW | One-time setup in `init` (coin creation, etc.) |
+| Publisher | Proving package authority to external systems |
+| `internal::Permit<T>` | Proving you define type `T` — works in any function, not just `init` |
+
 ## Move packages
 
 A Move package is a set of compiled bytecode modules published to the Sui network as an immutable object. Every published package receives a unique package ID on the network.
@@ -116,6 +138,17 @@ You can restrict the `UpgradeCap` in the same PTB as the publish command (for ex
 ## Move modules
 
 A module lives inside a package and defines the types (structs) and functions that interact with onchain objects. Modules are the unit of encapsulation in Move.
+
+## `type_name` deprecations
+
+The `std::type_name` module has renamed several functions. Use the new names — the old ones still compile but are deprecated and may be removed in a future release.
+
+| Deprecated | Replacement |
+|---|---|
+| `type_name::get<T>()` | `type_name::with_defining_ids<T>()` |
+| `type_name::get_with_original_ids<T>()` | `type_name::with_original_ids<T>()` |
+
+Additionally, `type_name::original_id<T>(): address` is a native helper that returns the defining package address directly. Use it instead of manually parsing via `address_string()` and `from_ascii_bytes()`.
 
 ## Move objects (structs)
 
@@ -277,3 +310,60 @@ When reviewing a Move package's access control:
 6. **Event emission.** Are security-critical actions (admin changes, deny list modifications, object deletions, configuration updates) emitting events? Events are the only way for offchain monitoring to detect these actions.
 7. **Object deletion.** Can shared objects be deleted? If so, who can delete them? Deleting a shared object with dynamic fields renders those fields permanently inaccessible.
 8. **Upgrade policy.** Is the `UpgradeCap` held by a multisig or has the package been made immutable? An unrestricted `UpgradeCap` held by a single key means the entire package can be rewritten.
+
+## Advanced design patterns
+
+### Ability dosing — default to minimum abilities
+
+Only add `store` if you genuinely need cross-module transferability or wrapping. Adding `store` weakens module-level invariants because it enables `public_transfer` — anyone can move the object, bypassing your module's transfer logic. Default to `key` only and add `store` consciously.
+
+### Phantom type parameters on events
+
+Use `phantom T` on event structs for native RPC type-filtering instead of carrying type names as string fields:
+
+```move
+public struct Attested<phantom T> has copy, drop { subject: address }
+```
+
+The event's full type `0xPKG::module::Attested<ConcreteT>` is filterable via RPC `eventType` — no string parsing needed.
+
+### Event denormalization anti-pattern
+
+Events should not carry information already derivable from the transaction effects (e.g., `tx.sender` for who executed, package address for type identity). This adds storage cost and creates dual sources of truth.
+
+### Prefer `&` over `&mut` on shared objects
+
+Sui consensus serializes transactions that take `&mut` references to shared objects. If your function only reads from a shared object, take `&` instead of `&mut` — this allows concurrent execution. This is one of the most impactful performance optimizations on Sui.
+
+### Receiver-syntax-friendly argument ordering
+
+Put capabilities (`Permit<T>`, `OwnerCap`, etc.) late in the argument list so the "main" object can be the receiver:
+
+```move
+// Good: enables registry.attest(...)
+public fun attest<T>(&Registry, ..., _: Permit<T>)
+// Bad: no receiver syntax
+public fun attest<T>(_: Permit<T>, &Registry, ...)
+```
+
+### Clever error constants
+
+Use `#[error]` attributes with human-readable messages:
+
+```move
+#[error(code = 0)]
+const EBoxAlreadyExists: vector<u8> = b"A Box already exists for this subject";
+```
+
+### `transfer::receive` privacy
+
+`transfer::receive<T>(uid, rcv)` is restricted to `T`'s defining module (same as `transfer::transfer`). Use `transfer::public_receive` (requires `T: key + store`) for cross-module access. Symmetric to `transfer`/`public_transfer`.
+
+### Field privacy as a safety primitive
+
+Move struct fields are private to the defining module. This is load-bearing for safe by-value APIs — even when you return an owned object, callers cannot mutate its fields. Combined with hot potatoes and no-`store`, this is why borrow-style patterns are safe.
+
+### Move 2024 macro gotchas
+
+- `()` is not a nameable type in macro return position. `public macro fun foo<$T, $R>(...) -> $R` fails when the caller substitutes `()`. Fix: return a value or have a separate void macro.
+- Macros expand in caller-module scope for privacy. A macro touching private fields can only be invoked from inside the defining package — macros are not a privacy escape hatch.

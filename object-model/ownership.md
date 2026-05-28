@@ -6,7 +6,7 @@ Every object on Sui has one of five ownership types. The ownership type determin
 
 Owned by a specific 32-byte address. Only that address can use the object as a transaction input. Created through `transfer::transfer()` or `transfer::public_transfer()`.
 
-All transactions go through consensus on Sui. However, transactions touching only address-owned objects benefit from optimized consensus handling, giving them the lowest latency and highest throughput. Most transactions on Sui (transfers, personal asset management, single-player game moves) touch only owned objects and execute in parallel.
+Transactions touching only address-owned objects use a **fastpath that does not require consensus ordering** — validators can certify them directly because only one address can use the object, so there are no ordering conflicts. This gives owned-object transactions the lowest latency and highest throughput. Most transactions on Sui (transfers, personal asset management, single-player game moves) touch only owned objects and execute in parallel.
 
 The tradeoff: only one address can use the object, and only one inflight transaction per object version is allowed. If multiple users need access, use a shared object. If a single owner needs multiple inflight transactions against the same object, use a party object.
 
@@ -40,7 +40,7 @@ Shared objects require consensus ordering through Mysticeti. This adds latency a
 
 Cannot be changed, transferred, or deleted. Anyone can read them. Created through `transfer::freeze_object()` or `transfer::public_freeze_object()`. Freezing is permanent and irreversible.
 
-Immutable objects skip consensus (like owned objects). Use for reference data, published packages, and constants that never change.
+Immutable objects also skip consensus (fastpath, like owned objects). Use for reference data, published packages, and constants that never change.
 
 ## Wrapped objects
 
@@ -48,7 +48,9 @@ An object stored as a field inside another object. Wrapped objects are not direc
 
 When unwrapped, the object regains direct access and retains its original ID.
 
-Wrapping requires the child object to have the `store` ability (so it can be stored inside the parent). Wrapping and unwrapping can happen within the same transaction.
+Wrapping requires the child object to have the `store` ability (so it can be stored inside the parent).
+
+**Same-transaction wrapping and unwrapping:** wrapping and unwrapping can happen within the same transaction. A PTB can wrap an object into a parent and later unwrap it, all atomically.
 
 Use wrapping for tight coupling: when a child should only be accessible through its parent (equipment inside a character, items inside a chest).
 
@@ -62,7 +64,7 @@ Only the most recent version is accessible to active transactions. Historical ve
 
 ### Versioning and ownership
 
-- **Address-owned / immutable objects:** Benefit from optimized consensus handling with lowest latency. The transaction must use the exact current version as input, and only one inflight transaction per object version is allowed. Coordinate offchain access or use a party/shared object if frequent concurrent use is needed.
+- **Address-owned / immutable objects:** Skip consensus entirely (fastpath). The transaction must use the exact current version as input, and only one inflight transaction per object version is allowed. Coordinate offchain access or use a party/shared object if frequent concurrent use is needed.
 - **Shared / party objects:** Sequenced through full consensus ordering. Enables concurrent access — multiple inflight transactions can touch the same object without version locking issues.
 - **Wrapped objects:** Version increments when the parent is modified, maintaining unique (ID, version) pairs. While wrapped, the object is not directly accessible by version.
 - **Dynamic fields:** Version increments when the field is modified, following Lamport timestamps like regular objects.

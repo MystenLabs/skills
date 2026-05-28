@@ -53,6 +53,18 @@ entry fun mint_and_keep(ctx: &mut TxContext) {
 }
 ```
 
+### CLI implication for returned values
+
+Functions that return non-`drop` values cannot be invoked via `sui client call` — the CLI has no way to consume the returned value, causing an `UnusedValueWithoutDrop` error. Use `sui client ptb` instead, where you can chain `--assign` and `--transfer-objects` to handle the return value:
+
+```bash
+sui client ptb \
+  --move-call @pkg::module::create_thing --assign thing \
+  --transfer-objects "[thing]" @sender
+```
+
+If the function is called frequently from the CLI, consider providing a companion `entry` wrapper that transfers internally (as shown above).
+
 This applies broadly:
 - `add_liquidity` should return LP coins and remainder coins, not transfer them
 - `remove_liquidity` should return both coins, not transfer them
@@ -67,7 +79,7 @@ Function parameters follow a strict order:
 2. **Capabilities second** — authorization tokens like `AdminCap`
 3. **Primitive values** — amounts, flags, addresses
 4. **Clock** — always at the end (before ctx), exception to objects-first rule
-5. **TxContext last** — always the final parameter
+5. **`ctx: &mut TxContext` last** — ALWAYS the final parameter, after all primitives and all other arguments
 
 ```move
 // WRONG — cap before object, primitives mixed in

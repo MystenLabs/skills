@@ -53,7 +53,7 @@ Because the `Borrow` receipt has no `drop`, the caller cannot keep the cap — t
 
 ## Soulbound objects
 
-An object without `store` can only be transferred by its defining module. To make it fully non-transferable, simply do not expose any transfer function. To allow temporary borrowing with forced return, use the hot potato pattern with a `ReturnReceipt`.
+An object without `store` can only be transferred by its defining module. To make it fully non-transferable, simply do not expose any transfer function. To allow temporary borrowing with forced return, use the hot potato pattern with a `ReturnReceipt`: the module lends the soulbound object out and issues a `ReturnReceipt` hot potato (a struct with no abilities) that forces the borrower to return the object in the same PTB. If the borrower does not call the return function, the transaction aborts because the receipt cannot be stored or dropped.
 
 ## Inventory pattern
 
@@ -106,3 +106,27 @@ Key properties:
 | Supports deletion | Yes | Yes |
 
 Use derived objects for registries, per-user configurations, soulbound tokens, and cases where you need parallel access without bottlenecking through a parent.
+
+## Object ownership as an index (TTO pattern)
+
+Transfer to Object (TTO) can replace shared-object collections as an index. Instead of storing entries in a `Table` on a shared object, create "box" objects at derived addresses and transfer items to the box. Queries use `listOwnedObjects` on the box address, and authorized access uses `Receiving<T>`.
+
+The pattern:
+
+1. **Derive a deterministic address** for each logical key (e.g., per-user or per-category).
+2. **Transfer items** to that derived address using `transfer::public_transfer(item, derived_addr)`.
+3. **Query** from the frontend with `listOwnedObjects(owner=derived_addr)` — paginated and type-filtered, no BCS decoding needed.
+4. **Access on-chain** by passing `Receiving<T>` into a function that holds `&mut UID` of the box object, calling `transfer::public_receive` for authorized pickup.
+
+Unlike Ethereum where tokens are automatically added to a recipient's balance, objects sent to another object on Sui are not usable until explicitly received via `transfer::receive` (or `transfer::public_receive` for objects with `key + store`).
+
+### When to use TTO vs Table
+
+| Concern | Table + shared object | TTO + derived addresses |
+|---|---|---|
+| Write contention | All writes serialize on shared object | Writes to different keys are independent |
+| Index maintenance | Manual Table updates | Runtime maintains ownership graph |
+| Frontend queries | BCS dynamic field lookups + Table UID resolution | `listOwnedObjects` — paginated, type-filtered |
+| On-chain readability | Callable from Move via Table lookup | Off-chain only via RPC |
+
+Use TTO when write contention is the bottleneck and you do not need to read the index from Move. Use Table when on-chain readability matters (other modules need to look up entries in your collection).
