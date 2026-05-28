@@ -48,7 +48,7 @@ An object stored as a field inside another object. Wrapped objects are not direc
 
 When unwrapped, the object regains direct access and retains its original ID.
 
-Wrapping requires the child object to have the `store` ability (so it can be stored inside the parent). Wrapping and unwrapping can happen within the same transaction.
+Wrapping requires the child object to have the `store` ability (so it can be stored inside the parent). Wrapping and unwrapping can happen within the same transaction — for example, a PTB can wrap an object into a parent and later unwrap it, all atomically.
 
 Use wrapping for tight coupling: when a child should only be accessible through its parent (equipment inside a character, items inside a chest).
 

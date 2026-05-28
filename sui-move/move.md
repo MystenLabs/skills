@@ -23,7 +23,7 @@ Common combinations:
 - `has copy, drop`: Not an object (no `key`). A plain data struct that can be passed around freely. Used for events, configs, or intermediate values.
 - `has store`: Not an object on its own, but can be stored as a field inside an object.
 
-Abilities are enforced at compile time. You cannot add abilities to a struct after publishing.
+Abilities are enforced at compile time. You cannot add abilities to a struct after publishing — abilities are fixed at publish time. Adding an ability to an existing struct would be a non-compatible upgrade, which Sui's upgrade policy does not allow.
 
 ## TxContext
 

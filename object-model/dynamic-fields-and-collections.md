@@ -44,6 +44,8 @@ Replace `dynamic_field` with `dynamic_object_field` for object fields. The API i
 
 Accessing a nonexistent field aborts the transaction — use `exists_` to check first when the field's presence is uncertain. Adding a field with a name that already exists (same name and type) also aborts.
 
+> **Important:** Accessing a nonexistent dynamic field (via `borrow`, `borrow_mut`, or `remove`) aborts the transaction. Always use `exists_` to check before accessing a dynamic field whose presence is uncertain.
+
 **Warning:** Deleting an object that still has dynamic fields attached renders those fields permanently inaccessible (orphaned storage). Always remove all dynamic fields before destroying the parent object.
 
 ## Collections
@@ -54,7 +56,7 @@ Accessing a nonexistent field aborts the transaction — use `exists_` to check 
 
 `ObjectTable<K, V>` is the same but values must be objects (`key + store`). Child objects keep their own IDs and are visible to explorers.
 
-Each Table entry is a separate dynamic field and therefore a separate storage operation. Gas cost scales linearly with the number of entries accessed in a single transaction.
+**Each Table entry is a separate dynamic field and therefore a separate storage operation — gas cost scales linearly with the number of entries accessed per transaction.**
 
 ```move
 let mut inventory = table::new<String, Sword>(ctx);

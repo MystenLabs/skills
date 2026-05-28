@@ -79,7 +79,7 @@ Function parameters follow a strict order:
 2. **Capabilities second** — authorization tokens like `AdminCap`
 3. **Primitive values** — amounts, flags, addresses
 4. **Clock** — always at the end (before ctx), exception to objects-first rule
-5. **TxContext last** — always the final parameter
+5. **`ctx: &mut TxContext` last** — ALWAYS the final parameter, after all primitives and all other arguments
 
 ```move
 // WRONG — cap before object, primitives mixed in

@@ -25,7 +25,7 @@ npm install @mysten/dapp-kit-core @mysten/sui
 npm install @nanostores/vue      # if Vue
 ```
 
-**Never install `@mysten/dapp-kit` (no suffix)** for new code — deprecated, JSON-RPC only. If a tutorial uses it, it's out of date. Follow the current getting-started guide instead: https://sdk.mystenlabs.com/dapp-kit/getting-started/react
+**Never install `@mysten/dapp-kit` (no suffix)** for new code — deprecated, JSON-RPC only. If a tutorial uses it, it's out of date. See the current getting-started docs at https://sdk.mystenlabs.com/dapp-kit/getting-started/react
 
 ## React setup
 
