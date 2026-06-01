@@ -5,6 +5,8 @@
   "scripts": {
     "eval": "node scripts/run-evals.js",
     "eval:changed": "node scripts/run-evals.js --changed-only",
+    "code-eval": "node scripts/run-code-evals.js",
+    "code-eval:changed": "node scripts/run-code-evals.js --changed-only",
     "staleness": "node scripts/check-sources.js",
     "staleness:update": "node scripts/check-sources.js --update"
   },

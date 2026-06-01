@@ -170,7 +170,7 @@
       ],
       "sources": [
         "https://docs.sui.io/develop/objects/transfers/custom-rules",
-        "https://move-book.com/storage/transfer-restrictions.html"
+        "https://move-book.com/storage/storage-functions"
       ]
     },
     {
@@ -233,7 +233,7 @@
         "The response does not suggest simply transferring the cap (which would give permanent access)"
       ],
       "sources": [
-        "https://docs.sui.io/develop/objects/transfers/borrow",
+        "https://docs.sui.io/develop/objects/transfers/simulating-refs",
         "https://move-book.com/programmability/hot-potato-pattern.html"
       ]
     },

@@ -22,39 +22,27 @@
  */
 
 import Anthropic from "@anthropic-ai/sdk";
-import { readFileSync, existsSync, writeFileSync } from "fs";
+import { writeFileSync } from "fs";
 import { resolve, dirname, basename, join } from "path";
-import { execSync } from "child_process";
-import { glob } from "glob";
-
-// ── Load .env file if present (key=value, one per line) ──────────────
-const ROOT_FOR_ENV = resolve(dirname(new URL(import.meta.url).pathname), "..");
-const envPath = join(ROOT_FOR_ENV, ".env");
-if (existsSync(envPath)) {
-  for (const line of readFileSync(envPath, "utf-8").split("\n")) {
-    const trimmed = line.trim();
-    if (!trimmed || trimmed.startsWith("#")) continue;
-    const eq = trimmed.indexOf("=");
-    if (eq === -1) continue;
-    const key = trimmed.slice(0, eq).trim();
-    const val = trimmed.slice(eq + 1).trim().replace(/^["']|["']$/g, "");
-    if (!process.env[key]) process.env[key] = val;
-  }
-}
+import {
+  ROOT,
+  getFlag,
+  hasFlag,
+  Semaphore,
+  withTimeout,
+  discoverEvalFiles,
+  loadSkillContext,
+  parseEvals,
+} from "./lib/utils.js";
 
 // ── CLI args ──────────────────────────────────────────────────────────
 const args = process.argv.slice(2);
-const changedOnly = args.includes("--changed-only");
-const skillFlag = args.find((a) => a.startsWith("--skill="))?.split("=")[1]
-  ?? (args.includes("--skill") ? args[args.indexOf("--skill") + 1] : null);
-const judgeModelFlag = args.find((a) => a.startsWith("--judge-model="))?.split("=")[1]
-  ?? (args.includes("--judge-model") ? args[args.indexOf("--judge-model") + 1] : null);
-const concurrencyFlag = args.find((a) => a.startsWith("--concurrency="))?.split("=")[1]
-  ?? (args.includes("--concurrency") ? args[args.indexOf("--concurrency") + 1] : null);
-const timeoutFlag = args.find((a) => a.startsWith("--timeout="))?.split("=")[1]
-  ?? (args.includes("--timeout") ? args[args.indexOf("--timeout") + 1] : null);
+const skillFlag = getFlag(args, "skill");
+const judgeModelFlag = getFlag(args, "judge-model");
+const concurrencyFlag = getFlag(args, "concurrency");
+const timeoutFlag = getFlag(args, "timeout");
+const changedOnly = hasFlag(args, "changed-only");
 
-const ROOT = resolve(dirname(new URL(import.meta.url).pathname), "..");
 const EVAL_MODEL = process.env.EVAL_MODEL ?? "claude-opus-4-6";
 const JUDGE_MODEL = judgeModelFlag ?? process.env.JUDGE_MODEL ?? "claude-haiku-4-5-20251001";
 const MAX_TOKENS_RESPONSE = 4096;
@@ -63,108 +51,6 @@ const CONCURRENCY = parseInt(concurrencyFlag ?? "3", 10);
 const EVAL_TIMEOUT = parseInt(timeoutFlag ?? "120000", 10);
 
 const client = new Anthropic();
-
-// ── Semaphore for concurrency control ────────────────────────────────
-class Semaphore {
-  constructor(max) {
-    this._max = max;
-    this._active = 0;
-    this._queue = [];
-  }
-  async acquire() {
-    if (this._active < this._max) {
-      this._active++;
-      return;
-    }
-    await new Promise((resolve) => this._queue.push(resolve));
-  }
-  release() {
-    this._active--;
-    if (this._queue.length > 0) {
-      this._active++;
-      this._queue.shift()();
-    }
-  }
-}
-
-// ── Timeout wrapper ──────────────────────────────────────────────────
-function withTimeout(promise, ms, label) {
-  return Promise.race([
-    promise,
-    new Promise((_, reject) =>
-      setTimeout(() => reject(new Error(`Eval timed out after ${ms}ms: ${label}`)), ms)
-    ),
-  ]);
-}
-
-// ── Discover evals ────────────────────────────────────────────────────
-function discoverEvalFiles() {
-  const pattern = join(ROOT, "**/evals/evals.json");
-  let files = glob.sync(pattern, { ignore: ["**/node_modules/**", "**/template/**"] });
-
-  if (skillFlag) {
-    files = files.filter((f) => f.includes(`/${skillFlag}/`));
-    if (files.length === 0) {
-      console.error(`No evals found for skill: ${skillFlag}`);
-      process.exit(1);
-    }
-  }
-
-  if (changedOnly) {
-    try {
-      const diff = execSync("git diff --name-only origin/main...HEAD", {
-        cwd: ROOT,
-        encoding: "utf-8",
-      });
-      const changedSkills = new Set(
-        diff
-          .split("\n")
-          .filter(Boolean)
-          .map((f) => f.split("/")[0])
-      );
-      files = files.filter((f) => {
-        const rel = f.replace(ROOT + "/", "");
-        const skill = rel.split("/")[0];
-        return changedSkills.has(skill);
-      });
-    } catch {
-      console.warn("Could not determine changed files, running all evals");
-    }
-  }
-
-  return files;
-}
-
-// ── Load skill context ────────────────────────────────────────────────
-function loadSkillContext(evalFilePath) {
-  const skillDir = resolve(dirname(evalFilePath), "..");
-  const skillName = basename(skillDir);
-  const mdFiles = glob.sync(join(skillDir, "*.md"), {
-    ignore: ["**/node_modules/**"],
-  });
-
-  const parts = [];
-  // Load SKILL.md first if it exists
-  const skillMd = mdFiles.find((f) => basename(f) === "SKILL.md");
-  if (skillMd) {
-    parts.push(`# ${skillName} — SKILL.md\n\n${readFileSync(skillMd, "utf-8")}`);
-  }
-  // Then load supplemental .md files
-  for (const f of mdFiles.sort()) {
-    if (basename(f) === "SKILL.md") continue;
-    parts.push(`# ${skillName} — ${basename(f)}\n\n${readFileSync(f, "utf-8")}`);
-  }
-
-  return parts.join("\n\n---\n\n");
-}
-
-// ── Parse evals (handles both object-wrapped and array formats) ──────
-function parseEvals(filePath) {
-  const raw = JSON.parse(readFileSync(filePath, "utf-8"));
-  if (Array.isArray(raw)) return raw;
-  if (raw.evals && Array.isArray(raw.evals)) return raw.evals;
-  throw new Error(`Unexpected eval format in ${filePath}`);
-}
 
 // ── Generate a response using the skill context ──────────────────────
 async function generateResponse(skillContext, prompt) {
@@ -314,7 +200,10 @@ async function runSkillEvals(evalFile) {
 
 // ── Main ──────────────────────────────────────────────────────────────
 async function main() {
-  const evalFiles = discoverEvalFiles();
+  const evalFiles = discoverEvalFiles("evals.json", {
+    skillFilter: skillFlag,
+    changedOnly,
+  });
   if (evalFiles.length === 0) {
     console.log("No eval files to run.");
     process.exit(0);
