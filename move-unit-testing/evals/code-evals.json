@@ -1,0 +1,17 @@
+{
+  "skill_name": "move-unit-testing",
+  "evals": [
+    {
+      "id": "unit-testing-code-test-scenario",
+      "prompt": "Write two Sui Move modules for package `test_project`. First module `test_project::token`: Define a Token object with key and store abilities, with id (UID) and value (u64) fields. Include a public function `mint` that takes value (u64) and ctx (&mut TxContext) and returns a Token. A public function `burn` that takes Token by value, unpacks it, and deletes the UID. A public function `value` that takes &Token and returns the u64 value. Second module `test_project::token_tests` marked #[test_only]: Write a test `test_mint_and_burn` that uses test_scenario to: (1) start a scenario with a test address, (2) in the first tx mint a token with value 42 and transfer it to the test address using transfer::public_transfer (since Token has store), (3) in the next tx take the token from the sender, assert its value is 42, then burn it, (4) end the scenario. Use Move 2024 edition syntax.",
+      "check": "test",
+      "expected_result": "pass",
+      "package_name": "test_project",
+      "expectations": [
+        "Code compiles with sui move build",
+        "Tests pass with sui move test",
+        "Uses test_scenario correctly"
+      ]
+    }
+  ]
+}

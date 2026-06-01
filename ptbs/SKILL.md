@@ -20,7 +20,7 @@ All patterns in this skill are derived from:
 - https://docs.sui.io/concepts/transactions/prog-txn-blocks
 - https://docs.sui.io/develop/transactions/ptbs/building-ptb
 - https://docs.sui.io/references/ptb-commands
-- https://sdk.mystenlabs.com/typescript/transaction-building/basics
+- https://sdk.mystenlabs.com/sui/transactions/basics
 - https://docs.sui.io/references/cli/client (CLI `sui client ptb`)
 
 If unsure about any API, method signature, or error message, fetch the relevant page before answering. Do not guess or extrapolate from Ethereum, Solana, or other chains — PTBs have no direct analog.

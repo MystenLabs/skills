@@ -1,6 +1,6 @@
 {
   "skill_name": "walrus-sites-publishing",
-  "source_constraint": "All facts must be verifiable against the MystenLabs/walrus-sites repo and docs.wal.app/walrus-sites/.",
+  "source_constraint": "All facts must be verifiable against the MystenLabs/walrus-sites repo and docs.wal.app/docs/sites.",
   "evals": [
     {
       "id": "publishing-deploy-react-app",
@@ -14,7 +14,7 @@
         "Mentions that wal.app only serves mainnet, testnet needs a self-hosted portal"
       ],
       "sources": [
-        "https://docs.wal.app/walrus-sites/"
+        "https://docs.wal.app/docs/sites"
       ]
     },
     {
@@ -29,7 +29,7 @@
         "Explains that expired blobs cause the site to 404 silently"
       ],
       "sources": [
-        "https://docs.wal.app/walrus-sites/"
+        "https://docs.wal.app/docs/sites"
       ]
     },
     {
@@ -43,7 +43,7 @@
         "Instructs to re-publish or update after modifying ws-resources.json"
       ],
       "sources": [
-        "https://docs.wal.app/walrus-sites/"
+        "https://docs.wal.app/docs/sites"
       ]
     },
     {
@@ -85,7 +85,7 @@
         "Does NOT suggest code changes since the user said nothing changed"
       ],
       "sources": [
-        "https://docs.wal.app/walrus-sites/"
+        "https://docs.wal.app/docs/sites"
       ]
     }
   ]

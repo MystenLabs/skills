@@ -1,0 +1,67 @@
+{
+  "skill_name": "sui-move",
+  "evals": [
+    {
+      "id": "sui-move-code-struct-abilities",
+      "prompt": "Write a Sui Move module called `test_project::sword` that defines a Sword NFT. The Sword should be a Sui object with key and store abilities, and have these fields: id (UID), name (String), and damage (u64). Include a public function `new` that takes name (String), damage (u64), and ctx (&mut TxContext), and returns the Sword to the caller. Use Move 2024 edition syntax.",
+      "check": "build",
+      "expected_result": "pass",
+      "package_name": "test_project",
+      "expectations": [
+        "Code compiles with sui move build"
+      ],
+      "sources": [
+        "https://move-book.com/move-basics/abilities-introduction.html"
+      ]
+    },
+    {
+      "id": "sui-move-code-init-otw-coin",
+      "prompt": "Write a Sui Move module called `test_project::my_coin` that creates a custom fungible token using the One-Time Witness pattern. The init function should call coin::create_currency with: the OTW, 6 decimals, symbol b\"MC\", name b\"My Coin\", description b\"A test coin\", and option::none() for icon_url. Transfer the TreasuryCap to the sender and use transfer::public_freeze_object on the CoinMetadata. Include a public function `mint` that takes &mut TreasuryCap<MY_COIN>, amount (u64), recipient (address), and ctx (&mut TxContext), and mints then transfers coins. Use Move 2024 edition syntax.",
+      "check": "build",
+      "expected_result": "pass",
+      "package_name": "test_project",
+      "expectations": [
+        "Code compiles with sui move build",
+        "Uses One-Time Witness pattern correctly"
+      ],
+      "sources": [
+        "https://move-book.com/programmability/one-time-witness.html",
+        "https://docs.sui.io/standards/coin"
+      ]
+    },
+    {
+      "id": "sui-move-code-events",
+      "prompt": "Write a Sui Move module called `test_project::registry` that implements a name registry. Define a shared Registry object (has key) with id (UID) and a names field of type Table<String, address>. Define a NameRegistered event (copy, drop) with name (String) and owner (address) fields. Include: a create function that creates and shares the registry, and a register function that takes &mut Registry, name (String), and ctx (&mut TxContext), adds the name to the table mapped to the sender, and emits a NameRegistered event. Use Move 2024 edition syntax.",
+      "check": "build",
+      "expected_result": "pass",
+      "package_name": "test_project",
+      "expectations": [
+        "Code compiles with sui move build",
+        "Events have copy and drop abilities",
+        "Uses sui::event::emit"
+      ]
+    },
+    {
+      "id": "sui-move-code-object-destruction",
+      "prompt": "Write a Sui Move module called `test_project::ticket` that defines a Ticket object with key ability only (no store, no drop). The Ticket has id (UID), event_name (String), and seat (u64). Include a public function `create` that takes event_name (String), seat (u64), and ctx (&mut TxContext), and returns the Ticket. Include a public function `use_ticket` that takes a Ticket by value, unpacks the struct, and deletes the UID using id.delete(). Use Move 2024 edition syntax.",
+      "check": "build",
+      "expected_result": "pass",
+      "package_name": "test_project",
+      "expectations": [
+        "Code compiles with sui move build",
+        "Ticket is destroyed by unpacking and deleting UID"
+      ]
+    },
+    {
+      "id": "sui-move-code-counter-with-tests",
+      "prompt": "Write two Move modules for package `test_project`. First module: `test_project::counter` — defines a Counter object (has key) with id (UID) and count (u64). Include: a public function `create` that creates a Counter with count 0, shares it with transfer::share_object, taking ctx (&mut TxContext). A public function `increment` taking &mut Counter that adds 1 to count. A public function `value` taking &Counter that returns the count as u64. Second module: `test_project::counter_tests` marked with #[test_only]. Write two test functions: (1) `test_create_and_increment` that creates a counter, increments it, and asserts value is 1. (2) `test_initial_value_is_zero` that creates a counter and asserts value is 0. Use sui::test_scenario and assert! macro. Use Move 2024 edition syntax for both modules.",
+      "check": "test",
+      "expected_result": "pass",
+      "package_name": "test_project",
+      "expectations": [
+        "Code compiles with sui move build",
+        "All tests pass with sui move test"
+      ]
+    }
+  ]
+}

@@ -17,7 +17,7 @@
       ],
       "sources": [
         "https://docs.sui.io/concepts/object-model",
-        "https://docs.sui.io/concepts/object-model/object-ownership"
+        "https://docs.sui.io/develop/objects/object-ownership"
       ]
     },
     {
@@ -34,7 +34,7 @@
       ],
       "sources": [
         "https://docs.sui.io/concepts/sui-architecture/consensus",
-        "https://docs.sui.io/concepts/transactions/transaction-lifecycle"
+        "https://docs.sui.io/develop/transactions/transaction-lifecycle"
       ]
     },
     {

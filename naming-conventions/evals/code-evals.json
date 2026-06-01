@@ -1,0 +1,16 @@
+{
+  "skill_name": "naming-conventions",
+  "evals": [
+    {
+      "id": "naming-code-conventions",
+      "prompt": "Write a Sui Move module called `test_project::marketplace` that demonstrates proper Sui Move naming conventions. Include: (1) An error constant ENotAuthorized (u64, starting with E prefix, PascalCase). (2) A constant MAX_PRICE: u64 (SCREAMING_SNAKE_CASE). (3) A public struct AdminCap with key ability (capability pattern, PascalCase with Cap suffix). (4) A public struct Listing with key and store abilities (PascalCase noun). (5) A public struct ListingCreated event with copy and drop abilities (PascalCase past-tense). (6) A public function `create_listing` (snake_case verb phrase) that returns a Listing. (7) A public function `listing_price` (snake_case getter without 'get_' prefix) that takes &Listing and returns u64. Use Move 2024 edition syntax.",
+      "check": "build",
+      "expected_result": "pass",
+      "package_name": "test_project",
+      "expectations": [
+        "Code compiles with sui move build",
+        "Follows Sui Move naming conventions"
+      ]
+    }
+  ]
+}

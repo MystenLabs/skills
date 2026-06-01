@@ -1,0 +1,16 @@
+{
+  "skill_name": "modern-move-syntax",
+  "evals": [
+    {
+      "id": "modern-syntax-code-2024-features",
+      "prompt": "Write a Sui Move module called `test_project::demo` that demonstrates Move 2024 edition syntax features. Include: (1) A public struct Item with key and store abilities, having id (UID), name (String), and tags (vector<String>). (2) A public function `create` that uses method syntax on vector (vector::empty(), tags.push_back()) and string (b\"hello\".to_string()). (3) A public function `tag_count` that takes &Item and returns the length using method syntax (item.tags.length()). (4) A public function `destroy` that unpacks the Item using positional/named destructuring and calls id.delete(). Use Move 2024 edition module declaration with semicolon, no outer braces.",
+      "check": "build",
+      "expected_result": "pass",
+      "package_name": "test_project",
+      "expectations": [
+        "Code compiles with sui move build",
+        "Uses 2024 method syntax instead of function-call syntax"
+      ]
+    }
+  ]
+}
