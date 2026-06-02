@@ -228,7 +228,7 @@
         "The response describes the borrow pattern: wrap the cap in a Referent, let the caller borrow it, and force return via a hot potato receipt",
         "The response explains that the hot potato receipt cannot be stored or dropped, forcing the caller to return the cap in the same PTB",
         "The response mentions the sui::borrow module from the Sui framework",
-        "The response notes that the cap must have store ability (or key + store) to be wrapped in a Referent or stored inside another object",
+        "The response notes that the cap must have key + store abilities to be wrapped in a Referent",
         "The response does not suggest simply transferring the cap (which would give permanent access)"
       ],
       "sources": [
