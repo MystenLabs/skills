@@ -10,7 +10,7 @@
       "Does not pass numeric abort codes to assert! in tests (no assert!(x, 0))",
       "Merges #[test] and #[expected_failure] on a single line: #[test, expected_failure(...)]",
       "Does not have unreachable cleanup code after an expected abort point in expected_failure tests",
-      "Uses test_utils::destroy for cleanup, not custom destroy_for_testing functions"
+      "Uses standard cleanup patterns (test_utils::destroy, return_shared, return_to_sender) not custom destroy_for_testing functions"
     ]
   }
 ]

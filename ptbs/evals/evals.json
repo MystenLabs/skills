@@ -13,7 +13,7 @@
       "Uses tx.transferObjects with tx.pure.address(recipient) — not a raw string argument",
       "Does NOT call tx.setGasBudget / tx.setGasPrice / tx.setGasPayment for a wallet-signed flow",
       "Does NOT call tx.build() before handing to the wallet (uses tx.serialize() or passes the Transaction instance directly)",
-      "Checks the execution result status before treating the transfer as successful"
+      "Mentions checking the execution result status (e.g., effects.status) or warns that transactions can fail at the Move level even if accepted"
     ]
   },
   {
