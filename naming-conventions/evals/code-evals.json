@@ -3,13 +3,18 @@
   "evals": [
     {
       "id": "naming-code-conventions",
-      "prompt": "Write a Sui Move module called `test_project::marketplace` that demonstrates proper Sui Move naming conventions. Include: (1) An error constant ENotAuthorized (u64, starting with E prefix, PascalCase). (2) A constant MAX_PRICE: u64 (SCREAMING_SNAKE_CASE). (3) A public struct AdminCap with key ability (capability pattern, PascalCase with Cap suffix). (4) A public struct Listing with key and store abilities (PascalCase noun). (5) A public struct ListingCreated event with copy and drop abilities (PascalCase past-tense). (6) A public function `create_listing` (snake_case verb phrase) that returns a Listing. (7) A public function `listing_price` (snake_case getter without 'get_' prefix) that takes &Listing and returns u64. Use Move 2024 edition syntax.",
+      "prompt": "Write a Move module for a simple NFT marketplace on Sui. Include an admin capability, listings, events for when listings are created, error constants, and functions to create and query listings.",
       "check": "build",
       "expected_result": "pass",
       "package_name": "test_project",
       "expectations": [
         "Code compiles with sui move build",
-        "Follows Sui Move naming conventions"
+        "Error constants use E prefix with PascalCase (e.g., ENotAuthorized)",
+        "Regular constants use SCREAMING_SNAKE_CASE (e.g., MAX_PRICE)",
+        "Capability struct uses Cap suffix (e.g., AdminCap, MarketplaceCap)",
+        "Event structs use PascalCase past-tense (e.g., ListingCreated)",
+        "Functions use snake_case (e.g., create_listing)",
+        "Getter functions do not use get_ prefix (e.g., listing_price not get_listing_price)"
       ]
     }
   ]

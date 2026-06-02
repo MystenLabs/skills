@@ -3,35 +3,41 @@
   "evals": [
     {
       "id": "object-model-code-shared-object",
-      "prompt": "Write a Sui Move module called `test_project::bulletin` that creates a shared Bulletin board. The Bulletin has key ability with id (UID) and messages (vector<String>) fields. Include: a public function `create` that creates a Bulletin with an empty vector and shares it using transfer::share_object, taking ctx (&mut TxContext). A public function `post` that takes &mut Bulletin and message (String), and pushes the message onto the vector. Use Move 2024 edition syntax.",
+      "prompt": "I need a message board where anyone can post messages. Write the Move code for Sui.",
       "check": "build",
       "expected_result": "pass",
       "package_name": "test_project",
       "expectations": [
         "Code compiles with sui move build",
-        "Uses transfer::share_object"
+        "Board object is shared using transfer::share_object or transfer::public_share_object",
+        "Messages are stored in a collection (vector, Table, etc.)",
+        "Post function takes the board by mutable reference (&mut)"
       ]
     },
     {
       "id": "object-model-code-dynamic-fields",
-      "prompt": "Write a Sui Move module called `test_project::inventory` that uses dynamic object fields. Define a Player object (has key, store) with id (UID) and name (String). Include a public function `create_player` that takes name (String) and ctx (&mut TxContext) and returns a Player. A public function `add_item` with type parameter T that has key and store, that takes &mut Player and item (T), and adds the item as a dynamic object field keyed by object::id(&item). A public function `remove_item` with type parameter T that has key and store, that takes &mut Player and item_id (ID), removes and returns the T. Use sui::dynamic_object_field. Use Move 2024 edition syntax.",
+      "prompt": "I'm building a game where players have an inventory that can hold different types of items (swords, shields, potions). How should I model this in Move on Sui?",
       "check": "build",
       "expected_result": "pass",
       "package_name": "test_project",
       "expectations": [
         "Code compiles with sui move build",
-        "Uses sui::dynamic_object_field"
+        "Uses dynamic fields or dynamic object fields for heterogeneous storage",
+        "Player/inventory object has key ability",
+        "Add and remove functions use generic type parameters for items"
       ]
     },
     {
       "id": "object-model-code-wrapping",
-      "prompt": "Write a Sui Move module called `test_project::lockbox` that demonstrates object wrapping. Define an Item object (has key, store) with id (UID) and value (u64). Define a Lockbox object (has key) with id (UID) and item (Item) fields — the Item is stored directly as a field inside the Lockbox. Include: a public function `create_item` that takes value (u64) and ctx (&mut TxContext) and returns an Item. A public function `lock` that takes item (Item) by value and ctx (&mut TxContext), wraps it inside a new Lockbox, and transfers the Lockbox to the sender. A public function `unlock` that takes lockbox (Lockbox) by value, unpacks it, deletes the Lockbox UID, and returns the Item. Use Move 2024 edition syntax.",
+      "prompt": "I want to build a lockbox that wraps another object inside it. The owner can lock an item and later unlock it to get the item back. Write the Move module.",
       "check": "build",
       "expected_result": "pass",
       "package_name": "test_project",
       "expectations": [
         "Code compiles with sui move build",
-        "Item is wrapped inside Lockbox"
+        "Item is stored as a direct field inside the Lockbox struct (wrapping pattern)",
+        "Unlock function takes Lockbox by value, unpacks it, and returns the inner item",
+        "Lockbox UID is deleted when unlocking"
       ]
     }
   ]

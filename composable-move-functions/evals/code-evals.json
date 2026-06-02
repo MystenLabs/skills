@@ -3,13 +3,15 @@
   "evals": [
     {
       "id": "composable-code-return-pattern",
-      "prompt": "Write a Sui Move module called `test_project::nft` that follows composable function design. Define an NFT object with key and store abilities, having id (UID), name (String), and description (String). Write a public function `mint` that takes name (String), description (String), and ctx (&mut TxContext) and RETURNS the NFT (do not transfer it inside the function). Write a public function `update_name` that takes &mut NFT and new_name (String) and updates the name field. Do not use 'entry' or 'public entry' — use 'public' only. Use Move 2024 edition syntax.",
+      "prompt": "Write a Move module for minting NFTs on Sui. The mint function should be composable so callers can decide what to do with the NFT after minting (transfer it, wrap it, add to a collection, etc.).",
       "check": "build",
       "expected_result": "pass",
       "package_name": "test_project",
       "expectations": [
         "Code compiles with sui move build",
-        "mint returns NFT rather than transferring internally"
+        "Mint function returns the NFT instead of transferring it internally",
+        "Functions use 'public' visibility (not 'public entry' or 'entry')",
+        "NFT struct has key and store abilities for composability"
       ]
     }
   ]
