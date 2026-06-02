@@ -115,7 +115,6 @@
         "The response explains that VecMap has O(n) lookup, is stored inline, and should only be used for small collections (under ~100 entries)",
         "The response explains that Bag allows heterogeneous key-value types while Table requires homogeneous types",
         "The response mentions ObjectTable and ObjectBag as variants where values must be objects",
-        "The response mentions LinkedTable for ordered iteration",
         "The response explains that Table/Bag entries each cost a separate storage operation while VecMap/VecSet are stored inline"
       ],
       "sources": [
