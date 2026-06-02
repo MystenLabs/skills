@@ -35,10 +35,12 @@ jobs:
         with:
           node-version: "20"
 
-      - name: Install Sui CLI
+      - name: Install Sui CLI via suiup
         run: |
-          curl -fsSL https://sui.io/install.sh | bash
+          curl -sSfL https://raw.githubusercontent.com/MystenLabs/suiup/main/install.sh | sh
           echo "$HOME/.local/bin" >> $GITHUB_PATH
+          suiup install sui@testnet
+          suiup switch sui@testnet
 
       - name: Verify Sui CLI
         run: sui --version
