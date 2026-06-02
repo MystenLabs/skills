@@ -163,7 +163,7 @@
       "expectations": [
         "The response explains that transfer::transfer can only be called from the module that defines the object's type",
         "The response explains that transfer::public_transfer can be called from any module but requires the object to have the store ability",
-        "The response lists all six core transfer functions: transfer, public_transfer, share_object, public_share_object, freeze_object, public_freeze_object",
+        "The response lists the core transfer function pairs: transfer/public_transfer, share_object/public_share_object, freeze_object/public_freeze_object",
         "The response explains that the same public_ vs module-only distinction applies to share and freeze functions",
         "The response mentions that this design enables custom transfer rules for objects without store"
       ],
