@@ -1,0 +1,18 @@
+{
+  "skill_name": "composable-move-functions",
+  "evals": [
+    {
+      "id": "composable-code-return-pattern",
+      "prompt": "Write a Move module for minting NFTs on Sui. The mint function should be composable so callers can decide what to do with the NFT after minting (transfer it, wrap it, add to a collection, etc.).",
+      "check": "build",
+      "expected_result": "pass",
+      "package_name": "test_project",
+      "expectations": [
+        "Code compiles with sui move build",
+        "Mint function returns the NFT instead of transferring it internally",
+        "Functions use 'public' visibility (not 'public entry' or 'entry')",
+        "NFT struct has key and store abilities for composability"
+      ]
+    }
+  ]
+}

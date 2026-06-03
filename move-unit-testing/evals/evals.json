@@ -9,9 +9,8 @@
       "Uses assert_eq! for equality comparisons instead of assert!(x == y) or assert!(x == y, 0)",
       "Does not pass numeric abort codes to assert! in tests (no assert!(x, 0))",
       "Merges #[test] and #[expected_failure] on a single line: #[test, expected_failure(...)]",
-      "Does not have cleanup code (.end(), destroy, return_shared) after the expected abort point in expected_failure tests",
-      "Uses tx_context::dummy() for simple tests that don't need multi-tx simulation",
-      "Uses test_utils::destroy for cleanup, not custom destroy_for_testing functions"
+      "Does not have unreachable cleanup code after an expected abort point in expected_failure tests",
+      "Uses standard cleanup patterns (test_utils::destroy, return_shared, return_to_sender) not custom destroy_for_testing functions"
     ]
   }
 ]

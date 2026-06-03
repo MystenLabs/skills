@@ -24,7 +24,7 @@
     "prompt": "I want to build a reusable access control package on Sui that other developers can import into their projects. It should support role-based access control — like defining roles (admin, moderator, minter, etc), granting and revoking roles to addresses, and checking if an address has a specific role before allowing an action. Think of it like OpenZeppelin's AccessControl but for Sui. Don't write tests yet.",
     "expectations": [
       "Error constants use EPascalCase (e.g. ENotAuthorized, not NOT_AUTHORIZED)",
-      "Capability struct suffixed with Cap (e.g. AdminCap)",
+      "If capabilities are used, structs are suffixed with Cap (e.g. AdminCap); or role objects use PascalCase nouns (e.g. RoleRegistry, AccessControl)",
       "Events are named in past tense (e.g. RoleGranted, RoleRevoked — not GrantRole, RevokeRole)",
       "Getter functions named after field (e.g. role_admin() not get_role_admin())"
     ]

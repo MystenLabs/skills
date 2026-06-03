@@ -73,7 +73,7 @@
         "Does NOT provide a wal.app URL for testnet sites"
       ],
       "sources": [
-        "https://docs.wal.app/walrus-sites/"
+        "https://docs.wal.app/docs/sites"
       ]
     }
   ]

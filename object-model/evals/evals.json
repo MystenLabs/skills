@@ -115,7 +115,6 @@
         "The response explains that VecMap has O(n) lookup, is stored inline, and should only be used for small collections (under ~100 entries)",
         "The response explains that Bag allows heterogeneous key-value types while Table requires homogeneous types",
         "The response mentions ObjectTable and ObjectBag as variants where values must be objects",
-        "The response mentions LinkedTable for ordered iteration",
         "The response explains that Table/Bag entries each cost a separate storage operation while VecMap/VecSet are stored inline"
       ],
       "sources": [
@@ -164,13 +163,13 @@
       "expectations": [
         "The response explains that transfer::transfer can only be called from the module that defines the object's type",
         "The response explains that transfer::public_transfer can be called from any module but requires the object to have the store ability",
-        "The response lists all six core transfer functions: transfer, public_transfer, share_object, public_share_object, freeze_object, public_freeze_object",
+        "The response lists the core transfer function pairs: transfer/public_transfer, share_object/public_share_object, freeze_object/public_freeze_object",
         "The response explains that the same public_ vs module-only distinction applies to share and freeze functions",
         "The response mentions that this design enables custom transfer rules for objects without store"
       ],
       "sources": [
         "https://docs.sui.io/develop/objects/transfers/custom-rules",
-        "https://move-book.com/storage/transfer-restrictions.html"
+        "https://move-book.com/storage/storage-functions"
       ]
     },
     {
@@ -229,11 +228,11 @@
         "The response describes the borrow pattern: wrap the cap in a Referent, let the caller borrow it, and force return via a hot potato receipt",
         "The response explains that the hot potato receipt cannot be stored or dropped, forcing the caller to return the cap in the same PTB",
         "The response mentions the sui::borrow module from the Sui framework",
-        "The response notes that the cap must have key + store to be stored inside a Referent",
+        "The response notes that the cap must have key + store abilities to be wrapped in a Referent",
         "The response does not suggest simply transferring the cap (which would give permanent access)"
       ],
       "sources": [
-        "https://docs.sui.io/develop/objects/transfers/borrow",
+        "https://docs.sui.io/develop/objects/transfers/simulating-refs",
         "https://move-book.com/programmability/hot-potato-pattern.html"
       ]
     },

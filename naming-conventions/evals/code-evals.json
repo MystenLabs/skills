@@ -1,0 +1,21 @@
+{
+  "skill_name": "naming-conventions",
+  "evals": [
+    {
+      "id": "naming-code-conventions",
+      "prompt": "Write a Move module for a simple NFT marketplace on Sui. Include an admin capability, listings, events for when listings are created, error constants, and functions to create and query listings.",
+      "check": "build",
+      "expected_result": "pass",
+      "package_name": "test_project",
+      "expectations": [
+        "Code compiles with sui move build",
+        "Error constants use E prefix with PascalCase (e.g., ENotAuthorized)",
+        "Regular constants use SCREAMING_SNAKE_CASE (e.g., MAX_PRICE)",
+        "Capability struct uses Cap suffix (e.g., AdminCap, MarketplaceCap)",
+        "Event structs use PascalCase past-tense (e.g., ListingCreated)",
+        "Functions use snake_case (e.g., create_listing)",
+        "Getter functions do not use get_ prefix (e.g., listing_price not get_listing_price)"
+      ]
+    }
+  ]
+}

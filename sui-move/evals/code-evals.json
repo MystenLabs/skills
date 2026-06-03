@@ -1,0 +1,74 @@
+{
+  "skill_name": "sui-move",
+  "evals": [
+    {
+      "id": "sui-move-code-nft-struct",
+      "prompt": "I want to create a simple NFT on Sui. It should have a name and a description, and anyone should be able to transfer it. Write the Move module for me.",
+      "check": "build",
+      "expected_result": "pass",
+      "package_name": "test_project",
+      "expectations": [
+        "Code compiles with sui move build",
+        "Struct has key and store abilities (store needed for public transfer)",
+        "Struct has id: UID as first field",
+        "Uses Move 2024 edition syntax (module declaration with semicolon)",
+        "Includes a constructor function that takes &mut TxContext"
+      ]
+    },
+    {
+      "id": "sui-move-code-custom-coin",
+      "prompt": "How do I create a new fungible token on Sui? Write me a complete module with minting capability.",
+      "check": "build",
+      "expected_result": "pass",
+      "package_name": "test_project",
+      "expectations": [
+        "Code compiles with sui move build",
+        "Uses One-Time Witness pattern (struct named after module in ALL CAPS with drop ability)",
+        "Calls coin::create_currency in the init function",
+        "Handles TreasuryCap and CoinMetadata correctly",
+        "Includes a mint function that uses the TreasuryCap"
+      ]
+    },
+    {
+      "id": "sui-move-code-events",
+      "prompt": "I'm building a name registry on Sui where users can claim names. I want to emit events when names are registered. Write the Move code.",
+      "check": "build",
+      "expected_result": "pass",
+      "package_name": "test_project",
+      "expectations": [
+        "Code compiles with sui move build",
+        "Event struct has copy and drop abilities",
+        "Uses sui::event::emit to emit events",
+        "Registry is a shared object",
+        "Uses a collection type (Table, VecMap, etc.) for name storage"
+      ]
+    },
+    {
+      "id": "sui-move-code-destroy-object",
+      "prompt": "Write a Move module for an event ticket that can be used exactly once. After use, the ticket should be destroyed. The ticket should not be transferable by the holder.",
+      "check": "build",
+      "expected_result": "pass",
+      "package_name": "test_project",
+      "expectations": [
+        "Code compiles with sui move build",
+        "Ticket struct has key but NOT store (non-transferable by holder)",
+        "Includes a function that destroys the ticket by unpacking and calling id.delete()",
+        "Uses Move 2024 edition syntax"
+      ]
+    },
+    {
+      "id": "sui-move-code-counter-with-tests",
+      "prompt": "Build me a shared counter on Sui with increment and read functions. Include unit tests.",
+      "check": "test",
+      "expected_result": "pass",
+      "package_name": "test_project",
+      "expectations": [
+        "Code compiles with sui move build",
+        "All tests pass with sui move test",
+        "Counter is shared via transfer::share_object",
+        "Test module uses sui::test_scenario or #[test] functions",
+        "At least one test verifies incrementing works correctly"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "skill_name": "move-unit-testing",
+  "evals": [
+    {
+      "id": "unit-testing-code-test-scenario",
+      "prompt": "Write a simple token module on Sui with mint and burn functions, and include tests that verify minting creates a token with the right value and burning destroys it.",
+      "check": "test",
+      "expected_result": "pass",
+      "package_name": "test_project",
+      "expectations": [
+        "Code compiles with sui move build",
+        "All tests pass with sui move test",
+        "Test module is marked #[test_only]",
+        "Tests use sui::test_scenario for multi-transaction scenarios",
+        "At least one test verifies the minted token's value",
+        "Token struct has store ability if tests use transfer::public_transfer"
+      ]
+    }
+  ]
+}

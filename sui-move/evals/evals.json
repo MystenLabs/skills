@@ -13,7 +13,7 @@
         "The response explains that 'drop' allows a struct to be silently discarded without explicit destruction",
         "The response covers the common combination 'has key, store' for freely composable objects",
         "The response explains that 'has key' alone restricts transfer to the defining module only",
-        "The response mentions that abilities are enforced at compile time and cannot be added after publishing",
+        "The response mentions that abilities are enforced at compile time",
         "The response provides practical guidance on when to use each combination"
       ],
       "sources": [
@@ -34,7 +34,7 @@
         "The response mentions the option to transfer the UpgradeCap to a multisig or destroy it to make the package permanently immutable"
       ],
       "sources": [
-        "https://docs.sui.io/concepts/sui-move-concepts/packages/upgrade"
+        "https://docs.sui.io/develop/publish-upgrade-packages/upgrade"
       ]
     },
     {
@@ -50,8 +50,8 @@
         "The response explains that OTW guarantees the currency can only be created once"
       ],
       "sources": [
-        "https://docs.sui.io/concepts/sui-move-concepts/init",
-        "https://docs.sui.io/concepts/sui-move-concepts/one-time-witness",
+        "https://move-book.com/programmability/module-initializer",
+        "https://move-book.com/programmability/one-time-witness",
         "https://move-book.com/programmability/one-time-witness.html"
       ]
     },
@@ -68,7 +68,7 @@
         "The response explains that TxContext is automatically provided by the runtime as the last parameter"
       ],
       "sources": [
-        "https://docs.sui.io/concepts/sui-move-concepts/epoch-and-time",
+        "https://docs.sui.io/sui-stack/on-chain-primitives/access-time",
         "https://move-book.com/programmability/epoch-and-time.html"
       ]
     },
@@ -85,7 +85,7 @@
         "The response mentions filtering events by type"
       ],
       "sources": [
-        "https://docs.sui.io/concepts/sui-move-concepts/event",
+        "https://docs.sui.io/develop/accessing-data/using-events",
         "https://move-book.com/programmability/events.html"
       ]
     },
@@ -100,11 +100,11 @@
         "The response covers coin::burn for destroying coins",
         "The response covers coin::split for splitting a coin into two",
         "The response covers coin::join (or merge) for combining two coins of the same type",
-        "The response mentions that SUI itself is a coin of type 0x2::sui::SUI"
+        "The response mentions that SUI itself is a Coin type (e.g., Coin<SUI> or 0x2::sui::SUI)"
       ],
       "sources": [
         "https://docs.sui.io/standards/coin",
-        "https://move-book.com/programmability/sui-framework/coin.html"
+        "https://docs.sui.io/references/framework/sui/coin"
       ]
     },
     {

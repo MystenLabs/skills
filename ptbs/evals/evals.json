@@ -4,7 +4,7 @@
     "prompt": "Using the Sui TypeScript SDK, write a function that transfers 100 MIST to the address 0xabc... from the connected wallet in a single transaction. Show me the code.",
     "sources": [
       "https://docs.sui.io/develop/transactions/ptbs/building-ptb",
-      "https://sdk.mystenlabs.com/typescript/transaction-building/basics"
+      "https://sdk.mystenlabs.com/sui/transactions/basics"
     ],
     "expected_output": "A TypeScript snippet that imports Transaction from '@mysten/sui/transactions', creates a Transaction, splits the specified amount off tx.gas (not a separately-fetched coin), transfers that new coin to the recipient address, and hands the Transaction off to the wallet via signTransaction/signAndExecuteTransaction. Should not call setGasBudget / setGasPrice / setGasPayment (let the wallet handle gas). Should use typed pure helpers (tx.pure.u64, tx.pure.address).",
     "expectations": [
@@ -13,7 +13,7 @@
       "Uses tx.transferObjects with tx.pure.address(recipient) — not a raw string argument",
       "Does NOT call tx.setGasBudget / tx.setGasPrice / tx.setGasPayment for a wallet-signed flow",
       "Does NOT call tx.build() before handing to the wallet (uses tx.serialize() or passes the Transaction instance directly)",
-      "Checks the execution result status before treating the transfer as successful"
+      "Mentions checking the execution result status (e.g., effects.status) or warns that transactions can fail at the Move level even if accepted"
     ]
   },
   {
@@ -54,7 +54,7 @@
     "prompt": "Explain how to build a sponsored transaction where my app constructs the PTB, a sponsor service pays the gas, and the user signs as sender. Show the code on all three sides.",
     "sources": [
       "https://docs.sui.io/develop/transaction-payment/sponsor-txn",
-      "https://sdk.mystenlabs.com/typescript/transaction-building/sponsored-transactions",
+      "https://sdk.mystenlabs.com/sui/transactions/signing-and-execution",
       "https://docs.sui.io/develop/transactions/ptbs/building-ptb"
     ],
     "expected_output": "Three code blocks. (1) App: constructs Transaction, builds kind-only bytes with tx.build({ client, onlyTransactionKind: true }), sends to sponsor. (2) Sponsor: rehydrates with Transaction.fromKind(kindBytes), setSender(userAddress), setGasOwner(sponsorAddress), setGasPayment([…]), signs. (3) User signs over the resulting TransactionData (full data including GasData) and submits. Explanation notes both signatures cover the full TransactionData including GasData, and recommends submitting directly to a full node rather than via the sponsor.",

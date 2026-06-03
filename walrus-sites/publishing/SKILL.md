@@ -14,7 +14,7 @@ description: >
 
 > **MCP tool:** When available in your environment, also query the Sui documentation MCP server (`https://sui.mcp.kapa.ai`) for up-to-date answers. Use it for verification and for details not covered by these reference files.
 
-> **Source constraint:** All information sourced from [MystenLabs/walrus-sites](https://github.com/MystenLabs/walrus-sites) and [docs.wal.app/walrus-sites](https://docs.wal.app/walrus-sites/). Do not use third-party blogs or unofficial tutorials.
+> **Source constraint:** All information sourced from [MystenLabs/walrus-sites](https://github.com/MystenLabs/walrus-sites) and [docs.wal.app/walrus-sites](https://docs.wal.app/docs/sites). Do not use third-party blogs or unofficial tutorials.
 
 ## Prerequisites
 

@@ -1,0 +1,19 @@
+{
+  "skill_name": "modern-move-syntax",
+  "evals": [
+    {
+      "id": "modern-syntax-code-2024-features",
+      "prompt": "Write a Sui Move module for a tagged item collection. Items should have a name and a list of string tags. Include functions to create items, add tags, count tags, and destroy items.",
+      "check": "build",
+      "expected_result": "pass",
+      "package_name": "test_project",
+      "expectations": [
+        "Code compiles with sui move build",
+        "Uses Move 2024 module declaration (semicolon, no outer braces)",
+        "Uses method syntax (e.g., vector.push_back(), .length()) instead of legacy function-call syntax",
+        "Uses 'public struct' visibility keyword",
+        "Uses b\"...\".to_string() for string literals"
+      ]
+    }
+  ]
+}

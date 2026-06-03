@@ -16,7 +16,7 @@ description: >
 
 Walrus Sites lets you deploy a static website (HTML/CSS/JS) to Walrus, with an on-chain Sui object tracking the site's resources. A portal server resolves site subdomains, fetches resources from Walrus, and serves them over HTTP. The result is a fully decentralized frontend — no centralized server, CDN, or DNS required.
 
-> **Source constraint:** All information in this skill is sourced from the [MystenLabs/walrus-sites](https://github.com/MystenLabs/walrus-sites) repository and the [Walrus Sites documentation](https://docs.wal.app/walrus-sites/). When extending or updating this skill, only pull from these sources. Do not use third-party blogs or unofficial tutorials.
+> **Source constraint:** All information in this skill is sourced from the [MystenLabs/walrus-sites](https://github.com/MystenLabs/walrus-sites) repository and the [Walrus Sites documentation](https://docs.wal.app/docs/sites). When extending or updating this skill, only pull from these sources. Do not use third-party blogs or unofficial tutorials.
 
 Common failures:
 

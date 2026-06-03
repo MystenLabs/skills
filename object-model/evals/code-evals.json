@@ -1,0 +1,44 @@
+{
+  "skill_name": "object-model",
+  "evals": [
+    {
+      "id": "object-model-code-shared-object",
+      "prompt": "I need a message board where anyone can post messages. Write the Move code for Sui.",
+      "check": "build",
+      "expected_result": "pass",
+      "package_name": "test_project",
+      "expectations": [
+        "Code compiles with sui move build",
+        "Board object is shared using transfer::share_object or transfer::public_share_object",
+        "Messages are stored in a collection (vector, Table, etc.)",
+        "Post function takes the board by mutable reference (&mut)"
+      ]
+    },
+    {
+      "id": "object-model-code-dynamic-fields",
+      "prompt": "I'm building a game where players have an inventory that can hold different types of items (swords, shields, potions). How should I model this in Move on Sui?",
+      "check": "build",
+      "expected_result": "pass",
+      "package_name": "test_project",
+      "expectations": [
+        "Code compiles with sui move build",
+        "Uses dynamic fields or dynamic object fields for heterogeneous storage",
+        "Player/inventory object has key ability",
+        "Add and remove functions use generic type parameters for items"
+      ]
+    },
+    {
+      "id": "object-model-code-wrapping",
+      "prompt": "I want to build a lockbox that wraps another object inside it. The owner can lock an item and later unlock it to get the item back. Write the Move module.",
+      "check": "build",
+      "expected_result": "pass",
+      "package_name": "test_project",
+      "expectations": [
+        "Code compiles with sui move build",
+        "Item is stored as a direct field inside the Lockbox struct (wrapping pattern)",
+        "Unlock function takes Lockbox by value, unpacks it, and returns the inner item",
+        "Lockbox UID is deleted when unlocking"
+      ]
+    }
+  ]
+}
