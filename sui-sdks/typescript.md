@@ -164,6 +164,32 @@ Pagination: core `list*` methods return a single nullable `cursor`. Iterate whil
 - Transaction reads (`getTransaction`, `waitForTransaction`): `effects`, `events`, `balanceChanges`, `transaction`, `bcs`.
 - Simulation (`simulateTransaction`): adds `commandResults`.
 
+### Missing objects and dynamic fields
+
+Unlike v1, v2 does **not** return `null` when a requested object or dynamic field does not exist.
+
+Methods such as:
+
+```ts
+await client.core.getObject({ objectId });
+await client.core.getDynamicField({ parentId, name });
+```
+
+throw an exception if the target cannot be found.
+
+When migrating from v1, replace any logic that relies on `null` checks with appropriate exception handling:
+
+```ts
+try {
+  const object = await client.core.getObject({ objectId });
+  // use object
+} catch (error) {
+  // object not found
+}
+```
+
+This is a behavioral change from v1, where equivalent APIs returned `null` for non-existent objects and dynamic fields.
+
 ## Execution
 
 ```ts
