@@ -99,26 +99,6 @@ jobs:
               });
             }
 
-      - name: Notify Slack on staleness detected
-        if: steps.check.outcome == 'failure'
-        uses: slackapi/slack-github-action@v2.0.0
-        with:
-          webhook: ${{ secrets.SLACK_STALENESS_WEBHOOK_URL }}
-          webhook-type: incoming-webhook
-          payload: |
-            {
-              "text": "⚠️ Skill staleness detected",
-              "blocks": [
-                {
-                  "type": "section",
-                  "text": {
-                    "type": "mrkdwn",
-                    "text": "⚠️ *Skill staleness detected* — upstream Sui sources have changed.\n\n<${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View workflow run>"
-                  }
-                }
-              ]
-            }
-
       - name: Commit updated hashes
         if: inputs.update_baseline == true
         run: |
