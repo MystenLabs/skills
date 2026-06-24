@@ -16,7 +16,7 @@
     },
     {
       "id": "object-model-code-dynamic-fields",
-      "prompt": "I'm building a game where players have an inventory that can hold different types of items (swords, shields, potions). How should I model this in Move on Sui?",
+      "prompt": "Write a Move module for Sui where a Player object has an inventory that can hold different types of game items (swords, shields, potions) using dynamic object fields. Include functions to add and remove items by name.",
       "check": "build",
       "expected_result": "pass",
       "package_name": "test_project",

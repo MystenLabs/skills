@@ -42,6 +42,47 @@ Use plain function calls (`dynamic_field::add`, `table::add`, etc.) instead of r
 
 Replace `dynamic_field` with `dynamic_object_field` for object fields. The API is identical.
 
+### Complete example: heterogeneous inventory with dynamic object fields
+
+```move
+module test_project::inventory;
+
+use std::string::String;
+use sui::dynamic_object_field;
+
+/// An inventory that can hold any object type as a named slot.
+public struct Inventory has key, store {
+    id: UID,
+}
+
+/// Create an empty inventory.
+public fun new(ctx: &mut TxContext): Inventory {
+    Inventory { id: object::new(ctx) }
+}
+
+/// Add an item to a named slot. T must be an object (key + store).
+public fun add_item<T: key + store>(
+    inventory: &mut Inventory,
+    name: String,
+    item: T,
+) {
+    dynamic_object_field::add(&mut inventory.id, name, item);
+}
+
+/// Remove an item from a named slot, returning it to the caller.
+public fun remove_item<T: key + store>(
+    inventory: &mut Inventory,
+    name: String,
+): T {
+    dynamic_object_field::remove(&mut inventory.id, name)
+}
+
+/// Check whether a slot is occupied.
+public fun has_item<T: key + store>(inventory: &Inventory, name: String): bool {
+    dynamic_object_field::exists_with_type<String, T>(&inventory.id, name)
+}
+```
+
 Accessing a nonexistent field aborts the transaction — use `exists_` to check first when the field's presence is uncertain. Adding a field with a name that already exists (same name and type) also aborts.
 
 > **Important:** Accessing a nonexistent dynamic field (via `borrow`, `borrow_mut`, or `remove`) aborts the transaction. Always use `exists_` to check before accessing a dynamic field whose presence is uncertain.
