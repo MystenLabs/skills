@@ -22,7 +22,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 60
     permissions:
-      contents: read
+      contents: write
       pull-requests: write
 
     steps:
@@ -67,6 +67,14 @@ jobs:
         with:
           name: eval-results
           path: scripts/eval-results.json
+
+      - name: Commit eval results
+        if: always() && github.event_name != 'pull_request'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add scripts/eval-results.json
+          git diff --staged --quiet || (git commit -m "Update eval results [skip ci]" && git push)
 
       - name: Comment on PR with failures
         if: failure() && github.event_name == 'pull_request'

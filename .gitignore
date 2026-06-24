@@ -3,5 +3,4 @@
 .claude/
 skills-lock.json
 node_modules/
-scripts/eval-results.json
 .env
