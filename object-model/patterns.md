@@ -42,9 +42,11 @@ public fun admin_action(_: &AdminCap, registry: &mut Registry) {
 
 Caps can be stored inside other objects and temporarily borrowed using the `sui::borrow` module. This module provides a `Referent<T>` wrapper and a hot potato receipt to ensure the cap is returned in the same PTB.
 
+The type wrapped in `Referent<T>` must have `key + store` abilities. This means only objects with both `key` and `store` can be placed inside a `Referent`.
+
 The flow:
 
-1. Store the cap inside a `Referent<T>` wrapper (requires `key + store` on the cap).
+1. Store the cap inside a `Referent<T>` wrapper.
 2. When a caller needs temporary access, call `borrow::borrow(&mut referent)` which returns the cap and a hot potato `Borrow` receipt.
 3. The caller uses the cap (for example, mints tokens with a `TreasuryCap`).
 4. The caller must call `borrow::put_back(&mut referent, cap, receipt)` in the same PTB to return the cap and consume the receipt.

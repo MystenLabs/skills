@@ -35,4 +35,4 @@ The `sui::coin` module provides the standard fungible token implementation. Key 
 - `coin::join(coin1, coin2)`: Merge two coins of the same type into one (called `merge` at the PTB level).
 - `coin::value(coin)`: Read the balance of a coin.
 
-SUI itself is a coin of type `0x2::sui::SUI`. Coins are objects with `key` and `store`, so they can be freely transferred and stored.
+The native gas token SUI is itself a `Coin` type — specifically `Coin<SUI>`, where `SUI` is the type defined at `0x2::sui::SUI`. It follows all the same `coin::` operations listed above (split, join, etc.). Coins are objects with `key` and `store`, so they can be freely transferred and stored.

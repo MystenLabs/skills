@@ -9,7 +9,7 @@ First file to load when a user describes what they want to do. Pick the right da
 3. Is this a **single entity read** (one object, one balance, one transaction, one coin list)? → **gRPC** (`grpc.md`). Use `client.core.*` from any SDK.
 4. Does the query **join across entities** or filter historical data in a way a single gRPC method doesn't cover (e.g., "all NFTs owned by X minted after date Y with field Z > N")? → **GraphQL RPC** (`graphql.md`).
 5. Is this **app-specific analytics** that neither gRPC nor GraphQL covers efficiently (leaderboards, custom aggregations, complex filters over millions of rows)? → **Custom indexer** (`indexers.md`).
-6. Is the data **older than full-node retention** and you're hitting "not found"? → Use **GraphQL RPC** (routes through Archival Store automatically). If you must use gRPC, query the archival service directly at its own URL. See `archival.md`.
+6. Is the data **older than full-node retention** and you're hitting "not found"? → Use **GraphQL RPC** or **gRPC** — both route through the Archival Store transparently when the operator has configured archival backing. There is no separate archival endpoint to call. See `archival.md`.
 7. None of the above? Choose based on what you're building: **frontends, tools, dynamic languages → GraphQL RPC**; **backends, indexers, typed systems languages → gRPC**.
 
 ## Common use cases
@@ -51,7 +51,7 @@ First file to load when a user describes what they want to do. Pick the right da
 |---|---|---|
 | Client type | Frontends, dashboards, developer tools, scripts, dynamic languages | Backends, indexers, exchanges, low-latency services, typed systems languages |
 | Query patterns | Flexible, nested, filtered, or historical queries combining transactions, objects, events, balances in one request | Point lookups, transaction execution, simulation, workflows modeled around protobuf messages |
-| Historical access | Can use configured Archival Service for supported historical point lookups; supports filtered pagination over historical txs and events | Limited by full node retention; for higher retention, query Archival Service endpoint directly |
+| Historical access | Can use configured Archival Service for supported historical point lookups; supports filtered pagination over historical txs and events | Also routes to Archival Store transparently when operator-configured; no separate endpoint needed |
 | Streaming | No subscription support yet | gRPC subscriptions for live checkpoint/event streaming |
 | Consistency | Execution-attached and simulation-attached queries provide read-after-write for fields that don't require indexed history | Use `waitForTransaction` or read from the same node you wrote to |
 

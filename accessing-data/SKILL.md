@@ -25,8 +25,8 @@ Any code — or tutorial — that uses JSON-RPC for new reads is wrong for mainn
 The four canonical data surfaces are:
 
 1. **gRPC** — low-latency, real-time, code-gen-friendly. Served by full nodes. Supports streaming/subscriptions. The default for transaction submission, live reads, and ingestion pipelines.
-2. **GraphQL RPC** — flexible relational queries over the General-Purpose Indexer's Postgres + full node + Archival Store. Supports reads, transaction submission, and dry-run. Best for frontends, dashboards, wallets, and any client that benefits from composable queries.
-3. **Archival Store** — long-term historical storage of transactions, checkpoints, and object states beyond full-node pruning. Accessed via GraphQL RPC (which routes to archival automatically for pruned data). Full nodes serving gRPC do **not** implicitly fall back to archival — if you need high-retention historical data over gRPC, you must query the archival service directly at its own URL.
+2. **GraphQL RPC** (**beta**) — flexible relational queries over the General-Purpose Indexer's Postgres + full node + Archival Store. Supports reads, transaction submission, and dry-run. Best for frontends, dashboards, wallets, and any client that benefits from composable queries. Still in beta — breaking schema changes are possible.
+3. **Archival Store** (**beta**) — long-term historical storage of transactions, checkpoints, and object states beyond full-node pruning. Accessed transparently via the standard gRPC and GraphQL RPC APIs — the server routes to archival behind the scenes when the requested data has been pruned. There is no separate archival endpoint for clients to call. Archival routing is operator-configured: if the operator hasn't set up archival backing, retention is limited to what the primary store holds.
 4. **Custom indexer (`sui-indexer-alt`)** — build your own data pipeline keyed on exactly the on-chain data your app needs. Writes to any storage layer (Postgres by default, but any backend works). Ingests checkpoints from GCS (backfill) + full node gRPC (steady state).
 
 Off-chain blob data (images, audio, models, large JSON) belongs on **Walrus**, not on-chain. Sui stores blob metadata; the blobs themselves sit on Walrus storage nodes.
@@ -61,8 +61,8 @@ If unsure about an API, fetch from the relevant page before answering. Do not gu
 
 ### archival — Archival Store
 **Path:** `archival.md`
-**Load when:** the data you need has been pruned from full nodes — old transactions, old object versions, old checkpoints. GraphQL can route to archival when operator-configured; gRPC does not — you must query the Archival Service directly.
-**Covers:** what the Archival Store retains, why pruning exists, how GraphQL routes to archival (operator-configured), Archival Service gRPC endpoint URLs, direct archival access for gRPC users, use cases (compliance, dispute resolution, long-range analytics).
+**Load when:** the data you need has been pruned from full nodes — old transactions, old object versions, old checkpoints. Both gRPC and GraphQL RPC can route to archival transparently when operator-configured.
+**Covers:** what the Archival Store retains (beta), why pruning exists, how gRPC and GraphQL RPC route to archival transparently (operator-configured), use cases (compliance, dispute resolution, long-range analytics).
 
 ### walrus — Off-chain blob storage
 **Path:** `walrus.md`
@@ -94,8 +94,8 @@ If unsure about an API, fetch from the relevant page before answering. Do not gu
 
 - **JSON-RPC is deprecated.** Full deactivation targeted for **July 2026**. Any new code must default to gRPC or GraphQL RPC. Existing JSON-RPC code must be migrated.
 - **gRPC is the performance default.** Typed protobuf, streaming, low latency, polyglot client code gen (TS, Rust, Go, Python, etc.). Served directly by full nodes. Best for backends, indexers, and apps built in typed systems languages.
-- **GraphQL RPC is the flexibility default.** Generally available. Reads from the General-Purpose Indexer's Postgres + full node + Archival Store. Also supports transaction submission and dry-run. One request can span multiple entity types. Best for frontends, tools, and apps built in dynamic languages.
-- **Archival routing is operator-configured.** GraphQL RPC can route supported historical point lookups to Archival when the GraphQL operator configures it. Full nodes serving gRPC do **not** fall back to archival — if you need historical data over gRPC, query the Archival Service endpoint directly (e.g., `archive.mainnet.sui.io:443`).
+- **GraphQL RPC is the flexibility default.** Currently in beta — functional and actively used, but breaking schema changes are possible. Reads from the General-Purpose Indexer's Postgres + full node + Archival Store. Also supports transaction submission and dry-run. One request can span multiple entity types. Best for frontends, tools, and apps built in dynamic languages.
+- **Archival routing is operator-configured.** Both GraphQL RPC and gRPC can route supported historical point lookups to the Archival Store transparently — but only when the operator has configured archival backing. There is no separate archival endpoint for clients to call. If archival is not configured, retention is limited to what the primary store holds.
 - **Custom indexers exist because no hosted API fits every query shape.** If you need filtered sorts over millions of rows with app-specific indexes, run your own `sui-indexer-alt` pipeline. Custom indexers can write to any storage layer by implementing the framework's `Store` and `Connection` traits — Postgres is the default, not a requirement.
 - **On-chain storage is not general-purpose blob storage.** Max Move object size is 250 KB. Storage is paid once (storage fund redistributes returns to validators). Big files go to Walrus.
 - **The storage fund does not "hold your data."** It's an economic mechanism: a fraction of each write fee goes in; validators earn yield that pays for ongoing storage. It affects pricing, not where you store.
@@ -104,13 +104,13 @@ If unsure about an API, fetch from the relevant page before answering. Do not gu
 
 1. **Absolutely no JSON-RPC for new code.** If a tutorial says `new SuiClient({ url: getFullnodeUrl(...) })`, replace with `new SuiGrpcClient({ network, baseUrl })`. If a user insists on JSON-RPC, name the deprecation + July 2026 sunset and offer `SuiJsonRpcClient` only as a migration stopgap.
 2. **Choose your initial API based on what you're building.** Front-ends, tools, and apps in dynamic languages → start with **GraphQL RPC** (superset of gRPC functionality, composable queries, archival routing). Backends, indexers, and apps in typed systems languages → start with **gRPC** (performance, streaming, code-gen). Only switch if you hit a limitation. **Current temporary caveats** (will be resolved in the coming months): only gRPC supports subscriptions; only GraphQL supports filtered pagination over historical transactions and events.
-3. **Archival routing differs by API.** GraphQL RPC routes supported historical point lookups to archival when the operator configures it. gRPC does **not** — if you need high-retention historical access via gRPC, query the Archival Service directly at its own URL (e.g., `archive.mainnet.sui.io:443`).
+3. **Archival routing is transparent but operator-configured.** Both gRPC and GraphQL RPC route supported historical point lookups to the Archival Store transparently when the operator has configured archival backing. There is no separate archival API for clients to call. If archival is not configured, retention is limited to what the primary store holds.
 4. **Build a custom indexer only when hosted APIs don't fit.** Operating an indexer is ongoing work — Postgres, checkpoint ingestion, failure handling. Evaluate GraphQL RPC first.
 5. **Put large files on Walrus.** Never advise embedding images/audio/video in Move objects or in transaction inputs. If the user is trying to, route them to the `walrus` reference file.
 6. **Map use case → method correctly.** See `use-cases.md`:
    - Live balance / owned-object / coin list → **gRPC `client.core.*`**.
    - Flexible multi-entity query for a frontend → **GraphQL RPC**.
-   - Historical transaction > N days old → **GraphQL RPC (routes through archival)**.
+   - Historical transaction > N days old → **GraphQL RPC or gRPC (both route through archival transparently when operator-configured)**.
    - Custom leaderboard / analytics across all events → **custom indexer**.
    - Transaction subscription / real-time effects feed → **gRPC streaming**.
    - Large files → **Walrus**.
@@ -127,5 +127,5 @@ If unsure about an API, fetch from the relevant page before answering. Do not gu
 - **Polling for events via JSON-RPC.** Use gRPC streaming / subscriptions instead. Polling is high-cost and high-latency.
 - **Reading from an RPC node and writing to a different one expecting read-after-write consistency.** Fullnodes are eventually consistent across the network. For GraphQL, prefer selecting fields in the same `executeTransaction` mutation (execution-attached scope gives consistent results without indexing). For gRPC, read from the same node you wrote to, or `waitForTransaction` before cross-node reads.
 - **Conflating "storage fund" with "storage service."** The storage fund is a tokenomics mechanism. It is not an API you call.
-- **Assuming gRPC falls back to archival for pruned data.** It does not. GraphQL can route to archival when the operator configures it. For gRPC clients needing historical data, query the Archival Service directly (e.g., `archive.mainnet.sui.io:443`).
-- **Assuming GraphQL archival routing is automatic.** It's operator-configured. If the GraphQL operator hasn't paired the service with an Archival Service backend, retention is limited to the Postgres database's retention policy.
+- **Trying to call a direct archival API endpoint.** There is no separate archival endpoint for clients. The Archival Store is accessed transparently through the standard gRPC and GraphQL RPC APIs — the server routes to archival behind the scenes.
+- **Assuming archival routing is automatic.** It's operator-configured. If the operator hasn't set up archival backing, retention is limited to what the primary store holds (e.g., the Postgres database's retention policy for GraphQL).

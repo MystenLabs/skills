@@ -5,11 +5,11 @@
     {
       "id": 1,
       "prompt": "What is the Sui Object Model and how do objects work on Sui?",
-      "expected_output": "A clear explanation of Sui's object-centric data model, how objects have unique IDs and versions, the four ownership types (address-owned, shared, immutable, wrapped), and how ownership affects transaction processing and parallel execution.",
+      "expected_output": "A clear explanation of Sui's object-centric data model, how objects have unique IDs and versions, the five ownership types (address-owned, shared, immutable, wrapped, consensus-address-owned / party objects), and how ownership affects transaction processing and parallel execution.",
       "expectations": [
         "The response explains that Sui uses an object-centric model where every piece of onchain state is a typed object with a unique ID",
         "The response describes object versioning: transactions produce new versions with incremented version numbers while preserving the original ID",
-        "The response covers all four ownership types: address-owned, shared, immutable/frozen, and wrapped",
+        "The response covers all five ownership types: address-owned, shared, immutable/frozen, wrapped, and consensus-address-owned / party objects",
         "The response explains that address-owned objects enable parallel execution without consensus",
         "The response explains that shared objects require consensus ordering (Mysticeti)",
         "The response contrasts Sui's model with account-based blockchains like Ethereum",

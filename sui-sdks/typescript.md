@@ -28,7 +28,7 @@ const client = new SuiGrpcClient({
   baseUrl: 'https://fullnode.mainnet.sui.io:443',
 });
 
-// Legacy — JSON-RPC, still widely deployed
+// Legacy — JSON-RPC is deprecated; migrate to SuiGrpcClient for new code
 import { SuiJsonRpcClient, getJsonRpcFullnodeUrl } from '@mysten/sui/jsonRpc';
 const client = new SuiJsonRpcClient({
   network: 'mainnet',
@@ -295,7 +295,7 @@ Full migration guide: fetch `https://sdk.mystenlabs.com/sui/migrations/sui-2.0/l
 | `client.getOwnedObjects` | `client.core.listOwnedObjects` |
 | `client.getCoins` | `client.core.listCoins` |
 | `client.getDynamicFields` | `client.core.listDynamicFields` |
-| `client.signAndExecuteTransactionBlock` | `keypair.signAndExecuteTransaction({ transaction, client })` |
+| `client.signAndExecuteTransactionBlock` | `keypair.signAndExecuteTransaction({ transaction, client, include: { effects: true } })` |
 | `client.waitForTransactionBlock` | `client.waitForTransaction` |
 | `client.devInspectTransactionBlock` | `client.simulateTransaction` |
 | `client.executeTransactionBlock` | `client.core.executeTransaction` |
@@ -326,7 +326,7 @@ All `@mysten/*` packages are ESM-only:
 | `import { ... } from '@mysten/sui.js'` | `import { ... } from '@mysten/sui'` |
 | `new TransactionBlock()` | `new Transaction()` |
 | `client.signAndExecuteTransactionBlock(...)` | `keypair.signAndExecuteTransaction({ transaction, client })` |
-| `SuiClient` | `SuiGrpcClient` (or `SuiJsonRpcClient`) |
+| `SuiClient` | `SuiGrpcClient` (or `SuiJsonRpcClient` — legacy, JSON-RPC is deprecated) |
 | Hardcoding `tx.object(Inputs.ObjectRef({ version, digest }))` for online code | `tx.object('0x...')` — let SDK resolve |
 | `tx.pure(100)` untyped | `tx.pure.u64(100)` |
 | Not checking `result.$kind` | Always check for `'FailedTransaction'` |
