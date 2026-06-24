@@ -68,13 +68,19 @@ jobs:
           name: eval-results
           path: scripts/eval-results.json
 
-      - name: Commit eval results
+      - name: Push eval results to eval-results branch
         if: always() && github.event_name != 'pull_request'
         run: |
+          cp scripts/eval-results.json /tmp/eval-results.json
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
+          git checkout --orphan eval-results
+          git rm -rf . > /dev/null 2>&1
+          mkdir -p scripts
+          cp /tmp/eval-results.json scripts/eval-results.json
           git add scripts/eval-results.json
-          git diff --staged --quiet || (git commit -m "Update eval results [skip ci]" && git push)
+          git commit -m "Update eval results $(date -u +%Y-%m-%d)"
+          git push origin eval-results --force
 
       - name: Comment on PR with failures
         if: failure() && github.event_name == 'pull_request'
@@ -110,23 +116,3 @@ jobs:
               repo: context.repo.repo,
               body
             });
-
-      - name: Notify Slack on eval failures
-        if: failure()
-        uses: slackapi/slack-github-action@v2.0.0
-        with:
-          webhook: ${{ secrets.SLACK_EVAL_WEBHOOK_URL }}
-          webhook-type: incoming-webhook
-          payload: |
-            {
-              "text": "❌ Skill eval failures detected",
-              "blocks": [
-                {
-                  "type": "section",
-                  "text": {
-                    "type": "mrkdwn",
-                    "text": "❌ *Skill eval failures detected* — ${{ github.event_name == 'pull_request' && format('PR #{0}', github.event.pull_request.number) || 'scheduled run' }}\n\n<${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View workflow run>"
-                  }
-                }
-              ]
-            }
