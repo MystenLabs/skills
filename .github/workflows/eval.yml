@@ -68,13 +68,19 @@ jobs:
           name: eval-results
           path: scripts/eval-results.json
 
-      - name: Commit eval results
+      - name: Push eval results to eval-results branch
         if: always() && github.event_name != 'pull_request'
         run: |
+          cp scripts/eval-results.json /tmp/eval-results.json
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
+          git checkout --orphan eval-results
+          git rm -rf . > /dev/null 2>&1
+          mkdir -p scripts
+          cp /tmp/eval-results.json scripts/eval-results.json
           git add scripts/eval-results.json
-          git diff --staged --quiet || (git commit -m "Update eval results [skip ci]" && git push)
+          git commit -m "Update eval results $(date -u +%Y-%m-%d)"
+          git push origin eval-results --force
 
       - name: Comment on PR with failures
         if: failure() && github.event_name == 'pull_request'
