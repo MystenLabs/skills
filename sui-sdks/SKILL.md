@@ -35,7 +35,7 @@ If unsure about any specific API in any SDK, fetch from the relevant doc page �
 ### typescript — TypeScript SDK (`@mysten/sui` v2)
 **Path:** `typescript.md`
 **Load when:** writing, reviewing, or migrating TypeScript/JavaScript code that imports `@mysten/sui`, constructing PTBs in TS, choosing between `SuiGrpcClient` / `SuiJsonRpcClient` / `SuiGraphQLClient`, using the v2 Core API, or migrating from SDK v1 (`@mysten/sui.js`).
-**Covers:** install, imports, client classes and when to use each, v2 Core API, PTB construction, pure/object inputs, `coinWithBalance` intent, execution & status checking, `waitForTransaction`, keypairs, offline building, sponsored transactions, v1→v2 migration table, `$extend` pattern for kiosk/suins/deepbook/walrus/seal/zksend.
+**Covers:** install, imports, client classes and when to use each, v2 Core API, PTB construction, pure/object inputs, balance and coin intents, execution & status checking, `waitForTransaction`, keypairs, offline building, sponsored transactions, v1→v2 migration table, `$extend` pattern for kiosk/suins/deepbook/walrus/seal/zksend.
 
 ### rust — Rust SDK (`sui-*` crates)
 **Path:** `rust.md`

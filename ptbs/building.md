@@ -124,6 +124,15 @@ tx.publish({ modules: number[][], dependencies: string[] })
 
 tx.upgrade({ modules, dependencies, packageId, ticket })
 //   returns: UpgradeReceipt
+
+tx.balance({ coinType?: string, owner?: string })
+//   returns: a Balance value resolved at build time
+
+tx.coin({ balance, type?: string })
+//   wraps a Balance into a Coin object
+
+tx.add(command)
+//   appends a raw command object to the transaction
 ```
 
 ## Result chaining
@@ -211,7 +220,7 @@ const tx2 = Transaction.from(bytes);           // full tx
 const tx3 = Transaction.fromKind(kindBytes);   // kind-only; set sender + gas data before building
 ```
 
-## App ↔ wallet handoff — use `serialize`, not `build`
+## App ↔ wallet handoff — use `toJSON`, not `build`
 
 In frontend code that hands a PTB to a wallet:
 
@@ -222,14 +231,14 @@ tx.transferObjects([tx.object(nftId)], tx.pure.address(recipient));
 await wallet.signTransaction({ transaction: tx });  // pass Transaction instance
 
 // The wallet adapter internally does:
-sendToWalletContext({ transaction: input.transaction.serialize() });
+sendToWalletContext({ transaction: await input.transaction.toJSON() });
 // And the wallet does:
 const userTx = Transaction.from(input.transaction);
 userTx.setSender(walletAddress);
 // wallet builds bytes (picks gas, sets budget via dry-run), signs, executes.
 ```
 
-**Why not `build`:** if the app calls `tx.build()` and hands bytes to the wallet, the wallet cannot do gas coin selection or budget dry-running on the caller's behalf. Use `tx.serialize()` (or pass the `Transaction` instance) so the wallet controls gas logic.
+**Why not `build`:** if the app calls `tx.build()` and hands bytes to the wallet, the wallet cannot do gas coin selection or budget dry-running on the caller's behalf. Use `await tx.toJSON()` (or pass the `Transaction` instance) so the wallet controls gas logic.
 
 ## Sponsored transactions
 
@@ -264,42 +273,33 @@ Both parties sign over the **entire TransactionData** including `GasData`. Signi
 ## Signing & executing
 
 ```ts
-const result = await client.signAndExecuteTransaction({
-  signer: keypair,
+const result = await keypair.signAndExecuteTransaction({
   transaction: tx,
-  options: {
-    showObjectChanges: true,
-    showBalanceChanges: true,
-    showEffects: true,
-  },
+  client,
+  include: { effects: true, balanceChanges: true, objectTypes: true },
 });
 
-if (result.effects?.status?.status !== 'success') {
-  throw new Error(`Tx failed: ${result.effects?.status?.error}`);
+if (result.$kind === 'FailedTransaction') {
+  throw new Error(`Tx failed: ${result.error}`);
 }
 
 // Ensure the RPC you'll read from next has indexed these effects
 await client.waitForTransaction({ digest: result.digest });
 ```
 
-**Always check status.** A transaction can execute (validators accept it) but still fail at the Move level (assertion, insufficient gas budget, etc.). Inspect `effects.status`.
+**Always check status.** A transaction can execute (validators accept it) but still fail at the Move level (assertion, insufficient gas budget, etc.). Check `result.$kind === 'FailedTransaction'`.
 
-## Dry-running and dev-inspect
+## Simulating transactions
 
 ```ts
-// Dry-run: full execution against current state, no signature required
-const dry = await client.dryRunTransactionBlock({
-  transactionBlock: await tx.build({ client }),
-});
-
-// Dev-inspect: like dry-run but also returns result values
-const inspect = await client.devInspectTransactionBlock({
-  transactionBlock: tx,
-  sender: senderAddress,
+// Simulate: full execution against current state, no signature required
+const sim = await client.simulateTransaction({
+  transaction: tx,
+  include: { effects: true, balanceChanges: true },
 });
 ```
 
-Use `devInspectTransactionBlock` when you need return values from a view-like Move call without publishing a custom view function.
+Use `client.simulateTransaction` to preview effects, estimate gas, and inspect return values from a view-like Move call without publishing a custom view function.
 
 ## Checklist for a PTB ready to ship
 
@@ -308,7 +308,7 @@ Use `devInspectTransactionBlock` when you need return values from a view-like Mo
 - Every non-`drop` result either consumed or transferred.
 - `tx.gas` only by value in `transferObjects`; otherwise `splitCoins`/`mergeCoins`/borrow.
 - Multi-return `moveCall` results destructured or indexed.
-- For user-signed flows: no `setGasBudget`/`setGasPrice`/`setGasPayment`, no `tx.build()` before handing to wallet — use `tx.serialize()` or pass the `Transaction` directly.
+- For user-signed flows: no `setGasBudget`/`setGasPrice`/`setGasPayment`, no `tx.build()` before handing to wallet — use `await tx.toJSON()` or pass the `Transaction` directly.
 - For sponsored flows: `build({ onlyTransactionKind: true })` → sponsor `setSender`/`setGasOwner`/`setGasPayment` → both signatures over full `TransactionData`.
-- **Check `result.effects.status` after execution.** A transaction can be accepted by validators but still fail at the Move level. Never treat a transfer (or any operation) as successful without verifying `status === 'success'`.
+- **Check `result.$kind` after execution.** A transaction can be accepted by validators but still fail at the Move level. Never treat a transfer (or any operation) as successful without checking `result.$kind === 'FailedTransaction'`.
 - `waitForTransaction` before reading mutated state from the same client.

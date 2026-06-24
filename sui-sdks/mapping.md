@@ -83,7 +83,7 @@ txn = SyncTransaction(client=client)
 
 ### Sign & execute
 
-| TS | `const result = await client.signAndExecuteTransaction({ signer, transaction: tx });` |
+| TS | `const result = await keypair.signAndExecuteTransaction({ transaction: tx, client });` |
 |---|---|
 | Rust | build → sign with `sui-crypto` → `client.transaction_execution_service().execute_transaction(tx, vec![sig]).await` |
 | Python | `result = txn.execute(gas_budget='10000000')` |
@@ -97,7 +97,7 @@ txn = SyncTransaction(client=client)
 
 ### Dry run / simulate
 
-| TS | `await client.core.simulateTransaction({ transaction: tx, sender });` |
+| TS | `await client.simulateTransaction({ transaction: tx, sender });` |
 |---|---|
 | Rust | `client.transaction_execution_service().dry_run_transaction(...).await` |
 | Python | `txn.inspect_for_result()` / `txn.inspect_all()` |
@@ -147,7 +147,7 @@ txn = SyncTransaction(client=client)
 | gRPC | ✅ (`SuiGrpcClient`) | ✅ (`sui-rpc`) | ✅ |
 | JSON-RPC | ✅ (`SuiJsonRpcClient`, deprecated) | ❌ (use legacy `sui-sdk`) | ✅ |
 | GraphQL | ✅ (`SuiGraphQLClient`) | ✅ (`sui-graphql`) | ✅ |
-| Coin intents | ✅ (`coinWithBalance`) | ✅ (`Coin`, `Balance` intents) | partial |
+| Coin intents | ✅ (`tx.balance()` / `tx.coin()`) | ✅ (`Coin`, `Balance` intents) | partial |
 | MVR name resolution | ✅ (automatic v2) | depends on crate | ❌ |
 | Sponsored transactions | ✅ | ✅ | ✅ |
 | Multi-sig | ✅ | ✅ | ✅ |

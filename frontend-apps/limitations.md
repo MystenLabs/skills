@@ -56,7 +56,7 @@ The wallet computes these better than you can — gas price is network-variable,
 
 ### Using `tx.gas` in `splitCoins` in a sponsored transaction
 
-Sponsors typically reject PTBs that consume the gas coin for non-gas purposes, because the sponsor's gas coin shouldn't be spent on app logic. Use `coinWithBalance` instead (see `sui-sdks` / `typescript.md`).
+Sponsors typically reject PTBs that consume the gas coin for non-gas purposes, because the sponsor's gas coin shouldn't be spent on app logic. Use `tx.coin({ balance, useGasCoin: false })` instead (see `sui-sdks` / `typescript.md`).
 
 ### Instantiating `SuiGrpcClient` inside components
 

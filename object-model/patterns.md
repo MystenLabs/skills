@@ -100,9 +100,10 @@ Key properties:
 |---|---|---|
 | Address predictable before creation | Yes | Yes |
 | Parent required for access | Only at creation | Always |
-| Independent ownership | Yes (any ownership type) | No (always owned by parent) |
+| Independent ownership | Yes (owned, shared, party, immutable, or wrapped) | No (always owned by parent) |
 | Can receive objects | Yes | No |
 | Parallel access | Yes | Limited (sequenced through parent) |
+| Supports reclaiming | Yes (transfer back to any owner) | Yes (remove from parent) |
 | Supports deletion | Yes | Yes |
 
 Use derived objects for registries, per-user configurations, soulbound tokens, and cases where you need parallel access without bottlenecking through a parent.

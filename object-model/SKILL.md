@@ -35,7 +35,7 @@ This skill routes to focused reference files. Load only the ones relevant to the
 ### transfers — Transferring and Deleting Objects
 **Path:** `transfers.md`
 **Load when:** transferring objects, choosing between `transfer` and `public_transfer`, implementing custom transfer rules, using `Receiving<T>`, transfer-to-object, or deleting/destroying objects.
-**Covers:** six core transfer functions (module-restricted vs public), custom transfer rules, transfer-to-object with `Receiving<T>`, `receive` vs `public_receive`, object deletion/unpacking pattern, dynamic field cleanup warning.
+**Covers:** eight core transfer functions (module-restricted vs public, including party_transfer variants), custom transfer rules, transfer-to-object with `Receiving<T>`, `receive` vs `public_receive`, object deletion/unpacking pattern, dynamic field cleanup warning.
 
 ### dynamic-fields-and-collections — Dynamic Fields and Collections
 **Path:** `dynamic-fields-and-collections.md`
@@ -150,5 +150,5 @@ Because `UID` has neither `copy` nor `drop`, objects (structs with `key`) can on
 - **Using `VecMap` for large collections.** It has O(n) lookup and is stored inline, hitting the 256 KB object size limit quickly.
 - **Confusing `dynamic_field` with `dynamic_object_field`.** Use `dynamic_object_field` when the child must remain queryable by ID in explorers. Use `dynamic_field` for plain values.
 - **Deleting an object without removing its dynamic fields first.** Those fields become permanently inaccessible.
-- **Using the legacy `sui::display` module for new code.** Use `sui::display_registry` (Display V2). V1 is deprecated and will be decommissioned.
+- **Using the legacy `sui::display` module for new code.** Use `sui::display_registry` (Display V2). V1 was migrated to V2 via a system snapshot migration.
 - **Forgetting to `display_registry::share(display)` after setting fields.** The display must be shared to be discoverable.

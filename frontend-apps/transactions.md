@@ -26,6 +26,9 @@ function ActionButton() {
 
     try {
       // Build the PTB — see sui-sdks / ptbs skills for patterns
+      // Note: for simple transfers, tx.coin() is now the preferred approach:
+      //   tx.transferObjects([tx.coin({ balance: 1_000_000n })], tx.pure.address('0xrecipient'));
+      // The splitCoins + transferObjects pattern below still works:
       const tx = new Transaction();
       const [coin] = tx.splitCoins(tx.gas, [tx.pure.u64(1_000_000n)]);
       tx.transferObjects([coin], tx.pure.address('0xrecipient'));
@@ -176,14 +179,14 @@ import { Transaction } from '@mysten/sui/transactions';
 const keypair = Ed25519Keypair.fromSecretKey(privateKeyBytes);
 // or: const keypair = new Ed25519Keypair();
 
-const client = new SuiGrpcClient({ url: 'https://fullnode.testnet.sui.io:443' });
+const client = new SuiGrpcClient({ baseUrl: 'https://fullnode.testnet.sui.io:443', network: 'testnet' });
 
 const tx = new Transaction();
 // ... build PTB ...
 
-const result = await client.signAndExecuteTransaction({
+const result = await keypair.signAndExecuteTransaction({
   transaction: tx,
-  signer: keypair,
+  client,
 });
 ```
 

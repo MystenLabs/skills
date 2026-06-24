@@ -28,7 +28,7 @@ Event structs must have `copy` and `drop` abilities. Subscribe to events offchai
 
 The `sui::coin` module provides the standard fungible token implementation. Key operations:
 
-- `coin::create_currency(witness, decimals, symbol, name, description, icon_url, ctx)`: Creates a new currency using a One-Time Witness. Returns a `TreasuryCap` (for minting/burning) and `CoinMetadata`.
+- `coin::create_currency(witness, decimals, symbol, name, description, icon_url, ctx)`: Creates a new currency using a One-Time Witness. Returns a `TreasuryCap` (for minting/burning) and `CoinMetadata`. **Warning:** Never freeze or share the `TreasuryCap` — doing so might allow malicious actors to call functions as the currency owner. Always transfer it to a controlled address.
 - `coin::mint(treasury_cap, amount, ctx)`: Mint new coins.
 - `coin::burn(treasury_cap, coin)`: Burn coins.
 - `coin::split(coin, amount, ctx)`: Split a coin, returning a new coin with the specified amount.

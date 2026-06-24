@@ -51,6 +51,8 @@ public fun check_deadline(clock: &Clock) {
 
 The Clock is more precise than `ctx.epoch_timestamp_ms()` (which returns only the epoch start time). Use the Clock for time-sensitive logic like auctions or deadlines. Use `ctx.epoch()` for epoch-level checks like staking windows.
 
+**Important:** Because the Clock is a shared object, any transaction that reads it must go through consensus. This makes Clock access incompatible with single-owner fastpath transactions (which skip consensus for lower latency). The Clock updates approximately every 1/4 second, at the checkpoint rate. If your transaction only touches owned objects and does not need sub-epoch time precision, prefer `ctx.epoch_timestamp_ms()` to stay on the fastpath.
+
 ## Init functions and One-Time Witness
 
 ### The init function
@@ -252,7 +254,7 @@ The new admin must actively call `accept_admin_transfer`, proving they control t
 
 ### Deny lists (regulated coins)
 
-Sui provides a system-level `DenyList` shared object (`0x403`) for regulated coins. Use `coin::create_regulated_currency` instead of `coin::create_currency` to enable address-based transfer restrictions:
+Sui provides a system-level `DenyList` shared object (`0x403`) for regulated coins. Use `coin::create_regulated_currency_v2` instead of `coin::create_currency` to enable address-based transfer restrictions:
 
 ```move
 use sui::coin;
@@ -261,7 +263,7 @@ use sui::deny_list::DenyList;
 public struct MY_TOKEN has drop {}
 
 fun init(otw: MY_TOKEN, ctx: &mut TxContext) {
-    let (treasury_cap, deny_cap, metadata) = coin::create_regulated_currency(
+    let (treasury_cap, deny_cap, metadata) = coin::create_regulated_currency_v2(
         otw, 9, b"TKN", b"Token", b"A regulated token", option::none(), ctx,
     );
     transfer::public_transfer(treasury_cap, ctx.sender());
@@ -269,10 +271,10 @@ fun init(otw: MY_TOKEN, ctx: &mut TxContext) {
     transfer::public_freeze_object(metadata);
 }
 
-/// Add an address to the deny list (requires DenyCap)
+/// Add an address to the deny list (requires DenyCapV2)
 public fun block_address(
     deny_list: &mut DenyList,
-    deny_cap: &mut DenyCap<MY_TOKEN>,
+    deny_cap: &mut DenyCapV2<MY_TOKEN>,
     addr: address,
     ctx: &mut TxContext,
 ) {
@@ -282,18 +284,37 @@ public fun block_address(
 /// Remove an address from the deny list
 public fun unblock_address(
     deny_list: &mut DenyList,
-    deny_cap: &mut DenyCap<MY_TOKEN>,
+    deny_cap: &mut DenyCapV2<MY_TOKEN>,
     addr: address,
     ctx: &mut TxContext,
 ) {
     coin::deny_list_v2_remove(deny_list, deny_cap, addr, ctx);
 }
+
+/// Pause all transfers of this coin type globally
+public fun global_pause(
+    deny_list: &mut DenyList,
+    deny_cap: &mut DenyCapV2<MY_TOKEN>,
+    ctx: &mut TxContext,
+) {
+    coin::deny_list_v2_enable_global_pause(deny_list, deny_cap, ctx);
+}
+
+/// Unpause all transfers of this coin type globally
+public fun global_unpause(
+    deny_list: &mut DenyList,
+    deny_cap: &mut DenyCapV2<MY_TOKEN>,
+    ctx: &mut TxContext,
+) {
+    coin::deny_list_v2_disable_global_pause(deny_list, deny_cap, ctx);
+}
 ```
 
 Key points:
-- `create_regulated_currency` returns an additional `DenyCap<T>` alongside the `TreasuryCap`.
-- The `DenyCap` authorizes adding/removing addresses from the deny list. Custody of the `DenyCap` is as important as the `TreasuryCap`.
+- `create_regulated_currency_v2` returns an additional `DenyCapV2<T>` alongside the `TreasuryCap`.
+- The `DenyCapV2` authorizes adding/removing addresses from the deny list and enabling/disabling global pause. Custody of the `DenyCapV2` is as important as the `TreasuryCap`.
 - Denied addresses cannot receive the coin type in any transaction. The restriction is enforced at the validator level.
+- Use `coin::deny_list_v2_enable_global_pause` / `coin::deny_list_v2_disable_global_pause` to pause or resume all transfers of the coin type globally (emergency freeze).
 - The `DenyList` object at `0x403` is a system shared object. Reference it from TypeScript with `tx.object.denyList()`.
 
 For custom (non-coin) deny lists, store a `Table<address, bool>` or `VecSet<address>` in a shared object and check it in your entry functions.
@@ -302,11 +323,11 @@ For custom (non-coin) deny lists, store a `Table<address, bool>` or `VecSet<addr
 
 When reviewing a Move package's access control:
 
-1. **Capability custody.** Where is each cap (`AdminCap`, `TreasuryCap`, `DenyCap`, `UpgradeCap`) created? Where does it end up? Is it transferred to `ctx.sender()` in `init`, or is it shared/wrapped? Can it be transferred to a new owner, and if so, through what mechanism?
+1. **Capability custody.** Where is each cap (`AdminCap`, `TreasuryCap`, `DenyCapV2`, `UpgradeCap`) created? Where does it end up? Is it transferred to `ctx.sender()` in `init`, or is it shared/wrapped? Can it be transferred to a new owner, and if so, through what mechanism? Never freeze or share the `TreasuryCap` — doing so might allow malicious actors to call functions as the currency owner.
 2. **Shared object entry points.** Every `public` or `entry` function that takes a `&mut SharedObject` is callable by any address. Verify that each one either (a) checks a capability, (b) checks `ctx.sender()` against a stored admin address, or (c) is intentionally permissionless.
-3. **`entry` vs `public` visibility.** `entry` functions are only callable as the first command in a PTB (not composable). `public` functions are callable from other Move code and PTBs. Prefer `public` for composability, but be aware that `public` functions can be called by any other package.
+3. **`entry` vs `public` visibility.** `entry` functions are callable from PTBs (at any position, not just the first command) but cannot be called from other Move packages — they restrict cross-package composability, not PTB ordering. `public` functions are callable from other Move code and PTBs. Prefer `public` for composability, but be aware that `public` functions can be called by any other package.
 4. **Admin rotation.** Is there a way to transfer admin authority? If so, does it use a two-step pattern? A single-step transfer risks permanent loss if the recipient address is wrong.
-5. **Deny list / blocklist.** For regulated tokens, is `create_regulated_currency` used? Is the `DenyCap` custody secured? For custom deny lists, are blocked addresses checked in all relevant entry points?
+5. **Deny list / blocklist.** For regulated tokens, is `create_regulated_currency_v2` used? Is the `DenyCapV2` custody secured? For custom deny lists, are blocked addresses checked in all relevant entry points?
 6. **Event emission.** Are security-critical actions (admin changes, deny list modifications, object deletions, configuration updates) emitting events? Events are the only way for offchain monitoring to detect these actions.
 7. **Object deletion.** Can shared objects be deleted? If so, who can delete them? Deleting a shared object with dynamic fields renders those fields permanently inaccessible.
 8. **Upgrade policy.** Is the `UpgradeCap` held by a multisig or has the package been made immutable? An unrestricted `UpgradeCap` held by a single key means the entire package can be rewritten.
@@ -326,6 +347,10 @@ public struct Attested<phantom T> has copy, drop { subject: address }
 ```
 
 The event's full type `0xPKG::module::Attested<ConcreteT>` is filterable via RPC `eventType` — no string parsing needed.
+
+### Event limit
+
+A single transaction can emit a maximum of 1,024 events (`max_num_event_emit` protocol config). If your logic could exceed this limit (e.g., batch operations emitting per-item events), aggregate into fewer, larger events or split across multiple transactions.
 
 ### Event denormalization anti-pattern
 

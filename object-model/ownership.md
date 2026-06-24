@@ -10,9 +10,11 @@ Transactions touching only address-owned objects use a **fastpath that does not 
 
 The tradeoff: only one address can use the object, and only one inflight transaction per object version is allowed. If multiple users need access, use a shared object. If a single owner needs multiple inflight transactions against the same object, use a party object.
 
+> **Current recommendation:** For most new use cases, prefer party objects over fastpath address-owned objects. Fastpath objects carry equivocation risk (if two transactions try to use the same owned object concurrently, the object can be locked) and require offchain coordination for concurrent access by multiple senders. Party objects avoid these issues by going through consensus while still restricting access to a single owner.
+
 ## Party objects
 
-Party objects are a newer ownership form that combines single-address ownership with consensus sequencing. The underlying mechanism is called "consensus-address-owned," which is a special case of the broader party object concept (still in development as a full feature). APIs expose this ownership with a `ConsensusAddressOwner` owner variant.
+Party objects are an ownership form that combines single-address ownership with consensus sequencing. The underlying mechanism is called consensus-address-owned (also called party objects). APIs expose this ownership with a `ConsensusAddressOwner` owner variant.
 
 Party objects are the public Move-facing way to create this ownership form. They are created using `sui::transfer::party_transfer` or `sui::transfer::public_party_transfer`, and use the `sui::party::Party` type (currently restricted to `party::single_owner` for single-address ownership).
 
@@ -23,6 +25,7 @@ Key differences from address-owned:
 Key differences from shared objects:
 - **Single-address ownership.** Only the owning address can use the object — unlike shared objects which are accessible to anyone.
 - **Can be transferred and wrapped.** Party objects can be transferred to and from other ownership types and wrapped inside other objects. Shared objects cannot.
+- **Transfer-to-object not supported.** You cannot transfer an object to a party object whose owning address corresponds to an object ID. Transfer-to-object (Receiving) is not supported for party objects.
 
 Use party objects when you want single-owner access control with consensus sequencing, for example to allow multiple inflight transactions against the same logical object without fastpath version locking. If an object is only used with other party or shared objects, converting it to a party object has no additional performance cost.
 
@@ -40,7 +43,7 @@ Shared objects require consensus ordering through Mysticeti. This adds latency a
 
 Cannot be changed, transferred, or deleted. Anyone can read them. Created through `transfer::freeze_object()` or `transfer::public_freeze_object()`. Freezing is permanent and irreversible.
 
-Immutable objects also skip consensus (fastpath, like owned objects). Use for reference data, published packages, and constants that never change.
+Immutable objects also skip consensus (like owned objects). However, for mutable state, the current recommendation is to prefer party objects over fastpath address-owned objects for most new use cases. Use immutable objects for reference data, published packages, and constants that never change.
 
 ## Wrapped objects
 
@@ -56,7 +59,7 @@ Use wrapping for tight coupling: when a child should only be accessible through 
 
 ## Object versioning
 
-Object versions use a system similar to Lamport timestamps, referred to as Lamport versioning. When a transaction touches multiple objects, all of them receive the same new version: `1 + max(version of all input objects)`.
+Object versions use Lamport timestamps. When a transaction touches multiple objects, all of them receive the same new version: `1 + max(version of all input objects)`.
 
 Example: if a transaction modifies an object at version 5 using a gas coin at version 3, both the object and the gas coin become version 6.
 
@@ -64,7 +67,7 @@ Only the most recent version is accessible to active transactions. Historical ve
 
 ### Versioning and ownership
 
-- **Address-owned / immutable objects:** Skip consensus entirely (fastpath). The transaction must use the exact current version as input, and only one inflight transaction per object version is allowed. Coordinate offchain access or use a party/shared object if frequent concurrent use is needed.
-- **Shared / party objects:** Sequenced through full consensus ordering. Enables concurrent access — multiple inflight transactions can touch the same object without version locking issues.
+- **Address-owned / immutable objects:** Skip consensus entirely (fastpath). The transaction must use the exact current version as input, and only one inflight transaction per object version is allowed. **For most new use cases, prefer party objects** over fastpath address-owned objects to avoid equivocation risk and the need for offchain coordination.
+- **Shared / party objects:** Sequenced through full consensus ordering. Enables concurrent access — multiple inflight transactions can touch the same object without version locking issues. Party objects are recommended over fastpath for single-owner mutable state.
 - **Wrapped objects:** Version increments when the parent is modified, maintaining unique (ID, version) pairs. While wrapped, the object is not directly accessible by version.
 - **Dynamic fields:** Version increments when the field is modified, following Lamport timestamps like regular objects.
