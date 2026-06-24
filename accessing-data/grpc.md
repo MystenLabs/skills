@@ -18,7 +18,7 @@ From the docs: *"gRPC has built-in support for code generation, allowing you to 
 
 - Multi-entity joins / historical filtered queries / filtered pagination over historical transactions and events. → Use GraphQL RPC.
 - App-specific analytics over millions of events. → Use a custom indexer.
-- Historical data beyond full-node retention. → gRPC full nodes do **not** fall back to the Archival Store. Use GraphQL RPC (which can route to archival when the operator configures it), or query the Archival Service gRPC endpoint directly (e.g., `archive.mainnet.sui.io:443`). The Archival Service exposes the same `LedgerService` API, so you can reuse your gRPC client — just change the endpoint URL.
+- Historical data beyond full-node retention. → Both gRPC and GraphQL RPC route to the Archival Store transparently when the operator has configured archival backing. There is no separate archival endpoint to call. If archival is not configured, retention is limited to what the primary store holds. See `archival.md`.
 
 ## Endpoint URLs
 
@@ -85,7 +85,7 @@ await client.nameService.reverseLookupName({ address: '0x...' });
 `include` flags replace v1's `options: { show*: true }`. Flags differ by method:
 
 - **Object reads** (`getObject`, `getObjects`, `listOwnedObjects`): `content`, `previousTransaction`, `json`, `objectBcs`, `display`.
-- **Transaction reads** (`getTransaction`, `waitForTransaction`): `effects`, `events`, `balanceChanges`, `transaction`, `bcs`.
+- **Transaction reads** (`getTransaction`, `waitForTransaction`): `effects`, `events`, `balanceChanges`, `objectTypes`, `transaction`, `bcs`.
 - **Simulation** (`simulateTransaction`): adds `commandResults`.
 
 Default fields on every object response: `objectId`, `version`, `digest`, `owner`, `type`.
@@ -144,7 +144,7 @@ Protobuf definitions live in the Sui monorepo under `crates/sui-rpc-api/proto/` 
 ## Transaction submission
 
 ```ts
-await client.signAndExecuteTransaction({ signer: keypair, transaction: tx });
+await keypair.signAndExecuteTransaction({ transaction: tx, client });
 // or, if signing separately:
 await client.core.executeTransaction({
   transaction: bytes,
@@ -156,7 +156,7 @@ await client.core.executeTransaction({
 ## `waitForTransaction` — read-after-write consistency
 
 ```ts
-const result = await client.signAndExecuteTransaction({ signer, transaction });
+const result = await keypair.signAndExecuteTransaction({ transaction, client });
 await client.waitForTransaction({ digest: result.digest });
 // subsequent reads on the same client will see the new state
 ```

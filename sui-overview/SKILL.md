@@ -47,12 +47,13 @@ This skill covers the conceptual foundation of Sui and the broader Sui Stack. Fo
 
 Every item on the Sui network is an object with a unique ID and a version number. When a transaction modifies an object, it produces a new version with an incremented version number while preserving the original ID.
 
-Objects have one of four ownership types:
+Objects have one of five ownership types:
 
 - **Address-owned:** Only the owning address can use the object. Enables parallel execution without consensus.
 - **Shared:** Any address can use the object. Requires consensus ordering through Mysticeti.
 - **Immutable (frozen):** Anyone can read it, no one can mutate it. Permanent and irreversible.
 - **Wrapped:** Stored inside another object's fields. Accessible only through the parent.
+- **Consensus-Address Owned (Party Objects):** Owned by a specific address but require consensus to access. Party objects combine the access control of address-owned objects with the consensus ordering of shared objects, enabling use cases like controlled shared state where only a designated party can mutate the object but concurrent transactions involving it are ordered through consensus.
 
 This ownership model is what enables Sui's parallel execution: transactions on non-overlapping owned objects execute in parallel without consensus. For example, coin transfers between addresses, single-player game actions, and personal asset management all operate on owned objects and can run concurrently. Only shared-object transactions (like interacting with a DEX pool or a shared marketplace) go through Mysticeti consensus ordering.
 

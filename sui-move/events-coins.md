@@ -28,11 +28,11 @@ Event structs must have `copy` and `drop` abilities. Subscribe to events offchai
 
 The `sui::coin` module provides the standard fungible token implementation. Key operations:
 
-- `coin::create_currency(witness, decimals, symbol, name, description, icon_url, ctx)`: Creates a new currency using a One-Time Witness. Returns a `TreasuryCap` (for minting/burning) and `CoinMetadata`.
+- `coin::create_currency(witness, decimals, symbol, name, description, icon_url, ctx)`: Creates a new currency using a One-Time Witness. Returns a `TreasuryCap` (for minting/burning) and `CoinMetadata`. **Warning:** Never freeze or share the `TreasuryCap` — doing so might allow malicious actors to call functions as the currency owner. Always transfer it to a controlled address.
 - `coin::mint(treasury_cap, amount, ctx)`: Mint new coins.
 - `coin::burn(treasury_cap, coin)`: Burn coins.
 - `coin::split(coin, amount, ctx)`: Split a coin, returning a new coin with the specified amount.
 - `coin::join(coin1, coin2)`: Merge two coins of the same type into one (called `merge` at the PTB level).
 - `coin::value(coin)`: Read the balance of a coin.
 
-SUI itself is a coin of type `0x2::sui::SUI`. Coins are objects with `key` and `store`, so they can be freely transferred and stored.
+The native gas token SUI is itself a `Coin` type — specifically `Coin<SUI>`, where `SUI` is the type defined at `0x2::sui::SUI`. It follows all the same `coin::` operations listed above (split, join, etc.). Coins are objects with `key` and `store`, so they can be freely transferred and stored.

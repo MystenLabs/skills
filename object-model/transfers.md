@@ -1,6 +1,6 @@
 # Transferring and Deleting Objects
 
-The `transfer` module provides six core functions in two tiers for moving objects between owners. Object deletion is the inverse operation — explicitly destroying an object and reclaiming its storage.
+The `transfer` module provides eight core functions for moving objects between owners. Object deletion is the inverse operation — explicitly destroying an object and reclaiming its storage.
 
 ## Module-restricted (no `store` required)
 
@@ -9,6 +9,7 @@ These can only be called from the module that defines the object's type:
 | Function | Effect |
 |---|---|
 | `transfer::transfer(obj, recipient)` | Transfer to an address |
+| `transfer::party_transfer(obj, recipient)` | Transfer to consensus-address-owned (party) state |
 | `transfer::share_object(obj)` | Make the object shared |
 | `transfer::freeze_object(obj)` | Make the object immutable |
 
@@ -19,6 +20,7 @@ These can be called from any module, but the object must have the `store` abilit
 | Function | Effect |
 |---|---|
 | `transfer::public_transfer(obj, recipient)` | Transfer to an address or object ID |
+| `transfer::public_party_transfer(obj, recipient)` | Transfer to consensus-address-owned (party) state |
 | `transfer::public_share_object(obj)` | Make the object shared |
 | `transfer::public_freeze_object(obj)` | Make the object immutable |
 
@@ -50,6 +52,8 @@ transfer::public_transfer(sword, @0x0B);
 ```
 
 The receiving object must explicitly accept sent objects using the `Receiving<T>` type. This differs from Ethereum, where tokens are automatically added to a recipient's balance — on Sui, the parent must opt in to receiving.
+
+> **Note:** Transfer-to-object is not supported for party objects whose owning address corresponds to an object ID. You cannot use `Receiving<T>` to receive objects sent to a party object.
 
 ```move
 public fun accept_item<T: key + store>(

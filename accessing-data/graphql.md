@@ -2,12 +2,12 @@
 
 Source: https://docs.sui.io/concepts/data-access/graphql-rpc
 
-**Generally available.** GraphQL RPC is production-ready with no expectation of breaking schema changes.
+**Beta.** GraphQL RPC is functional and actively used but still in beta — breaking schema changes are possible. Plan for schema drift and pin to a known-good schema version when stability matters.
 
 Reads from three backing stores and also supports transaction submission and dry-run:
 1. The **General-Purpose Indexer**'s Postgres (primary source — indexed, filterable).
 2. A **full node** (live tip-of-chain reads the indexer hasn't caught up to).
-3. The **Archival Store** (historical data pruned from full nodes).
+3. The **Archival Store** (historical data pruned from full nodes — also beta).
 
 GraphQL RPC routes each query to whichever backing store is right. Clients don't pick.
 

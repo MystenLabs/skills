@@ -57,7 +57,7 @@ Source: https://docs.sui.io/develop/testing-debugging/common-errors · https://d
 
 **Cause:** `setGasBudget` too low for actual execution cost. The max budget is withdrawn at tx start and the tx aborts without effects except charging the gas input.
 
-**Fix:** let the SDK auto-dry-run and pick the budget (don't call `setGasBudget`), or call `client.dryRunTransactionBlock` first and use the reported `gasUsed`.
+**Fix:** let the SDK auto-dry-run and pick the budget (don't call `setGasBudget`), or call `client.simulateTransaction` first and use the reported `gasUsed`.
 
 ## Shared object: cannot be transferred or frozen
 

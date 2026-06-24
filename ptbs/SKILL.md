@@ -42,7 +42,7 @@ If unsure about any API, method signature, or error message, fetch the relevant 
 ### building — TypeScript SDK `Transaction` class
 **Path:** `building.md`
 **Load when:** writing TS/JS code that constructs a PTB with `@mysten/sui/transactions`, configuring gas, building for wallets, serializing across services, or sending PTBs between app ↔ wallet ↔ sponsor.
-**Covers:** `Transaction` API (`tx.moveCall`, `tx.splitCoins`, `tx.mergeCoins`, `tx.transferObjects`, `tx.makeMoveVec`, `tx.publish`, `tx.upgrade`, `tx.object`, `tx.pure`, `tx.gas`, `tx.setSender/setGasPrice/setGasBudget/setGasPayment/setGasOwner`), `Inputs.*Ref` helpers, result destructuring, `build({ onlyTransactionKind: true })`, `Transaction.from` / `fromKind`, sponsored transaction flow, signing & executing.
+**Covers:** `Transaction` API (`tx.moveCall`, `tx.splitCoins`, `tx.mergeCoins`, `tx.transferObjects`, `tx.makeMoveVec`, `tx.publish`, `tx.upgrade`, `tx.balance`, `tx.coin`, `tx.add`, `tx.object`, `tx.pure`, `tx.gas`, `tx.setSender/setGasPrice/setGasBudget/setGasPayment/setGasOwner`), `Inputs.*Ref` helpers, result destructuring, `build({ onlyTransactionKind: true })`, `Transaction.from` / `fromKind`, sponsored transaction flow, signing & executing.
 
 ### cli — Building PTBs from the CLI
 **Path:** `cli.md`
@@ -84,7 +84,7 @@ If unsure about any API, method signature, or error message, fetch the relevant 
 
 1. **`tx.gas` must be used by reference, except in `transferObjects`.** To get an owned `Coin<SUI>` from the gas coin, use `SplitCoins(tx.gas, [amount])` first.
 3. **Leave gas config to the wallet when possible.** Do not hardcode `setGasBudget` / `setGasPrice` / `setGasPayment` in app code that will be signed by a user wallet — the wallet dry-runs and selects coins correctly. Only set them for backend-signed flows.
-4. **In app code that hands a PTB to a wallet, use `tx.serialize()` (not `tx.build()`).** The wallet must perform gas logic and coin selection itself; building bytes in app code preempts that.
+4. **In app code that hands a PTB to a wallet, use `await tx.toJSON()` (not `tx.build()`).** The wallet must perform gas logic and coin selection itself; building bytes in app code preempts that.
 5. **Use `Transaction.fromKind(kindBytes)` for sponsored flows.** Build in app with `tx.build({ client, onlyTransactionKind: true })`, send the kind-only bytes to the sponsor service, rehydrate there with `fromKind`, then `setSender`, `setGasOwner`, `setGasPayment`. The user (or either party) should submit the fully-signed transaction directly to a full node — not back through the sponsor service — to avoid censorship.
 6. **Every non-`drop` value must be consumed.** If `moveCall` returns a value you don't need, pass it to `transferObjects` (if it has `key + store`), to `public_transfer`, or to a destructor. `UnusedValueWithoutDrop` is the PTB-level error.
 7. **Shared objects cannot be transferred, frozen, or consumed by value if passed as read-only** (`mutable: false`). If you need mutable access, mark them mutable when building the input.
@@ -101,5 +101,5 @@ If unsure about any API, method signature, or error message, fetch the relevant 
 - **Treating multi-return `moveCall` results as single values.** The return is a vector; index or destructure.
 - **Using `transfer::transfer` / `transfer::share_object` on generic types from a PTB.** Those entries require a module-private type param. From a PTB, use `transfer::public_transfer` / `transfer::public_share_object`, which require the type to have `store`.
 - **Setting a gas budget that's too tight.** A tx that exceeds budget aborts but still charges the gas coin. Prefer the SDK's dry-run-based auto-budget.
-- **Not checking execution status.** A transaction can be accepted by validators but fail at the Move level (assertion, out of gas, etc.). Always check `result.effects.status.status === 'success'` before treating an operation as successful. The tx digest alone does not mean the effects were applied.
+- **Not checking execution status.** A transaction can be accepted by validators but fail at the Move level (assertion, out of gas, etc.). Always check `result.$kind !== 'FailedTransaction'` before treating an operation as successful. The tx digest alone does not mean the effects were applied.
 - **Looping in app code to submit N individual transactions.** Batch into one PTB (up to 1,024 ops). One PTB is cheaper and atomic.

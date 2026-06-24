@@ -28,7 +28,7 @@ const client = new SuiGrpcClient({
   baseUrl: 'https://fullnode.mainnet.sui.io:443',
 });
 
-// Legacy — JSON-RPC, still widely deployed
+// Legacy — JSON-RPC is deprecated; migrate to SuiGrpcClient for new code
 import { SuiJsonRpcClient, getJsonRpcFullnodeUrl } from '@mysten/sui/jsonRpc';
 const client = new SuiJsonRpcClient({
   network: 'mainnet',
@@ -114,20 +114,27 @@ const [upgradeCap] = tx.publish({ modules, dependencies });
 
 For deeper PTB semantics (equivocation, hot-potato cliques, sponsored), load the `ptbs` skill.
 
-### `coinWithBalance` intent (non-SUI coins)
+### Balance and coin intents (non-SUI coins)
 
-Manually selecting / merging / splitting non-SUI coins is verbose. Use the intent:
+Manually selecting / merging / splitting non-SUI coins is verbose. Use the transaction-level intents:
 
 ```ts
-import { coinWithBalance, Transaction } from '@mysten/sui/transactions';
+import { Transaction } from '@mysten/sui/transactions';
 
 const tx = new Transaction();
 tx.setSender(keypair.toSuiAddress()); // REQUIRED for non-SUI
 
+// tx.balance() — returns a Balance value (for Move functions that accept Balance<T>)
+tx.moveCall({
+  target: '0xpkg::module::send_funds',
+  arguments: [tx.balance({ balance: 1_000_000, type: '0x2::sui::SUI' })],
+});
+
+// tx.coin() — returns a Coin object (for transferObjects or Move functions that accept Coin<T>)
 tx.transferObjects(
   [
-    coinWithBalance({ balance: 1_000_000 }),  // SUI — splits from gas
-    coinWithBalance({ balance: 500_000, type: '0xpkg::token::TOKEN' }),
+    tx.coin({ balance: 1_000_000 }),  // SUI — splits from gas
+    tx.coin({ balance: 500_000, type: '0xpkg::token::TOKEN' }),
   ],
   recipient,
 );
@@ -153,7 +160,7 @@ await client.core.listDynamicFields({ parentId, limit: 50 });   // parentId, not
 await client.core.getDynamicField({ parentId, name });
 await client.core.getCoinMetadata({ coinType });
 await client.core.getTransaction({ digest, include: {...} });
-await client.core.simulateTransaction({ transaction: tx });
+await client.simulateTransaction({ transaction: tx });
 await client.core.executeTransaction({ transaction: bytes, signatures: [...], include: {...} });
 ```
 
@@ -161,7 +168,7 @@ Pagination: core `list*` methods return a single nullable `cursor`. Iterate whil
 
 **Include options** (replaces v1's `options: { show*: true }`). Keys differ by method:
 - Object reads (`getObject`, `getObjects`, `listOwnedObjects`): `content`, `previousTransaction`, `json`, `objectBcs`, `display`.
-- Transaction reads (`getTransaction`, `waitForTransaction`): `effects`, `events`, `balanceChanges`, `transaction`, `bcs`.
+- Transaction reads (`getTransaction`, `waitForTransaction`): `effects`, `events`, `balanceChanges`, `transaction`, `bcs`, `objectTypes` (map of object ID to type string for all changed objects).
 - Simulation (`simulateTransaction`): adds `commandResults`.
 
 ### Missing objects and dynamic fields
@@ -193,9 +200,9 @@ This is a behavioral change from v1, where equivalent APIs returned `null` for n
 ## Execution
 
 ```ts
-const result = await client.signAndExecuteTransaction({
-  signer: keypair,
+const result = await keypair.signAndExecuteTransaction({
   transaction: tx,
+  client,
 });
 
 if (result.$kind === 'FailedTransaction') {
@@ -225,6 +232,7 @@ const result = await client.core.executeTransaction({
 import { Ed25519Keypair } from '@mysten/sui/keypairs/ed25519';
 import { Secp256k1Keypair } from '@mysten/sui/keypairs/secp256k1';
 import { Secp256r1Keypair } from '@mysten/sui/keypairs/secp256r1';
+import { PasskeyKeypair } from '@mysten/sui/keypairs/passkey';
 
 const kp = new Ed25519Keypair();
 const kp2 = Ed25519Keypair.deriveKeypair('mnemonic words ...');
@@ -287,9 +295,9 @@ Full migration guide: fetch `https://sdk.mystenlabs.com/sui/migrations/sui-2.0/l
 | `client.getOwnedObjects` | `client.core.listOwnedObjects` |
 | `client.getCoins` | `client.core.listCoins` |
 | `client.getDynamicFields` | `client.core.listDynamicFields` |
-| `client.signAndExecuteTransactionBlock` | `client.signAndExecuteTransaction` |
+| `client.signAndExecuteTransactionBlock` | `keypair.signAndExecuteTransaction({ transaction, client, include: { effects: true } })` |
 | `client.waitForTransactionBlock` | `client.waitForTransaction` |
-| `client.devInspectTransactionBlock` | `client.core.simulateTransaction` |
+| `client.devInspectTransactionBlock` | `client.simulateTransaction` |
 | `client.executeTransactionBlock` | `client.core.executeTransaction` |
 | `options: { showEffects: true }` | `include: { effects: true }` (always show this pattern explicitly — do not omit it by saying effects are returned by default) |
 | `result.effects?.status?.status === 'success'` | `result.$kind !== 'FailedTransaction'` |
@@ -317,11 +325,11 @@ All `@mysten/*` packages are ESM-only:
 |---|---|
 | `import { ... } from '@mysten/sui.js'` | `import { ... } from '@mysten/sui'` |
 | `new TransactionBlock()` | `new Transaction()` |
-| `client.signAndExecuteTransactionBlock(...)` | `client.signAndExecuteTransaction(...)` |
-| `SuiClient` | `SuiGrpcClient` (or `SuiJsonRpcClient`) |
+| `client.signAndExecuteTransactionBlock(...)` | `keypair.signAndExecuteTransaction({ transaction, client })` |
+| `SuiClient` | `SuiGrpcClient` (or `SuiJsonRpcClient` — legacy, JSON-RPC is deprecated) |
 | Hardcoding `tx.object(Inputs.ObjectRef({ version, digest }))` for online code | `tx.object('0x...')` — let SDK resolve |
 | `tx.pure(100)` untyped | `tx.pure.u64(100)` |
 | Not checking `result.$kind` | Always check for `'FailedTransaction'` |
 | Querying state immediately after execution | `await client.waitForTransaction({ digest })` first |
-| Using `tx.gas` by value in `splitCoins` for sponsored tx (sponsor rejects) | Use `coinWithBalance({ balance })` |
-| `coinWithBalance(type=non-SUI)` without `tx.setSender` | Always call `tx.setSender(addr)` first for non-SUI |
+| Using `tx.gas` by value in `splitCoins` for sponsored tx (sponsor rejects) | Use `tx.coin({ balance })` |
+| `tx.coin(type=non-SUI)` / `tx.balance(type=non-SUI)` without `tx.setSender` | Always call `tx.setSender(addr)` first for non-SUI |
