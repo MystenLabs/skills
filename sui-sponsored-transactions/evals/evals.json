@@ -1,0 +1,132 @@
+{
+  "skill_name": "sui-sponsored-transactions",
+  "source_constraint": "All expected outputs and expectations are grounded exclusively in official Mysten Labs documentation: docs.sui.io, sdk.mystenlabs.com, docs.enoki.mystenlabs.com, and the MystenLabs source. Graders should flag any claims sourced from third-party blogs or tutorials, and any SDK method names not confirmable against the official typedoc.",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "What is a sponsored transaction on Sui and how does it let a user transact without holding SUI?",
+      "expected_output": "An explanation of the native sponsor/GasData model with the three roles and the dual-signature requirement.",
+      "expectations": [
+        "Explains that a sponsor pays the gas for the user's transaction so the user needs no SUI",
+        "Names the three roles: user, gas station, and sponsor",
+        "States that the gas payment coins are owned by the sponsor (GasData.owner), not the user",
+        "Explains that both the user and the sponsor sign the same TransactionData bytes",
+        "Mentions that GasData contains payment, owner, price, and budget",
+        "Does not claim a single signature is sufficient for a sponsored transaction"
+      ],
+      "sources": [
+        "https://docs.sui.io/concepts/transactions/sponsored-transactions"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Write the TypeScript to sponsor a user's transaction on Sui: the user builds it on the frontend and my backend pays the gas.",
+      "expected_output": "Code using @mysten/sui where the user builds onlyTransactionKind bytes, the sponsor reconstructs with Transaction.fromKind, sets gas owner/payment, both sign, and it executes with two signatures.",
+      "expectations": [
+        "User builds with tx.build({ client, onlyTransactionKind: true })",
+        "Sponsor reconstructs the transaction with Transaction.fromKind(kindBytes)",
+        "Calls setSender(userAddress) and setGasOwner(sponsorAddress)",
+        "Sets the sponsor's gas coins with setGasPayment(...)",
+        "Both the user keypair and sponsor keypair sign the same built bytes via signTransaction",
+        "Executes with an array of both signatures (signatures: [userSig, sponsorSig] for gRPC, or signature: [...] for JSON-RPC)",
+        "Uses the @mysten/sui v2 Transaction API, not @mysten/sui.js TransactionBlock"
+      ],
+      "sources": [
+        "https://sdk.mystenlabs.com/sui/transactions/signing-and-execution",
+        "https://docs.sui.io/concepts/transactions/sponsored-transactions"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "In my sponsored transaction setup, whose address should own the gas coins — the user's or the sponsor's? I set the gas payment to the user's coins and it's not working.",
+      "expected_output": "A correction that the gas coins must be owned by the sponsor, set via setGasOwner to the sponsor address.",
+      "expectations": [
+        "States that the gas payment coins must be owned by the sponsor, not the user",
+        "Explains that GasData.owner is the sponsor and is set with setGasOwner(sponsorAddress)",
+        "Explains that all coins in GasData.payment must share the same owner (the sponsor)",
+        "Clarifies that if the user's coins pay gas, it is not actually sponsored",
+        "Does not suggest the user should provide the gas coins"
+      ],
+      "sources": [
+        "https://docs.sui.io/concepts/transactions/sponsored-transactions"
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "My gas station works in testing but under load some sponsored transactions get rejected and a gas coin seems stuck until the next epoch. What's happening and how do I fix it?",
+      "expected_output": "Identification of the equivocation/locked-object risk from reusing a gas coin concurrently, with the gas-coin-pool mitigation.",
+      "expectations": [
+        "Explains that reusing the same gas object version across concurrent transactions causes equivocation",
+        "States that an equivocated owned object can be locked until the next epoch",
+        "Recommends maintaining a pool of distinct gas coins, one version per in-flight transaction",
+        "Mentions the MystenLabs Sui_Owned_Object_Pools library as a mitigation",
+        "Explains that conflicting transactions force a rebuild or re-sign rather than blind retry"
+      ],
+      "sources": [
+        "https://docs.sui.io/concepts/transactions/sponsored-transactions",
+        "https://github.com/MystenLabs/Sui_Owned_Object_Pools"
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "I don't want to run my own gas station infrastructure. How can I sponsor transactions on Sui using Enoki instead?",
+      "expected_output": "The Enoki EnokiClient backend flow with createSponsoredTransaction / executeSponsoredTransaction, allowlists, and the private-key rule.",
+      "expectations": [
+        "Uses EnokiClient with the private API key on the backend only",
+        "Builds transactionKindBytes on the client with onlyTransactionKind: true",
+        "Calls createSponsoredTransaction with network, sender (or jwt), and transactionKindBytes",
+        "Scopes sponsorship with allowedMoveCallTargets (and optionally allowedAddresses)",
+        "Signs the returned bytes and calls executeSponsoredTransaction with digest and signature",
+        "States that the private key must never be exposed to the frontend",
+        "Notes that Enoki manages the gas-coin pool and sponsor signing for you"
+      ],
+      "sources": [
+        "https://docs.enoki.mystenlabs.com/ts-sdk/sponsored-transactions",
+        "https://github.com/MystenLabs/ts-sdks/tree/main/packages/enoki"
+      ]
+    },
+    {
+      "id": 6,
+      "prompt": "What are the different sponsorship patterns on Sui — can the sponsor initiate, or only the user?",
+      "expected_output": "An explanation of the three patterns: user-proposed, sponsor-proposed, and wildcard GasData.",
+      "expectations": [
+        "Describes the user-proposed flow where the user builds the transaction kind and the sponsor adds gas",
+        "Describes the sponsor-proposed flow where the sponsor constructs and signs first, then the user signs",
+        "Describes the wildcard / GasData-object pattern where the sponsor provides gas for any transaction within budget",
+        "States that in all patterns the gas coins are owned by the sponsor and both parties sign",
+        "Does not claim only the user can initiate"
+      ],
+      "sources": [
+        "https://docs.sui.io/concepts/transactions/sponsored-transactions"
+      ]
+    },
+    {
+      "id": 7,
+      "prompt": "I'm worried a sponsor or gas station could censor my users' transactions. Is that possible with sponsored transactions, and how do I mitigate it?",
+      "expected_output": "Acknowledgement of the censorship/griefing risk when submitting through the sponsor, with the direct-to-fullnode mitigation.",
+      "expectations": [
+        "Explains that submitting the dual-signed transaction through the sponsor lets the sponsor delay or withhold it",
+        "States that the user holds fully dual-signed bytes",
+        "Recommends the user submit the dual-signed transaction directly to a full node to bypass a misbehaving sponsor",
+        "Frames this as a censorship-resistance mitigation"
+      ],
+      "sources": [
+        "https://docs.sui.io/concepts/transactions/sponsored-transactions"
+      ]
+    },
+    {
+      "id": 8,
+      "prompt": "Should I build my Sui sponsored-transaction code with TransactionBlock and signTransactionBlock from @mysten/sui.js?",
+      "expected_output": "A correction pointing to the current @mysten/sui Transaction API instead of the deprecated v1 package.",
+      "expectations": [
+        "States that @mysten/sui.js with TransactionBlock / signTransactionBlock is the deprecated v1 API",
+        "Recommends the current @mysten/sui package with the Transaction class and signTransaction",
+        "Maps the sponsorship methods to the current API (setGasOwner, setGasPayment, Transaction.fromKind, onlyTransactionKind)",
+        "Does not generate new code using the deprecated v1 API"
+      ],
+      "sources": [
+        "https://sdk.mystenlabs.com/sui/transactions/signing-and-execution"
+      ]
+    }
+  ]
+}

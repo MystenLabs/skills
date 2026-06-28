@@ -17,7 +17,10 @@ npx skills add mystenlabs/skills --all
 
 ## Skills
 
-No skills published yet. Check back soon or watch this repo for updates.
+| Skill | What it covers |
+|-------|----------------|
+| [`zklogin-enoki`](zklogin-enoki/) | Passwordless social login (zkLogin) and gasless onboarding for Sui apps with Enoki — `registerEnokiWallets` + dApp Kit, backend `EnokiClient`, and manual zkLogin. |
+| [`sui-sponsored-transactions`](sui-sponsored-transactions/) | Sponsored / gasless transactions on Sui — the native sponsor + `GasData` dual-signature flow with the TypeScript SDK, plus the Enoki gas station, and the equivocation/locked-object risks. |
 
 ## Repo Structure
 

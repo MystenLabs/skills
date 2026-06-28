@@ -1,0 +1,169 @@
+{
+  "skill_name": "zklogin-enoki",
+  "source_constraint": "All expected outputs and expectations are grounded exclusively in official Mysten Labs documentation: docs.enoki.mystenlabs.com, docs.sui.io, and the MystenLabs/ts-sdks source. Graders should flag any claims sourced from third-party blogs, tutorials, or unofficial documentation, and any API surface extrapolated from other SDKs.",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "What is zkLogin on Sui and how does a user end up with a Sui address just by signing in with Google?",
+      "expected_output": "An explanation of zkLogin as a Sui primitive that derives a self-custodial address from an OAuth login, covering the JWT, ephemeral key, nonce, ZK proof, salt, and address derivation, without claiming the OAuth identity is publicly linked on-chain.",
+      "expectations": [
+        "Explains that zkLogin lets a user control a self-custodial Sui address using an OAuth/OIDC credential, with no seed phrase",
+        "States that the OAuth identity is NOT publicly linked to the on-chain address",
+        "Describes the ephemeral key pair that signs transactions during a session",
+        "Mentions the nonce binds the ephemeral public key, maxEpoch, and randomness, and is sent to the provider",
+        "Explains the JWT and its claims (iss, aud, sub)",
+        "States that the address is derived from sub + iss + aud + user_salt (not from a private key)",
+        "Mentions a zero-knowledge proof is used so OAuth data is not revealed on-chain",
+        "Does not claim the zkLogin address can be converted to/from a normal keypair address"
+      ],
+      "sources": [
+        "https://docs.sui.io/concepts/cryptography/zklogin"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "I'm building a React app on Sui and want users to log in with Google and get a wallet automatically. What's the recommended way to do this with Enoki?",
+      "expected_output": "A walkthrough of the current Enoki flow: registerEnokiWallets into dApp Kit with the public API key, then sign in via dApp Kit hooks, reading the address from useCurrentAccount.",
+      "expectations": [
+        "Recommends installing @mysten/enoki",
+        "Uses registerEnokiWallets with client, network, apiKey (public key), and a providers map containing google",
+        "Drives sign-in through dApp Kit hooks (useWallets, useConnectWallet, useCurrentAccount)",
+        "Uses isEnokiWallet to filter the wallet list and connect via connect({ wallet })",
+        "States that currentAccount.address is the user's zkLogin Sui address",
+        "Does NOT use the legacy EnokiFlow, useEnokiFlow, useZkLogin, useAuthCallback, or EnokiFlowProvider APIs",
+        "Notes that the public API key (not the private key) is used in the frontend"
+      ],
+      "sources": [
+        "https://docs.enoki.mystenlabs.com/ts-sdk/register",
+        "https://docs.enoki.mystenlabs.com/ts-sdk/sign-in"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Write the Enoki auth setup for my Sui dApp. Here's my Enoki config — public key pk_xxx, private key sk_xxx, Google client id abc. Wire up login.",
+      "expected_output": "Frontend code that uses ONLY the public key in registerEnokiWallets and never references the private key, with a note that the private key is backend-only.",
+      "expectations": [
+        "Uses the public key (pk_xxx) in registerEnokiWallets",
+        "Does NOT place the private key (sk_xxx) anywhere in frontend code",
+        "Explicitly warns that the private/secret key must stay on the backend only",
+        "Explains that the private key can authorize gas sponsorship and must be treated as a server secret",
+        "Uses the current registerEnokiWallets + dApp Kit hook flow"
+      ],
+      "sources": [
+        "https://docs.enoki.mystenlabs.com/ts-sdk/register",
+        "https://docs.enoki.mystenlabs.com/http-api"
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "I want my Sui users to never pay gas. How do I make transactions sponsored/gasless with Enoki?",
+      "expected_output": "An explanation of the backend EnokiClient sponsorship flow: build transactionKindBytes on the client, createSponsoredTransaction on the backend with allowlists, sign, then executeSponsoredTransaction.",
+      "expectations": [
+        "Explains that sponsorship is authorized on the backend with the private API key (EnokiClient)",
+        "Builds the transaction on the client with tx.build({ client, onlyTransactionKind: true }) to get transactionKindBytes",
+        "Uses createSponsoredTransaction with network, sender (or jwt), and transactionKindBytes",
+        "Scopes sponsorship with allowedMoveCallTargets (and optionally allowedAddresses)",
+        "Signs the returned bytes and calls executeSponsoredTransaction with digest and signature",
+        "States that the private key must not be exposed to the frontend",
+        "Does not claim that simply signing through an Enoki wallet makes a transaction gasless"
+      ],
+      "sources": [
+        "https://docs.enoki.mystenlabs.com/ts-sdk/sponsored-transactions",
+        "https://github.com/MystenLabs/ts-sdks/tree/main/packages/enoki"
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "If I sign a transaction through the connected Enoki wallet on the frontend, does that automatically mean the user doesn't pay gas?",
+      "expected_output": "A correction clarifying that signing through Enoki does not by itself sponsor gas; sponsorship is a separate backend-authorized flow.",
+      "expectations": [
+        "States clearly that signing through an Enoki wallet does NOT by itself make a transaction gasless",
+        "Explains that sponsorship is a separate flow authorized on the backend with the private key",
+        "Mentions the sponsored flow uses createSponsoredTransaction / executeSponsoredTransaction with an allowlist",
+        "Notes that Enoki wallet signing auto-approves (no confirmation prompt), so the app should add its own confirmation UI"
+      ],
+      "sources": [
+        "https://docs.enoki.mystenlabs.com/ts-sdk/transactions",
+        "https://docs.enoki.mystenlabs.com/ts-sdk/sponsored-transactions"
+      ]
+    },
+    {
+      "id": 6,
+      "prompt": "My Enoki login works on testnet but after I let users switch to mainnet the wallet stops working. What's wrong?",
+      "expected_output": "Identification that Enoki wallets are network-bound and must be re-registered when the network changes, with the useEffect + unregister pattern.",
+      "expectations": [
+        "Explains that Enoki wallets are bound to a single network",
+        "States that registerEnokiWallets must be called again when the network changes",
+        "Recommends tracking the network (e.g. via useSuiClientContext) and re-registering inside a useEffect",
+        "Mentions calling the returned unregister function for cleanup",
+        "Does not suggest that a single registration works across all networks"
+      ],
+      "sources": [
+        "https://docs.enoki.mystenlabs.com/ts-sdk/register"
+      ]
+    },
+    {
+      "id": 7,
+      "prompt": "Should I implement zkLogin myself with @mysten/sui or use Enoki? I'm worried about managing user salts.",
+      "expected_output": "A recommendation that leans toward Enoki because it manages the salt and prover, with an honest comparison and the salt footguns called out.",
+      "expectations": [
+        "Explains that manual zkLogin requires you to run a ZK prover and manage user salts",
+        "States that Enoki manages both the salt and the prover",
+        "Warns that losing user salts permanently locks users out of their addresses",
+        "Warns that changing the OAuth client id (aud) or salt changes/loses the derived address",
+        "Recommends Enoki unless there's a specific reason to self-host (e.g. devnet, full control)",
+        "Mentions that the manual flow uses functions like generateNonce, jwtToAddress, genAddressSeed, and getZkLoginSignature from @mysten/sui"
+      ],
+      "sources": [
+        "https://docs.sui.io/guides/developer/cryptography/zklogin-integration",
+        "https://docs.enoki.mystenlabs.com"
+      ]
+    },
+    {
+      "id": 8,
+      "prompt": "How does a zkLogin session expire, and what happens to the user's address when it does?",
+      "expected_output": "An explanation of maxEpoch-bounded sessions and that the address is stable across re-authentication.",
+      "expectations": [
+        "Explains that a session is bounded by maxEpoch (a future epoch chosen at login)",
+        "States that when the session expires the user re-authenticates with the provider",
+        "States that the user's Sui address stays the same across re-authentication",
+        "Explains that the ephemeral key only authorizes transactions while the session is valid",
+        "Notes that losing the ephemeral key only ends the session and does not lose funds"
+      ],
+      "sources": [
+        "https://docs.sui.io/concepts/cryptography/zklogin"
+      ]
+    },
+    {
+      "id": 9,
+      "prompt": "Which OAuth providers can I use with zkLogin on Sui mainnet?",
+      "expected_output": "A list of supported providers grounded in the Sui docs, distinguishing mainnet/testnet support from devnet-only providers.",
+      "expectations": [
+        "Lists Google, Facebook, Twitch, and Apple among supported providers",
+        "Does not claim providers that are not in the official documentation",
+        "Distinguishes broadly-supported providers from devnet-only ones (e.g. Slack, Kakao, Microsoft) if it lists them",
+        "Notes that Enoki's frontend provider map exposes google, facebook, and twitch as first-class"
+      ],
+      "sources": [
+        "https://docs.sui.io/concepts/cryptography/zklogin",
+        "https://docs.enoki.mystenlabs.com/ts-sdk/register"
+      ]
+    },
+    {
+      "id": 10,
+      "prompt": "I'm sponsoring transactions for my users with Enoki. How do I make sure the sponsor only pays for my app's contract calls and can't be drained?",
+      "expected_output": "Guidance to scope sponsorship with allowedMoveCallTargets (and allowedAddresses), keep the private key on the backend, and use the sender/allowlist input variant.",
+      "expectations": [
+        "Recommends setting allowedMoveCallTargets to the app's specific move call targets",
+        "Mentions allowedAddresses as an optional additional scope on the sender",
+        "Explains that an unscoped sponsor can be drained by paying for arbitrary move calls",
+        "States that the private API key must stay on the backend",
+        "Mentions that createSponsoredTransaction accepts a sender + allowlists variant (distinct from the jwt variant)"
+      ],
+      "sources": [
+        "https://docs.enoki.mystenlabs.com/ts-sdk/sponsored-transactions",
+        "https://github.com/MystenLabs/ts-sdks/tree/main/packages/enoki"
+      ]
+    }
+  ]
+}
