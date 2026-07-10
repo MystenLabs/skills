@@ -10,6 +10,7 @@
     "agent-prompt-eval": "node scripts/run-agent-prompt-evals.js",
     "agent-prompt-eval:with-skills": "node scripts/run-agent-prompt-evals.js --with-skills",
     "compare-skill-impact": "node scripts/compare-skill-impact.js",
+    "unbranded-eval": "node scripts/run-unbranded-evals.js",
     "staleness": "node scripts/check-sources.js",
     "staleness:update": "node scripts/check-sources.js --update"
   },

@@ -242,8 +242,17 @@ async function main() {
   console.log(`${"═".repeat(60)}\n`);
 
   // ── Write results JSON ──────────────────────────────────────────
+  const output = {
+    metadata: {
+      provider: providerName,
+      model: EVAL_MODEL,
+      judge_model: JUDGE_MODEL,
+      timestamp: new Date().toISOString(),
+    },
+    results: allResults,
+  };
   const outPath = join(ROOT, "scripts", "eval-results.json");
-  writeFileSync(outPath, JSON.stringify(allResults, null, 2));
+  writeFileSync(outPath, JSON.stringify(output, null, 2));
   console.log(`Full results written to ${outPath}`);
 
   // ── GitHub Actions summary ──────────────────────────────────────

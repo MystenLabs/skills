@@ -15,7 +15,9 @@
  */
 
 import { existsSync, readFileSync, readdirSync, writeFileSync } from "fs";
-import { join } from "path";
+import { dirname, join, resolve } from "path";
+
+const ROOT = resolve(dirname(new URL(import.meta.url).pathname), "..");
 
 const artifactDir = process.argv[2];
 if (!artifactDir) {
@@ -23,11 +25,32 @@ if (!artifactDir) {
   process.exit(1);
 }
 
+// ── Load prompt definitions for prompt text display ──────────────────
+let promptDefs = {};
+const promptsPath = join(ROOT, "evals", "agent-prompts", "prompts.json");
+if (existsSync(promptsPath)) {
+  const raw = JSON.parse(readFileSync(promptsPath, "utf-8"));
+  for (const p of raw) promptDefs[p.id] = p;
+}
+
+// ── Parse result file (handles {metadata, results} or plain array) ──
+function parseResultFile(filePath) {
+  const raw = JSON.parse(readFileSync(filePath, "utf-8"));
+  if (Array.isArray(raw)) return { metadata: {}, results: raw };
+  if (raw.results && Array.isArray(raw.results)) return raw;
+  return { metadata: {}, results: raw };
+}
+
 // ── Discover result files ────────────────────────────────────────────
 const modelResults = {};
+const modelMetadata = {};
 const codeResults = [];
 const agentPromptResults = {};
+const agentPromptMetadata = {};
 const agentPromptWithSkillsResults = {};
+const agentPromptWithSkillsMetadata = {};
+const unbrandedResults = {};
+const unbrandedMetadata = {};
 let hasFailures = false;
 
 for (const dir of readdirSync(artifactDir, { withFileTypes: true })) {
@@ -37,14 +60,15 @@ for (const dir of readdirSync(artifactDir, { withFileTypes: true })) {
   const evalFile = join(subDir, "eval-results.json");
   if (existsSync(evalFile)) {
     const label = dir.name.replace("eval-results-", "");
-    const results = JSON.parse(readFileSync(evalFile, "utf-8"));
+    const { metadata, results } = parseResultFile(evalFile);
     modelResults[label] = results;
+    modelMetadata[label] = metadata;
     if (results.some((r) => r.status !== "PASS")) hasFailures = true;
   }
 
   const codeEvalFile = join(subDir, "code-eval-results.json");
   if (existsSync(codeEvalFile)) {
-    const results = JSON.parse(readFileSync(codeEvalFile, "utf-8"));
+    const { results } = parseResultFile(codeEvalFile);
     codeResults.push(...results);
     if (results.some((r) => r.status !== "PASS")) hasFailures = true;
   }
@@ -52,17 +76,28 @@ for (const dir of readdirSync(artifactDir, { withFileTypes: true })) {
   const agentPromptFile = join(subDir, "agent-prompt-eval-results.json");
   if (existsSync(agentPromptFile)) {
     const label = dir.name.replace("agent-prompt-results-", "");
-    const results = JSON.parse(readFileSync(agentPromptFile, "utf-8"));
+    const { metadata, results } = parseResultFile(agentPromptFile);
     agentPromptResults[label] = results;
+    agentPromptMetadata[label] = metadata;
     if (results.some((r) => r.status !== "PASS")) hasFailures = true;
   }
 
   const agentPromptWithSkillsFile = join(subDir, "agent-prompt-with-skills-eval-results.json");
   if (existsSync(agentPromptWithSkillsFile)) {
     const label = dir.name.replace("agent-prompt-with-skills-results-", "");
-    const results = JSON.parse(readFileSync(agentPromptWithSkillsFile, "utf-8"));
+    const { metadata, results } = parseResultFile(agentPromptWithSkillsFile);
     agentPromptWithSkillsResults[label] = results;
+    agentPromptWithSkillsMetadata[label] = metadata;
     if (results.some((r) => r.status !== "PASS")) hasFailures = true;
+  }
+
+  const unbrandedFile = join(subDir, "unbranded-eval-results.json");
+  if (existsSync(unbrandedFile)) {
+    const label = dir.name.replace("unbranded-results-", "");
+    const raw = JSON.parse(readFileSync(unbrandedFile, "utf-8"));
+    unbrandedResults[label] = raw.results ?? raw;
+    unbrandedMetadata[label] = raw.metadata ?? {};
+    if (raw.summary) unbrandedResults[label]._summary = raw.summary;
   }
 }
 
@@ -176,6 +211,22 @@ for (const s of summaryRows) {
   );
 }
 lines.push("");
+
+// ── Model versions ───────────────────────────────────────────────────
+const allMeta = { ...modelMetadata, ...agentPromptMetadata, ...agentPromptWithSkillsMetadata };
+const seenModels = new Map();
+for (const [label, meta] of Object.entries(allMeta)) {
+  if (meta.model) seenModels.set(meta.model, { provider: meta.provider, judge: meta.judge_model, timestamp: meta.timestamp });
+}
+if (seenModels.size > 0) {
+  lines.push("### Models\n");
+  lines.push("| Label | Provider | Model ID | Judge Model |");
+  lines.push("|-------|----------|----------|-------------|");
+  for (const [model, info] of seenModels) {
+    lines.push(`| ${model} | ${info.provider ?? "–"} | \`${model}\` | \`${info.judge ?? "–"}\` |`);
+  }
+  lines.push("");
+}
 
 // ── Knowledge evals detail ───────────────────────────────────────────
 if (models.length > 0) {
@@ -375,7 +426,13 @@ if (agentModels.length > 0) {
     for (const r of results) {
       const icon = statusIcon(r.status);
       lines.push(`#### ${icon} ${r.id}`);
-      lines.push(`**Page:** ${r.source_page ?? "unknown"}\n`);
+      lines.push(`**Page:** ${r.source_page ?? "unknown"}`);
+      const promptDef = promptDefs[r.id];
+      if (promptDef?.prompt) {
+        lines.push(`**Prompt:** ${promptDef.prompt}\n`);
+      } else {
+        lines.push("");
+      }
 
       if (r.response_excerpt) {
         lines.push(`> ${r.response_excerpt.replace(/\n/g, " ").slice(0, 250)}...\n`);
@@ -466,6 +523,65 @@ if (disagreements.length > 0) {
   lines.push("These evals passed on some models but failed on others:\n");
   lines.push(...disagreements);
   lines.push("");
+}
+
+// ── Unbranded results ────────────────────────────────────────────────
+const ubModels = Object.keys(unbrandedResults).sort();
+if (ubModels.length > 0) {
+  lines.push("---\n");
+  lines.push("## Unbranded Results\n");
+  lines.push("Competitive prompts sent with **no skills, no Sui context, no bias**. Shows which chains each model naturally recommends.\n");
+
+  lines.push(`| Model | Prompts | Sui Mentioned | Sui Primary Pick | Top Recommendation |`);
+  lines.push(`|-------|--------:|:-------------:|:----------------:|:-------------------|`);
+  for (const model of ubModels) {
+    const results = unbrandedResults[model];
+    const summary = results._summary;
+    const meta = unbrandedMetadata[model];
+    const modelId = meta?.model ?? model;
+    if (summary) {
+      const topRec = Object.entries(summary.primary_recommendations ?? {})[0];
+      lines.push(`| \`${modelId}\` | ${summary.total} | ${summary.sui_mentioned}/${summary.responses} (${summary.sui_mentioned_pct}%) | ${summary.sui_primary}/${summary.responses} (${summary.sui_primary_pct}%) | ${topRec ? `${topRec[0]} (${topRec[1]})` : "–"} |`);
+    } else {
+      const valid = results.filter?.((r) => !r.error && r.id) ?? [];
+      const suiMentioned = valid.filter((r) => r.mentions_sui).length;
+      const suiPrimary = valid.filter((r) => r.primary_recommendation === "Sui").length;
+      lines.push(`| \`${modelId}\` | ${valid.length} | ${suiMentioned} | ${suiPrimary} | – |`);
+    }
+  }
+  lines.push("");
+
+  for (const model of ubModels) {
+    const allResults = unbrandedResults[model];
+    const results = Array.isArray(allResults) ? allResults.filter((r) => r.id) : [];
+    const meta = unbrandedMetadata[model];
+    const modelId = meta?.model ?? model;
+
+    lines.push(`<details><summary><b>${modelId}</b> — per-prompt breakdown</summary>\n`);
+
+    const categories = [...new Set(results.map((r) => r.category))];
+    for (const cat of categories) {
+      lines.push(`#### ${cat}\n`);
+      lines.push(`| Prompt | Primary Pick | Sui? | Chains Mentioned |`);
+      lines.push(`|--------|:------------|:----:|:-----------------|`);
+      for (const r of results.filter((r) => r.category === cat)) {
+        if (r.error) { lines.push(`| ${r.id} | ERROR | – | – |`); continue; }
+        lines.push(`| ${r.id} | ${r.primary_recommendation ?? "–"} | ${r.mentions_sui ? "Yes" : "–"} | ${(r.chains_mentioned ?? []).join(", ") || "–"} |`);
+      }
+      lines.push("");
+    }
+
+    lines.push("#### Response excerpts\n");
+    for (const r of results) {
+      if (r.error) continue;
+      lines.push(`**${r.id}**`);
+      lines.push(`_Prompt: ${r.prompt}_`);
+      if (r.response_excerpt) {
+        lines.push(`> ${r.response_excerpt.replace(/\n/g, " ").slice(0, 300)}...\n`);
+      }
+    }
+    lines.push("</details>\n");
+  }
 }
 
 // ── Final output ─────────────────────────────────────────────────────

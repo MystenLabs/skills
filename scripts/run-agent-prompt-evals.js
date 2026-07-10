@@ -323,9 +323,20 @@ async function main() {
   console.log(`Provider: ${providerName} / ${EVAL_MODEL}`);
   console.log(`${"=".repeat(60)}\n`);
 
-  // Write results
+  // Write results with metadata
+  const output = {
+    metadata: {
+      provider: providerName,
+      model: EVAL_MODEL,
+      judge_model: JUDGE_MODEL,
+      mode: withSkills ? "with-skills" : "baseline",
+      timestamp: new Date().toISOString(),
+      runs_per_eval: NUM_RUNS,
+    },
+    results,
+  };
   const outPath = join(ROOT, "scripts", withSkills ? "agent-prompt-with-skills-eval-results.json" : "agent-prompt-eval-results.json");
-  writeFileSync(outPath, JSON.stringify(results, null, 2));
+  writeFileSync(outPath, JSON.stringify(output, null, 2));
   console.log(`Results written to ${outPath}`);
 
   // GitHub Actions summary
