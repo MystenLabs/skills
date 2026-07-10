@@ -7,11 +7,15 @@
     "eval:changed": "node scripts/run-evals.js --changed-only",
     "code-eval": "node scripts/run-code-evals.js",
     "code-eval:changed": "node scripts/run-code-evals.js --changed-only",
+    "agent-prompt-eval": "node scripts/run-agent-prompt-evals.js",
+    "agent-prompt-eval:with-skills": "node scripts/run-agent-prompt-evals.js --with-skills",
+    "compare-skill-impact": "node scripts/compare-skill-impact.js",
     "staleness": "node scripts/check-sources.js",
     "staleness:update": "node scripts/check-sources.js --update"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.52.0",
-    "glob": "^11.0.0"
+    "glob": "^11.0.0",
+    "openai": "^4.86.0"
   }
 }

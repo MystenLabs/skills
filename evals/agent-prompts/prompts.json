@@ -1,0 +1,440 @@
+[
+  {
+    "id": "sui-install",
+    "source_page": "getting-started/onboarding/sui-install",
+    "prompt": "Set up this machine for Sui development: Install the Sui CLI with curl -sSfL https://raw.githubusercontent.com/MystenLabs/suiup/main/install.sh | sh, then run suiup install sui@testnet to get the Testnet-compatible toolchain. Run sui client to generate your keys and config, then prompt me to visit faucet.sui.io, enter the generated address, and fund it with test tokens.",
+    "deterministic_checks": [
+      {
+        "type": "contains",
+        "value": "suiup"
+      },
+      {
+        "type": "contains",
+        "value": "sui client"
+      },
+      {
+        "type": "regex",
+        "value": "faucet"
+      }
+    ],
+    "subjective_expectations": [
+      "Provides a clear step-by-step setup sequence starting with installing suiup",
+      "Mentions generating keys or wallet configuration",
+      "Includes instructions about funding the address with test tokens"
+    ]
+  },
+  {
+    "id": "hello-world",
+    "source_page": "getting-started/onboarding/hello-world",
+    "prompt": "Clone the https://github.com/MystenLabs/sui-stack-hello-world example app, build and publish the Move package at move/hello-world to Testnet, then call its entry function and show me the resulting object and transaction on SuiVision.",
+    "deterministic_checks": [
+      {
+        "type": "contains",
+        "value": "sui-stack-hello-world"
+      },
+      {
+        "type": "regex",
+        "value": "sui\\s+(move\\s+)?build|sui\\s+client\\s+publish"
+      },
+      {
+        "type": "regex",
+        "value": "suivision|SuiVision"
+      }
+    ],
+    "subjective_expectations": [
+      "Provides the git clone command for the repo",
+      "Shows the build and publish commands",
+      "Explains how to call the entry function after publishing",
+      "Mentions viewing the result on SuiVision or a block explorer"
+    ]
+  },
+  {
+    "id": "testing",
+    "source_page": "develop/testing-debugging/testing",
+    "prompt": "Add Move unit tests for this package's public functions, including success, unauthorized, and edge cases.",
+    "deterministic_checks": [
+      {
+        "type": "contains",
+        "value": "#[test]"
+      },
+      {
+        "type": "regex",
+        "value": "test_scenario|unit_test"
+      }
+    ],
+    "subjective_expectations": [
+      "Shows the #[test] attribute pattern for writing Sui Move tests",
+      "Explains or demonstrates success-case testing patterns",
+      "Mentions #[expected_failure] or assert macros for failure testing",
+      "References test_scenario or unit_test module for Sui-specific testing"
+    ]
+  },
+  {
+    "id": "scenario-testing",
+    "source_page": "getting-started/examples/scenario-testing",
+    "prompt": "Create scenario tests for this Sui workflow, including multiple users, object ownership changes, and expected transaction failures.",
+    "deterministic_checks": [
+      {
+        "type": "contains",
+        "value": "test_scenario"
+      },
+      {
+        "type": "regex",
+        "value": "#\\[test\\]"
+      },
+      {
+        "type": "regex",
+        "value": "next_tx|next_epoch"
+      }
+    ],
+    "subjective_expectations": [
+      "Uses or references sui::test_scenario for multi-transaction workflows",
+      "Shows how to switch between different senders/users in a scenario",
+      "Demonstrates testing object ownership or state changes across transactions",
+      "Mentions or shows expected-failure patterns (e.g., #[expected_failure] or abort codes)"
+    ]
+  },
+  {
+    "id": "common-errors",
+    "source_page": "develop/testing-debugging/common-errors",
+    "prompt": "Debug this Sui transaction failure. Inspect object refs, gas objects, ownership, versions, and suggest the minimal code or PTB change to make it execute.",
+    "deterministic_checks": [
+      {
+        "type": "regex",
+        "value": "object|version|ownership"
+      },
+      {
+        "type": "regex",
+        "value": "gas|budget"
+      }
+    ],
+    "subjective_expectations": [
+      "Provides a systematic debugging approach for Sui transaction failures",
+      "Mentions checking object versions and ownership as common failure sources",
+      "Discusses gas-related issues (insufficient gas, gas coin conflicts)",
+      "Suggests concrete fixes rather than just diagnosis"
+    ]
+  },
+  {
+    "id": "publish-overview",
+    "source_page": "develop/publish-upgrade-packages/index",
+    "prompt": "Prepare this package for Mainnet publishing: verify tests, dependencies, addresses, upgrade policy, gas requirements, signer/custody plan, and produce a launch checklist.",
+    "deterministic_checks": [
+      {
+        "type": "regex",
+        "value": "sui\\s+client\\s+publish|sui\\s+move\\s+build"
+      },
+      {
+        "type": "regex",
+        "value": "UpgradeCap|upgrade"
+      },
+      {
+        "type": "regex",
+        "value": "mainnet|Mainnet"
+      }
+    ],
+    "subjective_expectations": [
+      "Includes a checklist or step-by-step process for publishing",
+      "Mentions verifying tests pass before publishing",
+      "Discusses the UpgradeCap and upgrade policy considerations",
+      "Addresses gas requirements or cost estimation"
+    ]
+  },
+  {
+    "id": "upgrade",
+    "source_page": "develop/publish-upgrade-packages/upgrade",
+    "prompt": "Prepare an upgrade for this published Sui package. Check compatibility rules, build the upgrade transaction, identify the UpgradeCap, and document the exact upgrade steps.",
+    "deterministic_checks": [
+      {
+        "type": "contains",
+        "value": "UpgradeCap"
+      },
+      {
+        "type": "regex",
+        "value": "compatible|additive|dependency"
+      },
+      {
+        "type": "regex",
+        "value": "sui\\s+client\\s+upgrade"
+      }
+    ],
+    "subjective_expectations": [
+      "Explains the role of the UpgradeCap object",
+      "Describes compatibility rules for package upgrades (compatible, additive, or dependency-only)",
+      "Shows the upgrade command or transaction construction",
+      "Mentions that the original package version is preserved on-chain"
+    ]
+  },
+  {
+    "id": "custom-policies",
+    "source_page": "develop/publish-upgrade-packages/custom-policies",
+    "prompt": "Create an operator runbook for package upgrades and admin actions: required caps, signer/custody steps, exact commands, verification, and rollback/communication plan.",
+    "deterministic_checks": [
+      {
+        "type": "regex",
+        "value": "UpgradeCap|AdminCap|cap"
+      },
+      {
+        "type": "regex",
+        "value": "multisig|multi-sig|custody"
+      }
+    ],
+    "subjective_expectations": [
+      "Provides a structured runbook format with clear steps",
+      "Addresses capability (Cap) management and access control",
+      "Includes verification steps to confirm operations succeeded",
+      "Mentions security considerations such as multisig, key management, or custody"
+    ]
+  },
+  {
+    "id": "display-overview",
+    "source_page": "develop/objects/display/display-overview",
+    "prompt": "Find Display V1 usage in this package or docs and migrate it to Display V2 and display_registry patterns.",
+    "deterministic_checks": [
+      {
+        "type": "regex",
+        "value": "Display|display"
+      },
+      {
+        "type": "regex",
+        "value": "display_registry|DisplayRegistry"
+      }
+    ],
+    "subjective_expectations": [
+      "Explains the difference between Display V1 and Display V2",
+      "Shows how to migrate from V1 to V2 patterns",
+      "Mentions the display_registry as the current approach",
+      "Provides concrete Move code or PTB examples for the migration"
+    ]
+  },
+  {
+    "id": "ptb-inputs-results",
+    "source_page": "develop/transactions/ptbs/inputs-and-results",
+    "prompt": "Review this PTB code for invalid pure inputs, custom structs/enums, object references, vectors/options, and command result usage.",
+    "deterministic_checks": [
+      {
+        "type": "regex",
+        "value": "pure|Pure"
+      },
+      {
+        "type": "regex",
+        "value": "object|Object"
+      },
+      {
+        "type": "regex",
+        "value": "Result|result"
+      }
+    ],
+    "subjective_expectations": [
+      "Explains the distinction between pure inputs and object inputs in PTBs",
+      "Mentions that custom structs and enums cannot be passed as pure inputs",
+      "Discusses how command results chain between PTB commands",
+      "Addresses vector and option encoding in PTB inputs"
+    ]
+  },
+  {
+    "id": "gas-smashing",
+    "source_page": "develop/transaction-payment/gas-smashing",
+    "prompt": "Review this app's gas coin handling. Add safe coin selection/splitting/merging guidance and avoid concurrent reuse of mutable owned objects.",
+    "deterministic_checks": [
+      {
+        "type": "regex",
+        "value": "gas"
+      },
+      {
+        "type": "regex",
+        "value": "split|merge|coin"
+      }
+    ],
+    "subjective_expectations": [
+      "Explains gas coin handling in Sui transactions",
+      "Warns about concurrent reuse of mutable owned objects or equivocation risks",
+      "Provides guidance on coin management strategies (selection, splitting, or merging)",
+      "Discusses gas budget estimation or setting"
+    ]
+  },
+  {
+    "id": "data-serving",
+    "source_page": "develop/accessing-data/data-serving",
+    "prompt": "Review this app's data access needs and recommend GraphQL, gRPC, or both. Consider frontend/backend use, historical queries, subscriptions, latency, and retention.",
+    "deterministic_checks": [
+      {
+        "type": "contains",
+        "value": "GraphQL"
+      },
+      {
+        "type": "contains",
+        "value": "gRPC"
+      }
+    ],
+    "subjective_expectations": [
+      "Compares GraphQL and gRPC as data access options for Sui",
+      "Provides guidance on when to use each option based on use case",
+      "Mentions subscription or streaming capabilities",
+      "Discusses data retention and historical query considerations"
+    ]
+  },
+  {
+    "id": "using-grpc",
+    "source_page": "develop/accessing-data/grpc/using-grpc",
+    "prompt": "Convert this Sui JSON-RPC usage to the current gRPC API. Generate/use the client, map request/response types, and add a working example.",
+    "deterministic_checks": [
+      {
+        "type": "contains",
+        "value": "gRPC"
+      },
+      {
+        "type": "regex",
+        "value": "proto|protobuf|client"
+      }
+    ],
+    "subjective_expectations": [
+      "Explains how to set up or generate a gRPC client for Sui",
+      "Maps or references common Sui RPC methods and their gRPC equivalents",
+      "Provides a code example demonstrating a gRPC call to Sui",
+      "References the proto definitions, endpoint, or service structure"
+    ]
+  },
+  {
+    "id": "query-with-graphql",
+    "source_page": "develop/accessing-data/graphql/query-with-graphql",
+    "prompt": "Convert this Sui JSON-RPC query to GraphQL. Include the query, variables, pagination handling, and TypeScript caller code.",
+    "deterministic_checks": [
+      {
+        "type": "contains",
+        "value": "GraphQL"
+      },
+      {
+        "type": "regex",
+        "value": "query\\s*\\{|query\\s+\\w+"
+      },
+      {
+        "type": "regex",
+        "value": "TypeScript|typescript|\\bts\\b"
+      }
+    ],
+    "subjective_expectations": [
+      "Provides a concrete GraphQL query with proper Sui schema types",
+      "Shows pagination handling with cursors or connection patterns",
+      "Includes TypeScript code that calls the GraphQL endpoint",
+      "Demonstrates use of variables in the query"
+    ]
+  },
+  {
+    "id": "observability",
+    "source_page": "operators/observability",
+    "prompt": "Add structured logging for transaction digest, sender, package/function, status, gas, and user-visible errors so support can debug failed Sui transactions.",
+    "deterministic_checks": [
+      {
+        "type": "regex",
+        "value": "digest|transaction"
+      },
+      {
+        "type": "regex",
+        "value": "log|logging|tracing"
+      }
+    ],
+    "subjective_expectations": [
+      "Shows structured logging with transaction-relevant fields",
+      "Includes key fields: digest, sender, status, gas used",
+      "Provides actionable patterns for debugging failed transactions",
+      "Uses structured logging format (not just string interpolation)"
+    ]
+  },
+  {
+    "id": "move-package-management",
+    "source_page": "develop/manage-packages/move-package-management",
+    "prompt": "Inspect this Move package's Move.toml, Move.lock, and dependencies. Fix dependency declarations, prefer MVR where appropriate, and verify sui move build works.",
+    "deterministic_checks": [
+      {
+        "type": "contains",
+        "value": "Move.toml"
+      },
+      {
+        "type": "regex",
+        "value": "Move\\.lock|Move\\.toml"
+      },
+      {
+        "type": "regex",
+        "value": "sui\\s+move\\s+build"
+      }
+    ],
+    "subjective_expectations": [
+      "Explains the role of Move.toml and its key fields",
+      "Shows how to declare or fix dependencies",
+      "Mentions Move Version Registry (MVR) or resolution strategies",
+      "References sui move build for verification"
+    ]
+  },
+  {
+    "id": "automated-address-management",
+    "source_page": "develop/manage-packages/automated-address-management",
+    "prompt": "Migrate this package to current Sui package address management using Move.lock / Published.toml conventions, then verify build and publish/test-publish behavior.",
+    "deterministic_checks": [
+      {
+        "type": "regex",
+        "value": "Move\\.lock|Published\\.toml"
+      },
+      {
+        "type": "regex",
+        "value": "address|0x0"
+      }
+    ],
+    "subjective_expectations": [
+      "Explains the current address management conventions",
+      "Shows how Published.toml or Move.lock track published addresses",
+      "Provides migration steps from older patterns",
+      "Includes verification commands to confirm correct behavior"
+    ]
+  },
+  {
+    "id": "walrus-storage",
+    "source_page": "sui-stack/walrus/sui-stack-walrus",
+    "prompt": "Upload this app's media or NFT assets to Walrus, store the resulting blob references, and wire them into Sui object metadata or Display fields.",
+    "deterministic_checks": [
+      {
+        "type": "contains",
+        "value": "Walrus"
+      },
+      {
+        "type": "regex",
+        "value": "blob|store|upload"
+      },
+      {
+        "type": "regex",
+        "value": "Display|metadata"
+      }
+    ],
+    "subjective_expectations": [
+      "Shows how to upload assets to Walrus (via CLI, SDK, or HTTP API)",
+      "Explains how to store or reference the resulting blob ID",
+      "Demonstrates wiring blob references into Sui object Display fields or metadata",
+      "Mentions token requirements (WAL for storage, SUI for gas) or cost considerations"
+    ]
+  },
+  {
+    "id": "walrus-sites",
+    "source_page": "sui-stack/walrus/sui-stack-walrus-sites",
+    "prompt": "Deploy this static frontend as a Walrus Site. Build the app, publish the site, record the site object and blob IDs, and document update steps.",
+    "deterministic_checks": [
+      {
+        "type": "regex",
+        "value": "site-builder|walrus-sites"
+      },
+      {
+        "type": "regex",
+        "value": "publish|deploy"
+      },
+      {
+        "type": "regex",
+        "value": "update|upgrade"
+      }
+    ],
+    "subjective_expectations": [
+      "Shows the build step for the static frontend",
+      "Provides the site-builder publish command",
+      "Explains how to record and track the site object ID",
+      "Documents the update process for redeploying changes"
+    ]
+  }
+]

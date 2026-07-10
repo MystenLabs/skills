@@ -1,0 +1,1252 @@
+{
+  "gpt4o": {
+    "prompts_compared": 11,
+    "improved": 3,
+    "unchanged": 6,
+    "regressed": 2,
+    "baseline_rate": 0.6986301369863014,
+    "enhanced_rate": 0.7671232876712328,
+    "delta_rate": 0.06849315068493145,
+    "prompts": [
+      {
+        "id": "automated-address-management",
+        "source_page": "develop/manage-packages/automated-address-management",
+        "skills_loaded": [
+          "sui-move-project",
+          "sui-publish"
+        ],
+        "baseline": {
+          "passed": 5,
+          "total": 6,
+          "rate": 0.8333333333333334
+        },
+        "enhanced": {
+          "passed": 4,
+          "total": 6,
+          "rate": 0.6666666666666666
+        },
+        "delta": -1,
+        "outcome": "regressed",
+        "subjective_changes": [
+          {
+            "expectation": "Explains the current address management conventions",
+            "was": true,
+            "now": false
+          },
+          {
+            "expectation": "Shows how Published.toml or Move.lock track published addresses",
+            "was": true,
+            "now": false
+          },
+          {
+            "expectation": "Provides migration steps from older patterns",
+            "was": false,
+            "now": true
+          }
+        ]
+      },
+      {
+        "id": "common-errors",
+        "outcome": "error",
+        "baseline_error": null,
+        "enhanced_error": "429 Rate limit reached for gpt-4o in organization org-Ymxfd9U0oHgQvWY3NcUtRd0M on tokens per min (TPM): Limit 30000, Used 23826, Requested 24668. Please try again in 36.988s. Visit https://platform.openai.com/account/rate-limits to learn more."
+      },
+      {
+        "id": "custom-policies",
+        "outcome": "error",
+        "baseline_error": null,
+        "enhanced_error": "429 Rate limit reached for gpt-4o in organization org-Ymxfd9U0oHgQvWY3NcUtRd0M on tokens per min (TPM): Limit 30000, Used 18215, Requested 12051. Please try again in 532ms. Visit https://platform.openai.com/account/rate-limits to learn more."
+      },
+      {
+        "id": "data-serving",
+        "outcome": "error",
+        "baseline_error": null,
+        "enhanced_error": "429 Rate limit reached for gpt-4o in organization org-Ymxfd9U0oHgQvWY3NcUtRd0M on tokens per min (TPM): Limit 30000, Used 29170, Requested 14300. Please try again in 26.94s. Visit https://platform.openai.com/account/rate-limits to learn more."
+      },
+      {
+        "id": "display-overview",
+        "outcome": "error",
+        "baseline_error": null,
+        "enhanced_error": "429 Rate limit reached for gpt-4o in organization org-Ymxfd9U0oHgQvWY3NcUtRd0M on tokens per min (TPM): Limit 30000, Used 27170, Requested 18406. Please try again in 31.152s. Visit https://platform.openai.com/account/rate-limits to learn more."
+      },
+      {
+        "id": "gas-smashing",
+        "source_page": "develop/transaction-payment/gas-smashing",
+        "skills_loaded": [
+          "ptbs",
+          "sui-cli"
+        ],
+        "baseline": {
+          "passed": 5,
+          "total": 6,
+          "rate": 0.8333333333333334
+        },
+        "enhanced": {
+          "passed": 5,
+          "total": 6,
+          "rate": 0.8333333333333334
+        },
+        "delta": 0,
+        "outcome": "unchanged"
+      },
+      {
+        "id": "hello-world",
+        "source_page": "getting-started/onboarding/hello-world",
+        "skills_loaded": [
+          "sui-move-project",
+          "sui-publish",
+          "sui-client"
+        ],
+        "baseline": {
+          "passed": 7,
+          "total": 7,
+          "rate": 1
+        },
+        "enhanced": {
+          "passed": 7,
+          "total": 7,
+          "rate": 1
+        },
+        "delta": 0,
+        "outcome": "unchanged"
+      },
+      {
+        "id": "move-package-management",
+        "source_page": "develop/manage-packages/move-package-management",
+        "skills_loaded": [
+          "sui-move-project"
+        ],
+        "baseline": {
+          "passed": 6,
+          "total": 7,
+          "rate": 0.8571428571428571
+        },
+        "enhanced": {
+          "passed": 4,
+          "total": 7,
+          "rate": 0.5714285714285714
+        },
+        "delta": -2,
+        "outcome": "regressed",
+        "deterministic_changes": [
+          {
+            "check": "sui\\s+move\\s+build",
+            "was": true,
+            "now": false
+          }
+        ],
+        "subjective_changes": [
+          {
+            "expectation": "Explains the role of Move.toml and its key fields",
+            "was": true,
+            "now": false
+          },
+          {
+            "expectation": "Shows how to declare or fix dependencies",
+            "was": true,
+            "now": false
+          },
+          {
+            "expectation": "Mentions Move Version Registry (MVR) or resolution strategies",
+            "was": false,
+            "now": true
+          }
+        ]
+      },
+      {
+        "id": "observability",
+        "outcome": "error",
+        "baseline_error": null,
+        "enhanced_error": "429 Rate limit reached for gpt-4o in organization org-Ymxfd9U0oHgQvWY3NcUtRd0M on tokens per min (TPM): Limit 30000, Used 4808, Requested 26001. Please try again in 1.618s. Visit https://platform.openai.com/account/rate-limits to learn more."
+      },
+      {
+        "id": "ptb-inputs-results",
+        "source_page": "develop/transactions/ptbs/inputs-and-results",
+        "skills_loaded": [
+          "ptbs"
+        ],
+        "baseline": {
+          "passed": 3,
+          "total": 7,
+          "rate": 0.42857142857142855
+        },
+        "enhanced": {
+          "passed": 3,
+          "total": 7,
+          "rate": 0.42857142857142855
+        },
+        "delta": 0,
+        "outcome": "unchanged"
+      },
+      {
+        "id": "publish-overview",
+        "outcome": "error",
+        "baseline_error": null,
+        "enhanced_error": "429 Rate limit reached for gpt-4o in organization org-Ymxfd9U0oHgQvWY3NcUtRd0M on tokens per min (TPM): Limit 30000, Used 20467, Requested 12052. Please try again in 5.038s. Visit https://platform.openai.com/account/rate-limits to learn more."
+      },
+      {
+        "id": "query-with-graphql",
+        "outcome": "error",
+        "baseline_error": null,
+        "enhanced_error": "429 Rate limit reached for gpt-4o in organization org-Ymxfd9U0oHgQvWY3NcUtRd0M on tokens per min (TPM): Limit 30000, Used 5013, Requested 25993. Please try again in 2.012s. Visit https://platform.openai.com/account/rate-limits to learn more."
+      },
+      {
+        "id": "scenario-testing",
+        "source_page": "getting-started/examples/scenario-testing",
+        "skills_loaded": [
+          "move-unit-testing",
+          "sui-move"
+        ],
+        "baseline": {
+          "passed": 2,
+          "total": 7,
+          "rate": 0.2857142857142857
+        },
+        "enhanced": {
+          "passed": 7,
+          "total": 7,
+          "rate": 1
+        },
+        "delta": 5,
+        "outcome": "improved",
+        "deterministic_changes": [
+          {
+            "check": "next_tx|next_epoch",
+            "was": false,
+            "now": true
+          }
+        ],
+        "subjective_changes": [
+          {
+            "expectation": "Uses or references sui::test_scenario for multi-transaction workflows",
+            "was": false,
+            "now": true
+          },
+          {
+            "expectation": "Shows how to switch between different senders/users in a scenario",
+            "was": false,
+            "now": true
+          },
+          {
+            "expectation": "Demonstrates testing object ownership or state changes across transactions",
+            "was": false,
+            "now": true
+          },
+          {
+            "expectation": "Mentions or shows expected-failure patterns (e.g., #[expected_failure] or abort codes)",
+            "was": false,
+            "now": true
+          }
+        ]
+      },
+      {
+        "id": "sui-install",
+        "source_page": "getting-started/onboarding/sui-install",
+        "skills_loaded": [
+          "sui-install"
+        ],
+        "baseline": {
+          "passed": 6,
+          "total": 6,
+          "rate": 1
+        },
+        "enhanced": {
+          "passed": 6,
+          "total": 6,
+          "rate": 1
+        },
+        "delta": 0,
+        "outcome": "unchanged"
+      },
+      {
+        "id": "testing",
+        "source_page": "develop/testing-debugging/testing",
+        "skills_loaded": [
+          "move-unit-testing",
+          "sui-move"
+        ],
+        "baseline": {
+          "passed": 3,
+          "total": 6,
+          "rate": 0.5
+        },
+        "enhanced": {
+          "passed": 5,
+          "total": 6,
+          "rate": 0.8333333333333334
+        },
+        "delta": 2,
+        "outcome": "improved",
+        "deterministic_changes": [
+          {
+            "check": "test_scenario|unit_test",
+            "was": false,
+            "now": true
+          }
+        ],
+        "subjective_changes": [
+          {
+            "expectation": "Mentions #[expected_failure] or assert macros for failure testing",
+            "was": false,
+            "now": true
+          }
+        ]
+      },
+      {
+        "id": "upgrade",
+        "source_page": "develop/publish-upgrade-packages/upgrade",
+        "skills_loaded": [
+          "sui-publish"
+        ],
+        "baseline": {
+          "passed": 5,
+          "total": 7,
+          "rate": 0.7142857142857143
+        },
+        "enhanced": {
+          "passed": 5,
+          "total": 7,
+          "rate": 0.7142857142857143
+        },
+        "delta": 0,
+        "outcome": "unchanged",
+        "subjective_changes": [
+          {
+            "expectation": "Explains the role of the UpgradeCap object",
+            "was": true,
+            "now": false
+          },
+          {
+            "expectation": "Describes compatibility rules for package upgrades (compatible, additive, or dependency-only)",
+            "was": false,
+            "now": true
+          }
+        ]
+      },
+      {
+        "id": "using-grpc",
+        "outcome": "error",
+        "baseline_error": null,
+        "enhanced_error": "429 Rate limit reached for gpt-4o in organization org-Ymxfd9U0oHgQvWY3NcUtRd0M on tokens per min (TPM): Limit 30000, Used 15826, Requested 14293. Please try again in 238ms. Visit https://platform.openai.com/account/rate-limits to learn more."
+      },
+      {
+        "id": "walrus-sites",
+        "source_page": "sui-stack/walrus/sui-stack-walrus-sites",
+        "skills_loaded": [
+          "walrus-overview",
+          "walrus-cli"
+        ],
+        "baseline": {
+          "passed": 4,
+          "total": 7,
+          "rate": 0.5714285714285714
+        },
+        "enhanced": {
+          "passed": 5,
+          "total": 7,
+          "rate": 0.7142857142857143
+        },
+        "delta": 1,
+        "outcome": "improved",
+        "subjective_changes": [
+          {
+            "expectation": "Explains how to record and track the site object ID",
+            "was": false,
+            "now": true
+          }
+        ]
+      },
+      {
+        "id": "walrus-storage",
+        "source_page": "sui-stack/walrus/sui-stack-walrus",
+        "skills_loaded": [
+          "walrus-overview",
+          "walrus-cli"
+        ],
+        "baseline": {
+          "passed": 5,
+          "total": 7,
+          "rate": 0.7142857142857143
+        },
+        "enhanced": {
+          "passed": 5,
+          "total": 7,
+          "rate": 0.7142857142857143
+        },
+        "delta": 0,
+        "outcome": "unchanged"
+      }
+    ]
+  },
+  "opus": {
+    "prompts_compared": 19,
+    "improved": 2,
+    "unchanged": 13,
+    "regressed": 4,
+    "baseline_rate": 0.975609756097561,
+    "enhanced_rate": 0.9349593495934959,
+    "delta_rate": -0.04065040650406504,
+    "prompts": [
+      {
+        "id": "automated-address-management",
+        "source_page": "develop/manage-packages/automated-address-management",
+        "skills_loaded": [
+          "sui-move-project",
+          "sui-publish"
+        ],
+        "baseline": {
+          "passed": 5,
+          "total": 6,
+          "rate": 0.8333333333333334
+        },
+        "enhanced": {
+          "passed": 6,
+          "total": 6,
+          "rate": 1
+        },
+        "delta": 1,
+        "outcome": "improved",
+        "subjective_changes": [
+          {
+            "expectation": "Shows how Published.toml or Move.lock track published addresses",
+            "was": false,
+            "now": true
+          }
+        ]
+      },
+      {
+        "id": "common-errors",
+        "source_page": "develop/testing-debugging/common-errors",
+        "skills_loaded": [
+          "ptbs",
+          "sui-cli",
+          "object-model"
+        ],
+        "baseline": {
+          "passed": 6,
+          "total": 6,
+          "rate": 1
+        },
+        "enhanced": {
+          "passed": 6,
+          "total": 6,
+          "rate": 1
+        },
+        "delta": 0,
+        "outcome": "unchanged"
+      },
+      {
+        "id": "custom-policies",
+        "source_page": "develop/publish-upgrade-packages/custom-policies",
+        "skills_loaded": [
+          "sui-publish",
+          "sui-move"
+        ],
+        "baseline": {
+          "passed": 6,
+          "total": 6,
+          "rate": 1
+        },
+        "enhanced": {
+          "passed": 6,
+          "total": 6,
+          "rate": 1
+        },
+        "delta": 0,
+        "outcome": "unchanged"
+      },
+      {
+        "id": "data-serving",
+        "source_page": "develop/accessing-data/data-serving",
+        "skills_loaded": [
+          "accessing-data"
+        ],
+        "baseline": {
+          "passed": 6,
+          "total": 6,
+          "rate": 1
+        },
+        "enhanced": {
+          "passed": 6,
+          "total": 6,
+          "rate": 1
+        },
+        "delta": 0,
+        "outcome": "unchanged"
+      },
+      {
+        "id": "display-overview",
+        "source_page": "develop/objects/display/display-overview",
+        "skills_loaded": [
+          "object-model",
+          "sui-move"
+        ],
+        "baseline": {
+          "passed": 6,
+          "total": 6,
+          "rate": 1
+        },
+        "enhanced": {
+          "passed": 6,
+          "total": 6,
+          "rate": 1
+        },
+        "delta": 0,
+        "outcome": "unchanged"
+      },
+      {
+        "id": "gas-smashing",
+        "source_page": "develop/transaction-payment/gas-smashing",
+        "skills_loaded": [
+          "ptbs",
+          "sui-cli"
+        ],
+        "baseline": {
+          "passed": 6,
+          "total": 6,
+          "rate": 1
+        },
+        "enhanced": {
+          "passed": 5,
+          "total": 6,
+          "rate": 0.8333333333333334
+        },
+        "delta": -1,
+        "outcome": "regressed",
+        "subjective_changes": [
+          {
+            "expectation": "Discusses gas budget estimation or setting",
+            "was": true,
+            "now": false
+          }
+        ]
+      },
+      {
+        "id": "hello-world",
+        "source_page": "getting-started/onboarding/hello-world",
+        "skills_loaded": [
+          "sui-move-project",
+          "sui-publish",
+          "sui-client"
+        ],
+        "baseline": {
+          "passed": 7,
+          "total": 7,
+          "rate": 1
+        },
+        "enhanced": {
+          "passed": 7,
+          "total": 7,
+          "rate": 1
+        },
+        "delta": 0,
+        "outcome": "unchanged"
+      },
+      {
+        "id": "move-package-management",
+        "source_page": "develop/manage-packages/move-package-management",
+        "skills_loaded": [
+          "sui-move-project"
+        ],
+        "baseline": {
+          "passed": 7,
+          "total": 7,
+          "rate": 1
+        },
+        "enhanced": {
+          "passed": 7,
+          "total": 7,
+          "rate": 1
+        },
+        "delta": 0,
+        "outcome": "unchanged"
+      },
+      {
+        "id": "observability",
+        "source_page": "operators/observability",
+        "skills_loaded": [
+          "accessing-data",
+          "sui-sdks"
+        ],
+        "baseline": {
+          "passed": 6,
+          "total": 6,
+          "rate": 1
+        },
+        "enhanced": {
+          "passed": 6,
+          "total": 6,
+          "rate": 1
+        },
+        "delta": 0,
+        "outcome": "unchanged"
+      },
+      {
+        "id": "ptb-inputs-results",
+        "source_page": "develop/transactions/ptbs/inputs-and-results",
+        "skills_loaded": [
+          "ptbs"
+        ],
+        "baseline": {
+          "passed": 7,
+          "total": 7,
+          "rate": 1
+        },
+        "enhanced": {
+          "passed": 6,
+          "total": 7,
+          "rate": 0.8571428571428571
+        },
+        "delta": -1,
+        "outcome": "regressed",
+        "subjective_changes": [
+          {
+            "expectation": "Explains the distinction between pure inputs and object inputs in PTBs",
+            "was": true,
+            "now": false
+          }
+        ]
+      },
+      {
+        "id": "publish-overview",
+        "source_page": "develop/publish-upgrade-packages/index",
+        "skills_loaded": [
+          "sui-publish",
+          "sui-move"
+        ],
+        "baseline": {
+          "passed": 7,
+          "total": 7,
+          "rate": 1
+        },
+        "enhanced": {
+          "passed": 7,
+          "total": 7,
+          "rate": 1
+        },
+        "delta": 0,
+        "outcome": "unchanged"
+      },
+      {
+        "id": "query-with-graphql",
+        "source_page": "develop/accessing-data/graphql/query-with-graphql",
+        "skills_loaded": [
+          "accessing-data",
+          "sui-sdks"
+        ],
+        "baseline": {
+          "passed": 7,
+          "total": 7,
+          "rate": 1
+        },
+        "enhanced": {
+          "passed": 3,
+          "total": 7,
+          "rate": 0.42857142857142855
+        },
+        "delta": -4,
+        "outcome": "regressed",
+        "subjective_changes": [
+          {
+            "expectation": "Provides a concrete GraphQL query with proper Sui schema types",
+            "was": true,
+            "now": false
+          },
+          {
+            "expectation": "Shows pagination handling with cursors or connection patterns",
+            "was": true,
+            "now": false
+          },
+          {
+            "expectation": "Includes TypeScript code that calls the GraphQL endpoint",
+            "was": true,
+            "now": false
+          },
+          {
+            "expectation": "Demonstrates use of variables in the query",
+            "was": true,
+            "now": false
+          }
+        ]
+      },
+      {
+        "id": "scenario-testing",
+        "source_page": "getting-started/examples/scenario-testing",
+        "skills_loaded": [
+          "move-unit-testing",
+          "sui-move"
+        ],
+        "baseline": {
+          "passed": 7,
+          "total": 7,
+          "rate": 1
+        },
+        "enhanced": {
+          "passed": 7,
+          "total": 7,
+          "rate": 1
+        },
+        "delta": 0,
+        "outcome": "unchanged"
+      },
+      {
+        "id": "sui-install",
+        "source_page": "getting-started/onboarding/sui-install",
+        "skills_loaded": [
+          "sui-install"
+        ],
+        "baseline": {
+          "passed": 6,
+          "total": 6,
+          "rate": 1
+        },
+        "enhanced": {
+          "passed": 6,
+          "total": 6,
+          "rate": 1
+        },
+        "delta": 0,
+        "outcome": "unchanged"
+      },
+      {
+        "id": "testing",
+        "source_page": "develop/testing-debugging/testing",
+        "skills_loaded": [
+          "move-unit-testing",
+          "sui-move"
+        ],
+        "baseline": {
+          "passed": 6,
+          "total": 6,
+          "rate": 1
+        },
+        "enhanced": {
+          "passed": 6,
+          "total": 6,
+          "rate": 1
+        },
+        "delta": 0,
+        "outcome": "unchanged"
+      },
+      {
+        "id": "upgrade",
+        "source_page": "develop/publish-upgrade-packages/upgrade",
+        "skills_loaded": [
+          "sui-publish"
+        ],
+        "baseline": {
+          "passed": 6,
+          "total": 7,
+          "rate": 0.8571428571428571
+        },
+        "enhanced": {
+          "passed": 7,
+          "total": 7,
+          "rate": 1
+        },
+        "delta": 1,
+        "outcome": "improved",
+        "subjective_changes": [
+          {
+            "expectation": "Mentions that the original package version is preserved on-chain",
+            "was": false,
+            "now": true
+          }
+        ]
+      },
+      {
+        "id": "using-grpc",
+        "source_page": "develop/accessing-data/grpc/using-grpc",
+        "skills_loaded": [
+          "accessing-data"
+        ],
+        "baseline": {
+          "passed": 6,
+          "total": 6,
+          "rate": 1
+        },
+        "enhanced": {
+          "passed": 5,
+          "total": 6,
+          "rate": 0.8333333333333334
+        },
+        "delta": -1,
+        "outcome": "regressed",
+        "subjective_changes": [
+          {
+            "expectation": "References the proto definitions, endpoint, or service structure",
+            "was": true,
+            "now": false
+          }
+        ]
+      },
+      {
+        "id": "walrus-sites",
+        "source_page": "sui-stack/walrus/sui-stack-walrus-sites",
+        "skills_loaded": [
+          "walrus-overview",
+          "walrus-cli"
+        ],
+        "baseline": {
+          "passed": 7,
+          "total": 7,
+          "rate": 1
+        },
+        "enhanced": {
+          "passed": 7,
+          "total": 7,
+          "rate": 1
+        },
+        "delta": 0,
+        "outcome": "unchanged"
+      },
+      {
+        "id": "walrus-storage",
+        "source_page": "sui-stack/walrus/sui-stack-walrus",
+        "skills_loaded": [
+          "walrus-overview",
+          "walrus-cli"
+        ],
+        "baseline": {
+          "passed": 6,
+          "total": 7,
+          "rate": 0.8571428571428571
+        },
+        "enhanced": {
+          "passed": 6,
+          "total": 7,
+          "rate": 0.8571428571428571
+        },
+        "delta": 0,
+        "outcome": "unchanged"
+      }
+    ]
+  },
+  "sonnet": {
+    "prompts_compared": 19,
+    "improved": 2,
+    "unchanged": 14,
+    "regressed": 3,
+    "baseline_rate": 0.967479674796748,
+    "enhanced_rate": 0.9512195121951219,
+    "delta_rate": -0.016260162601626105,
+    "prompts": [
+      {
+        "id": "automated-address-management",
+        "source_page": "develop/manage-packages/automated-address-management",
+        "skills_loaded": [
+          "sui-move-project",
+          "sui-publish"
+        ],
+        "baseline": {
+          "passed": 6,
+          "total": 6,
+          "rate": 1
+        },
+        "enhanced": {
+          "passed": 6,
+          "total": 6,
+          "rate": 1
+        },
+        "delta": 0,
+        "outcome": "unchanged"
+      },
+      {
+        "id": "common-errors",
+        "source_page": "develop/testing-debugging/common-errors",
+        "skills_loaded": [
+          "ptbs",
+          "sui-cli",
+          "object-model"
+        ],
+        "baseline": {
+          "passed": 6,
+          "total": 6,
+          "rate": 1
+        },
+        "enhanced": {
+          "passed": 5,
+          "total": 6,
+          "rate": 0.8333333333333334
+        },
+        "delta": -1,
+        "outcome": "regressed",
+        "subjective_changes": [
+          {
+            "expectation": "Suggests concrete fixes rather than just diagnosis",
+            "was": true,
+            "now": false
+          }
+        ]
+      },
+      {
+        "id": "custom-policies",
+        "source_page": "develop/publish-upgrade-packages/custom-policies",
+        "skills_loaded": [
+          "sui-publish",
+          "sui-move"
+        ],
+        "baseline": {
+          "passed": 6,
+          "total": 6,
+          "rate": 1
+        },
+        "enhanced": {
+          "passed": 6,
+          "total": 6,
+          "rate": 1
+        },
+        "delta": 0,
+        "outcome": "unchanged"
+      },
+      {
+        "id": "data-serving",
+        "source_page": "develop/accessing-data/data-serving",
+        "skills_loaded": [
+          "accessing-data"
+        ],
+        "baseline": {
+          "passed": 6,
+          "total": 6,
+          "rate": 1
+        },
+        "enhanced": {
+          "passed": 6,
+          "total": 6,
+          "rate": 1
+        },
+        "delta": 0,
+        "outcome": "unchanged"
+      },
+      {
+        "id": "display-overview",
+        "source_page": "develop/objects/display/display-overview",
+        "skills_loaded": [
+          "object-model",
+          "sui-move"
+        ],
+        "baseline": {
+          "passed": 6,
+          "total": 6,
+          "rate": 1
+        },
+        "enhanced": {
+          "passed": 4,
+          "total": 6,
+          "rate": 0.6666666666666666
+        },
+        "delta": -2,
+        "outcome": "regressed",
+        "subjective_changes": [
+          {
+            "expectation": "Explains the difference between Display V1 and Display V2",
+            "was": true,
+            "now": false
+          },
+          {
+            "expectation": "Provides concrete Move code or PTB examples for the migration",
+            "was": true,
+            "now": false
+          }
+        ]
+      },
+      {
+        "id": "gas-smashing",
+        "source_page": "develop/transaction-payment/gas-smashing",
+        "skills_loaded": [
+          "ptbs",
+          "sui-cli"
+        ],
+        "baseline": {
+          "passed": 6,
+          "total": 6,
+          "rate": 1
+        },
+        "enhanced": {
+          "passed": 6,
+          "total": 6,
+          "rate": 1
+        },
+        "delta": 0,
+        "outcome": "unchanged"
+      },
+      {
+        "id": "hello-world",
+        "source_page": "getting-started/onboarding/hello-world",
+        "skills_loaded": [
+          "sui-move-project",
+          "sui-publish",
+          "sui-client"
+        ],
+        "baseline": {
+          "passed": 7,
+          "total": 7,
+          "rate": 1
+        },
+        "enhanced": {
+          "passed": 7,
+          "total": 7,
+          "rate": 1
+        },
+        "delta": 0,
+        "outcome": "unchanged"
+      },
+      {
+        "id": "move-package-management",
+        "source_page": "develop/manage-packages/move-package-management",
+        "skills_loaded": [
+          "sui-move-project"
+        ],
+        "baseline": {
+          "passed": 6,
+          "total": 7,
+          "rate": 0.8571428571428571
+        },
+        "enhanced": {
+          "passed": 7,
+          "total": 7,
+          "rate": 1
+        },
+        "delta": 1,
+        "outcome": "improved",
+        "subjective_changes": [
+          {
+            "expectation": "Shows how to declare or fix dependencies",
+            "was": false,
+            "now": true
+          }
+        ]
+      },
+      {
+        "id": "observability",
+        "source_page": "operators/observability",
+        "skills_loaded": [
+          "accessing-data",
+          "sui-sdks"
+        ],
+        "baseline": {
+          "passed": 6,
+          "total": 6,
+          "rate": 1
+        },
+        "enhanced": {
+          "passed": 6,
+          "total": 6,
+          "rate": 1
+        },
+        "delta": 0,
+        "outcome": "unchanged"
+      },
+      {
+        "id": "ptb-inputs-results",
+        "source_page": "develop/transactions/ptbs/inputs-and-results",
+        "skills_loaded": [
+          "ptbs"
+        ],
+        "baseline": {
+          "passed": 7,
+          "total": 7,
+          "rate": 1
+        },
+        "enhanced": {
+          "passed": 6,
+          "total": 7,
+          "rate": 0.8571428571428571
+        },
+        "delta": -1,
+        "outcome": "regressed",
+        "subjective_changes": [
+          {
+            "expectation": "Explains the distinction between pure inputs and object inputs in PTBs",
+            "was": true,
+            "now": false
+          }
+        ]
+      },
+      {
+        "id": "publish-overview",
+        "source_page": "develop/publish-upgrade-packages/index",
+        "skills_loaded": [
+          "sui-publish",
+          "sui-move"
+        ],
+        "baseline": {
+          "passed": 7,
+          "total": 7,
+          "rate": 1
+        },
+        "enhanced": {
+          "passed": 7,
+          "total": 7,
+          "rate": 1
+        },
+        "delta": 0,
+        "outcome": "unchanged"
+      },
+      {
+        "id": "query-with-graphql",
+        "source_page": "develop/accessing-data/graphql/query-with-graphql",
+        "skills_loaded": [
+          "accessing-data",
+          "sui-sdks"
+        ],
+        "baseline": {
+          "passed": 7,
+          "total": 7,
+          "rate": 1
+        },
+        "enhanced": {
+          "passed": 7,
+          "total": 7,
+          "rate": 1
+        },
+        "delta": 0,
+        "outcome": "unchanged"
+      },
+      {
+        "id": "scenario-testing",
+        "source_page": "getting-started/examples/scenario-testing",
+        "skills_loaded": [
+          "move-unit-testing",
+          "sui-move"
+        ],
+        "baseline": {
+          "passed": 6,
+          "total": 7,
+          "rate": 0.8571428571428571
+        },
+        "enhanced": {
+          "passed": 7,
+          "total": 7,
+          "rate": 1
+        },
+        "delta": 1,
+        "outcome": "improved",
+        "subjective_changes": [
+          {
+            "expectation": "Mentions or shows expected-failure patterns (e.g., #[expected_failure] or abort codes)",
+            "was": false,
+            "now": true
+          }
+        ]
+      },
+      {
+        "id": "sui-install",
+        "source_page": "getting-started/onboarding/sui-install",
+        "skills_loaded": [
+          "sui-install"
+        ],
+        "baseline": {
+          "passed": 6,
+          "total": 6,
+          "rate": 1
+        },
+        "enhanced": {
+          "passed": 6,
+          "total": 6,
+          "rate": 1
+        },
+        "delta": 0,
+        "outcome": "unchanged"
+      },
+      {
+        "id": "testing",
+        "source_page": "develop/testing-debugging/testing",
+        "skills_loaded": [
+          "move-unit-testing",
+          "sui-move"
+        ],
+        "baseline": {
+          "passed": 6,
+          "total": 6,
+          "rate": 1
+        },
+        "enhanced": {
+          "passed": 6,
+          "total": 6,
+          "rate": 1
+        },
+        "delta": 0,
+        "outcome": "unchanged"
+      },
+      {
+        "id": "upgrade",
+        "source_page": "develop/publish-upgrade-packages/upgrade",
+        "skills_loaded": [
+          "sui-publish"
+        ],
+        "baseline": {
+          "passed": 7,
+          "total": 7,
+          "rate": 1
+        },
+        "enhanced": {
+          "passed": 7,
+          "total": 7,
+          "rate": 1
+        },
+        "delta": 0,
+        "outcome": "unchanged"
+      },
+      {
+        "id": "using-grpc",
+        "source_page": "develop/accessing-data/grpc/using-grpc",
+        "skills_loaded": [
+          "accessing-data"
+        ],
+        "baseline": {
+          "passed": 5,
+          "total": 6,
+          "rate": 0.8333333333333334
+        },
+        "enhanced": {
+          "passed": 5,
+          "total": 6,
+          "rate": 0.8333333333333334
+        },
+        "delta": 0,
+        "outcome": "unchanged"
+      },
+      {
+        "id": "walrus-sites",
+        "source_page": "sui-stack/walrus/sui-stack-walrus-sites",
+        "skills_loaded": [
+          "walrus-overview",
+          "walrus-cli"
+        ],
+        "baseline": {
+          "passed": 7,
+          "total": 7,
+          "rate": 1
+        },
+        "enhanced": {
+          "passed": 7,
+          "total": 7,
+          "rate": 1
+        },
+        "delta": 0,
+        "outcome": "unchanged"
+      },
+      {
+        "id": "walrus-storage",
+        "source_page": "sui-stack/walrus/sui-stack-walrus",
+        "skills_loaded": [
+          "walrus-overview",
+          "walrus-cli"
+        ],
+        "baseline": {
+          "passed": 6,
+          "total": 7,
+          "rate": 0.8571428571428571
+        },
+        "enhanced": {
+          "passed": 6,
+          "total": 7,
+          "rate": 0.8571428571428571
+        },
+        "delta": 0,
+        "outcome": "unchanged"
+      }
+    ]
+  }
+}
