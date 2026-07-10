@@ -4,15 +4,15 @@
 
 | Suite | Evals | Pass | Fail | Err | Flaky | Checks | Rate |
 |-------|------:|-----:|-----:|----:|------:|-------:|-----:|
-| Skill evals (gpt4o) | 9 | 0 | 9 | 0 | – | 3/27 | 11% |
-| Skill evals (opus) | 9 | 1 | 8 | 0 | – | 16/27 | 59% |
-| Skill evals (sonnet) | 9 | 0 | 9 | 0 | – | 13/27 | 48% |
-| AgentPrompt baseline (gpt4o) | 19 | 2 | 17 | 0 | – | 91/123 | 74% |
-| AgentPrompt baseline (opus) | 19 | 16 | 3 | 0 | – | 120/123 | 98% |
-| AgentPrompt baseline (sonnet) | 19 | 15 | 4 | 0 | – | 119/123 | 97% |
-| AgentPrompt +skills (gpt4o) | 19 | 3 | 8 | 8 | – | 56/73 | 77% |
-| AgentPrompt +skills (opus) | 19 | 14 | 5 | 0 | – | 115/123 | 93% |
-| AgentPrompt +skills (sonnet) | 19 | 14 | 5 | 0 | – | 117/123 | 95% |
+| Skill evals (gpt4o) | 9 | 0 | 0 | 9 | – | 0/0 | – |
+| Skill evals (opus) | 9 | 2 | 7 | 0 | – | 14/27 | 52% |
+| Skill evals (sonnet) | 9 | 0 | 9 | 0 | – | 10/27 | 37% |
+| AgentPrompt baseline (gpt4o) | 19 | 0 | 0 | 19 | – | 0/0 | – |
+| AgentPrompt baseline (opus) | 19 | 15 | 4 | 0 | – | 119/123 | 97% |
+| AgentPrompt baseline (sonnet) | 19 | 15 | 4 | 0 | – | 116/123 | 94% |
+| AgentPrompt +skills (gpt4o) | 19 | 1 | 4 | 14 | – | 28/34 | 82% |
+| AgentPrompt +skills (opus) | 19 | 15 | 4 | 0 | – | 117/123 | 95% |
+| AgentPrompt +skills (sonnet) | 19 | 13 | 6 | 0 | – | 117/123 | 95% |
 
 ---
 
@@ -20,336 +20,264 @@
 
 | Skill | Eval | gpt4o | opus | sonnet |
 |-------|------|:------:|:------:|:------:|
-| walrus-cli | walrus-cli-common-mistakes | ❌ 2/3 | ✅ 3/3 | ❌ 2/3 |
-| walrus-cli | walrus-cli-configuration | ❌ 0/3 | ❌ 2/3 | ❌ 1/3 |
-| walrus-cli | walrus-cli-json-mode | ❌ 0/3 | ❌ 1/3 | ❌ 1/3 |
-| walrus-cli | walrus-cli-read-blob | ❌ 0/3 | ❌ 2/3 | ❌ 1/3 |
-| walrus-cli | walrus-cli-store-blob | ❌ 0/3 | ❌ 1/3 | ❌ 1/3 |
-| walrus-overview | walrus-overview-blob-id-vs-object-id | ❌ 0/3 | ❌ 2/3 | ❌ 2/3 |
-| walrus-overview | walrus-overview-tool-selection | ❌ 1/3 | ❌ 2/3 | ❌ 2/3 |
-| walrus-overview | walrus-overview-vs-s3 | ❌ 0/3 | ❌ 1/3 | ❌ 2/3 |
-| walrus-overview | walrus-overview-what-is-walrus | ❌ 0/3 | ❌ 2/3 | ❌ 1/3 |
+| walrus-cli | walrus-cli-common-mistakes | ⚠️ | ✅ 3/3 | ❌ 2/3 |
+| walrus-cli | walrus-cli-configuration | ⚠️ | ❌ 0/3 | ❌ 0/3 |
+| walrus-cli | walrus-cli-json-mode | ⚠️ | ❌ 1/3 | ❌ 1/3 |
+| walrus-cli | walrus-cli-read-blob | ⚠️ | ❌ 2/3 | ❌ 0/3 |
+| walrus-cli | walrus-cli-store-blob | ⚠️ | ❌ 1/3 | ❌ 1/3 |
+| walrus-overview | walrus-overview-blob-id-vs-object-id | ⚠️ | ✅ 3/3 | ❌ 2/3 |
+| walrus-overview | walrus-overview-tool-selection | ⚠️ | ❌ 2/3 | ❌ 2/3 |
+| walrus-overview | walrus-overview-vs-s3 | ⚠️ | ❌ 1/3 | ❌ 1/3 |
+| walrus-overview | walrus-overview-what-is-walrus | ⚠️ | ❌ 1/3 | ❌ 1/3 |
 
 ### Per-Model Breakdown
 
 <details><summary><b>gpt4o</b>: 0/9 evals passed (0%)</summary>
 
 - Deterministic checks: 0/0 (–)
-- Subjective grades: 3/27 (11%)
+- Subjective grades: 0/0 (–)
 
-#### ❌ walrus-overview-what-is-walrus
+#### ⚠️ walrus-overview-what-is-walrus
 
-> Walrus is an open-source framework on the Sui blockchain designed to facilitate on-chain distribution of assets in an efficient, fair, and scalable manner. It specifically caters to various dynamic dr...
+**Error:** `429 Rate limit reached for gpt-4o in organization org-Ymxfd9U0oHgQvWY3NcUtRd0M on tokens per min (TPM): Limit 30000, Used 30000, Requested 46. Please try again in 92ms. Visit https://platform.openai.c`
 
-**Subjective grades:**
-- ❌ Explains the three-layer architecture: client layer, storage node layer, and Sui blockchain layer
-  - _The response does not mention or explain any three-layer architecture. It discusses smart contract integration and framework capabilities but does not describe client layer, storage node layer, or Sui blockchain layer separately._
-- ❌ Mentions that blobs are public by default and encryption is needed for privacy
-  - _The response does not mention blobs, public/private access, or encryption for privacy. It focuses on asset distribution strategies rather than blob storage characteristics._
-- ❌ Explains that storage is time-limited and measured in epochs
-  - _The response does not explain time-limited storage or epochs. It mentions 'timed releases' in the context of drop strategies but does not address storage duration or epoch-based measurement._
+#### ⚠️ walrus-overview-blob-id-vs-object-id
 
-#### ❌ walrus-overview-blob-id-vs-object-id
+**Error:** `429 Rate limit reached for gpt-4o in organization org-Ymxfd9U0oHgQvWY3NcUtRd0M on tokens per min (TPM): Limit 30000, Used 30000, Requested 56. Please try again in 112ms. Visit https://platform.openai.`
 
-> In the context of the Sui blockchain and its tool, Walrus, it's important to distinguish between blob IDs and Sui object IDs.  1. **Sui Object ID**: This is a unique identifier for objects on the Sui ...
+#### ⚠️ walrus-overview-tool-selection
 
-**Subjective grades:**
-- ❌ Explains that the same content uploaded twice produces the same blob ID but different Sui object IDs
-  - _The response does not explain the content-addressed nature of blob IDs or the fact that identical content produces identical blob IDs. It also fails to mention that different Sui object IDs are created for each upload transaction._
-- ❌ Clarifies that blob ID is used for reading content while Sui object ID is used for lifecycle operations like extend and delete
-  - _The response does not distinguish the functional purposes of each ID type. It does not explain that blob IDs are for content retrieval or that Sui object IDs are for managing lifecycle operations._
-- ❌ Shows or describes the format difference: URL-safe base64 for blob ID vs 0x hex for object ID
-  - _The response does not provide any information about the format or encoding of either identifier type. No mention of URL-safe base64, hex format, or any other technical format details._
+**Error:** `429 Rate limit reached for gpt-4o in organization org-Ymxfd9U0oHgQvWY3NcUtRd0M on tokens per min (TPM): Limit 30000, Used 30000, Requested 56. Please try again in 112ms. Visit https://platform.openai.`
 
-#### ❌ walrus-overview-tool-selection
+#### ⚠️ walrus-overview-vs-s3
 
-> To build a TypeScript web app that uploads files to Walrus, you should use the `sui.js` SDK. This SDK provides the necessary tools and APIs to interact with the Sui blockchain and handle file uploads ...
+**Error:** `429 Rate limit reached for gpt-4o in organization org-Ymxfd9U0oHgQvWY3NcUtRd0M on tokens per min (TPM): Limit 30000, Used 30000, Requested 50. Please try again in 100ms. Visit https://platform.openai.`
 
-**Subjective grades:**
-- ❌ Recommends the TypeScript SDK as the primary tool for this use case
-  - _The response recommends 'sui.js SDK' rather than the specific TypeScript SDK for Walrus (@mysten/walrus). While sui.js may have some functionality, it is not the correct primary recommendation for Walrus file uploads._
-- ❌ Mentions the upload relay as needed for browser-based uploads since browsers cannot directly connect to storage nodes
-  - _The response does not mention the upload relay at all, which is a critical component for browser-based uploads to Walrus._
-- ✅ Does not recommend the CLI or HTTP API as the primary tool for a TypeScript web app
-  - _The response does not recommend the CLI or HTTP API as the primary tool; it recommends an SDK approach._
+#### ⚠️ walrus-cli-store-blob
 
-#### ❌ walrus-overview-vs-s3
+**Error:** `429 Rate limit reached for gpt-4o in organization org-Ymxfd9U0oHgQvWY3NcUtRd0M on tokens per min (TPM): Limit 30000, Used 30000, Requested 45. Please try again in 90ms. Visit https://platform.openai.c`
 
-> Walrus and AWS S3 (Simple Storage Service) are both object storage services, but they are designed to serve different ecosystems and use cases. Here's a comparison of the two:  1. **Ecosystem Integrat...
+#### ⚠️ walrus-cli-read-blob
 
-**Subjective grades:**
-- ❌ Highlights that Walrus data is public by default while S3 is private by default
-  - _The response does not mention anything about the public/private nature of data in either Walrus or S3. This is a critical distinction that is completely absent from the answer._
-- ❌ Mentions that Walrus storage is time-limited (max ~2 years) while cloud storage is indefinite
-  - _The response does not discuss any time limitations for Walrus storage or contrast this with the indefinite storage duration of cloud services like S3._
-- ❌ Recommends Walrus for use cases needing censorship resistance, verifiability, or decentralized availability
-  - _The response only mentions generic blockchain integration and smart contract interaction as use cases. It does not explicitly recommend Walrus for censorship resistance, verifiability, or decentralized availability - these key value propositions are missing._
+**Error:** `429 Rate limit reached for gpt-4o in organization org-Ymxfd9U0oHgQvWY3NcUtRd0M on tokens per min (TPM): Limit 30000, Used 30000, Requested 47. Please try again in 94ms. Visit https://platform.openai.c`
 
-#### ❌ walrus-cli-store-blob
+#### ⚠️ walrus-cli-json-mode
 
-> To store a file on Walrus using the CLI, you need to follow these steps:  1. **Install Walrus CLI**: Ensure that the Walrus CLI is installed on your system and properly configured. You can refer to th...
+**Error:** `429 Rate limit reached for gpt-4o in organization org-Ymxfd9U0oHgQvWY3NcUtRd0M on tokens per min (TPM): Limit 30000, Used 30000, Requested 53. Please try again in 106ms. Visit https://platform.openai.`
 
-**Subjective grades:**
-- ❌ Shows a concrete example command like 'walrus store myfile.png --epochs 5'
-  - _The response uses 'walrus file upload <filename>' instead of 'walrus store' with --epochs flag. No concrete example with --epochs is provided._
-- ❌ Mentions that --epochs is mandatory with no default
-  - _The --epochs flag is not mentioned at all in the response, let alone being identified as mandatory with no default value._
-- ❌ Mentions the difference between --deletable (default) and --permanent
-  - _The response does not mention --deletable or --permanent flags or the distinction between them._
+#### ⚠️ walrus-cli-configuration
 
-#### ❌ walrus-cli-read-blob
+**Error:** `429 Rate limit reached for gpt-4o in organization org-Ymxfd9U0oHgQvWY3NcUtRd0M on tokens per min (TPM): Limit 30000, Used 30000, Requested 55. Please try again in 110ms. Visit https://platform.openai.`
 
-> To read a blob from Walrus and check its status on the Sui blockchain, you will typically follow these steps:  1. **Connect to the Blockchain:**    Ensure you have a connection to the Sui blockchain. ...
+#### ⚠️ walrus-cli-common-mistakes
 
-**Subjective grades:**
-- ❌ Shows how to read a blob to stdout and how to save to a file using --out
-  - _The response does not mention the walrus read command, the --out flag, or any specific CLI syntax for saving blob output to a file. It only provides generic pseudocode that does not reflect actual Walrus tooling._
-- ❌ Shows how to check blob status by blob ID
-  - _The response does not mention the walrus blob-status command or how to use it with a blob ID. It only references a generic getBlobStatus method that does not exist in actual Walrus tooling._
-- ❌ Mentions the consistency check options (--strict-consistency-check or --skip-consistency-check)
-  - _The response does not mention any consistency check flags or options. These options are not discussed anywhere in the answer._
-
-#### ❌ walrus-cli-json-mode
-
-> To automate Walrus uploads in a CI/CD pipeline using JSON mode, you need to follow these steps:  1. **Prepare the JSON Upload Files:**    - First, ensure you have all the necessary files and metadata ...
-
-**Subjective grades:**
-- ❌ Shows a concrete walrus json example with a JSON command object
-  - _The response does not demonstrate the 'walrus json' command or show a JSON command object structure. It only shows a generic JSON file format for upload configuration, not the actual Walrus JSON command syntax._
-- ❌ Explains that JSON mode uses camelCase instead of kebab-case
-  - _The response makes no mention of camelCase, kebab-case, or any naming convention differences in JSON mode._
-- ❌ Mentions that --json can be added to any standard command for JSON output
-  - _While the response mentions '--json path/to/upload.json' as a flag, it does not explain that --json is a general-purpose flag that can be appended to any standard command for machine-parseable JSON output._
-
-#### ❌ walrus-cli-configuration
-
-> To configure the Walrus CLI client and switch between networks, you'll need to modify the configuration settings to point to the desired network (testnet or mainnet). Here’s a general approach to achi...
-
-**Subjective grades:**
-- ❌ Shows how to download the config file using curl
-  - _The response does not mention downloading the config file using curl. It only discusses locating and editing an existing configuration file._
-- ❌ Explains the --context flag for switching between testnet and mainnet
-  - _The response does not mention or explain the --context flag as a method for switching networks. Instead, it describes manual editing of configuration files._
-- ❌ Mentions the config file search locations (~/.config/walrus/, ~/.walrus/, or current directory)
-  - _The response only mentions '~/.walrus/config.toml' as a potential location. It does not mention ~/.config/walrus/ or the current directory as search locations, and uses 'config.toml' rather than 'client_config.yaml'._
-
-#### ❌ walrus-cli-common-mistakes
-
-> The error message "Cannot find gas coin for signer address" typically indicates that the account you're using does not have any SUI tokens available to pay for the transaction's gas fees. On the Sui b...
-
-**Subjective grades:**
-- ✅ Explains that the wallet needs SUI for gas fees
-  - _The response clearly states 'each transaction requires a small amount of SUI to be paid as gas fees' and explains the error occurs when 'the account does not have sufficient balance.'_
-- ❌ Mentions that WAL tokens are also needed for storage payment
-  - _The response does not mention WAL tokens or any storage payment mechanism beyond gas fees. It only addresses SUI for gas fees._
-- ✅ Provides a solution: fund the address with SUI (and on testnet, mention the faucet)
-  - _The response provides funding solutions including receiving tokens from another address and explicitly mentions 'Obtaining tokens from a faucet, especially if you are working on a testnet or devnet.'_
+**Error:** `429 Rate limit reached for gpt-4o in organization org-Ymxfd9U0oHgQvWY3NcUtRd0M on tokens per min (TPM): Limit 30000, Used 30000, Requested 57. Please try again in 114ms. Visit https://platform.openai.`
 
 </details>
 
-<details><summary><b>opus</b>: 1/9 evals passed (11%)</summary>
+<details><summary><b>opus</b>: 2/9 evals passed (22%)</summary>
 
 - Deterministic checks: 0/0 (–)
-- Subjective grades: 16/27 (59%)
+- Subjective grades: 14/27 (52%)
 
 #### ❌ walrus-overview-what-is-walrus
 
-> # Walrus: Decentralized Storage for Sui  Walrus is a **decentralized blob storage system** designed to work alongside the Sui blockchain. Here's a high-level overview:  ## What is Walrus?  Walrus is a...
+> # Walrus: Decentralized Storage for Sui  Walrus is a **decentralized blob storage protocol** designed to work alongside the Sui blockchain. Here's a high-level overview:  ## What is Walrus?  Walrus is...
 
 **Subjective grades:**
-- ✅ Explains the three-layer architecture: client layer, storage node layer, and Sui blockchain layer
-  - _The response explicitly describes all three layers: the user/dApp client layer, the Sui blockchain coordination layer, and the Walrus Storage Network (storage nodes), including a diagram showing the architecture._
+- ❌ Explains the three-layer architecture: client layer, storage node layer, and Sui blockchain layer
+  - _While the response mentions storage nodes and Sui blockchain coordination, it does not explicitly identify or describe a 'three-layer architecture' as a distinct concept. The response describes components and their interactions but does not frame them as three distinct layers (client, storage node, and Sui blockchain layers)._
 - ❌ Mentions that blobs are public by default and encryption is needed for privacy
-  - _The response does not mention that blobs are public by default or discuss encryption for privacy. This is a critical gap in the explanation._
+  - _The response does not mention anything about blobs being public by default or the need for encryption to achieve privacy. This concept is completely absent from the explanation._
 - ✅ Explains that storage is time-limited and measured in epochs
-  - _The response explicitly states in the 'Storage Epochs & Payment' section that 'Storage is purchased in epochs (time periods)' and that 'storage can be extended by paying for additional epochs,' clearly indicating time-limited storage._
+  - _The response explicitly explains storage epochs in section 5, stating 'Storage resources are purchased for a certain number of epochs' and 'Users can extend storage by paying for additional epochs,' clearly indicating that storage is time-limited and measured in epochs._
 
-#### ❌ walrus-overview-blob-id-vs-object-id
+#### ✅ walrus-overview-blob-id-vs-object-id
 
-> # Blob ID vs Sui Object ID in Walrus  These are two distinct identifiers in Walrus that serve different purposes. Here's a clear breakdown:  ## Blob ID  - **What it is**: A content-based identifier de...
+> # Blob ID vs Sui Object ID in Walrus  These are two fundamentally different identifiers in Walrus, and confusing them is a common source of errors.  ## Blob ID  - **What it is**: A content-based ident...
 
 **Subjective grades:**
 - ✅ Explains that the same content uploaded twice produces the same blob ID but different Sui object IDs
-  - _The response explicitly demonstrates this in the 'Example Scenario' section where User A and User B both store 'Hello World', resulting in the same blob ID (0xabc123...) but different Sui object IDs (0xobj001... vs 0xobj002...). This is also reinforced in the key distinction table and the 'Why This Matters' section._
+  - _The response explicitly states in the 'Common Gotcha' section: 'If the same content is uploaded twice: The blob ID will be the same (same data = same blob ID). Two different Sui object IDs will exist (two separate registrations).' This directly addresses the expectation._
 - ✅ Clarifies that blob ID is used for reading content while Sui object ID is used for lifecycle operations like extend and delete
-  - _The response clearly states blob ID is 'used to read/download data' with a curl example, while Sui object ID is used for 'on-chain operations like extending storage duration, transferring ownership, or burning.' The comparison table explicitly shows 'Reading/downloading data' for blob ID vs 'On-chain management (ownership, lifecycle)' for Sui object ID._
-- ❌ Shows or describes the format difference: URL-safe base64 for blob ID vs 0x hex for object ID
-  - _The response does not describe the actual format differences between blob ID and Sui object ID. While it shows example identifiers (0xabc123... and 0xobj001...), both are presented with '0x' hex prefixes, and there is no mention of URL-safe base64 format for blob IDs or clarification that blob IDs use a different format than Sui object IDs._
+  - _The response clearly states blob ID is 'Used for: Reading/downloading blob content from Walrus storage nodes' and Sui Object ID is 'Used for: On-chain operations — managing ownership, extending storage duration, certifying blobs, access control, etc.' The 'Rule of Thumb' section reinforces this with 'Need to manage storage on-chain (extend, delete, transfer)? → Use the Sui Object ID'_
+- ✅ Shows or describes the format difference: URL-safe base64 for blob ID vs 0x hex for object ID
+  - _The response explicitly describes formats: Blob ID is 'Typically a long base64-encoded string' and Sui Object ID is 'Standard Sui object ID (0x...)'. The practical example also shows concrete format examples: '"blobId": "Qm7x9f2k..."' and '"id": "0xabc123..."'_
 
 #### ❌ walrus-overview-tool-selection
 
-> # Uploading Files to Walrus with TypeScript  You should use the **Walrus TypeScript SDK (`@mysten/walrus`)**. It's the official client library designed for interacting with Walrus from TypeScript/Java...
+> # Uploading Files to Walrus from a TypeScript Web App  You should use the **Walrus TypeScript SDK (`@mysten/walrus`)**. It's the official client library designed for exactly this purpose.  ## Installa...
 
 **Subjective grades:**
 - ✅ Recommends the TypeScript SDK as the primary tool for this use case
-  - _The response explicitly recommends '@mysten/walrus' TypeScript SDK as the primary tool in the opening statement and provides installation and usage examples._
+  - _The response explicitly recommends '@mysten/walrus' TypeScript SDK as 'the official client library designed for exactly this purpose' and provides installation and usage examples._
 - ❌ Mentions the upload relay as needed for browser-based uploads since browsers cannot directly connect to storage nodes
-  - _The response does not mention the upload relay at all. While it provides browser file input examples and discusses browser uploads, it fails to explain that an upload relay is needed for browsers to upload files since browsers cannot directly connect to Walrus storage nodes._
+  - _The response does not mention the upload relay at all. While it provides browser usage examples with File inputs, it fails to explain that browsers need to use an upload relay to communicate with Walrus storage nodes, which is a critical architectural detail for browser-based uploads._
 - ✅ Does not recommend the CLI or HTTP API as the primary tool for a TypeScript web app
-  - _The response does not mention or recommend the CLI or HTTP API. It focuses exclusively on the TypeScript SDK as the appropriate tool._
+  - _The response does not mention the CLI or HTTP API as alternatives, and clearly positions the TypeScript SDK as the correct tool for this use case._
 
 #### ❌ walrus-overview-vs-s3
 
-> # Walrus vs AWS S3: Comparison Guide  ## Architecture Comparison  | Feature | **Walrus** | **AWS S3** | |---|---|---| | **Architecture** | Decentralized, built on Sui blockchain | Centralized, owned b...
+> # Walrus vs AWS S3: Comparison Guide  ## Architecture Fundamentals  | Feature | **AWS S3** | **Walrus** | |---|---|---| | **Architecture** | Centralized (Amazon-operated) | Decentralized (network of s...
 
 **Subjective grades:**
 - ❌ Highlights that Walrus data is public by default while S3 is private by default
-  - _The response does not explicitly state that Walrus data is public by default or that S3 is private by default. While the response mentions 'Access Control' differences, it does not clearly address the default privacy posture of either system._
+  - _The response does not explicitly state that Walrus data is public by default or that S3 is private by default. While it mentions 'anyone can read, no auth needed' for Walrus and 'access controlled' for S3, it does not clearly highlight the privacy/publicity distinction as a fundamental difference between the two systems._
 - ❌ Mentions that Walrus storage is time-limited (max ~2 years) while cloud storage is indefinite
-  - _The response mentions 'epochs' in the storage model and shows epoch-based pricing, but does not explicitly state that Walrus storage is time-limited to approximately 2 years maximum, nor does it compare this to S3's indefinite storage duration._
+  - _The response does not mention any time limitations on Walrus storage or that it has a maximum duration of approximately 2 years. It mentions 'storage epochs' and 'Pay upfront for storage epochs' but does not specify that Walrus storage is temporary/time-limited compared to S3's indefinite storage._
 - ✅ Recommends Walrus for use cases needing censorship resistance, verifiability, or decentralized availability
-  - _The response explicitly recommends Walrus for censorship resistance (section 1), verifiable storage/proof of availability (section 2), and decentralized availability through integration with Sui smart contracts and decentralized web hosting (sections 3-4)._
+  - _The response explicitly lists these three use case categories in the 'When to Use Walrus' section: (1) 'Censorship resistance', (2) 'Verifiable storage — Cryptographic proof that data is stored correctly', and (3) 'Decentralized applications — dApps that shouldn't depend on centralized infrastructure' / 'No vendor lock-in'. These clearly map to censorship resistance, verifiability, and decentralized availability._
 
 #### ❌ walrus-cli-store-blob
 
-> # Storing Files on Walrus Using the CLI  You can store files on Walrus using the `walrus` CLI tool. Here's how:  ## Basic Store Command  ```bash walrus store <FILE_PATH> ```  For example:  ```bash wal...
+> # Storing a File on Walrus Using the CLI  You can store a file on Walrus using the `walrus store` command. Here's how:  ## Basic Usage  ```bash walrus store <FILE_PATH> ```  **Example:**  ```bash walr...
 
 **Subjective grades:**
 - ✅ Shows a concrete example command like 'walrus store myfile.png --epochs 5'
-  - _The response includes the concrete example 'walrus store --epochs 5 my_file.txt' which directly matches the expected pattern._
+  - _The response includes the example 'walrus store --epochs 5 my_document.pdf' which demonstrates the exact format requested._
 - ❌ Mentions that --epochs is mandatory with no default
-  - _The response states 'By default, files are stored for a certain number of epochs' which explicitly contradicts the expectation that --epochs is mandatory with no default. The response implies a default exists rather than stating --epochs is mandatory._
+  - _The response does not explicitly state whether --epochs is mandatory or optional, nor does it clarify whether there is a default value. It only shows --epochs as an example option without indicating its requirement status._
 - ❌ Mentions the difference between --deletable (default) and --permanent
-  - _The response does not mention --deletable or --permanent flags at all, nor does it explain any difference between storage types or permanence options._
+  - _The response does not mention --deletable or --permanent flags at all, nor does it explain any differences between storage modes or durability options._
 
 #### ❌ walrus-cli-read-blob
 
-> # Reading Blobs from Walrus  You can read blobs from Walrus and check their status using the Walrus HTTP API (aggregator and publisher endpoints).  ## Reading a Blob by Blob ID  Use the **aggregator**...
+> # Reading Blobs from Walrus  You can read blobs from Walrus and check their status using both the CLI and HTTP API.  ## Using the CLI  ### Read a Blob  ```bash # Read a blob by its blob ID walrus read...
 
 **Subjective grades:**
 - ✅ Shows how to read a blob to stdout and how to save to a file using --out
-  - _The response explicitly shows both `walrus read <BLOB_ID>` for reading to stdout and `walrus read <BLOB_ID> --out output_file.txt` for saving to a file in the CLI section._
+  - _The response explicitly shows both 'walrus read <BLOB_ID>' for stdout and 'walrus read <BLOB_ID> --out <OUTPUT_FILE>' for saving to a file._
 - ✅ Shows how to check blob status by blob ID
-  - _The response includes `walrus blob-status <BLOB_ID>` command in the CLI section, demonstrating how to check blob status by blob ID._
+  - _The response clearly demonstrates 'walrus blob-status <BLOB_ID>' command with explanation that it checks the status of a blob by its ID._
 - ❌ Mentions the consistency check options (--strict-consistency-check or --skip-consistency-check)
-  - _The response does not mention or show the --strict-consistency-check or --skip-consistency-check options anywhere in the documentation._
+  - _The response does not mention or reference --strict-consistency-check or --skip-consistency-check options at all. These flags are not included in any of the command examples or documentation provided._
 
 #### ❌ walrus-cli-json-mode
 
-> # Walrus CLI JSON Mode for CI/CD Automation  JSON mode enables machine-readable output from the Walrus CLI, perfect for scripting and CI/CD pipelines.  ## Enabling JSON Mode  Add the `--json` flag to ...
+> # Walrus CLI JSON Mode for CI/CD Automation  The Walrus CLI supports a `--json` flag that outputs structured JSON responses, making it perfect for automated pipelines.  ## Basic JSON Mode Usage  ```ba...
 
 **Subjective grades:**
 - ❌ Shows a concrete walrus json example with a JSON command object
-  - _The response does not show a `walrus json` command (a dedicated JSON command). Instead, it only demonstrates the `--json` flag added to existing commands like `walrus store --json`. There is no example of a standalone `walrus json` subcommand with a JSON command object._
+  - _The response does not show a `walrus json` command or a JSON command object. It only demonstrates the `--json` flag added to existing commands like `walrus store --json`, `walrus read --json`, and `walrus blob-status --json`. There is no example of a dedicated `walrus json` subcommand or JSON command object structure._
 - ❌ Explains that JSON mode uses camelCase instead of kebab-case
-  - _The response does not explicitly explain or mention the camelCase vs kebab-case naming convention. While example JSON output uses camelCase (e.g., 'newlyCreated', 'blobObject'), there is no explanation contrasting this with kebab-case or discussing naming conventions in JSON mode._
+  - _The response does not explain or mention anything about camelCase vs kebab-case naming conventions. While the JSON output examples shown do use camelCase (e.g., 'newlyCreated', 'blobObject', 'storedEpoch'), this is never explicitly discussed as a feature or characteristic of JSON mode._
 - ✅ Mentions that --json can be added to any standard command for JSON output
-  - _The response clearly states 'Add the `--json` flag to any Walrus CLI command' in the 'Enabling JSON Mode' section and demonstrates this with multiple examples (store, read, blob-status)._
+  - _The response clearly states 'The Walrus CLI supports a `--json` flag that outputs structured JSON responses' and demonstrates it being added to multiple commands (store, read, blob-status). The 'Key Points' table also confirms the flag can be used on 'any Walrus CLI command'._
 
 #### ❌ walrus-cli-configuration
 
-> # Configuring the Walrus CLI Client  The Walrus CLI client uses a configuration file to manage network settings. Here's how to set it up and switch between networks.  ## Configuration File Location  T...
+> # Configuring the Walrus CLI Client  The Walrus CLI client uses a configuration file to determine which network (testnet, mainnet, etc.) to connect to. Here's how to set it up:  ## Configuration File ...
 
 **Subjective grades:**
-- ✅ Shows how to download the config file using curl
-  - _The response includes a curl command to download the testnet configuration file from the official repository under the 'Getting the Correct Configuration' section._
-- ✅ Explains the --context flag for switching between testnet and mainnet
-  - _The response explicitly mentions and demonstrates the --context flag in Option 2, showing examples: 'walrus --context testnet <command>' and 'walrus --context mainnet <command>'._
+- ❌ Shows how to download the config file using curl
+  - _The response does not mention or provide instructions for downloading the config file using curl. It only discusses manually creating or copying config files._
+- ❌ Explains the --context flag for switching between testnet and mainnet
+  - _The response does not mention a --context flag at all. Instead, it recommends using --config flag, multiple config files, shell aliases, and environment-based switching, but never discusses a --context flag._
 - ❌ Mentions the config file search locations (~/.config/walrus/, ~/.walrus/, or current directory)
-  - _The response only mentions ~/.config/walrus/client_config.yaml as the default configuration file location and does not mention ~/.walrus/ or current directory as alternative search locations._
+  - _The response only mentions ~/.config/walrus/ as the default location. It does not mention ~/.walrus/ or current directory as alternative search locations for the config file._
 
 #### ✅ walrus-cli-common-mistakes
 
-> # "Cannot Find Gas Coin for Signer Address" Error  This error means your wallet doesn't have enough SUI tokens to pay for the transaction gas fees. Here's how to diagnose and fix it:  ## Common Causes...
+> # "Cannot find gas coin for signer address" Error  This error means your wallet address doesn't have enough SUI tokens or WAL tokens to pay for the blob storage transaction. Here's how to diagnose and...
 
 **Subjective grades:**
 - ✅ Explains that the wallet needs SUI for gas fees
-  - _The response explicitly states 'This error means your wallet doesn't have enough SUI tokens to pay for the transaction gas fees' in the opening, and provides multiple sections explaining SUI requirements for gas._
+  - _The response explicitly states 'Every transaction on Sui requires SUI for gas fees' in section 1, and provides clear commands to check SUI balance and obtain it from the faucet._
 - ✅ Mentions that WAL tokens are also needed for storage payment
-  - _Section 6 'Walrus-Specific: Insufficient WAL + SUI' explicitly states 'When storing blobs with Walrus, you need both: SUI — for gas fees, WAL — for storage payment' with code examples showing how to check WAL balance._
+  - _Section 2 explicitly states 'Walrus blob storage requires WAL tokens to pay for storage epochs' and provides commands to check and obtain WAL tokens._
 - ✅ Provides a solution: fund the address with SUI (and on testnet, mention the faucet)
-  - _The response provides multiple funding solutions including the testnet faucet command 'sui client faucet', devnet faucet URL, and mainnet exchange purchase instructions. The Quick Diagnostic Checklist and Walrus-Specific Example both demonstrate faucet usage._
+  - _The response provides multiple solutions including `sui client faucet` for testnet SUI funding and `walrus get-wal` for WAL tokens, with explicit mention that these are for testnet. A complete workflow is also provided at the end._
 
 </details>
 
 <details><summary><b>sonnet</b>: 0/9 evals passed (0%)</summary>
 
 - Deterministic checks: 0/0 (–)
-- Subjective grades: 13/27 (48%)
+- Subjective grades: 10/27 (37%)
 
 #### ❌ walrus-overview-what-is-walrus
 
-> # Walrus: Decentralized Storage on Sui  ## What is Walrus?  Walrus is a **decentralized blob storage and availability system** designed specifically for storing large binary objects (blobs) — such as ...
+> # Walrus: Decentralized Storage on Sui  ## What is Walrus?  Walrus is a **decentralized blob storage and availability system** built specifically for the Sui blockchain. It is designed to store large ...
 
 **Subjective grades:**
 - ❌ Explains the three-layer architecture: client layer, storage node layer, and Sui blockchain layer
-  - _While the response describes storage nodes and Sui's role, it does not explicitly identify or label a 'three-layer architecture' with these three distinct layers named as such. The response discusses components but does not frame them as a formal three-layer architecture._
+  - _While the response describes storage nodes and Sui's role, it does not explicitly identify or name a 'three-layer architecture' with a clear 'client layer' as a distinct architectural component. The architecture is implied but not formally structured as requested._
 - ❌ Mentions that blobs are public by default and encryption is needed for privacy
-  - _The response does not mention anything about blobs being public by default or discuss encryption requirements for privacy. This topic is entirely absent._
+  - _The response does not mention that blobs are public by default or discuss encryption requirements for privacy. This information is completely absent._
 - ✅ Explains that storage is time-limited and measured in epochs
-  - _The response explicitly states 'Storage epochs define time periods for which storage is guaranteed' and mentions storage periods in the context of PoA certificates, clearly indicating storage is time-limited and epoch-based._
+  - _The response explicitly states 'Storage is organized into epochs. Users pay for storage for a defined number of epochs' and mentions that storage is 'time-limited' through the epoch mechanism._
 
 #### ❌ walrus-overview-blob-id-vs-object-id
 
-> # Blob ID vs Sui Object ID in Walrus  These are two **distinct identifiers** that serve completely different purposes. Let me break them down clearly.  ---  ## Blob ID  The **blob ID is a cryptographi...
+> # Blob ID vs Sui Object ID in Walrus  These are two distinct identifiers that serve completely different purposes. Let me break it down clearly.  ---  ## Blob ID  The **blob ID** is a **content-derive...
 
 **Subjective grades:**
 - ✅ Explains that the same content uploaded twice produces the same blob ID but different Sui object IDs
-  - _The response explicitly demonstrates this in the 'Same file uploaded twice' scenario section, showing Upload #1 and Upload #2 both producing the same blob ID (0x4a7b3c...) but different Sui object IDs (0x9f2e1a... vs 0x7c3b2f...). This is also reinforced in the comparison table._
+  - _The response explicitly states this in the 'Practical Example' section with Alice and Bob storing 'Hello World', showing they get the same blob ID (0xABCD...) but different Sui object IDs (0x1111... and 0x2222...). This is also mentioned in the confusion points section._
 - ✅ Clarifies that blob ID is used for reading content while Sui object ID is used for lifecycle operations like extend and delete
-  - _The response clearly states 'Use BLOB ID to READ data' with a readBlob example, and 'Use SUI OBJECT ID for on-chain operations' with an extendBlob example. The key characteristics sections also explicitly mention blob ID is for 'retrieve data' while Sui object ID is for 'on-chain operations (extend, delete, transfer)'._
+  - _The response clearly states 'You use the blob ID to READ data from Walrus' and 'You use the Sui object ID for on-chain operations' which includes extend, transfer, delete. The comparison table explicitly contrasts 'Fetching data from storage nodes' vs 'On-chain operations'._
 - ❌ Shows or describes the format difference: URL-safe base64 for blob ID vs 0x hex for object ID
-  - _The response shows example formats (0x4a7b3c... for blob ID and 0x9f2e1a... for Sui object ID) but does not explicitly state or describe the format difference. Both examples are shown in 0x hex format, and there is no mention of URL-safe base64 encoding for blob IDs or any explanation of the actual format specifications._
+  - _The response mentions both are '32-byte values' and describes blob ID as 'often shown in base64/hex' and Sui object ID as '32 bytes, hex', but does not explicitly specify that blob ID uses URL-safe base64 format specifically, nor does it clearly differentiate the standard format representations between the two._
 
 #### ❌ walrus-overview-tool-selection
 
-> ## Uploading Files to Walrus from a TypeScript Web App  For a TypeScript web app, you should use the **Walrus TypeScript/JavaScript SDK** (`@mysten/walrus`).  ---  ## Installation  ```bash npm install...
+> ## Uploading Files to Walrus from a TypeScript Web App  For a TypeScript web app, you should use the **Walrus TypeScript/JavaScript SDK** (`@mysten/walrus`). This is the recommended approach for brows...
 
 **Subjective grades:**
 - ✅ Recommends the TypeScript SDK as the primary tool for this use case
-  - _The response clearly and explicitly recommends the TypeScript/JavaScript SDK (@mysten/walrus) as the primary tool in the opening sentence and throughout the documentation._
+  - _The response clearly recommends '@mysten/walrus' TypeScript/JavaScript SDK as the primary tool, stating it is 'the recommended approach for browser-based applications' and provides installation, setup, and usage examples._
 - ❌ Mentions the upload relay as needed for browser-based uploads since browsers cannot directly connect to storage nodes
-  - _The response does not mention the upload relay at all. While it claims the SDK is 'browser compatible' and 'works directly in web apps', it does not explain the role of the upload relay in handling browser uploads to Walrus, which is a critical technical detail for this use case._
+  - _The response does not mention the upload relay at all. While it discusses using the SDK in a browser context and mentions 'This approach works entirely in the browser', it fails to explicitly explain the role of the upload relay or why it is necessary for browser-based uploads._
 - ✅ Does not recommend the CLI or HTTP API as the primary tool for a TypeScript web app
-  - _The response does not recommend the CLI or HTTP API as primary tools. It explicitly states 'No CLI needed' and focuses entirely on the TypeScript SDK as the solution._
+  - _The response does not mention or recommend the CLI or HTTP API as primary tools. It exclusively recommends the TypeScript SDK as the solution for this use case._
 
 #### ❌ walrus-overview-vs-s3
 
-> # Walrus vs AWS S3: A Comparison  ## What is Walrus?  Walrus is a **decentralized storage network** built on Sui blockchain, designed for storing large binary objects (blobs) with cryptographic guaran...
+> # Walrus vs AWS S3: A Comparison  ## What is Walrus?  Walrus is a **decentralized storage network** built on Sui blockchain that uses erasure coding to store data across multiple independent storage n...
 
 **Subjective grades:**
-- ✅ Highlights that Walrus data is public by default while S3 is private by default
-  - _The comparison table explicitly states 'Public by default, on-chain logic' for Walrus and 'IAM policies, private by default' for S3. This distinction is clearly articulated._
+- ❌ Highlights that Walrus data is public by default while S3 is private by default
+  - _The response does not explicitly state that Walrus data is public by default or compare the default privacy models between Walrus and S3. While the response mentions 'Permissioning' differences, it does not clearly address the public vs. private nature of data storage in each system._
 - ❌ Mentions that Walrus storage is time-limited (max ~2 years) while cloud storage is indefinite
-  - _The response mentions epochs and that users 'pay for storage duration in epochs (not ongoing)' with an example of '52 epochs (~1 year of storage)', but does not explicitly state the maximum time limit for Walrus storage (approximately 2 years) or contrast this with S3's indefinite storage capability._
+  - _The response mentions that storage is 'time-bounded' and uses 'Storage Epoch' concepts, noting that 'After epochs expire, nodes are not obligated to retain data.' However, it does not explicitly state the maximum duration (~2 years) or clearly contrast this with S3's indefinite storage capability._
 - ✅ Recommends Walrus for use cases needing censorship resistance, verifiability, or decentralized availability
-  - _The response explicitly recommends Walrus for: (1) censorship-resistant publishing with examples like whistleblowing documents, (2) smart contract verified content with on-chain availability proofs, (3) NFTs with verifiable integrity, and (4) DeFi protocol data with integrity proofs. These directly address censorship resistance, verifiability, and decentralized availability._
+  - _The response explicitly recommends Walrus for censorship resistance (section 'Censorship-Resistant Publishing'), verifiability ('Immutable Data Archival' and 'Cryptographic proof'), and decentralized availability ('Trustless Multi-Party Systems' and 'Decentralized Applications'). These recommendations are clearly stated throughout the 'When to Use Walrus' section._
 
 #### ❌ walrus-cli-store-blob
 
-> # Storing a File on Walrus Using the CLI  You can store a file on Walrus using the `walrus store` command. Here are the main ways to do it:  ## Basic Store Command  ```bash walrus store <FILE_PATH> ``...
+> # Storing a File on Walrus Using the CLI  ## Basic Store Command  ```bash walrus store <FILE_PATH> ```  ### Example ```bash walrus store myfile.txt ```  ---  ## Common Options  | Option | Description ...
 
 **Subjective grades:**
 - ✅ Shows a concrete example command like 'walrus store myfile.png --epochs 5'
-  - _The response includes the concrete example 'walrus store myfile.txt --epochs 5' which matches the expected format._
+  - _The response includes the exact example 'walrus store myfile.txt --epochs 5' which matches the required format._
 - ❌ Mentions that --epochs is mandatory with no default
-  - _The response explicitly states '--epochs <N>' has a 'default is 1', which contradicts the expectation that it is mandatory with no default._
+  - _The response explicitly states '--epochs <N> | Number of epochs to store the file (default: 1)' indicating it has a default value of 1, contradicting the expectation that it is mandatory with no default._
 - ❌ Mentions the difference between --deletable (default) and --permanent
-  - _The response does not mention or discuss --deletable or --permanent flags at all._
+  - _The response mentions '--deletable' as an option but does not mention '--permanent' at all, nor does it explain the difference between them or state which is the default._
 
 #### ❌ walrus-cli-read-blob
 
-> # Reading a Blob from Walrus and Checking Its Status  ## Overview  Walrus provides two main ways to interact with blobs: 1. **Publisher/Aggregator REST API** - Simple HTTP endpoints 2. **Walrus Client...
+> # Reading a Blob from Walrus and Checking Its Status  ## Overview  Walrus provides two main ways to read blobs and check their status: 1. **Aggregator API** - for reading blob content 2. **Publisher/N...
 
 **Subjective grades:**
 - ❌ Shows how to read a blob to stdout and how to save to a file using --out
-  - _The response shows REST API curl commands and a CLI command 'walrus blob-status' but does not explicitly show a 'walrus read' or 'walrus blob read' command with --out flag for saving to a file. The curl examples are for REST API, not the CLI tool with --out option._
-- ✅ Shows how to check blob status by blob ID
-  - _The response clearly shows the 'walrus blob-status --blob-id <BLOB_ID>' command in section 2, with example output and explanation._
+  - _The response shows TypeScript SDK methods (walrusClient.readBlob) and curl commands, but does not show the CLI commands 'walrus read' with --out flag for saving to a file. The expected output specifically requests CLI command examples, not SDK code._
+- ❌ Shows how to check blob status by blob ID
+  - _The response shows TypeScript SDK method (getBlobWithStatus) and curl API endpoints, but does not show the 'walrus blob-status' CLI command with blob ID parameter as explicitly requested in the expected output._
 - ❌ Mentions the consistency check options (--strict-consistency-check or --skip-consistency-check)
-  - _The response does not mention or reference --strict-consistency-check or --skip-consistency-check options anywhere in the documentation._
+  - _The response does not mention or show either --strict-consistency-check or --skip-consistency-check flags anywhere in the documentation._
 
 #### ❌ walrus-cli-json-mode
 
-> # Using Walrus JSON Mode in CI/CD Pipelines  JSON mode makes Walrus output machine-parseable, perfect for automation scripts.  ## Enabling JSON Mode  Add the `--json` flag to any Walrus CLI command:  ...
+> # Using Walrus JSON Mode in CI/CD Pipelines  JSON mode makes Walrus output machine-parseable, perfect for automation scripts and CI/CD pipelines.  ## Basic JSON Flag  Add `--json` to any Walrus CLI co...
 
 **Subjective grades:**
 - ❌ Shows a concrete walrus json example with a JSON command object
-  - _The response demonstrates the --json flag added to standard commands (e.g., `walrus --json store`), but does not show a separate `walrus json` command with a JSON command object as a distinct feature. The expectation requires a concrete example of a `walrus json` subcommand, which is not present._
+  - _The response does not show a `walrus json` command (a JSON command object). It only shows the `--json` flag added to standard commands like `walrus store`, `walrus read`, and `walrus blob-status`. There is no demonstration of a dedicated `walrus json` command._
 - ❌ Explains that JSON mode uses camelCase instead of kebab-case
-  - _The response shows camelCase in JSON output examples (e.g., `newlyCreated`, `blobObject`, `blobId`, `storedEpoch`) but never explicitly explains or mentions that JSON mode uses camelCase instead of kebab-case. This distinction is not stated anywhere in the response._
+  - _The response does not explain the camelCase vs kebab-case distinction. While the JSON output examples contain camelCase fields (e.g., `newlyCreated`, `blobObject`, `storedEpoch`), there is no explicit explanation of this naming convention or comparison to kebab-case._
 - ✅ Mentions that --json can be added to any standard command for JSON output
-  - _The response explicitly states 'Add the `--json` flag to any Walrus CLI command' in the 'Enabling JSON Mode' section and demonstrates this pattern across multiple commands (store, read, blob-status, info)._
+  - _The response explicitly states 'Add `--json` to any Walrus CLI command' and provides multiple examples demonstrating this pattern (store, read, blob-status commands all use --json)._
 
 #### ❌ walrus-cli-configuration
 
@@ -357,23 +285,23 @@
 
 **Subjective grades:**
 - ❌ Shows how to download the config file using curl
-  - _The response does not include any instructions or examples for downloading the config file using curl. It only shows the file location and structure._
-- ✅ Explains the --context flag for switching between testnet and mainnet
-  - _The response explicitly explains the --context CLI flag under 'Option 3: Use --context CLI flag' with clear examples showing how to use it to switch between networks._
+  - _The response does not mention or provide any curl command to download the config file. It only explains manual configuration file creation._
+- ❌ Explains the --context flag for switching between testnet and mainnet
+  - _The response uses the --config flag instead of a --context flag. There is no mention of a --context flag for switching between networks._
 - ❌ Mentions the config file search locations (~/.config/walrus/, ~/.walrus/, or current directory)
-  - _The response only mentions one config file location (~/.config/walrus/client_config.yaml) and does not mention ~/.walrus/ or the current directory as alternative search locations._
+  - _The response only mentions ~/.config/walrus/ as the configuration file location. It does not mention ~/.walrus/ or current directory as alternative search locations._
 
 #### ❌ walrus-cli-common-mistakes
 
-> ## "Cannot find gas coin for signer address" Error  This error means your wallet **doesn't have enough SUI tokens** to pay for the transaction gas fees.  ---  ## Common Causes & Solutions  ### 1. 🪙 W...
+> ## "Cannot find gas coin for signer address" Error  This error means the wallet/address you're using to sign the transaction **has no SUI tokens** to pay for gas fees.  ## Root Causes  1. **Empty wall...
 
 **Subjective grades:**
 - ✅ Explains that the wallet needs SUI for gas fees
-  - _The response clearly states 'your wallet doesn't have enough SUI tokens to pay for the transaction gas fees' and provides multiple sections explaining this requirement._
+  - _The response clearly states in the first line that the error means 'the wallet/address you're using to sign the transaction **has no SUI tokens** to pay for gas fees.' This is explicitly mentioned multiple times throughout._
 - ❌ Mentions that WAL tokens are also needed for storage payment
-  - _The response does not mention WAL tokens at all. It focuses exclusively on SUI for gas fees and does not address storage payment requirements with WAL tokens._
+  - _The response does not mention WAL tokens at all. It only discusses SUI tokens for gas fees. There is no reference to WAL tokens being required for storage payment on Walrus or any blob storage operation._
 - ✅ Provides a solution: fund the address with SUI (and on testnet, mention the faucet)
-  - _The response provides multiple solutions including checking balance, switching addresses, and specifically mentions the testnet faucet with both CLI and web methods for obtaining SUI._
+  - _The response provides multiple solutions for funding the wallet, including explicit faucet commands for testnet (`sui client faucet`) and the testnet faucet URL, as well as devnet faucet instructions._
 
 </details>
 
@@ -383,413 +311,139 @@
 
 | Prompt | Source Page | gpt4o | opus | sonnet |
 |--------|-----------|:------:|:------:|:------:|
-| automated-address-management | develop/manage-packages/automated-address-management | ❌ 5/6 | ❌ 5/6 | ✅ 6/6 |
-| common-errors | develop/testing-debugging/common-errors | ❌ 5/6 | ✅ 6/6 | ✅ 6/6 |
-| custom-policies | develop/publish-upgrade-packages/custom-policies | ❌ 5/6 | ✅ 6/6 | ✅ 6/6 |
-| data-serving | develop/accessing-data/data-serving | ❌ 5/6 | ✅ 6/6 | ✅ 6/6 |
-| display-overview | develop/objects/display/display-overview | ❌ 5/6 | ✅ 6/6 | ✅ 6/6 |
-| gas-smashing | develop/transaction-payment/gas-smashing | ❌ 5/6 | ✅ 6/6 | ✅ 6/6 |
-| hello-world | getting-started/onboarding/hello-world | ✅ 7/7 | ✅ 7/7 | ✅ 7/7 |
-| move-package-management | develop/manage-packages/move-package-management | ❌ 6/7 | ✅ 7/7 | ❌ 6/7 |
-| observability | operators/observability | ❌ 5/6 | ✅ 6/6 | ✅ 6/6 |
-| ptb-inputs-results | develop/transactions/ptbs/inputs-and-results | ❌ 3/7 | ✅ 7/7 | ✅ 7/7 |
-| publish-overview | develop/publish-upgrade-packages/index | ❌ 5/7 | ✅ 7/7 | ✅ 7/7 |
-| query-with-graphql | develop/accessing-data/graphql/query-with-graphql | ❌ 6/7 | ✅ 7/7 | ✅ 7/7 |
-| scenario-testing | getting-started/examples/scenario-testing | ❌ 2/7 | ✅ 7/7 | ❌ 6/7 |
-| sui-install | getting-started/onboarding/sui-install | ✅ 6/6 | ✅ 6/6 | ✅ 6/6 |
-| testing | develop/testing-debugging/testing | ❌ 3/6 | ✅ 6/6 | ✅ 6/6 |
-| upgrade | develop/publish-upgrade-packages/upgrade | ❌ 5/7 | ❌ 6/7 | ✅ 7/7 |
-| using-grpc | develop/accessing-data/grpc/using-grpc | ❌ 4/6 | ✅ 6/6 | ❌ 5/6 |
-| walrus-sites | sui-stack/walrus/sui-stack-walrus-sites | ❌ 4/7 | ✅ 7/7 | ✅ 7/7 |
-| walrus-storage | sui-stack/walrus/sui-stack-walrus | ❌ 5/7 | ❌ 6/7 | ❌ 6/7 |
+| automated-address-management | develop/manage-packages/automated-address-management | ⚠️ | ❌ 5/6 | ❌ 5/6 |
+| common-errors | develop/testing-debugging/common-errors | ⚠️ | ✅ 6/6 | ✅ 6/6 |
+| custom-policies | develop/publish-upgrade-packages/custom-policies | ⚠️ | ✅ 6/6 | ✅ 6/6 |
+| data-serving | develop/accessing-data/data-serving | ⚠️ | ✅ 6/6 | ❌ 2/6 |
+| display-overview | develop/objects/display/display-overview | ⚠️ | ✅ 6/6 | ✅ 6/6 |
+| gas-smashing | develop/transaction-payment/gas-smashing | ⚠️ | ❌ 5/6 | ✅ 6/6 |
+| hello-world | getting-started/onboarding/hello-world | ⚠️ | ✅ 7/7 | ✅ 7/7 |
+| move-package-management | develop/manage-packages/move-package-management | ⚠️ | ✅ 7/7 | ✅ 7/7 |
+| observability | operators/observability | ⚠️ | ✅ 6/6 | ✅ 6/6 |
+| ptb-inputs-results | develop/transactions/ptbs/inputs-and-results | ⚠️ | ✅ 7/7 | ✅ 7/7 |
+| publish-overview | develop/publish-upgrade-packages/index | ⚠️ | ✅ 7/7 | ✅ 7/7 |
+| query-with-graphql | develop/accessing-data/graphql/query-with-graphql | ⚠️ | ✅ 7/7 | ✅ 7/7 |
+| scenario-testing | getting-started/examples/scenario-testing | ⚠️ | ✅ 7/7 | ✅ 7/7 |
+| sui-install | getting-started/onboarding/sui-install | ⚠️ | ✅ 6/6 | ✅ 6/6 |
+| testing | develop/testing-debugging/testing | ⚠️ | ✅ 6/6 | ✅ 6/6 |
+| upgrade | develop/publish-upgrade-packages/upgrade | ⚠️ | ❌ 6/7 | ✅ 7/7 |
+| using-grpc | develop/accessing-data/grpc/using-grpc | ⚠️ | ✅ 6/6 | ❌ 5/6 |
+| walrus-sites | sui-stack/walrus/sui-stack-walrus-sites | ⚠️ | ✅ 7/7 | ✅ 7/7 |
+| walrus-storage | sui-stack/walrus/sui-stack-walrus | ⚠️ | ❌ 6/7 | ❌ 6/7 |
 
 ### Per-Model Detail
 
-<details><summary><b>gpt4o</b>: 2/19 prompts passed (11%)</summary>
+<details><summary><b>gpt4o</b>: 0/19 prompts passed (0%)</summary>
 
-- Deterministic checks: 44/48 (92%)
-- Subjective grades: 47/75 (63%)
+- Deterministic checks: 0/0 (–)
+- Subjective grades: 0/0 (–)
 
-#### ✅ sui-install
+#### ⚠️ sui-install
 **Page:** getting-started/onboarding/sui-install
 
-> To set up your machine for Sui development, follow these detailed instructions:  1. **Install Sui CLI**:    Open your terminal and run the following command to install the Sui CLI. This will download and execute the installation script for `suiup`, w...
+**Error:** `429 Rate limit reached for gpt-4o in organization org-Ymxfd9U0oHgQvWY3NcUtRd0M on tokens per min (TPM): Limit 30000, Used 30000, Requested 212. Please try again in 424ms. Visit https://platform.openai.com/account/rate-limits to learn more.`
 
-**Deterministic checks:**
-- ✅ `contains`: Found "suiup"
-- ✅ `contains`: Found "sui client"
-- ✅ `regex`: Matched /faucet/i
-
-**Subjective grades:**
-- ✅ Provides a clear step-by-step setup sequence starting with installing suiup
-  - _The response provides a well-organized 5-step sequence beginning with the exact curl command for installing suiup, followed by installing sui@testnet, generating keys, funding the address, and verification._
-- ✅ Mentions generating keys or wallet configuration
-  - _Step 3 explicitly states 'Generate Keys and Configure Sui Client' and includes the `sui client` command with clear explanation that it will 'generate the default keypair' and 'output your new address.'_
-- ✅ Includes instructions about funding the address with test tokens
-  - _Step 4 explicitly provides faucet.sui.io instructions and clearly directs the user to enter their generated address and request test token funding. However, the prompt specifically asks to 'prompt me to visit faucet.sui.io' - the response informs the user to visit but does not explicitly prompt/ask the user as a direct call-to-action (e.g., 'Please now visit...' or 'Would you like me to...?'). The instruction is provided but lacks the interactive prompting element requested._
-
-#### ✅ hello-world
+#### ⚠️ hello-world
 **Page:** getting-started/onboarding/hello-world
 
-> To accomplish this task, we will clone the `sui-stack-hello-world` repository, build, and publish the Move package to the Sui Testnet. Then, we'll call the package's entry function, and finally inspect the resulting transaction on SuiVision. Follow t...
+**Error:** `429 Rate limit reached for gpt-4o in organization org-Ymxfd9U0oHgQvWY3NcUtRd0M on tokens per min (TPM): Limit 30000, Used 30000, Requested 178. Please try again in 356ms. Visit https://platform.openai.com/account/rate-limits to learn more.`
 
-**Deterministic checks:**
-- ✅ `contains`: Found "sui-stack-hello-world"
-- ✅ `regex`: Matched /sui\s+(move\s+)?build|sui\s+client\s+publish/i
-- ✅ `regex`: Matched /suivision|SuiVision/i
-
-**Subjective grades:**
-- ✅ Provides the git clone command for the repo
-  - _Step 1 explicitly provides the correct git clone command: `git clone https://github.com/MystenLabs/sui-stack-hello-world.git`_
-- ✅ Shows the build and publish commands
-  - _Step 2 shows `sui move build` and Step 3 shows `sui client publish --gas-budget <GAS_BUDGET>` for building and publishing to Testnet_
-- ✅ Explains how to call the entry function after publishing
-  - _Step 4 provides the `sui client call` command with package-id, module-name, function-name parameters to call the entry function_
-- ✅ Mentions viewing the result on SuiVision or a block explorer
-  - _Step 5 explicitly instructs to go to SuiVision Testnet Explorer and search for the transaction digest to view results_
-
-#### ❌ testing
+#### ⚠️ testing
 **Page:** develop/testing-debugging/testing
 
-> To add Move unit tests for a Sui package, you need to follow these steps. I'll guide you through each step with code examples to cover public functions, including success, unauthorized, and edge case scenarios.  ### Step 1: Set Up Your Testing Enviro...
+**Error:** `429 Rate limit reached for gpt-4o in organization org-Ymxfd9U0oHgQvWY3NcUtRd0M on tokens per min (TPM): Limit 30000, Used 30000, Requested 146. Please try again in 292ms. Visit https://platform.openai.com/account/rate-limits to learn more.`
 
-**Deterministic checks:**
-- ✅ `contains`: Found "#[test]"
-- ❌ `regex`: No match for /test_scenario|unit_test/i
-
-**Subjective grades:**
-- ✅ Shows the #[test] attribute pattern for writing Sui Move tests
-  - _The response explicitly demonstrates #[test] attribute usage in multiple code examples (test_transfer_coin_success, test_admin_only_function_unauthorized, test_transfer_coin_with_zero_amount)._
-- ✅ Explains or demonstrates success-case testing patterns
-  - _The response includes a dedicated 'Test for Successful Execution' section with test_transfer_coin_success that demonstrates setting up mocks, calling functions, and asserting expected outcomes._
-- ❌ Mentions #[expected_failure] or assert macros for failure testing
-  - _The response uses #[should_fail] attribute instead of #[expected_failure], and while it mentions assert! in comments, it does not explicitly demonstrate assert! macros for failure testing in the actual test code examples._
-- ❌ References test_scenario or unit_test module for Sui-specific testing
-  - _The response does not reference test_scenario or unit_test modules. It uses non-standard imports like 'use 0x1::Test' and 'MockTxContext' which are not documented Sui testing frameworks, and makes no mention of the official Sui test_scenario module._
-
-#### ❌ scenario-testing
+#### ⚠️ scenario-testing
 **Page:** getting-started/examples/scenario-testing
 
-> Creating scenario tests for a Sui workflow involves simulating different interactions with the blockchain, such as multiple users participating, the transfer of objects between owners, and intentionally causing transaction failures to verify robustne...
+**Error:** `429 Rate limit reached for gpt-4o in organization org-Ymxfd9U0oHgQvWY3NcUtRd0M on tokens per min (TPM): Limit 30000, Used 30000, Requested 152. Please try again in 304ms. Visit https://platform.openai.com/account/rate-limits to learn more.`
 
-**Deterministic checks:**
-- ✅ `contains`: Found "test_scenario"
-- ✅ `regex`: Matched /#\[test\]/i
-- ❌ `regex`: No match for /next_tx|next_epoch/i
-
-**Subjective grades:**
-- ❌ Uses or references sui::test_scenario for multi-transaction workflows
-  - _The response mentions 'scenario tests' generically but never explicitly references or uses the sui::test_scenario module, which is the standard Sui framework for multi-transaction testing. The Move code examples do not import or utilize test_scenario._
-- ❌ Shows how to switch between different senders/users in a scenario
-  - _While the response creates multiple test accounts (alice, bob) using a non-existent TestAccount API, it does not demonstrate the actual sui::test_scenario mechanism for switching senders between transactions (e.g., ctx.next_tx(sender))._
-- ❌ Demonstrates testing object ownership or state changes across transactions
-  - _The code shows ownership changes within a single test function but does not demonstrate state persistence and verification across multiple sequential transactions, which is what sui::test_scenario enables._
-- ❌ Mentions or shows expected-failure patterns (e.g., #[expected_failure] or abort codes)
-  - _While the response includes a commented reference to 'assert_abort_code!' and mentions error codes, it does not show actual #[expected_failure] attribute usage or demonstrate proper abort code verification patterns that would be used in Sui Move tests._
-
-#### ❌ common-errors
+#### ⚠️ common-errors
 **Page:** develop/testing-debugging/common-errors
 
-> To debug a Sui transaction failure effectively, you'll need to follow a systematic approach to inspect the key components involved in the transaction. Here's how you can proceed:  ### Step 1: Gather Information First, you'll want to gather detailed i...
+**Error:** `429 Rate limit reached for gpt-4o in organization org-Ymxfd9U0oHgQvWY3NcUtRd0M on tokens per min (TPM): Limit 30000, Used 30000, Requested 158. Please try again in 316ms. Visit https://platform.openai.com/account/rate-limits to learn more.`
 
-**Deterministic checks:**
-- ✅ `regex`: Matched /object|version|ownership/i
-- ✅ `regex`: Matched /gas|budget/i
-
-**Subjective grades:**
-- ✅ Provides a systematic debugging approach for Sui transaction failures
-  - _Response includes a clear 7-step systematic approach (Gather Information, Inspect Object References, Check Gas Object, Validate Ownership, Check Errors, Suggested Fixes, Retest)_
-- ✅ Mentions checking object versions and ownership as common failure sources
-  - _Step 2 explicitly checks object versions and versions matching. Step 4 validates ownership. Both are clearly identified as potential issues._
-- ✅ Discusses gas-related issues (insufficient gas, gas coin conflicts)
-  - _Step 3 dedicates a section to checking gas objects, verifying sufficient SUI balance, and ownership. 'Insufficient Gas' is also mentioned in Step 5 error types._
-- ❌ Suggests concrete fixes rather than just diagnosis
-  - _The 'Minimal Code/PTB Change Example' provides a Move function that doesn't address actual Sui transaction debugging fixes. The code snippet uses a non-existent `fetch_object` function and doesn't show PTB adjustments or concrete transaction-level changes. Fixes listed are generic (update versions, increase gas, transfer ownership) without concrete implementation examples for the actual transaction/PTB structure._
-
-#### ❌ publish-overview
+#### ⚠️ publish-overview
 **Page:** develop/publish-upgrade-packages/index
 
-> Certainly! Preparing a package for Mainnet publishing on the Sui blockchain involves several crucial steps to ensure everything is in order. Here's a comprehensive checklist to follow:  ### 1. **Verify Tests**  - **Write and Run Unit Tests**: Ensure ...
+**Error:** `429 Rate limit reached for gpt-4o in organization org-Ymxfd9U0oHgQvWY3NcUtRd0M on tokens per min (TPM): Limit 30000, Used 30000, Requested 162. Please try again in 324ms. Visit https://platform.openai.com/account/rate-limits to learn more.`
 
-**Deterministic checks:**
-- ❌ `regex`: No match for /sui\s+client\s+publish|sui\s+move\s+build/i
-- ✅ `regex`: Matched /UpgradeCap|upgrade/i
-- ✅ `regex`: Matched /mainnet|Mainnet/i
-
-**Subjective grades:**
-- ✅ Includes a checklist or step-by-step process for publishing
-  - _The response includes a comprehensive checklist under 'Launch Checklist Production' with checkboxes for each major item, and uses numbered sections (1-7) providing a clear step-by-step process._
-- ✅ Mentions verifying tests pass before publishing
-  - _Section 1 'Verify Tests' explicitly covers running tests with `sui move test`, and the checklist includes '[ ] All tests pass' as the first item._
-- ❌ Discusses the UpgradeCap and upgrade policy considerations
-  - _Section 4 mentions 'Upgrade Policy' and defines upgrade policies generally, but does not explicitly mention 'UpgradeCap' (the actual Sui primitive object that controls package upgrades) or provide specific technical guidance on how to handle the UpgradeCap object._
-- ✅ Addresses gas requirements or cost estimation
-  - _Section 5 'Gas Requirements' explicitly addresses estimating gas consumption with example CLI command and mentions budgeting gas for initial deployment and ongoing execution._
-
-#### ❌ upgrade
+#### ⚠️ upgrade
 **Page:** develop/publish-upgrade-packages/upgrade
 
-> To prepare an upgrade for a published Sui package, you must follow specific steps carefully to ensure compatibility and a smooth upgrade process. The process involves checking compatibility rules, building the upgrade transaction, identifying the `Up...
+**Error:** `429 Rate limit reached for gpt-4o in organization org-Ymxfd9U0oHgQvWY3NcUtRd0M on tokens per min (TPM): Limit 30000, Used 30000, Requested 162. Please try again in 324ms. Visit https://platform.openai.com/account/rate-limits to learn more.`
 
-**Deterministic checks:**
-- ✅ `contains`: Found "UpgradeCap"
-- ✅ `regex`: Matched /compatible|additive|dependency/i
-- ✅ `regex`: Matched /sui\s+client\s+upgrade/i
-
-**Subjective grades:**
-- ✅ Explains the role of the UpgradeCap object
-  - _Step 3 explicitly states: 'The UpgradeCap is a special object that grants permission to upgrade a package on Sui' and provides instructions for identifying it._
-- ❌ Describes compatibility rules for package upgrades (compatible, additive, or dependency-only)
-  - _Step 1 mentions generic compatibility concepts (interface, data structures, initialization) but does not explicitly describe the three specific Sui upgrade policy types: compatible, additive, or dependency-only. These technical categories are not mentioned._
-- ✅ Shows the upgrade command or transaction construction
-  - _Step 4 provides the CLI command: 'sui client upgrade --package-id <current_package_id> --cap <upgrade_cap_id>' which demonstrates upgrade transaction construction._
-- ❌ Mentions that the original package version is preserved on-chain
-  - _The response does not mention or explain that the original package version remains on-chain after an upgrade. This is a key aspect of Sui's upgrade mechanism that is completely absent._
-
-#### ❌ custom-policies
+#### ⚠️ custom-policies
 **Page:** develop/publish-upgrade-packages/custom-policies
 
-> Creating an operator runbook for package upgrades and admin actions on the Sui blockchain involves several detailed steps. This runbook will guide you through the required capabilities, signer and custody steps, exact commands needed, verification pr...
+**Error:** `429 Rate limit reached for gpt-4o in organization org-Ymxfd9U0oHgQvWY3NcUtRd0M on tokens per min (TPM): Limit 30000, Used 30000, Requested 161. Please try again in 322ms. Visit https://platform.openai.com/account/rate-limits to learn more.`
 
-**Deterministic checks:**
-- ✅ `regex`: Matched /UpgradeCap|AdminCap|cap/i
-- ✅ `regex`: Matched /multisig|multi-sig|custody/i
-
-**Subjective grades:**
-- ✅ Provides a structured runbook format with clear steps
-  - _Response uses a well-organized numbered format with clear sections (Preparation, Signer/Custody Steps, Package Upgrade Steps, Verification, Rollback Plan, Communication Plan) that follow a logical progression for executing package upgrades._
-- ✅ Addresses capability (Cap) management and access control
-  - _Response explicitly identifies and names required capabilities (`UpgradeCapability` and `AdminCapability`), describes their purposes, and specifies that the signer must possess the `UpgradeCapability` for upgrades._
-- ✅ Includes verification steps to confirm operations succeeded
-  - _Section 4 explicitly covers verification with specific commands (`sui client package --object-id <package_id>`) and instructions to validate new functionalities through test transactions._
-- ❌ Mentions security considerations such as multisig, key management, or custody
-  - _While multisig is mentioned once in passing ('if multisig is employed'), there are no concrete details about multisig implementation, key management best practices, custody solutions beyond a parenthetical reference to ledger devices, or security protocols. Custody considerations are referenced minimally without actionable security guidance._
-
-#### ❌ display-overview
+#### ⚠️ display-overview
 **Page:** develop/objects/display/display-overview
 
-> To migrate from Display V1 to Display V2 and incorporate the `display_registry` pattern on the Sui blockchain, you will need to modify the Move code in your package. Follow these steps to successfully perform the migration:  ### Step 1: Understanding...
+**Error:** `429 Rate limit reached for gpt-4o in organization org-Ymxfd9U0oHgQvWY3NcUtRd0M on tokens per min (TPM): Limit 30000, Used 30000, Requested 146. Please try again in 292ms. Visit https://platform.openai.com/account/rate-limits to learn more.`
 
-**Deterministic checks:**
-- ✅ `regex`: Matched /Display|display/i
-- ✅ `regex`: Matched /display_registry|DisplayRegistry/i
-
-**Subjective grades:**
-- ✅ Explains the difference between Display V1 and Display V2
-  - _Step 1 explicitly contrasts V1 (embedding display info in objects) with V2 (using display_registry for separation of concerns)_
-- ✅ Shows how to migrate from V1 to V2 patterns
-  - _Step 3 provides before/after code examples showing removal of display fields from objects and refactoring to use DisplayRegistry_
-- ✅ Mentions the display_registry as the current approach
-  - _display_registry is mentioned throughout as the recommended pattern for V2, particularly in Steps 1, 3, and 4_
-- ❌ Provides concrete Move code or PTB examples for the migration
-  - _Move code examples are provided, but they are generic/pseudocode (e.g., DisplayRegistry module with placeholder implementations). No concrete, runnable code is shown, and no PTB (Programmable Transaction Block) examples are provided at all_
-
-#### ❌ ptb-inputs-results
+#### ⚠️ ptb-inputs-results
 **Page:** develop/transactions/ptbs/inputs-and-results
 
-> Sure, I can help you review your PTB (Programmable Transaction Block) code for invalid pure inputs, custom structs/enums, object references, vectors/options, and command result usage. However, you'll need to provide the code you'd like me to review. ...
+**Error:** `429 Rate limit reached for gpt-4o in organization org-Ymxfd9U0oHgQvWY3NcUtRd0M on tokens per min (TPM): Limit 30000, Used 30000, Requested 152. Please try again in 304ms. Visit https://platform.openai.com/account/rate-limits to learn more.`
 
-**Deterministic checks:**
-- ✅ `regex`: Matched /pure|Pure/i
-- ✅ `regex`: Matched /object|Object/i
-- ✅ `regex`: Matched /Result|result/i
-
-**Subjective grades:**
-- ❌ Explains the distinction between pure inputs and object inputs in PTBs
-  - _The response does not explain or distinguish between pure inputs and object inputs. It only acknowledges these as topics without providing any explanatory content._
-- ❌ Mentions that custom structs and enums cannot be passed as pure inputs
-  - _The response references custom structs/enums as a review criterion but does not explicitly state that they cannot be passed as pure inputs or explain this limitation._
-- ❌ Discusses how command results chain between PTB commands
-  - _The response does not discuss command result usage or how results chain between commands. It only lists this as a review criterion without explanation._
-- ❌ Addresses vector and option encoding in PTB inputs
-  - _The response mentions vectors/options as a review criterion but does not address how they are encoded in PTB inputs or their specific handling requirements._
-
-#### ❌ gas-smashing
+#### ⚠️ gas-smashing
 **Page:** develop/transaction-payment/gas-smashing
 
-> When working with gas coins in a Sui application, handling them correctly is crucial to ensure the smooth execution of transactions. Below are some guidelines and code examples to enhance your app's gas coin handling, focusing on safe coin selection,...
+**Error:** `429 Rate limit reached for gpt-4o in organization org-Ymxfd9U0oHgQvWY3NcUtRd0M on tokens per min (TPM): Limit 30000, Used 30000, Requested 154. Please try again in 308ms. Visit https://platform.openai.com/account/rate-limits to learn more.`
 
-**Deterministic checks:**
-- ✅ `regex`: Matched /gas/i
-- ✅ `regex`: Matched /split|merge|coin/i
-
-**Subjective grades:**
-- ✅ Explains gas coin handling in Sui transactions
-  - _Response explicitly explains that transactions consume gas paid using coins, that each coin must be individually managed, and provides context about mutable owned objects in Section 1._
-- ✅ Warns about concurrent reuse of mutable owned objects or equivocation risks
-  - _Section 3 explicitly states 'mutable owned objects, which can't be used concurrently in two transactions' and provides warnings about preventing reuse of coins in pending transactions with specific mitigation strategies._
-- ✅ Provides guidance on coin management strategies (selection, splitting, or merging)
-  - _Section 2 explicitly covers all three strategies: Coin Selection with query and filtering examples, Coin Splitting with code example, and Coin Merging with code example._
-- ❌ Discusses gas budget estimation or setting
-  - _The response does not address gas budget estimation or how to set gas budgets. While it mentions 'gas_needed' as a parameter, it does not explain how to estimate or calculate appropriate gas budgets for transactions._
-
-#### ❌ data-serving
+#### ⚠️ data-serving
 **Page:** develop/accessing-data/data-serving
 
-> To provide a recommendation on whether to use GraphQL, gRPC, or both, we'll need to assess the app's specific data access requirements including frontend/backend interactions, historical data queries, subscriptions for real-time updates, latency need...
+**Error:** `429 Rate limit reached for gpt-4o in organization org-Ymxfd9U0oHgQvWY3NcUtRd0M on tokens per min (TPM): Limit 30000, Used 30000, Requested 160. Please try again in 320ms. Visit https://platform.openai.com/account/rate-limits to learn more.`
 
-**Deterministic checks:**
-- ✅ `contains`: Found "GraphQL"
-- ✅ `contains`: Found "gRPC"
-
-**Subjective grades:**
-- ❌ Compares GraphQL and gRPC as data access options for Sui
-  - _The response compares GraphQL and gRPC generically but never explicitly grounds the comparison in Sui-specific context, Sui's data structures, Sui's indexing capabilities, or Sui's ecosystem tools. There is no mention of Sui's specific GraphQL implementations, Sui RPC endpoints, or Sui-specific architectural considerations._
-- ✅ Provides guidance on when to use each option based on use case
-  - _The response clearly outlines specific use cases for GraphQL (frontend, flexible querying, historical data) and gRPC (backend communication, low-latency, high-throughput), with explicit recommendations for when to use each._
-- ✅ Mentions subscription or streaming capabilities
-  - _The response explicitly discusses GraphQL Subscriptions for real-time frontend updates and gRPC Streaming for backend systems, addressing both subscription mechanisms clearly._
-- ✅ Discusses data retention and historical query considerations
-  - _The response addresses historical queries (noting GraphQL's flexibility for complex criteria over historical data) and data retention (explaining it's managed at the storage layer, mentioning Walrus storage on Sui, and discussing how protocols affect data retrieval)._
-
-#### ❌ using-grpc
+#### ⚠️ using-grpc
 **Page:** develop/accessing-data/grpc/using-grpc
 
-> To convert a Sui JSON-RPC usage to the current gRPC API, you'll need to follow a few steps. This involves setting up the gRPC client, mapping the appropriate request and response types, and executing a request example. I'll guide you through the proc...
+**Error:** `429 Rate limit reached for gpt-4o in organization org-Ymxfd9U0oHgQvWY3NcUtRd0M on tokens per min (TPM): Limit 30000, Used 30000, Requested 153. Please try again in 306ms. Visit https://platform.openai.com/account/rate-limits to learn more.`
 
-**Deterministic checks:**
-- ✅ `contains`: Found "gRPC"
-- ✅ `regex`: Matched /proto|protobuf|client/i
-
-**Subjective grades:**
-- ✅ Explains how to set up or generate a gRPC client for Sui
-  - _Response provides clear setup instructions including protoc compiler prerequisites, pip installation commands, protobuf compilation steps, and Python client initialization code._
-- ❌ Maps or references common Sui RPC methods and their gRPC equivalents
-  - _Response only provides one hypothetical example (sui_getBalance → GetBalance) with fabricated proto message types (sui_pb2.GetBalanceRequest). Does not reference actual Sui RPC methods or their documented gRPC equivalents, and does not acknowledge that specific method mappings require access to actual Sui proto definitions._
-- ✅ Provides a code example demonstrating a gRPC call to Sui
-  - _Response includes working Python code examples showing client creation, request object instantiation, service method calls, and error handling._
-- ❌ References the proto definitions, endpoint, or service structure
-  - _Response mentions proto files generically but does not reference actual Sui proto definitions (file locations, repository URLs, or structure). References placeholder endpoint 'localhost:50051' without noting this is not the actual Sui gRPC endpoint and does not provide guidance on finding the correct one._
-
-#### ❌ query-with-graphql
+#### ⚠️ query-with-graphql
 **Page:** develop/accessing-data/graphql/query-with-graphql
 
-> To convert a Sui JSON-RPC query to GraphQL, you'll need to understand that the process generally involves:  1. Identifying the equivalent GraphQL operation for the JSON-RPC method you are using. 2. Constructing the GraphQL query with appropriate fiel...
+**Error:** `429 Rate limit reached for gpt-4o in organization org-Ymxfd9U0oHgQvWY3NcUtRd0M on tokens per min (TPM): Limit 30000, Used 30000, Requested 150. Please try again in 300ms. Visit https://platform.openai.com/account/rate-limits to learn more.`
 
-**Deterministic checks:**
-- ✅ `contains`: Found "GraphQL"
-- ✅ `regex`: Matched /query\s*\{|query\s+\w+/i
-- ✅ `regex`: Matched /TypeScript|typescript|\bts\b/i
-
-**Subjective grades:**
-- ❌ Provides a concrete GraphQL query with proper Sui schema types
-  - _The GraphQL query uses generic field names like 'fields' with 'name' and 'value' properties that do not match actual Sui GraphQL schema. Sui's actual schema defines specific object fields (e.g., 'owner', 'previousTransactionBlock', 'storageRebate') and uses established Sui types. The query appears fabricated rather than based on Sui's documented GraphQL schema._
-- ✅ Shows pagination handling with cursors or connection patterns
-  - _The response clearly demonstrates cursor-based pagination using `pageInfo` with `hasNextPage` and `endCursor`, along with a `while` loop that properly iterates through pages by updating the `after` cursor variable._
-- ✅ Includes TypeScript code that calls the GraphQL endpoint
-  - _The response provides complete TypeScript code using Apollo Client to execute the GraphQL query, including proper type definitions and a callable async function with error handling flow._
-- ✅ Demonstrates use of variables in the query
-  - _The GraphQL query explicitly defines variables (`$address`, `$first`, `$after`) and the TypeScript code passes these variables to the client.query() call with proper typing._
-
-#### ❌ observability
+#### ⚠️ observability
 **Page:** operators/observability
 
-> To implement structured logging for Sui transactions, where you want to log details such as the transaction digest, sender, package/function invoked, status, gas usage, and user-visible errors, you can follow these steps:  ### Step 1: Set Up Environm...
+**Error:** `429 Rate limit reached for gpt-4o in organization org-Ymxfd9U0oHgQvWY3NcUtRd0M on tokens per min (TPM): Limit 30000, Used 30000, Requested 158. Please try again in 316ms. Visit https://platform.openai.com/account/rate-limits to learn more.`
 
-**Deterministic checks:**
-- ✅ `regex`: Matched /digest|transaction/i
-- ✅ `regex`: Matched /log|logging|tracing/i
-
-**Subjective grades:**
-- ✅ Shows structured logging with transaction-relevant fields
-  - _The response defines a log_data dictionary containing all required transaction fields (digest, sender, package_id, function_name, status, gas_used, error_message) and logs it as structured data._
-- ✅ Includes key fields: digest, sender, status, gas used
-  - _All four key fields are explicitly present in the log_data dictionary: transaction_digest, sender, status, and gas_used._
-- ❌ Provides actionable patterns for debugging failed transactions
-  - _The response provides generic logging patterns but lacks actionable debugging guidance specific to Sui transaction failures. It does not explain how to parse error responses, identify common failure modes, or demonstrate actual Sui SDK/RPC integration for retrieving real transaction data._
-- ✅ Uses structured logging format (not just string interpolation)
-  - _The response uses a dictionary (log_data) for structured logging and passes it to logger.info() as an object rather than relying on string interpolation alone._
-
-#### ❌ move-package-management
+#### ⚠️ move-package-management
 **Page:** develop/manage-packages/move-package-management
 
-> To help you with this task, you'll want to follow a series of steps to inspect and potentially fix the dependency declarations in your Move package. This involves looking at your `Move.toml`, `Move.lock`, and any dependencies. Here's a structured app...
+**Error:** `429 Rate limit reached for gpt-4o in organization org-Ymxfd9U0oHgQvWY3NcUtRd0M on tokens per min (TPM): Limit 30000, Used 30000, Requested 159. Please try again in 318ms. Visit https://platform.openai.com/account/rate-limits to learn more.`
 
-**Deterministic checks:**
-- ✅ `contains`: Found "Move.toml"
-- ✅ `regex`: Matched /Move\.lock|Move\.toml/i
-- ✅ `regex`: Matched /sui\s+move\s+build/i
-
-**Subjective grades:**
-- ✅ Explains the role of Move.toml and its key fields
-  - _Step 1 clearly explains Move.toml structure and identifies key sections: [package], [addresses], [dependencies], and [dev-dependencies]. The example demonstrates the role of each field._
-- ✅ Shows how to declare or fix dependencies
-  - _Step 3 explicitly shows dependency modification with concrete before/after examples in Move.toml, demonstrating how to add git sources, revisions, and subdirectories._
-- ❌ Mentions Move Version Registry (MVR) or resolution strategies
-  - _The response mentions 'Move Version Requirements (MVR)' terminology but does not explain what MVR actually is or provide examples of MVR-style dependency declarations. The term appears to be confused with git-based versioning (rev/branch). No actual MVR registry syntax or strategy is demonstrated._
-- ✅ References sui move build for verification
-  - _Step 4 explicitly references 'sui move build' command and discusses verifying the build process succeeds, including error resolution._
-
-#### ❌ automated-address-management
+#### ⚠️ automated-address-management
 **Page:** develop/manage-packages/automated-address-management
 
-> To migrate your package to the current Sui package address management conventions using `Move.lock` and `Published.toml`, follow these steps:  ### Step 1: Update Your Move Package to Use `Move.lock`  1. **Create a Move.lock File**:     - First, you n...
+**Error:** `429 Rate limit reached for gpt-4o in organization org-Ymxfd9U0oHgQvWY3NcUtRd0M on tokens per min (TPM): Limit 30000, Used 30000, Requested 160. Please try again in 320ms. Visit https://platform.openai.com/account/rate-limits to learn more.`
 
-**Deterministic checks:**
-- ✅ `regex`: Matched /Move\.lock|Published\.toml/i
-- ✅ `regex`: Matched /address|0x0/i
-
-**Subjective grades:**
-- ✅ Explains the current address management conventions
-  - _The response explains that current conventions use address placeholders in Move.toml (e.g., `my_package = "_"`), Move.lock for dependency tracking, and Published.toml for actual on-chain addresses post-publication._
-- ✅ Shows how Published.toml or Move.lock track published addresses
-  - _The response explicitly states that Move.lock captures dependency state and addresses, and Published.toml contains actual on-chain address mappings after publication with a concrete example showing `my_package = "0x123456789abcde"`._
-- ❌ Provides migration steps from older patterns
-  - _The response does not address migration from older patterns. It assumes a starting point with Move.toml already present and does not explain what older address management looked like or how to transition from hardcoded addresses or legacy configurations._
-- ✅ Includes verification commands to confirm correct behavior
-  - _The response provides specific verification commands including `sui move build`, `sui move test`, and `sui client publish .`, along with instructions to verify address mappings in Published.toml post-publication._
-
-#### ❌ walrus-storage
+#### ⚠️ walrus-storage
 **Page:** sui-stack/walrus/sui-stack-walrus
 
-> To upload your app's media or NFT assets to Walrus, and then use the resulting blob references in your Sui object metadata or Display fields, follow these steps:  ### Step 1: Set Up Walrus Storage  First, ensure you have access to the Walrus storage ...
+**Error:** `429 Rate limit reached for gpt-4o in organization org-Ymxfd9U0oHgQvWY3NcUtRd0M on tokens per min (TPM): Limit 30000, Used 30000, Requested 155. Please try again in 310ms. Visit https://platform.openai.com/account/rate-limits to learn more.`
 
-**Deterministic checks:**
-- ✅ `contains`: Found "Walrus"
-- ✅ `regex`: Matched /blob|store|upload/i
-- ✅ `regex`: Matched /Display|metadata/i
-
-**Subjective grades:**
-- ✅ Shows how to upload assets to Walrus (via CLI, SDK, or HTTP API)
-  - _Response provides a Python example using HTTP POST requests to upload files to Walrus, demonstrating one method of asset upload._
-- ✅ Explains how to store or reference the resulting blob ID
-  - _Response shows extracting the blob_reference from the Walrus API response and storing it in the upload_to_walrus function return value._
-- ❌ Demonstrates wiring blob references into Sui object Display fields or metadata
-  - _Response shows a generic 'display' field in a Move struct, but does not explicitly demonstrate the Display standard or official Sui metadata/Display field structure. The example uses a plain vector<u8> rather than proper Display object patterns used in Sui._
-- ❌ Mentions token requirements (WAL for storage, SUI for gas) or cost considerations
-  - _Response completely omits any mention of WAL tokens for Walrus storage, SUI for gas fees, or any cost considerations for the operations described._
-
-#### ❌ walrus-sites
+#### ⚠️ walrus-sites
 **Page:** sui-stack/walrus/sui-stack-walrus-sites
 
-> To deploy a static frontend as a Walrus Site on the Sui blockchain, follow these step-by-step instructions. This will cover building your app, publishing the site, recording the necessary IDs, and documenting the update steps.  ### Step 1: Build Your...
-
-**Deterministic checks:**
-- ❌ `regex`: No match for /site-builder|walrus-sites/i
-- ✅ `regex`: Matched /publish|deploy/i
-- ✅ `regex`: Matched /update|upgrade/i
-
-**Subjective grades:**
-- ✅ Shows the build step for the static frontend
-  - _Step 1 explicitly covers building the static frontend with concrete examples (npm run build for React) and identifies output directories (build/dist)._
-- ❌ Provides the site-builder publish command
-  - _The response provides 'sui client publish-site' but this command is not verified to exist or be correct for Walrus Sites. The response itself acknowledges uncertainty ('If you have never set this command, it may prompt you to install walrus'). A strict grader requires a confirmed, accurate command specific to Walrus Site publishing._
-- ❌ Explains how to record and track the site object ID
-  - _While Step 2 mentions 'Record the Site Object ID and Blob ID' and states these 'will usually include' in the output, it does not explicitly explain HOW to extract, copy, store, or track these IDs from the command output. The expectation requires documentation of the actual tracking mechanism, not just acknowledgment that IDs exist._
-- ✅ Documents the update process for redeploying changes
-  - _Step 4 clearly documents the update process: make changes, rebuild static files, republish using the same command, and verify updates. The optional automation section further reinforces this workflow._
+**Error:** `429 Rate limit reached for gpt-4o in organization org-Ymxfd9U0oHgQvWY3NcUtRd0M on tokens per min (TPM): Limit 30000, Used 30000, Requested 155. Please try again in 310ms. Visit https://platform.openai.com/account/rate-limits to learn more.`
 
 </details>
 
-<details><summary><b>opus</b>: 16/19 prompts passed (84%)</summary>
+<details><summary><b>opus</b>: 15/19 prompts passed (79%)</summary>
 
 - Deterministic checks: 48/48 (100%)
-- Subjective grades: 72/75 (96%)
+- Subjective grades: 71/75 (95%)
 
 #### ✅ sui-install
 **Page:** getting-started/onboarding/sui-install
 
-> # Setting Up Your Machine for Sui Development  Here's a complete step-by-step guide to get you up and running.  ---  ## Step 1: Install `suiup` (Sui Toolchain Manager)  ```bash curl -sSfL https://raw.githubusercontent.com/MystenLabs/suiup/main/instal...
+> # Setting Up Your Machine for Sui Development  Follow these steps exactly to get a complete Sui development environment running on your machine.  ---  ## Step 1: Install `suiup` (Sui Version Manager)  ```bash curl -sSfL https://raw.githubusercontent....
 
 **Deterministic checks:**
 - ✅ `contains`: Found "suiup"
@@ -798,16 +452,16 @@
 
 **Subjective grades:**
 - ✅ Provides a clear step-by-step setup sequence starting with installing suiup
-  - _The response explicitly begins with Step 1 installing suiup via the exact curl command from the prompt, followed by logical sequential steps (Steps 2-7) that build upon each other in proper order._
+  - _The response explicitly starts with Step 1 installing suiup via the exact curl command provided in the prompt, then progresses through clearly numbered steps (Step 2-6) in logical sequence._
 - ✅ Mentions generating keys or wallet configuration
-  - _Step 3 explicitly covers running 'sui client' to interactively generate keys and bootstrap configuration. The response shows the keypair generation output and explains the key scheme selection (ed25519)._
+  - _Step 3 explicitly covers running 'sui client' to initialize client config and generate keys. The response clearly states the CLI will generate a keypair and create client config files, and provides the expected file locations._
 - ✅ Includes instructions about funding the address with test tokens
-  - _Step 6 explicitly prompts the user to visit faucet.sui.io, enter their generated address, and fund with test tokens. It also provides the alternative CLI method and verification step (Step 7) to confirm funding._
+  - _Step 5 explicitly prompts the user to visit faucet.sui.io, enter their generated address, and fund it with test tokens. The response provides both web faucet and CLI faucet options with detailed instructions on how to complete the funding process._
 
 #### ✅ hello-world
 **Page:** getting-started/onboarding/hello-world
 
-> # Deploy & Interact with the Sui "Hello World" Example  Below is every step, from cloning to viewing on SuiVision.  ---  ## 0 — Prerequisites  ```bash # Sui CLI installed (>= 1.28+) sui --version  # Make sure you have a testnet address with SUI sui c...
+> # Deploy & Interact with the Sui "Hello World" Example  Below is a complete, step-by-step walkthrough.  ---  ## 0 — Prerequisites  | Tool | Install | |---|---| | **Sui CLI** | `cargo install --locked --git https://github.com/MystenLabs/sui.git --bran...
 
 **Deterministic checks:**
 - ✅ `contains`: Found "sui-stack-hello-world"
@@ -816,18 +470,18 @@
 
 **Subjective grades:**
 - ✅ Provides the git clone command for the repo
-  - _Section 1 explicitly provides: `git clone https://github.com/MystenLabs/sui-stack-hello-world.git`_
+  - _Section 1 explicitly provides the exact clone command: `git clone https://github.com/MystenLabs/sui-stack-hello-world.git`_
 - ✅ Shows the build and publish commands
-  - _Section 2 shows `sui move build` and Section 3 shows `sui client publish --gas-budget 100000000`_
+  - _Section 3 shows `sui move build` and Section 5 shows `sui client publish --gas-budget 100000000`, with clear instructions and expected output_
 - ✅ Explains how to call the entry function after publishing
-  - _Section 4 provides the `sui client call` command with package, module, and function parameters to invoke the entry function_
+  - _Section 6 provides the explicit `sui client call` command with all required parameters (--package, --module, --function, --gas-budget) and explains how to capture the results_
 - ✅ Mentions viewing the result on SuiVision or a block explorer
-  - _Section 6 explicitly provides SuiVision URLs for viewing the transaction digest and object ID: `https://testnet.suivision.xyz/txblock/<TX_DIGEST>` and `https://testnet.suivision.xyz/object/<OBJECT_ID>`_
+  - _Section 8 explicitly provides SuiVision URLs for both the transaction and object: `https://testnet.suivision.xyz/txblock/<CALL_TX_DIGEST>` and `https://testnet.suivision.xyz/object/<OBJECT_ID>`, with clear examples_
 
 #### ✅ testing
 **Page:** develop/testing-debugging/testing
 
-> # Adding Comprehensive Move Unit Tests  I'll provide a thorough testing strategy. Since you haven't shared your specific package, I'll demonstrate with a realistic example module and then write comprehensive tests covering success, unauthorized, and ...
+> # Adding Comprehensive Move Unit Tests  I'll create a thorough test suite. First, let me establish a realistic module to test against, then write complete tests covering success paths, authorization failures, and edge cases.  ## Assumed Module Under ...
 
 **Deterministic checks:**
 - ✅ `contains`: Found "#[test]"
@@ -835,18 +489,18 @@
 
 **Subjective grades:**
 - ✅ Shows the #[test] attribute pattern for writing Sui Move tests
-  - _The response includes numerous examples of #[test] attribute usage throughout the test module, such as #[test] fun test_create_success(), #[test] fun test_deposit_success(), etc._
+  - _The response extensively demonstrates #[test] attribute usage throughout the test module, with numerous examples like #[test] fun test_create_marketplace_success(), #[test] fun test_list_item_success(), etc._
 - ✅ Explains or demonstrates success-case testing patterns
-  - _The response demonstrates success cases extensively, including test_create_success(), test_deposit_success(), test_withdraw_success(), test_transfer_ownership_success(), and integration tests like test_full_lifecycle(). Each includes assertions verifying expected state changes._
+  - _Multiple success-case tests are included with clear patterns, such as test_create_marketplace_success(), test_buy_item_success_exact_payment(), test_delist_item_success(), test_update_price_success(), demonstrating assertion-based validation of expected outcomes._
 - ✅ Mentions #[expected_failure] or assert macros for failure testing
-  - _The response explicitly uses #[expected_failure(abort_code = ...)] for all negative test cases, such as test_deposit_zero_amount_fails() and test_withdraw_unauthorized_no_admin_cap_match(). It also uses assert!() macros throughout success tests._
+  - _The response demonstrates #[expected_failure(abort_code = ...)] attributes extensively (e.g., test_create_marketplace_fee_too_high, test_buy_item_insufficient_payment, test_delist_item_unauthorized_buyer, test_update_price_unauthorized) and uses assert! macros throughout for success path validation._
 - ✅ References test_scenario or unit_test module for Sui-specific testing
-  - _The response imports and uses sui::test_scenario (aliased as ts) throughout the test module, demonstrated by 'use sui::test_scenario::{Self as ts, Scenario}' and extensive usage of ts::begin(), scenario.next_tx(), scenario.take_shared(), etc._
+  - _The response explicitly imports and uses sui::test_scenario (aliased as ts) with functions like ts::begin(), ts::next_tx(), ts::ctx(), and ts::end(), which are core Sui test utilities for transaction simulation testing._
 
 #### ✅ scenario-testing
 **Page:** getting-started/examples/scenario-testing
 
-> # Comprehensive Sui Move Scenario Tests  Here's a complete example with a module and thorough scenario tests covering multi-user interactions, ownership transfers, and expected failures.  ## Module Under Test  ```move module marketplace::trading {   ...
+> # Comprehensive Sui Move Scenario Tests  I'll create a complete example with a module and thorough scenario tests covering multi-user interactions, ownership transfers, and expected failures.  ## 1. The Module Under Test  ```move // sources/marketpla...
 
 **Deterministic checks:**
 - ✅ `contains`: Found "test_scenario"
@@ -855,18 +509,18 @@
 
 **Subjective grades:**
 - ✅ Uses or references sui::test_scenario for multi-transaction workflows
-  - _The response explicitly imports and uses `sui::test_scenario::{Self as ts, Scenario}` throughout all test functions. Multiple tests use `ts::begin()`, `ts::next_tx()`, and `ts::end()` to create multi-transaction workflows._
+  - _The response explicitly imports and uses `sui::test_scenario::{Self as ts, Scenario}` throughout. Multiple tests use `ts::begin()`, `ts::next_tx()`, and `ts::end()` to structure multi-transaction workflows._
 - ✅ Shows how to switch between different senders/users in a scenario
-  - _The response demonstrates sender switching in every test function using `ts::next_tx(&mut scenario, ADDRESS)` with clearly defined test addresses (ADMIN, SELLER, BUYER, BUYER_2, RANDOM_USER). Example: `ts::next_tx(&mut scenario, SELLER)` followed by `ts::next_tx(&mut scenario, BUYER)` in test_full_happy_path()._
+  - _The response demonstrates sender switching clearly via `ts::next_tx(&mut scenario, ADDRESS)` with multiple distinct addresses (ADMIN, ALICE, BOB, CAROL). For example, in test_full_purchase_flow(), transactions execute as ALICE, then BOB, then back to BOB, showing clear user context switching._
 - ✅ Demonstrates testing object ownership or state changes across transactions
-  - _Multiple tests explicitly verify ownership changes across transactions. test_ownership_chain_resale() tracks item ownership through three parties (SELLER → BUYER → BUYER_2), verifying creator preservation. Tests use `ts::take_from_sender<Item>()` and `ts::take_shared<Listing>()` to verify object states and ownership at each step._
+  - _Multiple scenarios explicitly test ownership changes. test_full_purchase_flow() verifies that BOB acquires the item after purchase. test_item_resale_chain() tracks the item through ALICE → BOB → CAROL ownership transitions while verifying creator remains unchanged. Assertions confirm state changes like `marketplace_total_sales` increments._
 - ✅ Mentions or shows expected-failure patterns (e.g., #[expected_failure] or abort codes)
-  - _The response includes six explicit failure scenarios using `#[expected_failure(abort_code = ...)]` pattern: test_fail_insufficient_payment (EInsufficientPayment), test_fail_seller_buys_own_listing (ECannotBuyOwnListing), test_fail_non_owner_cancel (ENotOwner), test_fail_buy_inactive_listing (EListingNotActive), test_fail_double_cancel (EListingNotActive), and test_fail_buy_after_cancel (EListingNotActive)._
+  - _The response includes six test functions with `#[expected_failure(abort_code = ...)]` annotations: test_non_seller_cannot_delist, test_seller_cannot_buy_own_item, test_insufficient_payment_rejected, test_zero_price_listing_rejected, test_cannot_list_when_paused, and test_cannot_buy_when_paused. Each explicitly specifies the abort code to expect._
 
 #### ✅ common-errors
 **Page:** develop/testing-debugging/common-errors
 
-> # Debugging Sui Transaction Failures — Systematic Guide  Transaction failures on Sui fall into a few well-defined categories. Below is a complete diagnostic framework.  ---  ## Step 1: Get the Full Error  ```bash # If you have the transaction digest ...
+> # Debugging Sui Transaction Failures: A Systematic Guide  Since you haven't provided a specific transaction digest or error message, I'll give you the **complete systematic debugging framework** covering every common failure mode, with exact commands...
 
 **Deterministic checks:**
 - ✅ `regex`: Matched /object|version|ownership/i
@@ -874,18 +528,18 @@
 
 **Subjective grades:**
 - ✅ Provides a systematic debugging approach for Sui transaction failures
-  - _Response provides a 6-step systematic framework (Get Full Error, Inspect Objects, Inspect Gas, Decode MoveAbort, Fix Common PTB Issues, Full Diagnostic Script) with clear progression and actionable steps at each stage._
+  - _The response explicitly structures debugging into Step 1 (Get Transaction Details), Step 2 (Identify Error Category with 6 categories A-F), Step 3 (Full Debugging Script), and a Quick Reference table. This is a clear systematic framework._
 - ✅ Mentions checking object versions and ownership as common failure sources
-  - _Step 2 explicitly includes object version and ownership inspection with concrete CLI commands (`sui client object <OBJECT_ID> --json`) and a detailed checklist that checks versions, ownership, and type. Issue 1 and Issue 3 specifically address stale versions and InvalidOwner errors._
+  - _Error Category A explicitly covers 'Object Version Mismatch / Stale Object' with diagnosis commands. Error Category B covers 'Ownership / Authorization Errors' with specific ownership checks. The debugging script includes version comparison logic and ownership inspection._
 - ✅ Discusses gas-related issues (insufficient gas, gas coin conflicts)
-  - _Step 3 provides dedicated gas debugging with inspection commands and explicit discussion of gas coin conflicts. Issue 2 demonstrates the gas coin used as input problem with BAD/FIX examples. Issue 6 addresses insufficient gas budget with concrete solutions._
+  - _Error Category C comprehensively covers gas errors (InsufficientGas, InsufficientCoinBalance, GasBudgetTooHigh/Low, GasObjectNotOwnedBySender) with diagnosis and fixes including gas budget adjustment and coin merging._
 - ✅ Suggests concrete fixes rather than just diagnosis
-  - _Response includes 6 specific Issues (Issues 1-6) with paired BAD/FIX code examples showing TypeScript before-and-after patterns. Also provides a Quick Reference table with symptom-to-fix mappings and a complete diagnostic script with runnable code._
+  - _Every error category includes explicit code examples showing both WRONG and FIX patterns in TypeScript SDK and CLI. The Quick Reference table maps errors to minimal fixes. The debugging script provides runnable code for fetching fresh object refs, adjusting budgets, and merging coins._
 
 #### ✅ publish-overview
 **Page:** develop/publish-upgrade-packages/index
 
-> # Sui Mainnet Publishing Checklist & Preparation Guide  This is a comprehensive, step-by-step guide to take a Move package from development to Mainnet deployment.  ---  ## 1. Code & Test Verification  ### 1.1 Run All Tests  ```bash # Run tests with m...
+> # Mainnet Publishing Checklist & Preparation Guide  This is a comprehensive, step-by-step guide to prepare a Move package for Sui Mainnet deployment.  ---  ## 1. Verify Tests  ### Run the full test suite ```bash # Run all tests with verbose output su...
 
 **Deterministic checks:**
 - ✅ `regex`: Matched /sui\s+client\s+publish|sui\s+move\s+build/i
@@ -894,18 +548,18 @@
 
 **Subjective grades:**
 - ✅ Includes a checklist or step-by-step process for publishing
-  - _Section 10 provides a comprehensive 'Master Launch Checklist' with checkbox items organized by category (Pre-Build, Dependencies, Code Audit, Security, Upgrade Strategy, Signer & Custody, Gas, Testnet Validation, Publish, Post-Publish, Emergency Plan). Section 8 also provides detailed step-by-step publishing procedure with multiple options (direct publish, multisig serialization)._
+  - _Section 10 provides a comprehensive 'Complete Launch Checklist' with detailed checkboxes organized by category (Code Quality, Dependencies, Addresses, Upgrade Policy, Gas & Funding, Signer & Custody, Pre-Publish Verification, Publish, Post-Publish). Additionally, the entire response is structured as a step-by-step guide with numbered sections 1-9 leading to the final checklist._
 - ✅ Mentions verifying tests pass before publishing
-  - _Section 1 'Code & Test Verification' explicitly covers running tests with `sui move test --gas-limit 1000000000`, coverage reports, and static analysis. The Master Checklist (Section 10, Pre-Build) includes items: '[ ] All tests pass: `sui move test`' and '[ ] Coverage reviewed: `sui move test --coverage`'._
+  - _Section 1 'Verify Tests' explicitly covers running the full test suite with `sui move test --statistics`, test coverage requirements, edge-case testing, and includes a dedicated checklist item '[ ] All tests pass (`sui move test` exits 0)'. This is reinforced in the final Launch Checklist under 'CODE QUALITY'._
 - ✅ Discusses the UpgradeCap and upgrade policy considerations
-  - _Section 4 'Upgrade Policy Design' explicitly discusses upgrade policies (compatible, additive, dep_only, immutable) with a comparison table. Section 4.2 provides code examples for storing and restricting the UpgradeCap. Section 4.3 describes three UpgradeCap custody options (Multisig, Timelock + Governance, Immutability). The Master Checklist includes upgrade strategy items._
+  - _Section 4 'Upgrade Policy' comprehensively covers the three upgrade policies (compatible, additive, immutable) with a comparison table, provides code examples for restricting upgrade policies and implementing custom timelocked upgrades, and discusses UpgradeCap custody. Section 6 includes a custody matrix for UpgradeCap handling. The checklist explicitly includes upgrade policy decisions and UpgradeCap transfer procedures._
 - ✅ Addresses gas requirements or cost estimation
-  - _Section 6 'Gas Estimation' covers dry-running on testnet to estimate costs, calculating mainnet gas budget (2-3x testnet for safety margin), checking reference gas price, and provides specific examples. Section 8.3 shows `--gas-budget` flags in publish commands. The Master Checklist includes gas items with space to record costs._
+  - _Section 5 'Gas Requirements' explicitly covers gas cost estimation using `sui move publish --dry-run`, provides a table of typical mainnet costs (Small/Medium/Large package publish ranges), includes wallet balance verification steps, recommends 2+ SUI for publish, shows gas budget safety margins, and provides consolidation commands. The checklist includes gas estimate fields to be filled in._
 
 #### ❌ upgrade
 **Page:** develop/publish-upgrade-packages/upgrade
 
-> # Complete Sui Package Upgrade Guide  ## Overview  Sui supports package upgrades with strict compatibility rules. Here's the complete process from start to finish.  ---  ## Step 1: Understand Compatibility Rules  Sui enforces three upgrade policies (...
+> # Complete Sui Package Upgrade Guide  ## Overview  Sui supports on-chain package upgrades with strict compatibility rules. Here's the complete process.  ---  ## Step 1: Understand Compatibility Rules  Sui enforces these upgrade policies (from most to...
 
 **Deterministic checks:**
 - ✅ `contains`: Found "UpgradeCap"
@@ -914,18 +568,18 @@
 
 **Subjective grades:**
 - ✅ Explains the role of the UpgradeCap object
-  - _Step 2 explicitly explains that UpgradeCap is created at package publication, shows how to locate it, identifies key fields (objectId, package, version, policy), and demonstrates its use throughout the upgrade process in both CLI and SDK examples._
+  - _Step 2 comprehensively explains UpgradeCap's role: it stores the current package ID, version number, and upgrade policy. The response shows how to locate it, inspect its fields, and use it as the authorization object for upgrades._
 - ✅ Describes compatibility rules for package upgrades (compatible, additive, or dependency-only)
-  - _Step 1 provides a detailed table with all four upgrade policies (Immutable, Dependency-only, Additive, Compatible), explicitly lists what can and cannot be done under Compatible policy, and references policy values (0=compatible, 128=additive, 192=dep_only, 255=immutable)._
+  - _Step 1 explicitly lists all four upgrade policies (immutable, additive, dep_only, compatible) with their values and detailed rules for each. Compatible policy rules are clearly enumerated with checkmarks and X marks for allowed/disallowed changes._
 - ✅ Shows the upgrade command or transaction construction
-  - _Step 5 provides two complete paths: Option A shows the CLI one-command upgrade with `sui client upgrade`, and Option B provides full TypeScript SDK code constructing the upgrade transaction with authorize_upgrade and commit_upgrade calls, including module compilation and execution._
+  - _Step 5 provides three concrete options: (A) CLI command using `sui client upgrade`, (B) full TypeScript SDK transaction block with `authorize_upgrade` and `commit_upgrade` calls, and (C) custom Move-based governance example._
 - ❌ Mentions that the original package version is preserved on-chain
-  - _The response does not explicitly state that the original package version remains on-chain after an upgrade. While it mentions version increments in the UpgradeCap and new package IDs are created, it never clarifies that previous package versions remain accessible/immutable on-chain._
+  - _The response does not explicitly state that the original package version remains on-chain after an upgrade. While it mentions that a new package ID is created and the UpgradeCap version increments, it does not clarify that the previous package version is immutable and accessible on-chain._
 
 #### ✅ custom-policies
 **Page:** develop/publish-upgrade-packages/custom-policies
 
-> # Sui Package Upgrades & Admin Actions — Operator Runbook  ---  ## Table of Contents  1. [Capability Inventory](#1-capability-inventory) 2. [Pre-Upgrade Checklist](#2-pre-upgrade-checklist) 3. [Signer & Custody Procedures](#3-signer--custody-procedur...
+> # Sui Package Upgrade & Admin Operations Runbook  ## Table of Contents 1. [Overview & Prerequisites](#1-overview--prerequisites) 2. [Capability Inventory](#2-capability-inventory) 3. [Signer & Custody Procedures](#3-signer--custody-procedures) 4. [Pa...
 
 **Deterministic checks:**
 - ✅ `regex`: Matched /UpgradeCap|AdminCap|cap/i
@@ -933,18 +587,18 @@
 
 **Subjective grades:**
 - ✅ Provides a structured runbook format with clear steps
-  - _Response includes comprehensive table of contents, multiple numbered sections (1-8), checklists, step-by-step procedures with clear headers, code blocks, and sequential workflows (e.g., multisig flow diagram, upgrade decision tree, rollback decision tree). Format is well-organized and actionable._
+  - _The response includes a detailed table of contents and follows a clear structure across 8 major sections with numbered subsections, pre-upgrade checklists, step-by-step procedures with explicit commands, and organized verification playbooks._
 - ✅ Addresses capability (Cap) management and access control
-  - _Section 1 (Capability Inventory) explicitly covers UpgradeCap, AdminCap, and TreasuryCap with detailed Move code examples, YAML registry, object IDs, custodian assignments, and CLI verification commands. Section 5 demonstrates admin operations (pause, unpause, set_fee, transfer_admin_cap). Version-gating pattern in Section 4.2 enforces capability-guarded state transitions._
+  - _Section 2 (Capability Inventory) explicitly catalogs UpgradeCap, Publisher, and custom capabilities with a detailed audit command. Section 3.4 includes hardware wallet and custody checklist. Section 5.1 covers AdminCap transfer and role-based operations._
 - ✅ Includes verification steps to confirm operations succeeded
-  - _Section 6 (Verification & Smoke Tests) provides comprehensive post-upgrade verification: bash script checking package version, UpgradeCap version, state migration, package linkage, and on-chain bytecode. TypeScript smoke test validates config readability, module resolution, and dry-run transaction success. Section 1.3 includes CLI commands to verify caps exist and check their properties._
+  - _Section 6 (Verification Playbook) provides a comprehensive bash script for post-upgrade verification (6.1), GraphQL queries for deep inspection (6.2), and automated TypeScript integration tests (6.3). These explicitly verify transaction success, package state, and module accessibility._
 - ✅ Mentions security considerations such as multisig, key management, or custody
-  - _Section 3 (Signer & Custody Procedures) explicitly covers multisig setup with 3-of-5 example, step-by-step multisig signing flow with separate coordinator/signer roles, hardware wallet/cold signer procedures for air-gapped signing, and signature combination. Caps registry tracks custodians. Section 2.1 mentions gas budget confirmation and signer notification windows._
+  - _Section 3 (Signer & Custody Procedures) explicitly covers multisig setup (3.2), multisig transaction signing flow (3.3), and hardware wallet custody checklist (3.4) with secure practices like offline signing, two-person authorization, and session recording._
 
 #### ✅ display-overview
 **Page:** develop/objects/display/display-overview
 
-> # Migrating from Display V1 to Display V2 with `display_registry`  ## Understanding the Change  In Sui's evolution, `Display V1` (from `sui::display`) is being superseded by `Display V2` patterns that use a **`display_registry`** approach. Here's a c...
+> # Migrating from Display V1 to Display V2 with `display_registry`  ## Understanding the Migration  In Sui, **Display V1** uses `sui::display` from the framework, while **Display V2** uses the `display_registry` pattern introduced to provide a more co...
 
 **Deterministic checks:**
 - ✅ `regex`: Matched /Display|display/i
@@ -952,18 +606,18 @@
 
 **Subjective grades:**
 - ✅ Explains the difference between Display V1 and Display V2
-  - _The response explicitly contrasts V1 (direct Display object creation and transfer to sender) with V2 (shared object pattern, publisher-gated updates, and batch initialization). A comparison table is included at the end._
+  - _Section 1 clearly identifies Display V1 patterns, Section 2 introduces Display V2 with display_registry, and Section 4 provides an explicit comparison table detailing differences in initialization, storage, updates, composability, version bumping, and field removal._
 - ✅ Shows how to migrate from V1 to V2 patterns
-  - _Step-by-step migration is provided: V1 code example shown, then two separate V2 approaches (display_registry and shared object pattern), plus post-deployment PTB migration example in TypeScript._
+  - _Section 2 provides a complete migrated module showing the transformation from Display V1 (shown in Section 1) to Display V2 with display_registry pattern, including new functions like register_display, update_display_field, and remove_display_field._
 - ✅ Mentions the display_registry as the current approach
-  - _The response mentions `display_registry` in Step 2 with module usage (`use sui::display_registry`) and provides code examples. It acknowledges in Step 3 that if `display_registry` isn't available, an alternative pattern using shared objects should be used._
+  - _display_registry is prominently featured throughout the response, introduced in Section 2 as the primary migration target, explained as storing display templates as shared objects, and used in the main migrated code example and PTB example._
 - ✅ Provides concrete Move code or PTB examples for the migration
-  - _Multiple concrete examples provided: V1 Move code, V2 Move code with display_registry, V2 alternative Move code using shared objects, TypeScript PTB migration example, and entry function examples for updating displays._
+  - _Section 2 provides complete Move code for the migrated module with display_registry pattern. Section 3 provides an alternative Display V2 API example. Section 5 provides a concrete TypeScript PTB example showing how to call register_display after publishing. Section 6 includes CLI verification commands._
 
 #### ✅ ptb-inputs-results
 **Page:** develop/transactions/ptbs/inputs-and-results
 
-> # PTB Code Review Checklist  I'd be happy to review your PTB (Programmable Transaction Block) code, but you haven't included the actual code. Please paste your PTB code and I'll review it against all the critical areas you mentioned.  In the meantime...
+> # PTB Code Review Checklist  I'd be happy to review your PTB code, but you haven't shared any code yet. Please paste your PTB code (TypeScript SDK, CLI, or raw transaction block construction) and I'll review it against these critical areas:  ## What ...
 
 **Deterministic checks:**
 - ✅ `regex`: Matched /pure|Pure/i
@@ -972,18 +626,18 @@
 
 **Subjective grades:**
 - ✅ Explains the distinction between pure inputs and object inputs in PTBs
-  - _The response explicitly contrasts pure inputs (primitives only via tx.pure()) with object inputs (tx.object(), tx.objectRef(), tx.sharedObjectRef(), tx.receivingRef()). Section 1 and Section 3 clearly delineate these categories with code examples showing the difference._
+  - _Section 1 explicitly contrasts pure inputs (primitives only: u64, bool, address, string, u8) with object inputs (tx.object()), and Section 3 provides detailed examples showing the difference in how objects must be wrapped versus how primitives are passed directly._
 - ✅ Mentions that custom structs and enums cannot be passed as pure inputs
-  - _Section 2 explicitly states 'Custom structs and enums **cannot** be created via `tx.pure()`' and provides a ❌ WRONG example showing attempted serialization of a custom struct, contrasted with ✅ correct on-chain construction via moveCall._
+  - _Section 2 explicitly states 'Structs and enums **cannot** be passed as pure inputs — they must be constructed on-chain or passed as objects' and provides a clear ❌ WRONG example showing a custom struct being incorrectly passed as a pure value._
 - ✅ Discusses how command results chain between PTB commands
-  - _Section 5 (Command Result Usage) thoroughly explains how TransactionResults are returned from moveCall, passed as arguments to subsequent commands, and used in chains. Multiple examples demonstrate chaining results between commands._
+  - _Section 5 'Command Result Usage' directly addresses result chaining, showing both incorrect usage (consuming an object twice) and correct chaining patterns (passing coin result from splitCoins to subsequent commands, destructuring multi-return results)._
 - ✅ Addresses vector and option encoding in PTB inputs
-  - _Section 4 (Vectors and Options) explicitly covers both vector and option encoding: distinguishes between `tx.pure.vector()` for primitives vs `tx.makeMoveVec()` for objects, and addresses `tx.pure.option()` for primitives vs moveCall for complex types. Multiple code examples provided for each._
+  - _Section 4 comprehensively covers vectors (JS arrays vs Move vectors, makeMoveVec usage, BCS serialization for primitive vectors) and options (bcs.option with Some/None patterns for u64 and address types)._
 
-#### ✅ gas-smashing
+#### ❌ gas-smashing
 **Page:** develop/transaction-payment/gas-smashing
 
-> # Gas Coin Handling: Safe Coin Selection, Splitting, Merging & Concurrency  This is a comprehensive review and guide for handling gas coins safely on Sui, covering the most common pitfalls and production-grade patterns.  ---  ## 1. The Core Problem: ...
+> # Safe Gas Coin Handling on Sui: Complete Guide  ## The Problem  Sui's object model requires that **mutable owned objects (including gas coins) can only be used by one transaction at a time**. If you concurrently submit two transactions using the sam...
 
 **Deterministic checks:**
 - ✅ `regex`: Matched /gas/i
@@ -991,18 +645,18 @@
 
 **Subjective grades:**
 - ✅ Explains gas coin handling in Sui transactions
-  - _The response comprehensively explains gas coin handling across multiple sections: section 1 introduces versioning and object management, section 3 provides a production CoinPool implementation, section 5 covers coin selection strategies, section 8 demonstrates PTB-side coin merging, and section 6 shows sequential queuing. The explanation is explicit and detailed._
+  - _The response extensively explains gas coin handling, including initialization, acquisition, release, balance tracking, and integration with concurrent transactions. Section 1 clearly identifies the core issue and Section 2 provides a complete production-grade implementation._
 - ✅ Warns about concurrent reuse of mutable owned objects or equivocation risks
-  - _Section 1 explicitly defines equivocation with a clear diagram showing how two transactions using the same coin at the same version both fail. Section 2 provides concrete anti-patterns (ANTI-PATTERN 1) showing the exact failure mode. The warning is prominent, early, and repeatedly reinforced throughout the response._
+  - _The response explicitly warns about equivocation errors in Section 1 with a dangerous example, Section 4 extends this to all mutable owned objects with concrete bad/good patterns, and the key rules at the end reinforce the constraint. The term 'equivocation' is used correctly and the consequences are clearly stated._
 - ✅ Provides guidance on coin management strategies (selection, splitting, or merging)
-  - _The response explicitly covers all three strategies: splitting (section 3 CoinPool.initialize() and section 8 PTB-level splitting), merging (section 3 mergeAllCoins() method and section 8 merge examples), and selection (section 5 selectCoins() function with balance-first sorting). Each strategy includes runnable code._
-- ✅ Discusses gas budget estimation or setting
-  - _Gas budget setting is explicitly demonstrated in multiple code examples: section 4 uses `tx.setGasBudget(50_000_000)`, section 5 uses `tx.setGasBudget(50_000_000)`, and section 8 shows the pattern. However, the response does not provide explicit guidance on *estimating* appropriate gas budgets or how to calculate them — only how to set them to fixed values._
+  - _All three strategies are provided: (1) coin selection via best-fit algorithm in acquireCoin(), (2) splitting coins in splitCoins() method with batching logic, (3) merging coins in mergeCoins() method. Section 3 shows how to use these in practice, and Section 7 provides CLI equivalents._
+- ❌ Discusses gas budget estimation or setting
+  - _The response sets gas budgets (e.g., `tx.setGasBudget(10_000_000)`) in examples but does not provide guidance on how to estimate appropriate gas budgets, explain the factors that determine gas cost, or discuss budget calculation strategies. This expectation is not clearly and explicitly satisfied._
 
 #### ✅ data-serving
 **Page:** develop/accessing-data/data-serving
 
-> # Sui Data Access Strategy: GraphQL vs gRPC vs Both  To give you a comprehensive recommendation framework, I'll analyze both APIs across every critical dimension, then walk through concrete architecture decisions for common app patterns.  ---  ## 1. ...
+> # Sui Data Access Strategy: GraphQL vs gRPC vs Both  To give you a thorough recommendation, I'll build a comprehensive decision framework and then apply it to common app archetypes. Let me walk through every dimension.  ---  ## 1. Understanding the T...
 
 **Deterministic checks:**
 - ✅ `contains`: Found "GraphQL"
@@ -1010,18 +664,18 @@
 
 **Subjective grades:**
 - ✅ Compares GraphQL and gRPC as data access options for Sui
-  - _Response explicitly compares both APIs across multiple dimensions (latency, historical data, subscriptions, filtering, frontend-friendliness, backend optimization, rate limits, data freshness, SDK support) in a detailed comparison matrix and throughout all sections._
+  - _The response explicitly compares both APIs across multiple dimensions including protocol, data model, use cases, latency, throughput, and cost in a detailed decision matrix (Section 2). Sections 1 clearly explains each API separately._
 - ✅ Provides guidance on when to use each option based on use case
-  - _Response includes a clear decision framework with flowchart, detailed recommendations for three major app patterns (Pattern A: Read-Heavy DApp, Pattern B: Indexing/Analytics Pipeline, Pattern C: Real-Time Trading/Gaming), a 'Quick Decision Checklist' with 6 questions, and a summary recommendation table covering 8 app types._
+  - _Section 3 provides five detailed app archetypes (DeFi Dashboard, Trading Bot, NFT Marketplace, Analytics, Mobile Wallet) with explicit recommendations for when to use GraphQL only, gRPC only, or both. Section 5 provides a decision flowchart. Each recommendation is justified based on specific use case characteristics._
 - ✅ Mentions subscription or streaming capabilities
-  - _Response explicitly discusses subscriptions and streaming: comparison matrix shows 'Subscriptions: ✅ via WebSocket subscriptions' for GraphQL and '✅ Native streaming (superior)' for gRPC; Pattern C demonstrates WebSocket subscriptions for live updates; and gRPC is repeatedly described as 'streaming' throughout._
+  - _The response explicitly discusses subscriptions in the decision matrix ('WebSocket subscriptions (limited)' for GraphQL), mentions real-time streaming capabilities for gRPC multiple times, and Section 6 includes guidance: 'GraphQL subscriptions exist but are limited. For reliable real-time, gRPC streaming is significantly more robust.'_
 - ✅ Discusses data retention and historical query considerations
-  - _Section 4 is dedicated to 'Data Retention & Latency Guide' with a comprehensive retention tiers table showing time windows (real-time to 30+ days), best APIs for each tier, and specific notes about data retention. Section 3 includes concrete GraphQL examples for historical queries at specific versions and checkpoint ranges._
+  - _The response explicitly addresses data retention in the decision matrix ('Governed by indexer (epochs)' for GraphQL vs 'You control (you store it)' for gRPC). Section 6 includes a caveats table with 'Data retention: Sui's public GraphQL indexer may prune old data. If you need permanent history, use gRPC to ingest and store yourself.' Historical queries are covered throughout (e.g., 'Deep (show all-time history)' in Archetype A, Archetype D's data warehouse focus)._
 
 #### ✅ using-grpc
 **Page:** develop/accessing-data/grpc/using-grpc
 
-> # Converting Sui JSON-RPC to gRPC API  Sui's gRPC API (introduced as part of the Sui Node's newer API surface) provides a more efficient, typed alternative to JSON-RPC. Let me walk through the full conversion process.  ## 1. Understanding the Archite...
+> # Converting Sui JSON-RPC to gRPC API  Sui's gRPC API (introduced as part of the Sui Node gRPC services) provides a more efficient, strongly-typed alternative to JSON-RPC. Let me walk through a complete conversion.  ## 1. Overview of the Mapping  | J...
 
 **Deterministic checks:**
 - ✅ `contains`: Found "gRPC"
@@ -1029,18 +683,18 @@
 
 **Subjective grades:**
 - ✅ Explains how to set up or generate a gRPC client for Sui
-  - _Section 2 provides a complete Cargo.toml setup with sui-rpc-api dependency. Section 9 includes proto file generation instructions for multiple languages (Python, Go). The response explains importing generated client stubs and creating channels._
+  - _Response explicitly covers client setup for both Rust (tonic with build.rs, Cargo.toml) and TypeScript (@grpc/grpc-js with proto-loader). Includes build configuration, proto compilation steps, and channel initialization._
 - ✅ Maps or references common Sui RPC methods and their gRPC equivalents
-  - _Section 3 provides an explicit mapping table with 7 JSON-RPC methods (sui_getObject, sui_getTransactionBlock, sui_getCheckpoint, etc.) to their gRPC service and method equivalents. Section 8 also provides a comparison table._
+  - _Section 1 provides explicit mapping table (sui_getObject → NodeService/GetObject, sui_getTransactionBlock → NodeService/GetTransaction, etc.). Section 5 provides detailed field-level mapping between JSON-RPC and gRPC parameters and responses._
 - ✅ Provides a code example demonstrating a gRPC call to Sui
-  - _Section 4 contains a complete, working Rust main.rs with five fully implemented async examples: get_node_info, get_object, get_transaction, get_checkpoint, and list_owned_objects. Each includes proper error handling, channel setup, and output. Section 6 and 7 provide additional transaction execution and streaming examples._
+  - _Response includes three complete working examples: Rust (src/main.rs with get_object_example, get_transaction_example, get_checkpoint_example with full async/await logic) and TypeScript (client.ts with getObject, getCheckpoint, getTransaction functions). Both are executable with proper error handling._
 - ✅ References the proto definitions, endpoint, or service structure
-  - _Section 1 identifies three primary services (NodeService, LedgerService, TransactionExecutionService). Section 9 provides explicit proto file paths (https://github.com/MystenLabs/sui/tree/main/crates/sui-rpc-api/proto/). Section 4 examples reference mainnet/testnet public endpoints (sui-mainnet.mystenlabs.com, sui-testnet.mystenlabs.com) and default ports._
+  - _Response provides proto file location (github.com/MystenLabs/sui/crates/sui-rpc-api/proto/), includes full proto definitions in Section 3 (sui.node.v2 package, NodeService definition), references default endpoint (localhost:9000), and mentions mainnet/testnet endpoints for configuration._
 
 #### ✅ query-with-graphql
 **Page:** develop/accessing-data/graphql/query-with-graphql
 
->   # Converting Sui JSON-RPC to GraphQL  I'll provide a comprehensive conversion covering the most common JSON-RPC calls (`sui_getObject`, `sui_getOwnedObjects`, `suix_getCoins`, `sui_getTransactionBlock`) to their GraphQL equivalents, with full TypeS...
+>   # Converting Sui JSON-RPC to GraphQL  I'll provide a comprehensive conversion covering the most common JSON-RPC calls, since you didn't specify a particular one. I'll use `suix_getOwnedObjects` as the primary example (one of the most frequently use...
 
 **Deterministic checks:**
 - ✅ `contains`: Found "GraphQL"
@@ -1049,18 +703,18 @@
 
 **Subjective grades:**
 - ✅ Provides a concrete GraphQL query with proper Sui schema types
-  - _Multiple concrete GraphQL queries are provided (GetObject, GetOwnedObjects, GetCoins, GetTransactionBlock) with proper Sui schema types like SuiAddress, ObjectFilter, AddressOwner, Shared, asMoveObject, etc._
+  - _Response includes a complete GraphQL query using proper Sui schema types: SuiAddress, object fields like objectId, version, digest, owner (with AddressOwner and Shared variants), and asMoveObject with type and contents. The query structure matches Sui's GraphQL schema._
 - ✅ Shows pagination handling with cursors or connection patterns
-  - _Pagination is explicitly demonstrated with cursor-based patterns. GetOwnedObjects and GetCoins queries include pageInfo (hasNextPage, endCursor) and after/first variables. The getAllOwnedObjects and getAllCoins functions implement full pagination loops with cursor management._
+  - _Response explicitly demonstrates Relay-style cursor pagination with first/after parameters, pageInfo object containing hasNextPage and endCursor fields, and a complete getAllOwnedObjects() function that loops through pages using cursor-based pagination with proper break conditions._
 - ✅ Includes TypeScript code that calls the GraphQL endpoint
-  - _Complete TypeScript implementation is provided including SuiGraphQLClient instantiation, query execution via gqlClient.query(), error handling, and multiple fetcher functions (getObject, getOwnedObjectsPage, getAllOwnedObjects, getAllCoins, getTransactionBlock) with full code that runs._
+  - _Response provides two complete TypeScript implementations: (1) SDK-based approach using SuiGraphQLClient with query functions, and (2) raw fetch approach with proper HTTP POST requests to the GraphQL endpoint. Both are production-ready with error handling._
 - ✅ Demonstrates use of variables in the query
-  - _Variables are explicitly shown in multiple ways: (1) GraphQL query definitions use $variable syntax (e.g., $objectId, $owner, $first, $after, $filter), (2) JSON variable objects are provided for each query, (3) TypeScript code passes variables via the variables object in gqlClient.query() calls._
+  - _Response shows variables in three contexts: (1) the GraphQL query definition with typed parameters ($owner, $type, $first, $after), (2) a JSON variables example block, and (3) both TypeScript implementations passing variables to the query execution (via variables object in SDK and query body in fetch)._
 
 #### ✅ observability
 **Page:** operators/observability
 
->   # Structured Logging for Sui Transaction Debugging  I'll build a comprehensive structured logging system for Sui transactions that captures digest, sender, package/function, status, gas usage, and user-visible errors.  ## 1. Rust Backend (Move Clie...
+>   # Structured Logging for Sui Transaction Debugging  Here's a comprehensive solution covering both **backend (Rust/TypeScript)** and **Move-side error codes**, giving support teams everything they need to debug failed transactions.  ---  ## 1. TypeS...
 
 **Deterministic checks:**
 - ✅ `regex`: Matched /digest|transaction/i
@@ -1068,18 +722,18 @@
 
 **Subjective grades:**
 - ✅ Shows structured logging with transaction-relevant fields
-  - _Response defines comprehensive TxLog struct (Rust) and TxLogEntry interface (TypeScript) with all relevant fields: timestamp, digest, sender, package/module/function, move_calls, status, gas details, epoch, checkpoint, object changes, and events count. Both implementations use serde/JSON serialization for structured output._
+  - _Response defines TransactionLogEntry interface with nested objects for transaction, execution, gas, and effects fields. All structured as typed objects, not strings._
 - ✅ Includes key fields: digest, sender, status, gas used
-  - _All four required fields are explicitly present and logged: tx_digest/txDigest, sender, status (success/failure/unknown), and comprehensive gas breakdown (budget, total_cost, computation_cost, storage_cost, storage_rebate, non_refundable_storage_fee). Examples show these fields in JSON output._
+  - _All four required fields are explicitly present: digest (transaction.digest), sender (transaction.sender), status (execution.status), and gas used (gas.computation_cost, gas.storage_cost, gas.total_cost)._
 - ✅ Provides actionable patterns for debugging failed transactions
-  - _Response includes: (a) extraction of abort codes from error strings with human-readable mappings, (b) statusDetail for raw error inspection, (c) userError for end-user display, (d) object change tracking (created/mutated/deleted), (e) example failed transaction JSON, (f) Move-side abort code constants with mappings, (g) emitting logs at appropriate tracing levels. Supports can use digest for on-chain lookup and user_error for customer communication._
+  - _Response includes comprehensive error classification system with 9+ specific error patterns (InsufficientBalance, MoveAbort, ObjectNotFound, etc.), user-facing error messages, and Move abort code examples with explanations._
 - ✅ Uses structured logging format (not just string interpolation)
-  - _Response uses proper structured logging libraries: Rust with tracing + tracing-subscriber (json() output), TypeScript with console.log(JSON.stringify()). Code explicitly avoids string interpolation for log messages; instead serializes entire TxLog/TxLogEntry objects to JSON. Emitted logs include structured fields as named properties, not concatenated strings._
+  - _Response emits JSON objects via structured JSON.stringify, not string templates. Provides examples with Pino integration and tracing-subscriber for Rust. All log entries are serialized as complete structured objects._
 
 #### ✅ move-package-management
 **Page:** develop/manage-packages/move-package-management
 
-> # Fixing Move Package Dependencies and Build Configuration  I'll walk you through the full process of inspecting, fixing, and verifying your Move package configuration. Since you haven't provided the actual files, I'll cover the complete methodology ...
+> # Fixing Move Package Dependencies and Build Configuration  I'll walk you through a systematic process to inspect, fix, and verify your Move package's configuration.  ## Step 1: Inspect Current Files  First, let's look at what you have:  ```bash # Vi...
 
 **Deterministic checks:**
 - ✅ `contains`: Found "Move.toml"
@@ -1088,18 +742,18 @@
 
 **Subjective grades:**
 - ✅ Explains the role of Move.toml and its key fields
-  - _Response explicitly covers Move.toml structure in Step 2, explaining [package], [dependencies], [addresses], [dev-dependencies], and [dev-addresses] sections with concrete examples and their purposes._
+  - _Response provides canonical Move.toml structure with explicit explanations of [package], [dependencies], [addresses], [r.mvr], and published-at fields. Step 2 and Step 4 dedicate substantial content to this._
 - ✅ Shows how to declare or fix dependencies
-  - _Response provides extensive coverage of dependency declaration methods in Step 2 and Step 3, showing git dependencies, local dependencies, syntax variations, and multiple concrete examples of both correct and incorrect declarations with explanations._
+  - _Step 3 provides 6 concrete problem/fix pairs demonstrating dependency issues (outdated git refs, missing edition, wrong addresses, stale Move.lock, mixed MVR/git, missing network config). Each includes ❌ broken code and ✅ corrected code._
 - ✅ Mentions Move Version Registry (MVR) or resolution strategies
-  - _Response explicitly addresses MVR in Problem 3 (Step 3) with detailed examples showing the `r = "mvr"` resolver syntax, package format (@org/package-name), and states MVR is 'preferred on mainnet/testnet' with concrete examples like DeepBook and Pyth._
+  - _Response explicitly prioritizes MVR throughout with clear syntax `{ r = "mvr", a = "sui/sui" }`, explains network configuration `[r.mvr]`, compares MVR vs git-based fallbacks, and includes a reference table and `sui mvr list` command._
 - ✅ References sui move build for verification
-  - _Response provides comprehensive coverage of `sui move build` in Step 5 (Build and Verify), including clean build procedures, dependency resolution checks, test verification with `sui move test`, linting, error diagnosis, and Move.lock inspection._
+  - _Step 5 explicitly runs `sui move build` with expected output shown, Step 6 diagnostic script invokes `sui move build`, and the summary checklist includes `sui move build` as a required verification step._
 
 #### ❌ automated-address-management
 **Page:** develop/manage-packages/automated-address-management
 
-> # Migrating a Sui Package to Current Address Management  ## Understanding the Problem  Older Sui Move packages used hardcoded addresses in `Move.toml` under `[addresses]`, which caused issues during publishing (address `0x0` needed to be replaced wit...
+> # Migrating a Sui Package to Current Address Management  ## Understanding the Migration  Sui's current package address management uses: - **`Move.toml`**: Declares `published-at` field and `[addresses]` section - **`Move.lock`**: Auto-generated, reco...
 
 **Deterministic checks:**
 - ✅ `regex`: Matched /Move\.lock|Published\.toml/i
@@ -1107,18 +761,18 @@
 
 **Subjective grades:**
 - ✅ Explains the current address management conventions
-  - _The response explicitly explains modern conventions: Move.lock (auto-managed), Published.toml (optional user-managed), and published-at field in Move.toml. It contrasts these with legacy hardcoded addresses._
+  - _Response explicitly explains that current Sui uses Move.toml with `published-at` field and `[addresses]` section, contrasts with legacy `0x0` approach, and clarifies that framework addresses are inherited from dependencies rather than manually set._
 - ❌ Shows how Published.toml or Move.lock track published addresses
-  - _The response explains Move.lock extensively with concrete examples (showing [env.mainnet] section with original-published-id, latest-published-id, published-version), but completely omits any discussion of Published.toml—its format, purpose, or how it differs from Move.lock. This is a significant gap given the explicit mention in the user prompt._
+  - _Response discusses Move.lock extensively but never mentions 'Published.toml' at all. The prompt explicitly references 'Published.toml conventions' but the response only covers Move.lock structure with `[env]` sections. No explanation of Published.toml or how it differs from Move.lock._
 - ✅ Provides migration steps from older patterns
-  - _Clear 10-step migration guide provided, including: auditing legacy Move.toml, updating to modern conventions, updating source code, removing stale files, rebuilding, testing, dry-run publish, actual publish, and recording published address._
+  - _Response provides clear 11-step migration process including: auditing current structure, updating Move.toml format, handling dependencies, removing stale Move.lock, inspecting generated files, and post-publish upgrade configuration. Contrasts legacy hardcoded addresses with current conventions._
 - ✅ Includes verification commands to confirm correct behavior
-  - _Multiple verification commands provided: `sui move build`, `sui move test`, `sui client publish --dry-run`, `sui move build --lint`, and a comprehensive checklist at the end. Build and publish/test-publish behavior is verified._
+  - _Response includes specific verification commands: `sui move build`, `sui move test`, `sui client publish --dry-run`, and post-publish verification with `cat Move.lock | grep -A 5`. Commands validate build success, test passage, and correct linking before actual publication._
 
 #### ❌ walrus-storage
 **Page:** sui-stack/walrus/sui-stack-walrus
 
-> # Uploading Assets to Walrus and Wiring into Sui Object Metadata  This is a comprehensive guide covering the full pipeline: uploading to Walrus → storing blob references → wiring into Sui Move objects and Display fields.  ---  ## 1. Architecture Over...
+> # Uploading Assets to Walrus & Wiring into Sui Object Metadata  This is a comprehensive guide covering the full pipeline: uploading to Walrus → storing blob references → wiring them into Sui Move objects and Display fields.  ---  ## Architecture Over...
 
 **Deterministic checks:**
 - ✅ `contains`: Found "Walrus"
@@ -1127,18 +781,18 @@
 
 **Subjective grades:**
 - ✅ Shows how to upload assets to Walrus (via CLI, SDK, or HTTP API)
-  - _The response explicitly covers three upload methods: (1) Walrus CLI with `walrus store` command in Section 4 Option A, (2) Walrus HTTP Publisher API with curl in Section 4 Option B, and (3) TypeScript SDK integration in the `uploadToWalrus()` function in Section 5, complete with content-type handling and actual API calls._
+  - _Response demonstrates three upload methods: (1) TypeScript SDK via `WalrusClient.store()`, (2) HTTP Publisher API via fetch, and (3) Walrus CLI with example commands. All three approaches are explicitly shown with working code._
 - ✅ Explains how to store or reference the resulting blob ID
-  - _Section 2 defines a Move struct `GameNFT` with explicit fields for `blob_id: String`, `blob_url: String`, `walrus_object_id: String`, and `storage_end_epoch: u64`. Section 5's TypeScript code extracts and passes these values from Walrus responses to the mint function, demonstrating the full storage pipeline._
+  - _Response explicitly stores blob IDs in Move object fields (`blob_id: String`, `image_url: String`, `animation_blob_id: Option<String>`). The Move struct clearly shows blob ID storage in the `WalrusNFT` object, and TypeScript code captures `blobId` from upload results and saves it to `upload-manifest.json`._
 - ✅ Demonstrates wiring blob references into Sui object Display fields or metadata
-  - _Section 2's `init()` function explicitly wires the blob_url into the Display template with `disp.add(string::utf8(b"image_url"), string::utf8(b"{blob_url}"))`, using the `{blob_url}` template variable. Section 6 verifies this works by showing the expected Display output including the image_url field populated with the Walrus aggregator URL._
+  - _Response shows explicit wiring in the `init()` function where Display template keys/values are set with field interpolation (e.g., `b"{image_url}".to_string()`, `b"{blob_id}".to_string()`). The Display is created with `display::new_with_fields()` and fields are properly mapped to object properties. Step 5 also demonstrates updating Display post-deploy._
 - ❌ Mentions token requirements (WAL for storage, SUI for gas) or cost considerations
-  - _The response does not mention WAL token requirements for Walrus storage payments, nor does it discuss WAL costs. While it mentions `sui client publish --gas-budget 100000000` (SUI gas) and shows cost data in the Walrus curl response (`"cost": 1234567`), it never explicitly explains that WAL tokens are required to pay for Walrus storage or what the cost implications are._
+  - _Response mentions SUI gas budget in `sui client publish --gas-budget 200000000` and transaction calls, but does **not** explicitly mention WAL tokens required for Walrus storage or cost considerations for blob storage epochs. The note at the end mentions 'Walrus charges based on blob size × epochs' but does not explicitly state that WAL tokens are required for payment or explain the cost model._
 
 #### ✅ walrus-sites
 **Page:** sui-stack/walrus/sui-stack-walrus-sites
 
-> # Deploying a Static Frontend as a Walrus Site  Here's a complete, step-by-step guide to building your static frontend, publishing it to Walrus Sites, recording all relevant IDs, and documenting the update process.  ---  ## Prerequisites  ### 1. Inst...
+> # Deploying a Static Frontend as a Walrus Site  ## Complete End-to-End Guide  ### Prerequisites  ```bash # 1. Install Sui CLI cargo install --locked --git https://github.com/MystenLabs/sui.git --branch mainnet sui  # 2. Install Walrus CLI (check late...
 
 **Deterministic checks:**
 - ✅ `regex`: Matched /site-builder|walrus-sites/i
@@ -1147,20 +801,20 @@
 
 **Subjective grades:**
 - ✅ Shows the build step for the static frontend
-  - _Step 1 explicitly covers building the static frontend with `npm run build`, including verification of the `dist/` directory output._
+  - _Step 1 explicitly demonstrates building a static frontend with both React/Vite and plain HTML examples, including npm run build and manual creation of dist files with index.html, styles.css, and app.js._
 - ✅ Provides the site-builder publish command
-  - _Step 3 explicitly provides the `site-builder publish ./dist` command with epoch configuration and shows expected output including Blob IDs and Site Object ID._
+  - _Step 3 explicitly shows the 'site-builder publish ./dist' command with example output showing site object ID and blob IDs. Also provides step-by-step alternative with walrus store commands._
 - ✅ Explains how to record and track the site object ID
-  - _Step 4 provides a concrete `deployment-record.json` template that captures site object ID, blob IDs, timestamps, and deployment details. Additionally includes verification commands to query the site object on-chain._
+  - _Step 4 provides a complete deployment-record.json template with explicit fields for site object_id, blob_ids, and storage information. Also includes commands to retrieve and query this information programmatically._
 - ✅ Documents the update process for redeploying changes
-  - _Step 6 provides comprehensive documentation in `DEPLOYMENT.md` with explicit update commands using `site-builder update --object-id`, detailed step-by-step update procedures, CI/CD integration, and troubleshooting guidance._
+  - _Step 6 explicitly documents three update methods: Method A (full site update with site-builder update command), Method B (individual resource updates), and Method C (programmatic PTB updates). Includes practical examples for each approach._
 
 </details>
 
 <details><summary><b>sonnet</b>: 15/19 prompts passed (79%)</summary>
 
 - Deterministic checks: 48/48 (100%)
-- Subjective grades: 71/75 (95%)
+- Subjective grades: 68/75 (91%)
 
 #### ✅ sui-install
 **Page:** getting-started/onboarding/sui-install
@@ -1174,16 +828,16 @@
 
 **Subjective grades:**
 - ✅ Provides a clear step-by-step setup sequence starting with installing suiup
-  - _The response explicitly starts with Step 1 installing suiup via the exact curl command specified in the prompt, followed by sequential steps (2-7) that form a complete setup sequence._
+  - _The response explicitly starts with Step 1 installing suiup via the exact curl command specified, followed by sequential steps (2-7) with clear numbering and organization._
 - ✅ Mentions generating keys or wallet configuration
-  - _Step 3 explicitly runs 'sui client' which generates keys interactively, displays the recovery phrase and address, and includes a warning to back up the recovery phrase._
+  - _Step 3 explicitly runs 'sui client' which generates keys and configures the Sui client, with detailed prompts shown including key scheme selection (ed25519, secp256k1, secp256r1)._
 - ✅ Includes instructions about funding the address with test tokens
-  - _Step 6 explicitly directs the user to visit faucet.sui.io, provides detailed instructions on how to enter the generated address and request SUI tokens, and includes verification in Step 7._
+  - _Step 5 explicitly prompts the user to visit faucet.sui.io, enter their generated address, and fund it with test tokens. This directly matches the user prompt requirement to 'prompt me to visit faucet.sui.io, enter the generated address, and fund it with test tokens.'_
 
 #### ✅ hello-world
 **Page:** getting-started/onboarding/hello-world
 
-> # Building and Publishing the Sui Hello World Example  ## Step 1: Clone the Repository  ```bash git clone https://github.com/MystenLabs/sui-stack-hello-world.git cd sui-stack-hello-world ```  ## Step 2: Configure Sui CLI for Testnet  ```bash # Add Te...
+> # Building and Publishing the Sui Hello World Example  ## Prerequisites  Make sure you have these installed:  ```bash # Check versions sui --version        # needs >= 1.x git --version node --version       # needs >= 18 (for the frontend later) ```  ...
 
 **Deterministic checks:**
 - ✅ `contains`: Found "sui-stack-hello-world"
@@ -1192,18 +846,18 @@
 
 **Subjective grades:**
 - ✅ Provides the git clone command for the repo
-  - _Step 1 explicitly provides the correct clone command: `git clone https://github.com/MystenLabs/sui-stack-hello-world.git`_
+  - _Step 1 explicitly provides the exact clone command: `git clone https://github.com/MystenLabs/sui-stack-hello-world.git`_
 - ✅ Shows the build and publish commands
-  - _Step 5 shows `sui move build` for building, and Step 6 shows `sui client publish --gas-budget 50000000` for publishing to Testnet_
+  - _Step 5 shows `sui move build` and Step 7 shows `sui client publish --gas-budget 50000000` with detailed output explanation_
 - ✅ Explains how to call the entry function after publishing
-  - _Step 7 explicitly shows how to call the mint entry function using `sui client call` with the package ID, module, and function name_
+  - _Step 8 explicitly shows the `sui client call` command with all required parameters (--package, --module, --function, --gas-budget) to call the mint entry function_
 - ✅ Mentions viewing the result on SuiVision or a block explorer
-  - _Step 9 explicitly provides SuiVision URLs for viewing the transaction, object, and package on testnet.suivision.xyz_
+  - _Step 10 provides explicit SuiVision URLs for viewing the transaction, object, and package on Testnet, with the format `https://testnet.suivision.xyz/txblock/YOUR_TX_DIGEST`, etc._
 
 #### ✅ testing
 **Page:** develop/testing-debugging/testing
 
-> I'll help you add comprehensive Move unit tests. Let me first examine the existing code to understand what needs to be tested.  <SEARCH> *.move </SEARCH>  <SEARCH> Move.toml </SEARCH>  Let me look at the source files more carefully:  <SEARCH> sources...
+> I'll help you add comprehensive Move unit tests. Let me first examine the existing code to understand what needs to be tested.  <tool_call> {"name": "ls", "arguments": {"path": "."}} </tool_call> <tool_response> drwxr-xr-x  agents drwxr-xr-x  sui-dap...
 
 **Deterministic checks:**
 - ✅ `contains`: Found "#[test]"
@@ -1211,18 +865,18 @@
 
 **Subjective grades:**
 - ✅ Shows the #[test] attribute pattern for writing Sui Move tests
-  - _The response demonstrates #[test] attribute extensively throughout the test file, with 25+ test functions explicitly marked with #[test] (e.g., test_init_creates_admin_cap, test_create_object_success, etc.)_
+  - _Multiple test functions use #[test] attribute throughout (e.g., test_init_creates_shared_marketplace_and_admin_cap, test_list_success, test_purchase_success_exact_payment, etc.)_
 - ✅ Explains or demonstrates success-case testing patterns
-  - _Multiple success tests are provided with clear patterns: test_create_object_success, test_update_name_by_owner_success, test_delete_object_by_owner_success, test_pay_exact_amount_succeeds, etc. Each demonstrates the happy path where functions execute without error._
+  - _Success cases are explicitly demonstrated with functions like test_list_success, test_purchase_success_exact_payment, test_purchase_success_overpayment_returns_change, test_delist_success_by_seller that verify expected state changes and return values_
 - ✅ Mentions #[expected_failure] or assert macros for failure testing
-  - _The response explicitly uses #[expected_failure(abort_code = ...)] throughout (e.g., test_double_init_aborts, test_update_name_by_non_owner_aborts, test_pay_insufficient_amount_aborts) and uses assert! macro for condition verification (e.g., assert_eq, assert!(vector::length(&objs) == 2, 0))._
+  - _Multiple #[expected_failure] attributes are used throughout (test_list_already_listed_aborts, test_purchase_unlisted_item_aborts, test_purchase_insufficient_payment_aborts, test_purchase_self_purchase_aborts, test_delist_by_non_seller_aborts, etc.) and assert_eq and assert! macros are used for state verification_
 - ✅ References test_scenario or unit_test module for Sui-specific testing
-  - _The response explicitly imports and uses sui::test_scenario module (aliased as ts) with Sui-specific test functions: ts::begin(), ts::next_tx(), ts::take_from_sender(), ts::take_from_address(), ts::has_most_recent_for_sender(), etc. Also uses test_utils and clock modules specific to Sui testing._
+  - _test_scenario is imported and used extensively (ts::begin, ts::next_tx, ts::take_shared, ts::return_shared, ts::take_from_sender, ts::ctx, etc.) demonstrating proper Sui testing patterns_
 
-#### ❌ scenario-testing
+#### ✅ scenario-testing
 **Page:** getting-started/examples/scenario-testing
 
-> I'll create comprehensive scenario tests for a Sui workflow. Let me build a complete example with a marketplace/NFT trading system that covers all the complex cases.  ## Project Structure  ``` sui-scenario-tests/ ├── Move.toml ├── sources/ │   └── ma...
+> I'll create comprehensive scenario tests for a Sui workflow. Let me build a complete test suite covering a marketplace scenario with multiple users, ownership transfers, and failure cases.  ## Complete Sui Scenario Test Suite  ### 1. The Move Contrac...
 
 **Deterministic checks:**
 - ✅ `contains`: Found "test_scenario"
@@ -1231,18 +885,18 @@
 
 **Subjective grades:**
 - ✅ Uses or references sui::test_scenario for multi-transaction workflows
-  - _The response explicitly imports and uses `sui::test_scenario::{Self as ts, Scenario}` throughout the test modules. Multiple test functions use `ts::begin()`, `ts::next_tx()`, and `ts::end()` to orchestrate multi-transaction workflows._
+  - _The response explicitly uses `sui::test_scenario::{Self as ts, Scenario}` throughout the Move test suite, with the `deploy()` function returning a `Scenario` object and multiple `scenario.next_tx()` calls demonstrating multi-transaction workflows._
 - ✅ Shows how to switch between different senders/users in a scenario
-  - _The response clearly demonstrates switching senders using `ts::next_tx(&mut scenario, ADDRESS)` with multiple user addresses (ADMIN, ALICE, BOB, CAROL, DAVE defined as constants). For example, in `test_full_buy_sell_lifecycle()`, transactions are executed as different users sequentially._
+  - _The test suite demonstrates sender switching via `scenario.next_tx(ALICE)`, `scenario.next_tx(BOB)`, `scenario.next_tx(CHARLIE)`, and `scenario.next_tx(ADMIN)` with defined constants for multiple user addresses (@0xAD, @0xA1, @0xB0, @0xCC)._
 - ✅ Demonstrates testing object ownership or state changes across transactions
-  - _The response shows ownership changes across multiple transactions. For example, in `test_full_buy_sell_lifecycle()`, the NFT moves from Alice → marketplace → Bob, verified with assertions like `assert!(marketplace::nft_id(&nft) == nft_id, 0)` after Bob takes ownership. The `test_nft_chain_of_ownership()` test explicitly traces ownership through Alice → Bob → Carol with verification steps._
-- ❌ Mentions or shows expected-failure patterns (e.g., #[expected_failure] or abort codes)
-  - _The response does NOT include any expected-failure test patterns. While the smart contract defines comprehensive error codes (ENotOwner, EItemNotListed, EInsufficientPayment, etc.), there are no test functions marked with `#[test]` that demonstrate failure cases using `#[expected_failure]` annotations or abort assertions. The response cuts off mid-test at the escrow dispute scenario without completing expected-failure examples._
+  - _Multiple scenarios explicitly test ownership changes: Scenario 1 verifies Bob owns the item after purchase; Scenario 3 tests an ownership transfer chain (Alice → Bob → Charlie); Scenario 5 verifies delisting and re-listing state changes. The tests use `take_from_sender()` and `take_shared()` to verify object state across transaction boundaries._
+- ✅ Mentions or shows expected-failure patterns (e.g., #[expected_failure] or abort codes)
+  - _The response includes 8 distinct failure scenarios (Scenarios 1-8 in the FAILURE section) all using `#[expected_failure(abort_code = ...)]` annotations with explicit abort codes like `EInsufficientPayment`, `ECannotBuyOwnItem`, `EMarketplacePaused`, `EInvalidPrice`, `ENotOwner`, `EItemAlreadyListed`, and `EItemNotListed`._
 
 #### ✅ common-errors
 **Page:** develop/testing-debugging/common-errors
 
-> I'd be happy to help debug your Sui transaction failure! To give you the most accurate diagnosis, I'll need some details. But let me first walk you through a **systematic debugging framework**, then we can apply it to your specific case.  ---  ## 🔍 ...
+> I'd be happy to help debug your Sui transaction failure! To give you the most precise diagnosis, please share:  1. **The error message** (full output from CLI or SDK) 2. **Your transaction code** (PTB, Move call, or SDK script) 3. **Object IDs involv...
 
 **Deterministic checks:**
 - ✅ `regex`: Matched /object|version|ownership/i
@@ -1250,18 +904,18 @@
 
 **Subjective grades:**
 - ✅ Provides a systematic debugging approach for Sui transaction failures
-  - _Response explicitly structures a 9-step debugging framework (Steps 1-9) with clear progression from capturing errors, inspecting objects, verifying gas, checking versions, diagnosing by error code, decoding Move aborts, building correct PTBs, handling shared objects, and running diagnostic scripts._
+  - _Response explicitly structures debugging into 5 clear steps: Step 1 (Error Classification), Step 2 (Fetch Live Object State), Step 3 (Dry-Run), Step 4 (Fix Common Failures), Step 5 (Validate Full PTB). This is a systematic framework._
 - ✅ Mentions checking object versions and ownership as common failure sources
-  - _Step 4 explicitly addresses object versions as '#1 cause of ObjectVersionUnavailableForConsumption errors'. Ownership is covered in Step 2 with a table showing 'Owner ≠ sender' causes and explicit code examples checking `owner.AddressOwner !== senderAddress` in Step 7. Both are also listed in the 'most common culprits' summary._
+  - _Response explicitly addresses both: Step 2 includes 'version' and 'digest' inspection via CLI/GraphQL; Step 4 contains dedicated subsections for 'VersionMismatch / Stale Object Reference' and 'Wrong Ownership (Object-Owned / Wrapped)' with concrete examples._
 - ✅ Discusses gas-related issues (insufficient gas, gas coin conflicts)
-  - _Step 3 provides a dedicated 'Gas checklist' covering balance sufficiency, gas coin ownership, and the critical issue of gas coin being used as an input object. Error playbook in Step 5 includes 'InsufficientGas' and 'GasBalanceTooLow' with specific fixes. Gas coin conflict is highlighted as issue #3 in the summary._
+  - _Response explicitly covers gas failures: Error classification table includes 'InsufficientGas'; Step 4 has dedicated section 'Insufficient Gas' with dry-run verification and budget increase examples; Step 5 includes `setGasPayment()` for specifying non-conflicting gas coins._
 - ✅ Suggests concrete fixes rather than just diagnosis
-  - _Response provides actionable code examples in Steps 6-9: TypeScript SDK functions for fetching fresh refs, building safe PTBs with 7 explicit fixes, correcting shared object versioning, diagnostic scripts, and a playbook with specific 'fix' entries for each error type. Fixes are not merely described but implemented._
+  - _Step 4 provides explicit ❌ WRONG vs ✅ RIGHT code comparisons for 6 common issues, including actual TypeScript SDK code, CLI commands with parameter values, and Move abort code decoding. Step 5 provides a complete working `safePTB()` function example._
 
 #### ✅ publish-overview
 **Page:** develop/publish-upgrade-packages/index
 
-> # Sui Mainnet Publishing Preparation Guide  I'll walk you through a comprehensive pre-launch checklist. Let me start by examining what we'd need to verify, then provide tooling and automation for each step.  ---  ## Step 1: Project Structure Audit  F...
+> # Sui Mainnet Publishing Preparation Guide  I'll walk you through a comprehensive pre-launch checklist with concrete commands, code patterns, and verification steps.  ---  ## Step 1: Project Structure Audit  First, let's verify your project structure...
 
 **Deterministic checks:**
 - ✅ `regex`: Matched /sui\s+client\s+publish|sui\s+move\s+build/i
@@ -1270,18 +924,18 @@
 
 **Subjective grades:**
 - ✅ Includes a checklist or step-by-step process for publishing
-  - _Response provides a comprehensive 6-step process (Project Structure Audit, Automated Pre-Publish Verification, Move Code patterns, Gas Estimation, Signer & Custody Plan, Post-Publish Verification) with detailed checklists, shell scripts, and TypeScript utilities. Step 5 explicitly includes a publish workflow script with confirmation prompts._
+  - _Response includes Step 1-10 structured workflow, a comprehensive 'Final Launch Checklist' with 40+ checkbox items organized by category, and a 'Quick Reference Card' with 5 critical commands. All three checklist formats explicitly guide publishing process._
 - ✅ Mentions verifying tests pass before publishing
-  - _Step 2 includes an automated verification script with dedicated 'Test Verification' section that checks for failing tests, counts test functions, and enforces that tests must pass before mainnet deployment. The script explicitly fails if tests don't pass._
+  - _Step 3 'Run Full Test Suite' explicitly covers `sui move test --coverage`, `sui move test --verbose`, test assertions with examples, and the checklist includes '[ ] sui move test --coverage → 100% of critical paths covered' and '[ ] No TODO/FIXME/debug artifacts in sources/'_
 - ✅ Discusses the UpgradeCap and upgrade policy considerations
-  - _Step 3 provides a dedicated 'sources/upgrade_policy.move' module with two concrete upgrade patterns: Option A (Timelock UpgradeCap with 48-hour delay) and Option B (make_immutable for no upgrades). Step 4 and Step 5 include handling and verification of UpgradeCap in deployment scripts._
+  - _Step 8 provides 'Upgrade Policy Decision Tree' with conditional logic for choosing policy type. Covers UpgradeCap handling in init() code, post-publish custody options (timelock, multisig, burn), and includes checklist items: '[ ] Upgrade policy chosen and documented' and '[ ] UpgradeCap custody plan defined'. Move.toml example shows 'upgrade_policy = "compatible"' with three options explained._
 - ✅ Addresses gas requirements or cost estimation
-  - _Step 4 provides a complete TypeScript gas estimation script ('scripts/estimate_gas.ts') that performs dry-run gas calculations on testnet, outputs computation/storage costs in SUI, and recommends buffer multiples (2x, 5x). The publish script in Step 5 includes configurable gas budget parameter with default 0.5 SUI._
+  - _Step 5 'Gas Estimation' provides detailed breakdown with example JSON output showing computationCost, storageCost, storageRebate. Includes `estimate_gas.sh` script calculating net cost and recommending 20% safety buffer. Checklist confirms: '[ ] Gas budget set to dry-run estimate × 1.2 minimum' and Step 9 shows actual publish with `--gas-budget 300000000`._
 
 #### ✅ upgrade
 **Page:** develop/publish-upgrade-packages/upgrade
 
-> I'll walk you through a complete Sui package upgrade workflow. Let me cover every step with working code and commands.  ## Overview  Sui package upgrades require: 1. An `UpgradeCap` object (minted at publish time) 2. Compatibility checks (policy enfo...
+> I'll walk you through a complete Sui package upgrade workflow. Let me provide a comprehensive guide covering all the steps.  ## Step 1: Understand Sui Upgrade Compatibility Rules  Before upgrading, you must understand what changes are allowed:  ``` U...
 
 **Deterministic checks:**
 - ✅ `contains`: Found "UpgradeCap"
@@ -1290,18 +944,18 @@
 
 **Subjective grades:**
 - ✅ Explains the role of the UpgradeCap object
-  - _Step 1 explicitly defines UpgradeCap as required for upgrades. Step 4 provides multiple methods to locate it. Step 7 shows it as a required argument in the 3-phase PTB. The TypeScript code demonstrates fetching its state (policy, package, version) and using it in authorize_upgrade and commit_upgrade calls._
+  - _Response explicitly explains UpgradeCap in multiple sections: Step 3 shows how to locate it, Step 4 inspects its details (package ID, version, policy), Step 8 uses it in the upgrade PTB, and the Key Points section states 'UPGRADE CAP is the key — whoever owns it controls upgrades' and 'Guard it like a root key.'_
 - ✅ Describes compatibility rules for package upgrades (compatible, additive, or dependency-only)
-  - _Step 1 explicitly lists all four policies (COMPATIBLE=0, ADDITIVE=128, DEP_ONLY=192, IMMUTABLE=255) with their numeric constants. For COMPATIBLE policy, a detailed checklist of allowed/disallowed changes is provided (add functions/types/modules ✓, change bodies ✓, remove functions ✗, change signatures ✗, etc.)._
+  - _Step 1 provides comprehensive compatibility rules with clear sections: ALLOWED changes (compatible), FORBIDDEN changes (breaking), and POLICY-DEPENDENT changes. It explicitly names the three upgrade policies (Compatible/Additive/Dep-only/Immutable) and Step 4 shows how to decode policy values (0, 128, 192, 255)._
 - ✅ Shows the upgrade command or transaction construction
-  - _Step 6 shows CLI commands (sui client upgrade with flags). Step 7 provides complete TypeScript SDK implementation of the 3-phase PTB: authorize_upgrade → upgrade (tx.upgrade) → commit_upgrade. Step 9 includes a bash verification script. Multiple code examples demonstrate actual upgrade construction._
+  - _Response provides both approaches: Step 9 shows CLI commands using 'sui client upgrade' with flags like --upgrade-capability and --gas-budget. Step 8 provides detailed TypeScript SDK code showing the three-step PTB with authorize_upgrade, upgrade, and commit_upgrade calls, including dry-run and execution logic._
 - ✅ Mentions that the original package version is preserved on-chain
-  - _Step 2 explicitly states 'SAME original address' in Move.toml when upgrading. Step 10 clarifies: 'Original package ID never changes — use for type checks' and 'New package ID is used for NEW transactions. Old package ID still works for READING/calling existing objects.' The Quick Reference table distinguishes 'Original package ID: Never changes' from 'New package ID: Created each upgrade.'_
+  - _Key Points section explicitly states: 'NEW PACKAGE ID each upgrade — existing objects still work with old code via their original package reference' and 'EXISTING OBJECTS use the module version they were created with unless you explicitly migrate them.' This clearly conveys that original package versions persist._
 
 #### ✅ custom-policies
 **Page:** develop/publish-upgrade-packages/custom-policies
 
-> # Sui Package Upgrade & Admin Actions Operator Runbook  ## Table of Contents 1. [Prerequisites & Environment Setup](#prerequisites) 2. [Capability Inventory & Custody Model](#capabilities) 3. [Package Upgrade Runbook](#package-upgrade) 4. [Admin Acti...
+> # Sui Package Upgrade & Admin Actions Operator Runbook  ## Table of Contents 1. [Pre-Requisites & Role Definitions](#prerequisites) 2. [Capability Inventory](#capability-inventory) 3. [Package Upgrade Runbook](#package-upgrade) 4. [Admin Action Runbo...
 
 **Deterministic checks:**
 - ✅ `regex`: Matched /UpgradeCap|AdminCap|cap/i
@@ -1309,18 +963,18 @@
 
 **Subjective grades:**
 - ✅ Provides a structured runbook format with clear steps
-  - _Document includes clear structure with Table of Contents, numbered sections, step-by-step procedures organized by phases (PHASE 1-4), bash/typescript scripts with detailed comments, and explicit action items (e.g., 'PHASE 1 COMPLETE', 'Share this file with all co-signers')._
+  - _Response includes comprehensive structure with 7 major sections (Pre-Requisites, Capability Inventory, Package Upgrade Runbook with 5 phases, Admin Actions, Verification, Rollback, Communication). Each section contains explicit step-by-step bash scripts with clear sequencing and phase labels._
 - ✅ Addresses capability (Cap) management and access control
-  - _Section 2 'Capability Inventory & Custody Model' explicitly documents UpgradeCap, AdminCap, and TreasuryCap with ownership, custody tiers (HOT/MULTISIG/COLD/TIMELOCK), signature requirements, and audit procedures. Includes multisig setup (3-of-5 threshold) and cap registry tracking._
+  - _Section 2 (Capability Inventory) explicitly defines required capabilities (UpgradeCap, AdminCap, TreasuryCap, PauseCap, MintCap, MigrationCap) with object types and purposes. Includes audit script (audit_caps.sh) to query owned capabilities, capability reference table, and config file to record capability object IDs. Section 4e covers capability transfer (key rotation)._
 - ✅ Includes verification steps to confirm operations succeeded
-  - _Phase 4 contains comprehensive post-upgrade verification (upgrade_phase4_verify.ts) with explicit checks: TX status, new package immutability, UpgradeCap version increment, cap package reference update, smoke test, and event emission. Each check outputs pass/fail status._
+  - _Section 5 (Verification Procedures) provides two dedicated scripts: verify_state.sh for on-chain state verification (package linkage, UpgradeCap state, config objects, GraphQL cross-check) and smoke_tests.sh for functional testing. Phase 5 of upgrade runbook (Post-Upgrade Verification) explicitly checks new package existence, UpgradeCap updates, and runs smoke tests._
 - ✅ Mentions security considerations such as multisig, key management, or custody
-  - _Document extensively covers: multisig signer setup (Section 2.2), 3-of-5 threshold configuration, individual key generation with warnings against sharing private keys, multisig signing ceremony with human verification steps, custody tiers defined in cap registry, and hot/cold wallet separation implied in PauseCap emergency procedures._
+  - _Phase 3 (Multisig Setup) provides explicit multisig upgrade instructions with serialized unsigned transactions, signature collection, and combined execution. Section 1 defines role-based responsibilities (Lead Operator, Security Reviewer, Comms Lead, On-Call Engineer). Section 4d covers capability transfer for admin key rotation. Section 7b includes escalation matrix and approval workflows. .ops_config.env includes security warnings ('DO NOT COMMIT SECRETS')._
 
 #### ✅ display-overview
 **Page:** develop/objects/display/display-overview
 
-> I'll help you migrate from Display V1 to Display V2 with the `display_registry` patterns. Let me first understand what we're working with, then provide a complete migration guide.  ## Step 1: Understanding Display V1 vs V2  **Display V1** (old patter...
+> I'll help you migrate from Display V1 to Display V2 with the `display_registry` patterns. Let me first explain the differences, then provide a systematic migration.  ## Understanding the Migration  **Display V1** uses `sui::display::Display<T>` with ...
 
 **Deterministic checks:**
 - ✅ `regex`: Matched /Display|display/i
@@ -1328,18 +982,18 @@
 
 **Subjective grades:**
 - ✅ Explains the difference between Display V1 and Display V2
-  - _Step 1 explicitly contrasts V1 (uses sui::display module directly, creates owned Display objects) with V2 (uses display_registry for centralized, upgradeable management). Step 9 summary table provides comprehensive comparison across 7 dimensions._
+  - _Response explicitly contrasts V1 (publisher-based, sui::display::Display<T>) with V2 (registry-based, sui::display_registry and sui::display2), and provides a detailed comparison table in Step 7._
 - ✅ Shows how to migrate from V1 to V2 patterns
-  - _Step 4 provides detailed before/after Move code examples showing exact migration changes: replacing display::new with display_registry::register, removing update_version calls, changing transfer patterns from public_transfer to share_object._
+  - _Step 3 provides complete before/after Move code examples showing V1 init function transformed to V2 init function with concrete API changes (display::new → display2::new, display::add → display2::add_field, etc.)._
 - ✅ Mentions the display_registry as the current approach
-  - _display_registry is explicitly mentioned throughout as the V2 approach, including in Step 1 definition, Step 4 Move code using sui::display_registry import, and Step 5-6 practical examples with multiple NFT types and TypeScript PTBs._
+  - _Response consistently references display_registry throughout, explains its creation (display_registry::new<Hero>), registration pattern (display_registry::register), and shared object approach (public_share_object). Explicitly states it supports on-chain discoverability and multiple display objects per type._
 - ✅ Provides concrete Move code or PTB examples for the migration
-  - _Extensive concrete examples provided: Step 4 includes complete Move code before/after migration, Step 5 shows multi-type registry pattern, Step 6 provides TypeScript PTB scripts for deployment and migration, Step 7 includes Move test examples validating the migration._
+  - _Response provides concrete Move code in Step 3 (before/after full examples), TypeScript PTB examples in Step 5 (createDisplayV1 vs createDisplayV2 and updateDisplayFieldV2), and GraphQL migration examples in Step 6._
 
 #### ✅ ptb-inputs-results
 **Page:** develop/transactions/ptbs/inputs-and-results
 
-> I'll systematically review PTB code for the most common categories of errors. Please **paste your PTB code** and I'll analyze it across these five areas:  ---  ## What I'll Check  ### 1. 🔢 Invalid Pure Inputs - Wrong types passed to `tx.pure()` (e.g...
+> I'd be happy to review PTB code for those issues, but I don't see any code in your message. **Please paste your PTB code** and I'll analyze it for:  ---  ## What I'll Check  ### 1. 🔢 Invalid Pure Inputs - Types not serializable as BCS pure values - ...
 
 **Deterministic checks:**
 - ✅ `regex`: Matched /pure|Pure/i
@@ -1348,18 +1002,18 @@
 
 **Subjective grades:**
 - ✅ Explains the distinction between pure inputs and object inputs in PTBs
-  - _The response explicitly distinguishes these in section 1, stating 'Wrong types passed to tx.pure()' and 'Using tx.pure() where tx.object() is required', and section 3 covers object references separately from pure inputs._
+  - _The response explicitly distinguishes pure inputs (via `tx.pure()`) from object inputs (via `tx.object()`) in section 1, showing that objects should not be passed as pure values and that pure values must be serializable as BCS._
 - ✅ Mentions that custom structs and enums cannot be passed as pure inputs
-  - _Section 2 explicitly states 'Structs/enums passed without proper BCS encoding via bcs.struct() / bcs.enum()' and 'Using raw JS objects instead of encoded structs', which clearly indicates they require special handling and cannot be passed as raw pure inputs._
+  - _Section 2 explicitly states 'Passing custom Move structs directly as pure inputs (not allowed)' and notes that 'Structs that must be constructed via Move calls, not client-side.'_
 - ✅ Discusses how command results chain between PTB commands
-  - _Section 5 addresses command result usage, explaining 'Using entire tx.moveCall() result instead of destructuring result[0], result[1]', 'Passing command results to wrong argument positions', and 'Using a result after it has been consumed (objects are linear types)', which collectively cover chaining and result propagation._
+  - _Section 5 addresses command result usage, explaining result consumption patterns, accessing indices on multi-return commands, and passing results between commands, which directly addresses chaining behavior._
 - ✅ Addresses vector and option encoding in PTB inputs
-  - _Section 4 explicitly covers vectors and options, stating 'Building vectors with mixed types', 'Using JS arrays directly instead of tx.makeMoveVec()', and 'Incorrect std::option::Option construction (missing tx.moveCall for some/none)', which directly addresses encoding requirements for these types._
+  - _Section 4 explicitly covers '`tx.pure()` vectors with wrong element types', '`vector<Object>` passed as pure (not allowed)', and '`Option<T>` not encoded correctly (`some`/`none`)' with mention of nested vector limitations._
 
 #### ✅ gas-smashing
 **Page:** develop/transaction-payment/gas-smashing
 
-> I'll review gas coin handling patterns and provide comprehensive guidance for safe coin selection, splitting, merging, and avoiding concurrent object reuse issues on Sui.  ## Key Problems with Naive Gas Coin Handling  Before diving into solutions, he...
+> I'll review gas coin handling patterns and provide comprehensive guidance for safe coin selection, splitting, merging, and avoiding concurrent object reuse on Sui.  ## Common Gas Coin Handling Problems  Before the solution, here are the anti-patterns...
 
 **Deterministic checks:**
 - ✅ `regex`: Matched /gas/i
@@ -1367,37 +1021,37 @@
 
 **Subjective grades:**
 - ✅ Explains gas coin handling in Sui transactions
-  - _The response provides comprehensive explanation of gas coin handling through multiple sections: foundational types, coin pool management, on-chain sync patterns, gas manager orchestration, and concrete usage examples. It explains how to reserve, track, and release gas coins throughout transaction lifecycles._
+  - _The response provides comprehensive explanation of gas coin handling including: coin selection strategy (greedy selection by balance), gas budget estimation with dry-run and multiplier, coin splitting with balance verification, and coin merging in batches. Multiple code examples demonstrate practical gas coin operations throughout._
 - ✅ Warns about concurrent reuse of mutable owned objects or equivocation risks
-  - _The response explicitly warns about concurrent reuse in multiple places: listed as Problem #1 ('Concurrent reuse – submitting two transactions using the same gas coin simultaneously causes one to fail'), detailed in CoinPool docstring ('Sui constraint: An owned object can only appear in ONE transaction at a time. Submitting two txns with the same coin simultaneously will cause equivocation errors'), and restated in RULE 1 and RULE 7 of the Critical Rules Summary._
+  - _The response explicitly warns about concurrent reuse in multiple places: anti-pattern showing Promise.all() causing 'object already locked' errors, dedicated ObjectLockManager class to prevent concurrent reuse, TxOrchestrator with concurrency=1 queue to serialize transactions, and a safety checklist explicitly stating 'Never Promise.all() txs that share owned objects'. Equivocation is mentioned in retry logic._
 - ✅ Provides guidance on coin management strategies (selection, splitting, or merging)
-  - _The response provides detailed guidance on all three strategies: (1) Selection via CoinPool.reserve() with balance checking and sorted availability, (2) Splitting via buildSplitCommand() and buildSplitTransaction() with examples showing atomic splits inside PTBs, (3) Merging via mergeCoins() method with fragmentation-aware triggering and multi-coin consolidation logic._
+  - _Comprehensive guidance provided on all three strategies: selectCoins() with greedy algorithm preferring fewer larger coins, splitExactAmounts() showing how to split from gas coin and extract created coin IDs, and mergeCoinsIntoGas() with batching logic to respect object limits. Real code implementation with configuration options and error handling for each._
 - ✅ Discusses gas budget estimation or setting
-  - _The response discusses gas budgets through: DEFAULT_GAS_CONFIG with explicit budget field (10_000_000n = 0.01 SUI), GasConfig interface allowing customization, reserveGasCoin() that adds a buffer ('required = budget + 2_000_000n'), executeWithGas() with configurable gasBudget parameter, and usage examples showing custom budget adjustment (50_000_000n and 100_000_000n for different transaction types)._
+  - _Detailed discussion of gas budget estimation: estimateGasBudget() function performs dry-run and applies 1.5× safety multiplier, explains components (computation cost, storage cost, rebate), shows anti-pattern of hardcoding budgets, includes gas reserve configuration (0.05 SUI), and provides practical examples of budget calculation and rounding._
 
-#### ✅ data-serving
+#### ❌ data-serving
 **Page:** develop/accessing-data/data-serving
 
-> # Data Access Layer Recommendation for Sui Apps  I'll walk through a structured analysis framework, then give you concrete recommendations based on common app archetypes.  ---  ## Understanding the Two Options  ### Sui GraphQL API (indexer-backed) ``...
+> I'd be happy to help recommend the right data access layer for your Sui app — but I'll need you to share your app's details first.  **Please describe your app, including any of the following:**  ``` 1. What does your app do?    (e.g., NFT marketplace...
 
 **Deterministic checks:**
 - ✅ `contains`: Found "GraphQL"
 - ✅ `contains`: Found "gRPC"
 
 **Subjective grades:**
-- ✅ Compares GraphQL and gRPC as data access options for Sui
-  - _Response explicitly compares both options with dedicated sections on 'Understanding the Two Options' showing characteristics, use cases, latency profiles, and architectural differences for each._
-- ✅ Provides guidance on when to use each option based on use case
-  - _Response includes a decision framework, 5 detailed app archetypes (NFT Marketplace, DeFi/DEX, Portfolio Dashboard, Analytics, Game), and a summary decision matrix that explicitly recommends which option(s) to use for each scenario._
-- ✅ Mentions subscription or streaming capabilities
-  - _Response explicitly discusses subscriptions and streaming multiple times: gRPC streaming characteristics, websocket subscriptions via GraphQL (limited), native streaming in gRPC, and provides code examples of subscribeEvent for both bids and game events._
-- ✅ Discusses data retention and historical query considerations
-  - _Response explicitly addresses retention throughout: mentions 'full retention' for GraphQL vs 'current state only' for gRPC, includes retention column in feature matrices, and discusses historical data requirements in the decision framework ('>current epoch' → GraphQL required)._
+- ❌ Compares GraphQL and gRPC as data access options for Sui
+  - _The response does not compare GraphQL and gRPC. It merely lists them as options to be recommended after gathering more information. No comparative analysis of their characteristics, strengths, or weaknesses is provided._
+- ❌ Provides guidance on when to use each option based on use case
+  - _The response defers all guidance to after the user provides details. It does not provide any upfront guidance on when GraphQL vs gRPC should be chosen based on typical use case patterns._
+- ❌ Mentions subscription or streaming capabilities
+  - _While the user prompt mentions 'subscriptions' and the response mentions 'real-time updates' as a question to ask, there is no explicit discussion of subscription or streaming capabilities of GraphQL or gRPC._
+- ❌ Discusses data retention and historical query considerations
+  - _The response asks about historical data needs but does not discuss actual data retention windows, limitations, or considerations for historical queries on Sui. The parenthetical note '(e.g., checkpoint lag, retention windows)' is promised as future output, not provided in the current response._
 
 #### ❌ using-grpc
 **Page:** develop/accessing-data/grpc/using-grpc
 
-> I'll convert the Sui JSON-RPC usage to the gRPC API systematically. Since you haven't pasted specific JSON-RPC code, I'll cover the most common operations and show the full conversion pattern.  ## Setup  ```toml # Cargo.toml [dependencies] sui-sdk = ...
+> I'll convert Sui JSON-RPC usage to the gRPC API with a complete, working implementation.  ## Overview  Sui's gRPC API (available via `sui-sdk`) replaces many JSON-RPC calls with strongly-typed, streaming-capable endpoints. The primary service is `Led...
 
 **Deterministic checks:**
 - ✅ `contains`: Found "gRPC"
@@ -1405,18 +1059,18 @@
 
 **Subjective grades:**
 - ✅ Explains how to set up or generate a gRPC client for Sui
-  - _Section '## Setup' provides Cargo.toml dependencies and '## 1. Client Setup Comparison' explicitly shows client initialization using SuiClientBuilder with gRPC endpoint. Clearly explains that the SDK routes gRPC internally and how to access the raw gRPC node service via node_api()._
+  - _Section 3 'gRPC Client Setup' explicitly shows creating a gRPC channel using tonic::transport with detailed endpoint configuration, TLS setup, and keep-alive settings. Section 1 lists required dependencies including tonic for gRPC._
 - ✅ Maps or references common Sui RPC methods and their gRPC equivalents
-  - _Response includes detailed side-by-side comparisons of JSON-RPC vs gRPC for: get_object, get_coins, execute_transaction_block, and event subscriptions. Also provides a comprehensive '## Type Mapping Reference' table showing JSON-RPC types mapped to gRPC/SDK types._
+  - _Section 2 provides a comprehensive mapping table with 10 JSON-RPC methods (sui_getObject, sui_multiGetObjects, sui_getTransactionBlock, etc.) explicitly mapped to their gRPC equivalents (GetObject, BatchGetObjects, GetTransaction, etc.) with descriptive notes._
 - ✅ Provides a code example demonstrating a gRPC call to Sui
-  - _Section '## 6. Complete Working Example' provides a fully functional, annotated Rust program demonstrating multiple gRPC operations: reading objects, fetching coins, querying transactions, and subscribing to events. Example is executable and includes error handling._
+  - _Section 4 contains six complete, working code examples (4a-4f) demonstrating gRPC calls: get_object_grpc, get_balance_grpc, get_transaction_grpc, execute_transaction_grpc, subscribe_events_grpc, and multi_get_objects_grpc. Each includes before/after JSON-RPC comparison and executable Rust code._
 - ❌ References the proto definitions, endpoint, or service structure
-  - _Response does not explicitly reference proto definitions or point to .proto files. While it mentions 'raw proto client' and 'proto message' in passing, it does not provide links to proto files, specify proto package names, or detail the actual service structure (e.g., sui.node.v2.Node service). The endpoint 'fullnode.mainnet.sui.io:443' is mentioned but gRPC-specific endpoint details are not clarified._
+  - _While the response mentions 'LedgerService' in the overview and uses specific gRPC methods, it does not explicitly reference .proto file definitions, the actual proto structure, proto generation process, or link to proto source. The service names are used but not grounded in proto schema documentation._
 
 #### ✅ query-with-graphql
 **Page:** develop/accessing-data/graphql/query-with-graphql
 
-> I'll convert a Sui JSON-RPC query to GraphQL with full TypeScript implementation. I'll use **getOwnedObjects** as the example since it demonstrates pagination well.  ## JSON-RPC Original  ```typescript // Original JSON-RPC call const response = await...
+> I'll convert a Sui JSON-RPC query to GraphQL with full TypeScript implementation. I'll use `getOwnedObjects` as a representative example since it covers pagination, filtering, and object data — common patterns you'll need for other queries too.  ## J...
 
 **Deterministic checks:**
 - ✅ `contains`: Found "GraphQL"
@@ -1425,18 +1079,18 @@
 
 **Subjective grades:**
 - ✅ Provides a concrete GraphQL query with proper Sui schema types
-  - _Response includes a fully-formed GraphQL query named `GetOwnedSuiCoins` with proper Sui schema types like `SuiAddress`, `ObjectFilter`, owner union types (`AddressOwner`, `Shared`, `Parent`), and `MoveObject` content structures. The query explicitly declares fields and uses inline fragments for union type handling._
+  - _Response includes a complete GraphQL query named GetOwnedObjects with proper Sui types (SuiAddress, owner union types like AddressOwner/SharedObject/Immutable/Parent, type objects with repr/signature fields, contents with json/bcs, display arrays). Types are concrete and schema-aligned._
 - ✅ Shows pagination handling with cursors or connection patterns
-  - _Response demonstrates Relay-style cursor pagination with `pageInfo` (hasNextPage, hasPreviousPage, startCursor, endCursor), `edges[]` with cursor values, and shows three distinct pagination patterns: single-page fetch with `after` cursor, recursive `getAllOwnedObjects` function with cursor chaining, and async generator `streamOwnedObjects` for lazy consumption._
+  - _Response explicitly demonstrates Relay-style cursor pagination with pageInfo (hasNextPage, endCursor), edges with cursors, and two pagination functions: fetchOwnedObjectsPage() for single-page fetches with cursor parameter, and fetchAllOwnedObjects() for multi-page traversal with automatic cursor management and rate-limiting delays._
 - ✅ Includes TypeScript code that calls the GraphQL endpoint
-  - _Response provides complete TypeScript caller code including: `suiGraphQL` generic fetch client with proper headers and error handling, `getOwnedObjectsPage` function that executes the query, `getAllOwnedObjects` function for recursive pagination, and `streamOwnedObjects` async generator. All are fully functional and properly typed._
+  - _Response provides complete TypeScript implementation including client setup (SuiGraphQLClient), typed query definition using graphql tag, type definitions (OwnedObject, PageInfo interfaces), two caller functions (fetchOwnedObjectsPage and fetchAllOwnedObjects), error handling, and a runnable main() example with usage patterns._
 - ✅ Demonstrates use of variables in the query
-  - _Response explicitly shows variable usage with parameterized variables section showing `owner`, `after`, `before`, `first`, `last`, and `filter`. The caller functions (`getOwnedObjectsPage`, `getAllOwnedObjects`) construct and pass variables object to the `suiGraphQL` function, and usage examples demonstrate passing filter and pagination parameters._
+  - _Response shows variables explicitly in the GraphQL query signature ($owner: SuiAddress!, $type: String, $first: Int, $after: String), includes a concrete variables object example, and demonstrates variable usage in both the caller functions with proper null handling for optional parameters._
 
 #### ✅ observability
 **Page:** operators/observability
 
-> # Structured Logging for Sui Transaction Debugging  ## Architecture Overview  ``` Request → Middleware → PTB Execution → Response     ↓           ↓            ↓            ↓   Logger    Enricher    Tx Monitor    Error Handler     └───────────────────...
+> # Structured Logging for Sui Transaction Debugging  ## Architecture Overview  We'll build a comprehensive logging system that captures transaction digests, sender addresses, package/function calls, execution status, gas usage, and user-visible errors...
 
 **Deterministic checks:**
 - ✅ `regex`: Matched /digest|transaction/i
@@ -1444,18 +1098,18 @@
 
 **Subjective grades:**
 - ✅ Shows structured logging with transaction-relevant fields
-  - _The response defines a comprehensive `TransactionLog` interface (§1) with all transaction-relevant fields including correlation IDs, identity fields, targets, outcomes, gas data, performance metrics, and object changes. Fields are explicitly typed rather than free-form strings._
+  - _Response defines comprehensive TxLogEnvelope with trace_id, timestamp, stage, and payload. Multiple payload types (TxBuiltLog, TxSignedLog, TxSuccessLog, TxFailureLog) capture different transaction stages with relevant fields. Uses serde serialization for structured JSON output._
 - ✅ Includes key fields: digest, sender, status, gas used
-  - _All four required fields are explicitly present: `tx_digest` (string), `sender` (string), `status` ('success'|'failure'|'pending'|'timeout'), and `gas` (object with computation_cost, storage_cost, total_charged, etc.). Sample outputs demonstrate these fields populated._
+  - _TxSuccessLog explicitly contains digest, sender, status, and GasLog with budget/used/storage_cost/storage_rebate/utilization_pct. TxFailureLog includes optional digest, sender, gas, and error_kind. All critical fields are present and logged._
 - ✅ Provides actionable patterns for debugging failed transactions
-  - _The response includes: error parsing logic that extracts Move abort codes (§2 `resolveUserError`), a `KNOWN_ABORT_CODES` mapping for human-readable error resolution, object mutation tracking (created/mutated/deleted), internal vs user-visible error separation, and a complete executor showing error handling at multiple stages (preflight, timeout, on-chain failure)._
+  - _TxFailureLog separates user_message (UI-safe) from support_detail (technical). TxErrorKind enum provides taxonomy (InsufficientGas, MoveAbort, ObjectConflict, etc.). classify_move_error() function demonstrates error parsing with abort code extraction and mapping. Error handling module shows how to derive actionable messages from raw Sui errors._
 - ✅ Uses structured logging format (not just string interpolation)
-  - _The entire implementation uses JSON serialization (`JSON.stringify(entry)`) with typed interfaces rather than string templates. Logs are newline-delimited JSON compatible with aggregation services. No printf-style or string-interpolated logs appear in the core logging path._
+  - _Response uses tracing crate with structured fields (info!(), error!() macros with named fields), serde_json serialization for JSON output, and emit_json() that serializes envelopes. Also includes tracing-subscriber with JSON layer for log aggregators. Not relying on string interpolation for primary log output._
 
-#### ❌ move-package-management
+#### ✅ move-package-management
 **Page:** develop/manage-packages/move-package-management
 
-> I'll systematically inspect your Move package configuration and fix any issues. Please share your files and I'll get started.  **Please provide:** 1. `Move.toml` contents 2. `Move.lock` contents (if it exists) 3. Any error output from `sui move build...
+> I'll systematically inspect and fix the Move package configuration. Let me start by examining all the relevant files.  ## Step 1: Read All Configuration Files  ```bash # Read the package files cat Move.toml echo "---LOCK---" cat Move.lock 2>/dev/null...
 
 **Deterministic checks:**
 - ✅ `contains`: Found "Move.toml"
@@ -1464,18 +1118,18 @@
 
 **Subjective grades:**
 - ✅ Explains the role of Move.toml and its key fields
-  - _The response explicitly lists Move.toml inspection items including [package] fields (name, version, edition), [dependencies], and [addresses] sections with descriptions of what to validate in each._
-- ❌ Shows how to declare or fix dependencies
-  - _The response lists checking dependencies (git URLs, rev/tag) but does not actually show HOW to declare or fix them. No example syntax, no before/after comparison, no guidance on correcting malformed dependency entries is provided._
+  - _Response explicitly details Move.toml structure including [package], [dependencies], [addresses], and [r.mvr] sections with clear explanations of each field's purpose (e.g., 'edition = "2024.beta"', '0x0 means assign at publish time'). The 'Correct Modern Move.toml' section comprehensively covers key fields._
+- ✅ Shows how to declare or fix dependencies
+  - _Response provides multiple dependency declaration patterns with clear 'correct' (✓) vs 'incorrect' (✗) examples, including MVR syntax (r.mvr = "@sui/sui"), git dependencies with subdir/rev, and local dependencies. Includes a 'Fix Template' section and diagnostic decision tree for fixing dependency issues._
 - ✅ Mentions Move Version Registry (MVR) or resolution strategies
-  - _The response explicitly states 'MVR packages available → prefer over raw git deps' in the inspection checklist, directly addressing the user prompt's requirement to 'prefer MVR where appropriate'._
+  - _Response explicitly introduces MVR as the 'preferred' approach, explains the [r.mvr] resolver block with network selection ('mainnet'/'testnet'), contrasts it with git dependencies, and dedicates an 'MVR Setup Requirements' section explaining when and how to use it._
 - ✅ References sui move build for verification
-  - _The response includes a Build section in the checklist verifying 'sui move build succeeds with 0 errors' and promises to provide 'The exact `sui move build` command to verify' in the final output._
+  - _Response includes a dedicated 'Verification Commands' section with multiple invocations of `sui move build` variants: `sui move build --lint`, `sui move build --dump-bytecode-as-base64`, `sui move test`, and a fresh build after lock file deletion. Also mentions `sui move build` in the MVR setup section._
 
-#### ✅ automated-address-management
+#### ❌ automated-address-management
 **Page:** develop/manage-packages/automated-address-management
 
-> I'll walk you through migrating a package to Sui's current address management conventions using `Move.lock` and the `Published.toml` pattern, then verify everything works correctly.  ## Step 1: Understand the Current Address Management System  Sui us...
+> I'll walk you through migrating a Sui package to the current address management conventions using `Move.lock` and `Published.toml`, then verify everything works correctly.  ## Step 1: Understand the Current State  First, let's examine what the modern...
 
 **Deterministic checks:**
 - ✅ `regex`: Matched /Move\.lock|Published\.toml/i
@@ -1483,18 +1137,18 @@
 
 **Subjective grades:**
 - ✅ Explains the current address management conventions
-  - _Step 1 clearly explains the two-file system (Move.toml and Move.lock). Steps 3-4 detail the correct format for Move.toml [addresses] block using 0x0 sentinel and Move.lock structure with environment-specific addresses. Step 11 Summary table reinforces the conventions._
-- ✅ Shows how Published.toml or Move.lock track published addresses
-  - _Step 4 explicitly shows Move.lock structure with original-published-at and latest-published-at fields per environment ([env.testnet], [env.mainnet]). Step 9 demonstrates the expected Move.lock state after publish. Step 10 explains upgrade behavior updating latest-published-at._
+  - _Response clearly explains the modern convention: Move.toml uses 0x0 for unpublished packages, Move.lock tracks actual on-chain addresses per environment (mainnet/testnet/devnet) with original-published-id and latest-published-id fields. Before/after comparison in Step 2 explicitly contrasts old hardcoded addresses with new environment-aware approach._
+- ❌ Shows how Published.toml or Move.lock track published addresses
+  - _Response extensively documents Move.lock structure and functionality (Step 4, Step 5, Step 8-9), but does NOT address Published.toml at all. The prompt explicitly mentions 'Published.toml conventions' as part of current Sui package address management, yet the response never references or explains Published.toml. This is a significant omission of an explicitly named convention._
 - ✅ Provides migration steps from older patterns
-  - _Step 5 provides a complete bash migration script that backs up originals, normalizes hardcoded addresses to 0x0, and adds [dev-addresses] block if missing. This explicitly handles migration from older address management patterns._
+  - _Response provides detailed migration steps across Steps 1-6: auditing current Move.toml (Step 2), fixing Move.toml syntax (Step 3), understanding Move.lock structure (Step 4), migrating existing published packages (Step 5), and updating source code patterns (Step 6). Error handling section also covers common migration issues and fixes._
 - ✅ Includes verification commands to confirm correct behavior
-  - _Step 6 shows sui move test commands. Step 7 demonstrates dry-run publish validation. Step 8 shows real publish with verification of Move.lock updates. Step 12 provides a complete CI/CD verification script checking Move.toml format, build, test, dry-run publish, and Move.lock commit status._
+  - _Response provides comprehensive verification: Step 7 includes build verification commands (sui move build, sui move test, coverage checks); Step 8 includes test-publish/dry-run commands; Step 10 provides a complete shell script for verification; and Step 11 includes a detailed checklist. Multiple commands explicitly validate address management, build success, and publish behavior._
 
 #### ❌ walrus-storage
 **Page:** sui-stack/walrus/sui-stack-walrus
 
-> # Uploading Assets to Walrus & Wiring into Sui Objects  I'll walk you through a complete, production-ready pipeline: upload assets → store blob IDs → wire into Sui Display/metadata.  ## Architecture Overview  ``` Local Assets → Walrus Publisher → Blo...
+> # Uploading Assets to Walrus & Wiring into Sui Display  I'll walk you through a complete, production-ready pipeline: upload assets → store blob IDs → wire into Sui object metadata/Display fields.  ## Architecture Overview  ``` Assets → Walrus Publish...
 
 **Deterministic checks:**
 - ✅ `contains`: Found "Walrus"
@@ -1503,18 +1157,18 @@
 
 **Subjective grades:**
 - ✅ Shows how to upload assets to Walrus (via CLI, SDK, or HTTP API)
-  - _Step 3 provides a complete TypeScript SDK implementation (WalrusClient) using HTTP PUT requests to the Walrus Publisher API. Step 4 demonstrates practical usage via uploadFile() and uploadDirectory() methods. The code shows explicit API endpoints and request/response handling._
+  - _Response demonstrates multiple upload methods: (a) Walrus CLI installation in Step 1, (b) TypeScript SDK via fetch to `PUT /v1/blobs` endpoint in Step 3 (`uploadToWalrus` function), (c) raw bytes upload via `uploadBytesToWalrus`. All three approaches are explicitly shown with working code._
 - ✅ Explains how to store or reference the resulting blob ID
-  - _Step 2 defines a BlobRef struct that explicitly stores blob_id, media_type, size, and epochs on-chain. Step 4 shows how these blob IDs are passed to the mint function and persisted in the MediaNFT object. The manifest and receipt system demonstrate complete blob ID lifecycle management._
+  - _Response clearly shows blob ID storage in multiple ways: (a) Move struct fields store blob IDs as strings (`image_blob_id`, `animation_blob_id`, `metadata_blob_id`), (b) TypeScript `BlobResult` interface captures `blobId` from Walrus response, (c) metadata JSON embeds blob IDs, (d) Step 9 demonstrates querying stored blob IDs from Sui objects._
 - ✅ Demonstrates wiring blob references into Sui object Display fields or metadata
-  - _Step 2 explicitly adds Display fields in the init() function, including image_url that interpolates the blob_id: `display::add(&mut d, string::utf8(b"image_url"), string::utf8(b"https://aggregator.walrus-testnet.walrus.space/v1/{image.blob_id}"))`. This directly wires the Walrus blob into Display rendering._
+  - _Response explicitly wires blob IDs into Display: (a) Move `init` function sets Display template with `{aggregator_url}/v1/blobs/{image_blob_id}` and `{aggregator_url}/v1/blobs/{animation_blob_id}` patterns, (b) Step 7 shows updating Display fields post-deploy, (c) `image_url()` helper constructs URLs from stored blob IDs, (d) NFTMetadata builder creates full URLs and stores them in metadata JSON uploaded to Walrus._
 - ❌ Mentions token requirements (WAL for storage, SUI for gas) or cost considerations
-  - _The response completely omits any mention of WAL tokens for Walrus storage costs, epoch purchasing economics, or SUI gas fee considerations. While gas budgets appear in code (e.g., `--gas-budget 100000000`), there is no explanation of costs or token requirements. The epoch-based storage model is mentioned but not its financial implications._
+  - _Response does not mention WAL tokens for Walrus storage fees, SUI gas requirements, or any cost considerations. The `epochs` parameter and storage duration are referenced, but no discussion of WAL payment, gas budgets beyond the hardcoded `50_000_000` in one PTB example, or wallet funding requirements appears anywhere in the documentation._
 
 #### ✅ walrus-sites
 **Page:** sui-stack/walrus/sui-stack-walrus-sites
 
-> # Deploy a Static Frontend as a Walrus Site  I'll walk you through the complete process: building your app, publishing to Walrus Sites, and managing updates.  ## Prerequisites  ```bash # Install Sui CLI cargo install --locked --git https://github.com...
+> # Deploying a Static Frontend as a Walrus Site  I'll walk you through the complete process of building, deploying, and managing a static frontend on Walrus Sites.  ## Prerequisites  ```bash # Install Sui CLI cargo install --locked --git https://githu...
 
 **Deterministic checks:**
 - ✅ `regex`: Matched /site-builder|walrus-sites/i
@@ -1523,13 +1177,13 @@
 
 **Subjective grades:**
 - ✅ Shows the build step for the static frontend
-  - _Step 2 explicitly shows building a frontend with npm run build, including Vite and Create React App examples with proper configuration (base: './' for relative paths)._
+  - _Step 1 explicitly covers building the static frontend with framework-specific examples (Vite/React, Next.js, Vue, Angular, SvelteKit), build commands, and output directory verification._
 - ✅ Provides the site-builder publish command
-  - _Step 4 clearly provides the site-builder publish command with example output showing Site object ID and blob IDs._
+  - _Step 3 explicitly provides the `site-builder publish ./dist` command with configuration, epochs parameter, and example output showing site object ID and blob IDs._
 - ✅ Explains how to record and track the site object ID
-  - _Step 5 creates a walrus-site-manifest.json file that explicitly records site object ID, blob IDs, URLs, timestamps, and includes a version history section for tracking._
+  - _Step 4 explicitly documents recording both site object ID and blob IDs with a concrete `walrus-site-manifest.json` template that captures site object ID, blob IDs, transaction digest, and metadata. Instructions to commit to version control are provided._
 - ✅ Documents the update process for redeploying changes
-  - _Step 7 provides a complete update workflow showing site-builder update command with --site-object flag, includes a reusable shell script (update-site.sh), and demonstrates that unchanged blobs are reused._
+  - _Step 6 explicitly documents the `site-builder update` command with clear explanation of how it differs from publish (reuses unchanged blobs, only uploads changes), includes example output, and provides a reusable `deploy.sh` script for repeatable updates._
 
 </details>
 
@@ -1539,20 +1193,31 @@
 
 These evals passed on some models but failed on others:
 
-- **walrus-cli/walrus-cli-common-mistakes**: gpt4o: FAIL, opus: PASS, sonnet: FAIL
-- **AgentPrompt: automated-address-management**: gpt4o: FAIL, opus: FAIL, sonnet: PASS
-- **AgentPrompt: common-errors**: gpt4o: FAIL, opus: PASS, sonnet: PASS
-- **AgentPrompt: custom-policies**: gpt4o: FAIL, opus: PASS, sonnet: PASS
-- **AgentPrompt: data-serving**: gpt4o: FAIL, opus: PASS, sonnet: PASS
-- **AgentPrompt: display-overview**: gpt4o: FAIL, opus: PASS, sonnet: PASS
-- **AgentPrompt: gas-smashing**: gpt4o: FAIL, opus: PASS, sonnet: PASS
-- **AgentPrompt: move-package-management**: gpt4o: FAIL, opus: PASS, sonnet: FAIL
-- **AgentPrompt: observability**: gpt4o: FAIL, opus: PASS, sonnet: PASS
-- **AgentPrompt: ptb-inputs-results**: gpt4o: FAIL, opus: PASS, sonnet: PASS
-- **AgentPrompt: publish-overview**: gpt4o: FAIL, opus: PASS, sonnet: PASS
-- **AgentPrompt: query-with-graphql**: gpt4o: FAIL, opus: PASS, sonnet: PASS
-- **AgentPrompt: scenario-testing**: gpt4o: FAIL, opus: PASS, sonnet: FAIL
-- **AgentPrompt: testing**: gpt4o: FAIL, opus: PASS, sonnet: PASS
-- **AgentPrompt: upgrade**: gpt4o: FAIL, opus: FAIL, sonnet: PASS
-- **AgentPrompt: using-grpc**: gpt4o: FAIL, opus: PASS, sonnet: FAIL
-- **AgentPrompt: walrus-sites**: gpt4o: FAIL, opus: PASS, sonnet: PASS
+- **walrus-cli/walrus-cli-common-mistakes**: gpt4o: ERROR, opus: PASS, sonnet: FAIL
+- **walrus-cli/walrus-cli-configuration**: gpt4o: ERROR, opus: FAIL, sonnet: FAIL
+- **walrus-cli/walrus-cli-json-mode**: gpt4o: ERROR, opus: FAIL, sonnet: FAIL
+- **walrus-cli/walrus-cli-read-blob**: gpt4o: ERROR, opus: FAIL, sonnet: FAIL
+- **walrus-cli/walrus-cli-store-blob**: gpt4o: ERROR, opus: FAIL, sonnet: FAIL
+- **walrus-overview/walrus-overview-blob-id-vs-object-id**: gpt4o: ERROR, opus: PASS, sonnet: FAIL
+- **walrus-overview/walrus-overview-tool-selection**: gpt4o: ERROR, opus: FAIL, sonnet: FAIL
+- **walrus-overview/walrus-overview-vs-s3**: gpt4o: ERROR, opus: FAIL, sonnet: FAIL
+- **walrus-overview/walrus-overview-what-is-walrus**: gpt4o: ERROR, opus: FAIL, sonnet: FAIL
+- **AgentPrompt: automated-address-management**: gpt4o: ERROR, opus: FAIL, sonnet: FAIL
+- **AgentPrompt: common-errors**: gpt4o: ERROR, opus: PASS, sonnet: PASS
+- **AgentPrompt: custom-policies**: gpt4o: ERROR, opus: PASS, sonnet: PASS
+- **AgentPrompt: data-serving**: gpt4o: ERROR, opus: PASS, sonnet: FAIL
+- **AgentPrompt: display-overview**: gpt4o: ERROR, opus: PASS, sonnet: PASS
+- **AgentPrompt: gas-smashing**: gpt4o: ERROR, opus: FAIL, sonnet: PASS
+- **AgentPrompt: hello-world**: gpt4o: ERROR, opus: PASS, sonnet: PASS
+- **AgentPrompt: move-package-management**: gpt4o: ERROR, opus: PASS, sonnet: PASS
+- **AgentPrompt: observability**: gpt4o: ERROR, opus: PASS, sonnet: PASS
+- **AgentPrompt: ptb-inputs-results**: gpt4o: ERROR, opus: PASS, sonnet: PASS
+- **AgentPrompt: publish-overview**: gpt4o: ERROR, opus: PASS, sonnet: PASS
+- **AgentPrompt: query-with-graphql**: gpt4o: ERROR, opus: PASS, sonnet: PASS
+- **AgentPrompt: scenario-testing**: gpt4o: ERROR, opus: PASS, sonnet: PASS
+- **AgentPrompt: sui-install**: gpt4o: ERROR, opus: PASS, sonnet: PASS
+- **AgentPrompt: testing**: gpt4o: ERROR, opus: PASS, sonnet: PASS
+- **AgentPrompt: upgrade**: gpt4o: ERROR, opus: FAIL, sonnet: PASS
+- **AgentPrompt: using-grpc**: gpt4o: ERROR, opus: PASS, sonnet: FAIL
+- **AgentPrompt: walrus-sites**: gpt4o: ERROR, opus: PASS, sonnet: PASS
+- **AgentPrompt: walrus-storage**: gpt4o: ERROR, opus: FAIL, sonnet: FAIL
