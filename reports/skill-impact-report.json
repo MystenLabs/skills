@@ -18,37 +18,37 @@
         "id": "common-errors",
         "outcome": "error",
         "baseline_error": "429 Rate limit reached for gpt-4o in organization org-Ymxfd9U0oHgQvWY3NcUtRd0M on tokens per min (TPM): Limit 30000, Used 30000, Requested 158. Please try again in 316ms. Visit https://platform.openai.com/account/rate-limits to learn more.",
-        "enhanced_error": "429 Rate limit reached for gpt-4o in organization org-Ymxfd9U0oHgQvWY3NcUtRd0M on tokens per min (TPM): Limit 30000, Used 25999, Requested 24668. Please try again in 41.334s. Visit https://platform.openai.com/account/rate-limits to learn more."
+        "enhanced_error": "429 Rate limit reached for gpt-4o in organization org-Ymxfd9U0oHgQvWY3NcUtRd0M on tokens per min (TPM): Limit 30000, Used 26930, Requested 24668. Please try again in 43.196s. Visit https://platform.openai.com/account/rate-limits to learn more."
       },
       {
         "id": "custom-policies",
         "outcome": "error",
         "baseline_error": "429 Rate limit reached for gpt-4o in organization org-Ymxfd9U0oHgQvWY3NcUtRd0M on tokens per min (TPM): Limit 30000, Used 30000, Requested 161. Please try again in 322ms. Visit https://platform.openai.com/account/rate-limits to learn more.",
-        "enhanced_error": "429 Rate limit reached for gpt-4o in organization org-Ymxfd9U0oHgQvWY3NcUtRd0M on tokens per min (TPM): Limit 30000, Used 18539, Requested 12051. Please try again in 1.18s. Visit https://platform.openai.com/account/rate-limits to learn more."
+        "enhanced_error": null
       },
       {
         "id": "data-serving",
         "outcome": "error",
         "baseline_error": "429 Rate limit reached for gpt-4o in organization org-Ymxfd9U0oHgQvWY3NcUtRd0M on tokens per min (TPM): Limit 30000, Used 30000, Requested 160. Please try again in 320ms. Visit https://platform.openai.com/account/rate-limits to learn more.",
-        "enhanced_error": "429 Rate limit reached for gpt-4o in organization org-Ymxfd9U0oHgQvWY3NcUtRd0M on tokens per min (TPM): Limit 30000, Used 20919, Requested 14300. Please try again in 10.438s. Visit https://platform.openai.com/account/rate-limits to learn more."
+        "enhanced_error": "429 Rate limit reached for gpt-4o in organization org-Ymxfd9U0oHgQvWY3NcUtRd0M on tokens per min (TPM): Limit 30000, Used 16995, Requested 14300. Please try again in 2.59s. Visit https://platform.openai.com/account/rate-limits to learn more."
       },
       {
         "id": "display-overview",
         "outcome": "error",
         "baseline_error": "429 Rate limit reached for gpt-4o in organization org-Ymxfd9U0oHgQvWY3NcUtRd0M on tokens per min (TPM): Limit 30000, Used 30000, Requested 146. Please try again in 292ms. Visit https://platform.openai.com/account/rate-limits to learn more.",
-        "enhanced_error": "429 Rate limit reached for gpt-4o in organization org-Ymxfd9U0oHgQvWY3NcUtRd0M on tokens per min (TPM): Limit 30000, Used 23828, Requested 18406. Please try again in 24.468s. Visit https://platform.openai.com/account/rate-limits to learn more."
+        "enhanced_error": "429 Rate limit reached for gpt-4o in organization org-Ymxfd9U0oHgQvWY3NcUtRd0M on tokens per min (TPM): Limit 30000, Used 19216, Requested 18406. Please try again in 15.244s. Visit https://platform.openai.com/account/rate-limits to learn more."
       },
       {
         "id": "gas-smashing",
         "outcome": "error",
         "baseline_error": "429 Rate limit reached for gpt-4o in organization org-Ymxfd9U0oHgQvWY3NcUtRd0M on tokens per min (TPM): Limit 30000, Used 30000, Requested 154. Please try again in 308ms. Visit https://platform.openai.com/account/rate-limits to learn more.",
-        "enhanced_error": "429 Rate limit reached for gpt-4o in organization org-Ymxfd9U0oHgQvWY3NcUtRd0M on tokens per min (TPM): Limit 30000, Used 21705, Requested 13508. Please try again in 10.426s. Visit https://platform.openai.com/account/rate-limits to learn more."
+        "enhanced_error": null
       },
       {
         "id": "hello-world",
         "outcome": "error",
         "baseline_error": "429 Rate limit reached for gpt-4o in organization org-Ymxfd9U0oHgQvWY3NcUtRd0M on tokens per min (TPM): Limit 30000, Used 30000, Requested 178. Please try again in 356ms. Visit https://platform.openai.com/account/rate-limits to learn more.",
-        "enhanced_error": "429 Rate limit reached for gpt-4o in organization org-Ymxfd9U0oHgQvWY3NcUtRd0M on tokens per min (TPM): Limit 30000, Used 24681, Requested 8307. Please try again in 5.976s. Visit https://platform.openai.com/account/rate-limits to learn more."
+        "enhanced_error": null
       },
       {
         "id": "move-package-management",
@@ -60,43 +60,43 @@
         "id": "observability",
         "outcome": "error",
         "baseline_error": "429 Rate limit reached for gpt-4o in organization org-Ymxfd9U0oHgQvWY3NcUtRd0M on tokens per min (TPM): Limit 30000, Used 30000, Requested 158. Please try again in 316ms. Visit https://platform.openai.com/account/rate-limits to learn more.",
-        "enhanced_error": "429 Rate limit reached for gpt-4o in organization org-Ymxfd9U0oHgQvWY3NcUtRd0M on tokens per min (TPM): Limit 30000, Used 19894, Requested 26001. Please try again in 31.79s. Visit https://platform.openai.com/account/rate-limits to learn more."
+        "enhanced_error": "429 Rate limit reached for gpt-4o in organization org-Ymxfd9U0oHgQvWY3NcUtRd0M on tokens per min (TPM): Limit 30000, Used 4846, Requested 26001. Please try again in 1.694s. Visit https://platform.openai.com/account/rate-limits to learn more."
       },
       {
         "id": "ptb-inputs-results",
         "outcome": "error",
         "baseline_error": "429 Rate limit reached for gpt-4o in organization org-Ymxfd9U0oHgQvWY3NcUtRd0M on tokens per min (TPM): Limit 30000, Used 30000, Requested 152. Please try again in 304ms. Visit https://platform.openai.com/account/rate-limits to learn more.",
-        "enhanced_error": "429 Rate limit reached for gpt-4o in organization org-Ymxfd9U0oHgQvWY3NcUtRd0M on tokens per min (TPM): Limit 30000, Used 24690, Requested 12657. Please try again in 14.694s. Visit https://platform.openai.com/account/rate-limits to learn more."
+        "enhanced_error": "429 Rate limit reached for gpt-4o in organization org-Ymxfd9U0oHgQvWY3NcUtRd0M on tokens per min (TPM): Limit 30000, Used 18332, Requested 12657. Please try again in 1.978s. Visit https://platform.openai.com/account/rate-limits to learn more."
       },
       {
         "id": "publish-overview",
         "outcome": "error",
         "baseline_error": "429 Rate limit reached for gpt-4o in organization org-Ymxfd9U0oHgQvWY3NcUtRd0M on tokens per min (TPM): Limit 30000, Used 30000, Requested 162. Please try again in 324ms. Visit https://platform.openai.com/account/rate-limits to learn more.",
-        "enhanced_error": "429 Rate limit reached for gpt-4o in organization org-Ymxfd9U0oHgQvWY3NcUtRd0M on tokens per min (TPM): Limit 30000, Used 18785, Requested 12052. Please try again in 1.674s. Visit https://platform.openai.com/account/rate-limits to learn more."
+        "enhanced_error": "429 Rate limit reached for gpt-4o in organization org-Ymxfd9U0oHgQvWY3NcUtRd0M on tokens per min (TPM): Limit 30000, Used 22991, Requested 12052. Please try again in 10.086s. Visit https://platform.openai.com/account/rate-limits to learn more."
       },
       {
         "id": "query-with-graphql",
         "outcome": "error",
         "baseline_error": "429 Rate limit reached for gpt-4o in organization org-Ymxfd9U0oHgQvWY3NcUtRd0M on tokens per min (TPM): Limit 30000, Used 30000, Requested 150. Please try again in 300ms. Visit https://platform.openai.com/account/rate-limits to learn more.",
-        "enhanced_error": "429 Rate limit reached for gpt-4o in organization org-Ymxfd9U0oHgQvWY3NcUtRd0M on tokens per min (TPM): Limit 30000, Used 19896, Requested 25993. Please try again in 31.777s. Visit https://platform.openai.com/account/rate-limits to learn more."
+        "enhanced_error": "429 Rate limit reached for gpt-4o in organization org-Ymxfd9U0oHgQvWY3NcUtRd0M on tokens per min (TPM): Limit 30000, Used 4831, Requested 25993. Please try again in 1.648s. Visit https://platform.openai.com/account/rate-limits to learn more."
       },
       {
         "id": "scenario-testing",
         "outcome": "error",
         "baseline_error": "429 Rate limit reached for gpt-4o in organization org-Ymxfd9U0oHgQvWY3NcUtRd0M on tokens per min (TPM): Limit 30000, Used 30000, Requested 152. Please try again in 304ms. Visit https://platform.openai.com/account/rate-limits to learn more.",
-        "enhanced_error": "429 Rate limit reached for gpt-4o in organization org-Ymxfd9U0oHgQvWY3NcUtRd0M on tokens per min (TPM): Limit 30000, Used 27212, Requested 9776. Please try again in 13.976s. Visit https://platform.openai.com/account/rate-limits to learn more."
+        "enhanced_error": null
       },
       {
         "id": "sui-install",
         "outcome": "error",
         "baseline_error": "429 Rate limit reached for gpt-4o in organization org-Ymxfd9U0oHgQvWY3NcUtRd0M on tokens per min (TPM): Limit 30000, Used 30000, Requested 212. Please try again in 424ms. Visit https://platform.openai.com/account/rate-limits to learn more.",
-        "enhanced_error": "429 Rate limit reached for gpt-4o in organization org-Ymxfd9U0oHgQvWY3NcUtRd0M on tokens per min (TPM): Limit 30000, Used 30000, Requested 1579. Please try again in 3.158s. Visit https://platform.openai.com/account/rate-limits to learn more."
+        "enhanced_error": null
       },
       {
         "id": "testing",
         "outcome": "error",
         "baseline_error": "429 Rate limit reached for gpt-4o in organization org-Ymxfd9U0oHgQvWY3NcUtRd0M on tokens per min (TPM): Limit 30000, Used 30000, Requested 146. Please try again in 292ms. Visit https://platform.openai.com/account/rate-limits to learn more.",
-        "enhanced_error": "429 Rate limit reached for gpt-4o in organization org-Ymxfd9U0oHgQvWY3NcUtRd0M on tokens per min (TPM): Limit 30000, Used 29033, Requested 9769. Please try again in 17.604s. Visit https://platform.openai.com/account/rate-limits to learn more."
+        "enhanced_error": null
       },
       {
         "id": "upgrade",
@@ -108,7 +108,7 @@
         "id": "using-grpc",
         "outcome": "error",
         "baseline_error": "429 Rate limit reached for gpt-4o in organization org-Ymxfd9U0oHgQvWY3NcUtRd0M on tokens per min (TPM): Limit 30000, Used 30000, Requested 153. Please try again in 306ms. Visit https://platform.openai.com/account/rate-limits to learn more.",
-        "enhanced_error": "429 Rate limit reached for gpt-4o in organization org-Ymxfd9U0oHgQvWY3NcUtRd0M on tokens per min (TPM): Limit 30000, Used 27717, Requested 14293. Please try again in 24.02s. Visit https://platform.openai.com/account/rate-limits to learn more."
+        "enhanced_error": "429 Rate limit reached for gpt-4o in organization org-Ymxfd9U0oHgQvWY3NcUtRd0M on tokens per min (TPM): Limit 30000, Used 17068, Requested 14293. Please try again in 2.722s. Visit https://platform.openai.com/account/rate-limits to learn more."
       },
       {
         "id": "walrus-sites",
@@ -126,12 +126,12 @@
   },
   "opus": {
     "prompts_compared": 19,
-    "improved": 3,
-    "unchanged": 12,
-    "regressed": 4,
-    "baseline_rate": 0.967479674796748,
-    "enhanced_rate": 0.9512195121951219,
-    "delta_rate": -0.016260162601626105,
+    "improved": 2,
+    "unchanged": 15,
+    "regressed": 2,
+    "baseline_rate": 0.983739837398374,
+    "enhanced_rate": 0.983739837398374,
+    "delta_rate": 0,
     "prompts": [
       {
         "id": "automated-address-management",
@@ -141,24 +141,17 @@
           "sui-publish"
         ],
         "baseline": {
-          "passed": 5,
+          "passed": 6,
           "total": 6,
-          "rate": 0.8333333333333334
+          "rate": 1
         },
         "enhanced": {
           "passed": 6,
           "total": 6,
           "rate": 1
         },
-        "delta": 1,
-        "outcome": "improved",
-        "subjective_changes": [
-          {
-            "expectation": "Shows how Published.toml or Move.lock track published addresses",
-            "was": false,
-            "now": true
-          }
-        ]
+        "delta": 0,
+        "outcome": "unchanged"
       },
       {
         "id": "common-errors",
@@ -174,12 +167,19 @@
           "rate": 1
         },
         "enhanced": {
-          "passed": 6,
+          "passed": 5,
           "total": 6,
-          "rate": 1
+          "rate": 0.8333333333333334
         },
-        "delta": 0,
-        "outcome": "unchanged"
+        "delta": -1,
+        "outcome": "regressed",
+        "subjective_changes": [
+          {
+            "expectation": "Suggests concrete fixes rather than just diagnosis",
+            "was": true,
+            "now": false
+          }
+        ]
       },
       {
         "id": "custom-policies",
@@ -253,17 +253,17 @@
           "rate": 0.8333333333333334
         },
         "enhanced": {
-          "passed": 4,
+          "passed": 6,
           "total": 6,
-          "rate": 0.6666666666666666
+          "rate": 1
         },
-        "delta": -1,
-        "outcome": "regressed",
+        "delta": 1,
+        "outcome": "improved",
         "subjective_changes": [
           {
-            "expectation": "Provides guidance on coin management strategies (selection, splitting, or merging)",
-            "was": true,
-            "now": false
+            "expectation": "Discusses gas budget estimation or setting",
+            "was": false,
+            "now": true
           }
         ]
       },
@@ -300,19 +300,12 @@
           "rate": 1
         },
         "enhanced": {
-          "passed": 6,
+          "passed": 7,
           "total": 7,
-          "rate": 0.8571428571428571
+          "rate": 1
         },
-        "delta": -1,
-        "outcome": "regressed",
-        "subjective_changes": [
-          {
-            "expectation": "Explains the role of Move.toml and its key fields",
-            "was": true,
-            "now": false
-          }
-        ]
+        "delta": 0,
+        "outcome": "unchanged"
       },
       {
         "id": "observability",
@@ -346,20 +339,15 @@
           "rate": 1
         },
         "enhanced": {
-          "passed": 5,
+          "passed": 6,
           "total": 7,
-          "rate": 0.7142857142857143
+          "rate": 0.8571428571428571
         },
-        "delta": -2,
+        "delta": -1,
         "outcome": "regressed",
         "subjective_changes": [
           {
             "expectation": "Explains the distinction between pure inputs and object inputs in PTBs",
-            "was": true,
-            "now": false
-          },
-          {
-            "expectation": "Discusses how command results chain between PTB commands",
             "was": true,
             "now": false
           }
@@ -471,24 +459,17 @@
           "sui-publish"
         ],
         "baseline": {
-          "passed": 6,
+          "passed": 7,
           "total": 7,
-          "rate": 0.8571428571428571
+          "rate": 1
         },
         "enhanced": {
           "passed": 7,
           "total": 7,
           "rate": 1
         },
-        "delta": 1,
-        "outcome": "improved",
-        "subjective_changes": [
-          {
-            "expectation": "Mentions that the original package version is preserved on-chain",
-            "was": false,
-            "now": true
-          }
-        ]
+        "delta": 0,
+        "outcome": "unchanged"
       },
       {
         "id": "using-grpc",
@@ -502,19 +483,12 @@
           "rate": 1
         },
         "enhanced": {
-          "passed": 5,
+          "passed": 6,
           "total": 6,
-          "rate": 0.8333333333333334
+          "rate": 1
         },
-        "delta": -1,
-        "outcome": "regressed",
-        "subjective_changes": [
-          {
-            "expectation": "References the proto definitions, endpoint, or service structure",
-            "was": true,
-            "now": false
-          }
-        ]
+        "delta": 0,
+        "outcome": "unchanged"
       },
       {
         "id": "walrus-sites",
@@ -567,12 +541,12 @@
   },
   "sonnet": {
     "prompts_compared": 19,
-    "improved": 1,
+    "improved": 2,
     "unchanged": 15,
-    "regressed": 3,
-    "baseline_rate": 0.943089430894309,
+    "regressed": 2,
+    "baseline_rate": 0.926829268292683,
     "enhanced_rate": 0.9512195121951219,
-    "delta_rate": 0.008130081300812941,
+    "delta_rate": 0.024390243902438935,
     "prompts": [
       {
         "id": "automated-address-management",
@@ -582,14 +556,14 @@
           "sui-publish"
         ],
         "baseline": {
-          "passed": 5,
+          "passed": 6,
           "total": 6,
-          "rate": 0.8333333333333334
+          "rate": 1
         },
         "enhanced": {
-          "passed": 5,
+          "passed": 6,
           "total": 6,
-          "rate": 0.8333333333333334
+          "rate": 1
         },
         "delta": 0,
         "outcome": "unchanged"
@@ -649,6 +623,26 @@
           "accessing-data"
         ],
         "baseline": {
+          "passed": 6,
+          "total": 6,
+          "rate": 1
+        },
+        "enhanced": {
+          "passed": 6,
+          "total": 6,
+          "rate": 1
+        },
+        "delta": 0,
+        "outcome": "unchanged"
+      },
+      {
+        "id": "display-overview",
+        "source_page": "develop/objects/display/display-overview",
+        "skills_loaded": [
+          "object-model",
+          "sui-move"
+        ],
+        "baseline": {
           "passed": 2,
           "total": 6,
           "rate": 0.3333333333333333
@@ -662,46 +656,26 @@
         "outcome": "improved",
         "subjective_changes": [
           {
-            "expectation": "Compares GraphQL and gRPC as data access options for Sui",
+            "expectation": "Explains the difference between Display V1 and Display V2",
             "was": false,
             "now": true
           },
           {
-            "expectation": "Provides guidance on when to use each option based on use case",
+            "expectation": "Shows how to migrate from V1 to V2 patterns",
             "was": false,
             "now": true
           },
           {
-            "expectation": "Mentions subscription or streaming capabilities",
+            "expectation": "Mentions the display_registry as the current approach",
             "was": false,
             "now": true
           },
           {
-            "expectation": "Discusses data retention and historical query considerations",
+            "expectation": "Provides concrete Move code or PTB examples for the migration",
             "was": false,
             "now": true
           }
         ]
-      },
-      {
-        "id": "display-overview",
-        "source_page": "develop/objects/display/display-overview",
-        "skills_loaded": [
-          "object-model",
-          "sui-move"
-        ],
-        "baseline": {
-          "passed": 6,
-          "total": 6,
-          "rate": 1
-        },
-        "enhanced": {
-          "passed": 6,
-          "total": 6,
-          "rate": 1
-        },
-        "delta": 0,
-        "outcome": "unchanged"
       },
       {
         "id": "gas-smashing",
@@ -716,12 +690,19 @@
           "rate": 1
         },
         "enhanced": {
-          "passed": 6,
+          "passed": 5,
           "total": 6,
-          "rate": 1
+          "rate": 0.8333333333333334
         },
-        "delta": 0,
-        "outcome": "unchanged"
+        "delta": -1,
+        "outcome": "regressed",
+        "subjective_changes": [
+          {
+            "expectation": "Discusses gas budget estimation or setting",
+            "was": true,
+            "now": false
+          }
+        ]
       },
       {
         "id": "hello-world",
@@ -751,17 +732,24 @@
           "sui-move-project"
         ],
         "baseline": {
-          "passed": 7,
+          "passed": 6,
           "total": 7,
-          "rate": 1
+          "rate": 0.8571428571428571
         },
         "enhanced": {
           "passed": 7,
           "total": 7,
           "rate": 1
         },
-        "delta": 0,
-        "outcome": "unchanged"
+        "delta": 1,
+        "outcome": "improved",
+        "subjective_changes": [
+          {
+            "expectation": "Shows how to declare or fix dependencies",
+            "was": false,
+            "now": true
+          }
+        ]
       },
       {
         "id": "observability",
@@ -790,24 +778,17 @@
           "ptbs"
         ],
         "baseline": {
-          "passed": 7,
+          "passed": 5,
           "total": 7,
-          "rate": 1
+          "rate": 0.7142857142857143
         },
         "enhanced": {
-          "passed": 6,
+          "passed": 5,
           "total": 7,
-          "rate": 0.8571428571428571
+          "rate": 0.7142857142857143
         },
-        "delta": -1,
-        "outcome": "regressed",
-        "subjective_changes": [
-          {
-            "expectation": "Explains the distinction between pure inputs and object inputs in PTBs",
-            "was": true,
-            "now": false
-          }
-        ]
+        "delta": 0,
+        "outcome": "unchanged"
       },
       {
         "id": "publish-overview",
@@ -901,19 +882,12 @@
           "rate": 1
         },
         "enhanced": {
-          "passed": 5,
+          "passed": 6,
           "total": 6,
-          "rate": 0.8333333333333334
+          "rate": 1
         },
-        "delta": -1,
-        "outcome": "regressed",
-        "deterministic_changes": [
-          {
-            "check": "#[test]",
-            "was": true,
-            "now": false
-          }
-        ]
+        "delta": 0,
+        "outcome": "unchanged"
       },
       {
         "id": "upgrade",
