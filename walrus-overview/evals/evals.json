@@ -1,0 +1,126 @@
+[
+  {
+    "id": "walrus-overview-what-is-walrus",
+    "type": "knowledge",
+    "prompt": "What is Walrus and how does it work at a high level?",
+    "expected_output": "A clear explanation of Walrus as a decentralized blob storage protocol built on Sui, covering erasure coding, the three-layer architecture, and how storing/reading works.",
+    "deterministic_checks": [
+      {
+        "type": "contains",
+        "value": "erasure coding"
+      },
+      {
+        "type": "contains",
+        "value": "Sui"
+      },
+      {
+        "type": "contains",
+        "value": "blob"
+      },
+      {
+        "type": "contains",
+        "value": "storage node"
+      },
+      {
+        "type": "contains",
+        "value": "WAL"
+      }
+    ],
+    "subjective_expectations": [
+      "Explains the three-layer architecture: client layer, storage node layer, and Sui blockchain layer",
+      "Mentions that blobs are public by default and encryption is needed for privacy",
+      "Explains that storage is time-limited and measured in epochs"
+    ],
+    "expectations": [
+      "Explains the three-layer architecture: client layer, storage node layer, and Sui blockchain layer",
+      "Mentions that blobs are public by default and encryption is needed for privacy",
+      "Explains that storage is time-limited and measured in epochs"
+    ]
+  },
+  {
+    "id": "walrus-overview-blob-id-vs-object-id",
+    "type": "knowledge",
+    "prompt": "I keep getting confused between blob ID and Sui object ID in Walrus. What is the difference?",
+    "expected_output": "A clear comparison explaining that blob ID is content-addressed (derived from content) while Sui object ID is unique per upload transaction.",
+    "deterministic_checks": [
+      {
+        "type": "contains",
+        "value": "blob ID"
+      },
+      {
+        "type": "contains",
+        "value": "object ID"
+      },
+      {
+        "type": "regex",
+        "value": "content[- ]address"
+      }
+    ],
+    "subjective_expectations": [
+      "Explains that the same content uploaded twice produces the same blob ID but different Sui object IDs",
+      "Clarifies that blob ID is used for reading content while Sui object ID is used for lifecycle operations like extend and delete",
+      "Shows or describes the format difference: URL-safe base64 for blob ID vs 0x hex for object ID"
+    ],
+    "expectations": [
+      "Explains that the same content uploaded twice produces the same blob ID but different Sui object IDs",
+      "Clarifies that blob ID is used for reading content while Sui object ID is used for lifecycle operations like extend and delete",
+      "Shows or describes the format difference: URL-safe base64 for blob ID vs 0x hex for object ID"
+    ]
+  },
+  {
+    "id": "walrus-overview-tool-selection",
+    "type": "knowledge",
+    "prompt": "I want to build a TypeScript web app that uploads files to Walrus. Which tool should I use?",
+    "expected_output": "Directs the user to the TypeScript SDK (@mysten/walrus) and mentions the upload relay for browser uploads.",
+    "deterministic_checks": [
+      {
+        "type": "contains",
+        "value": "@mysten/walrus"
+      },
+      {
+        "type": "regex",
+        "value": "upload\\s+relay"
+      }
+    ],
+    "subjective_expectations": [
+      "Recommends the TypeScript SDK as the primary tool for this use case",
+      "Mentions the upload relay as needed for browser-based uploads since browsers cannot directly connect to storage nodes",
+      "Does not recommend the CLI or HTTP API as the primary tool for a TypeScript web app"
+    ],
+    "expectations": [
+      "Recommends the TypeScript SDK as the primary tool for this use case",
+      "Mentions the upload relay as needed for browser-based uploads since browsers cannot directly connect to storage nodes",
+      "Does not recommend the CLI or HTTP API as the primary tool for a TypeScript web app"
+    ]
+  },
+  {
+    "id": "walrus-overview-vs-s3",
+    "type": "knowledge",
+    "prompt": "How does Walrus compare to AWS S3? When should I use Walrus instead?",
+    "expected_output": "A comparison covering the key differences in trust model, privacy, duration, and cost model, with guidance on when Walrus is the right choice.",
+    "deterministic_checks": [
+      {
+        "type": "contains",
+        "value": "decentralized"
+      },
+      {
+        "type": "contains",
+        "value": "public by default"
+      },
+      {
+        "type": "not_contains",
+        "value": "Walrus is better than S3 in every way"
+      }
+    ],
+    "subjective_expectations": [
+      "Highlights that Walrus data is public by default while S3 is private by default",
+      "Mentions that Walrus storage is time-limited (max ~2 years) while cloud storage is indefinite",
+      "Recommends Walrus for use cases needing censorship resistance, verifiability, or decentralized availability"
+    ],
+    "expectations": [
+      "Highlights that Walrus data is public by default while S3 is private by default",
+      "Mentions that Walrus storage is time-limited (max ~2 years) while cloud storage is indefinite",
+      "Recommends Walrus for use cases needing censorship resistance, verifiability, or decentralized availability"
+    ]
+  }
+]

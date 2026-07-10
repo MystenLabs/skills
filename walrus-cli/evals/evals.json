@@ -1,0 +1,152 @@
+[
+  {
+    "id": "walrus-cli-store-blob",
+    "type": "knowledge",
+    "prompt": "How do I store a file on Walrus using the CLI?",
+    "expected_output": "Step-by-step instructions using walrus store with the --epochs flag and optional flags.",
+    "deterministic_checks": [
+      {
+        "type": "contains",
+        "value": "walrus store"
+      },
+      {
+        "type": "contains",
+        "value": "--epochs"
+      },
+      {
+        "type": "regex",
+        "value": "walrus\\s+store\\s+"
+      }
+    ],
+    "subjective_expectations": [
+      "Shows a concrete example command like 'walrus store myfile.png --epochs 5'",
+      "Mentions that --epochs is mandatory with no default",
+      "Mentions the difference between --deletable (default) and --permanent"
+    ],
+    "expectations": [
+      "Shows a concrete example command like 'walrus store myfile.png --epochs 5'",
+      "Mentions that --epochs is mandatory with no default",
+      "Mentions the difference between --deletable (default) and --permanent"
+    ]
+  },
+  {
+    "id": "walrus-cli-read-blob",
+    "type": "knowledge",
+    "prompt": "How do I read a blob from Walrus and check its status?",
+    "expected_output": "Shows the walrus read and walrus blob-status commands with examples.",
+    "deterministic_checks": [
+      {
+        "type": "contains",
+        "value": "walrus read"
+      },
+      {
+        "type": "contains",
+        "value": "blob-status"
+      },
+      {
+        "type": "regex",
+        "value": "--blob-id"
+      }
+    ],
+    "subjective_expectations": [
+      "Shows how to read a blob to stdout and how to save to a file using --out",
+      "Shows how to check blob status by blob ID",
+      "Mentions the consistency check options (--strict-consistency-check or --skip-consistency-check)"
+    ],
+    "expectations": [
+      "Shows how to read a blob to stdout and how to save to a file using --out",
+      "Shows how to check blob status by blob ID",
+      "Mentions the consistency check options (--strict-consistency-check or --skip-consistency-check)"
+    ]
+  },
+  {
+    "id": "walrus-cli-json-mode",
+    "type": "knowledge",
+    "prompt": "I need to automate Walrus uploads in a CI/CD pipeline. How do I use JSON mode?",
+    "expected_output": "Explains both the walrus json command and the --json flag for machine-parseable output.",
+    "deterministic_checks": [
+      {
+        "type": "contains",
+        "value": "walrus json"
+      },
+      {
+        "type": "contains",
+        "value": "--json"
+      },
+      {
+        "type": "contains",
+        "value": "camelCase"
+      }
+    ],
+    "subjective_expectations": [
+      "Shows a concrete walrus json example with a JSON command object",
+      "Explains that JSON mode uses camelCase instead of kebab-case",
+      "Mentions that --json can be added to any standard command for JSON output"
+    ],
+    "expectations": [
+      "Shows a concrete walrus json example with a JSON command object",
+      "Explains that JSON mode uses camelCase instead of kebab-case",
+      "Mentions that --json can be added to any standard command for JSON output"
+    ]
+  },
+  {
+    "id": "walrus-cli-configuration",
+    "type": "knowledge",
+    "prompt": "How do I configure the walrus CLI client? I want to switch between testnet and mainnet.",
+    "expected_output": "Explains client_config.yaml, config locations, and context switching.",
+    "deterministic_checks": [
+      {
+        "type": "contains",
+        "value": "client_config.yaml"
+      },
+      {
+        "type": "contains",
+        "value": "--context"
+      },
+      {
+        "type": "regex",
+        "value": "suiup\\s+install\\s+walrus"
+      }
+    ],
+    "subjective_expectations": [
+      "Shows how to download the config file using curl",
+      "Explains the --context flag for switching between testnet and mainnet",
+      "Mentions the config file search locations (~/.config/walrus/, ~/.walrus/, or current directory)"
+    ],
+    "expectations": [
+      "Shows how to download the config file using curl",
+      "Explains the --context flag for switching between testnet and mainnet",
+      "Mentions the config file search locations (~/.config/walrus/, ~/.walrus/, or current directory)"
+    ]
+  },
+  {
+    "id": "walrus-cli-common-mistakes",
+    "type": "knowledge",
+    "prompt": "I'm getting 'Cannot find gas coin for signer address' when trying to store a blob. What's wrong?",
+    "expected_output": "Identifies the error as a missing SUI balance and explains both token requirements.",
+    "deterministic_checks": [
+      {
+        "type": "contains",
+        "value": "SUI"
+      },
+      {
+        "type": "contains",
+        "value": "WAL"
+      },
+      {
+        "type": "contains",
+        "value": "gas"
+      }
+    ],
+    "subjective_expectations": [
+      "Explains that the wallet needs SUI for gas fees",
+      "Mentions that WAL tokens are also needed for storage payment",
+      "Provides a solution: fund the address with SUI (and on testnet, mention the faucet)"
+    ],
+    "expectations": [
+      "Explains that the wallet needs SUI for gas fees",
+      "Mentions that WAL tokens are also needed for storage payment",
+      "Provides a solution: fund the address with SUI (and on testnet, mention the faucet)"
+    ]
+  }
+]
