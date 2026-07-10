@@ -412,6 +412,7 @@
 
 #### ✅ sui-install
 **Page:** getting-started/onboarding/sui-install
+**Prompt:** Set up this machine for Sui development: Install the Sui CLI with curl -sSfL https://raw.githubusercontent.com/MystenLabs/suiup/main/install.sh | sh, then run suiup install sui@testnet to get the Testnet-compatible toolchain. Run sui client to generate your keys and config, then prompt me to visit faucet.sui.io, enter the generated address, and fund it with test tokens.
 
 > To set up your machine for Sui development, follow these detailed instructions:  1. **Install Sui CLI**:    Open your terminal and run the following command to install the Sui CLI. This will download and execute the installation script for `suiup`, w...
 
@@ -430,6 +431,7 @@
 
 #### ✅ hello-world
 **Page:** getting-started/onboarding/hello-world
+**Prompt:** Clone the https://github.com/MystenLabs/sui-stack-hello-world example app, build and publish the Move package at move/hello-world to Testnet, then call its entry function and show me the resulting object and transaction on SuiVision.
 
 > To accomplish this task, we will clone the `sui-stack-hello-world` repository, build, and publish the Move package to the Sui Testnet. Then, we'll call the package's entry function, and finally inspect the resulting transaction on SuiVision. Follow t...
 
@@ -450,6 +452,7 @@
 
 #### ❌ testing
 **Page:** develop/testing-debugging/testing
+**Prompt:** Add Move unit tests for this package's public functions, including success, unauthorized, and edge cases.
 
 > To add Move unit tests for a Sui package, you need to follow these steps. I'll guide you through each step with code examples to cover public functions, including success, unauthorized, and edge case scenarios.  ### Step 1: Set Up Your Testing Enviro...
 
@@ -469,6 +472,7 @@
 
 #### ❌ scenario-testing
 **Page:** getting-started/examples/scenario-testing
+**Prompt:** Create scenario tests for this Sui workflow, including multiple users, object ownership changes, and expected transaction failures.
 
 > Creating scenario tests for a Sui workflow involves simulating different interactions with the blockchain, such as multiple users participating, the transfer of objects between owners, and intentionally causing transaction failures to verify robustne...
 
@@ -489,6 +493,7 @@
 
 #### ❌ common-errors
 **Page:** develop/testing-debugging/common-errors
+**Prompt:** Debug this Sui transaction failure. Inspect object refs, gas objects, ownership, versions, and suggest the minimal code or PTB change to make it execute.
 
 > To debug a Sui transaction failure effectively, you'll need to follow a systematic approach to inspect the key components involved in the transaction. Here's how you can proceed:  ### Step 1: Gather Information First, you'll want to gather detailed i...
 
@@ -508,6 +513,7 @@
 
 #### ❌ publish-overview
 **Page:** develop/publish-upgrade-packages/index
+**Prompt:** Prepare this package for Mainnet publishing: verify tests, dependencies, addresses, upgrade policy, gas requirements, signer/custody plan, and produce a launch checklist.
 
 > Certainly! Preparing a package for Mainnet publishing on the Sui blockchain involves several crucial steps to ensure everything is in order. Here's a comprehensive checklist to follow:  ### 1. **Verify Tests**  - **Write and Run Unit Tests**: Ensure ...
 
@@ -528,6 +534,7 @@
 
 #### ❌ upgrade
 **Page:** develop/publish-upgrade-packages/upgrade
+**Prompt:** Prepare an upgrade for this published Sui package. Check compatibility rules, build the upgrade transaction, identify the UpgradeCap, and document the exact upgrade steps.
 
 > To prepare an upgrade for a published Sui package, you must follow specific steps carefully to ensure compatibility and a smooth upgrade process. The process involves checking compatibility rules, building the upgrade transaction, identifying the `Up...
 
@@ -548,6 +555,7 @@
 
 #### ❌ custom-policies
 **Page:** develop/publish-upgrade-packages/custom-policies
+**Prompt:** Create an operator runbook for package upgrades and admin actions: required caps, signer/custody steps, exact commands, verification, and rollback/communication plan.
 
 > Creating an operator runbook for package upgrades and admin actions on the Sui blockchain involves several detailed steps. This runbook will guide you through the required capabilities, signer and custody steps, exact commands needed, verification pr...
 
@@ -567,6 +575,7 @@
 
 #### ❌ display-overview
 **Page:** develop/objects/display/display-overview
+**Prompt:** Find Display V1 usage in this package or docs and migrate it to Display V2 and display_registry patterns.
 
 > To migrate from Display V1 to Display V2 and incorporate the `display_registry` pattern on the Sui blockchain, you will need to modify the Move code in your package. Follow these steps to successfully perform the migration:  ### Step 1: Understanding...
 
@@ -586,6 +595,7 @@
 
 #### ❌ ptb-inputs-results
 **Page:** develop/transactions/ptbs/inputs-and-results
+**Prompt:** Review this PTB code for invalid pure inputs, custom structs/enums, object references, vectors/options, and command result usage.
 
 > Sure, I can help you review your PTB (Programmable Transaction Block) code for invalid pure inputs, custom structs/enums, object references, vectors/options, and command result usage. However, you'll need to provide the code you'd like me to review. ...
 
@@ -606,6 +616,7 @@
 
 #### ❌ gas-smashing
 **Page:** develop/transaction-payment/gas-smashing
+**Prompt:** Review this app's gas coin handling. Add safe coin selection/splitting/merging guidance and avoid concurrent reuse of mutable owned objects.
 
 > When working with gas coins in a Sui application, handling them correctly is crucial to ensure the smooth execution of transactions. Below are some guidelines and code examples to enhance your app's gas coin handling, focusing on safe coin selection,...
 
@@ -625,6 +636,7 @@
 
 #### ❌ data-serving
 **Page:** develop/accessing-data/data-serving
+**Prompt:** Review this app's data access needs and recommend GraphQL, gRPC, or both. Consider frontend/backend use, historical queries, subscriptions, latency, and retention.
 
 > To provide a recommendation on whether to use GraphQL, gRPC, or both, we'll need to assess the app's specific data access requirements including frontend/backend interactions, historical data queries, subscriptions for real-time updates, latency need...
 
@@ -644,6 +656,7 @@
 
 #### ❌ using-grpc
 **Page:** develop/accessing-data/grpc/using-grpc
+**Prompt:** Convert this Sui JSON-RPC usage to the current gRPC API. Generate/use the client, map request/response types, and add a working example.
 
 > To convert a Sui JSON-RPC usage to the current gRPC API, you'll need to follow a few steps. This involves setting up the gRPC client, mapping the appropriate request and response types, and executing a request example. I'll guide you through the proc...
 
@@ -663,6 +676,7 @@
 
 #### ❌ query-with-graphql
 **Page:** develop/accessing-data/graphql/query-with-graphql
+**Prompt:** Convert this Sui JSON-RPC query to GraphQL. Include the query, variables, pagination handling, and TypeScript caller code.
 
 > To convert a Sui JSON-RPC query to GraphQL, you'll need to understand that the process generally involves:  1. Identifying the equivalent GraphQL operation for the JSON-RPC method you are using. 2. Constructing the GraphQL query with appropriate fiel...
 
@@ -683,6 +697,7 @@
 
 #### ❌ observability
 **Page:** operators/observability
+**Prompt:** Add structured logging for transaction digest, sender, package/function, status, gas, and user-visible errors so support can debug failed Sui transactions.
 
 > To implement structured logging for Sui transactions, where you want to log details such as the transaction digest, sender, package/function invoked, status, gas usage, and user-visible errors, you can follow these steps:  ### Step 1: Set Up Environm...
 
@@ -702,6 +717,7 @@
 
 #### ❌ move-package-management
 **Page:** develop/manage-packages/move-package-management
+**Prompt:** Inspect this Move package's Move.toml, Move.lock, and dependencies. Fix dependency declarations, prefer MVR where appropriate, and verify sui move build works.
 
 > To help you with this task, you'll want to follow a series of steps to inspect and potentially fix the dependency declarations in your Move package. This involves looking at your `Move.toml`, `Move.lock`, and any dependencies. Here's a structured app...
 
@@ -722,6 +738,7 @@
 
 #### ❌ automated-address-management
 **Page:** develop/manage-packages/automated-address-management
+**Prompt:** Migrate this package to current Sui package address management using Move.lock / Published.toml conventions, then verify build and publish/test-publish behavior.
 
 > To migrate your package to the current Sui package address management conventions using `Move.lock` and `Published.toml`, follow these steps:  ### Step 1: Update Your Move Package to Use `Move.lock`  1. **Create a Move.lock File**:     - First, you n...
 
@@ -741,6 +758,7 @@
 
 #### ❌ walrus-storage
 **Page:** sui-stack/walrus/sui-stack-walrus
+**Prompt:** Upload this app's media or NFT assets to Walrus, store the resulting blob references, and wire them into Sui object metadata or Display fields.
 
 > To upload your app's media or NFT assets to Walrus, and then use the resulting blob references in your Sui object metadata or Display fields, follow these steps:  ### Step 1: Set Up Walrus Storage  First, ensure you have access to the Walrus storage ...
 
@@ -761,6 +779,7 @@
 
 #### ❌ walrus-sites
 **Page:** sui-stack/walrus/sui-stack-walrus-sites
+**Prompt:** Deploy this static frontend as a Walrus Site. Build the app, publish the site, record the site object and blob IDs, and document update steps.
 
 > To deploy a static frontend as a Walrus Site on the Sui blockchain, follow these step-by-step instructions. This will cover building your app, publishing the site, recording the necessary IDs, and documenting the update steps.  ### Step 1: Build Your...
 
@@ -788,6 +807,7 @@
 
 #### ✅ sui-install
 **Page:** getting-started/onboarding/sui-install
+**Prompt:** Set up this machine for Sui development: Install the Sui CLI with curl -sSfL https://raw.githubusercontent.com/MystenLabs/suiup/main/install.sh | sh, then run suiup install sui@testnet to get the Testnet-compatible toolchain. Run sui client to generate your keys and config, then prompt me to visit faucet.sui.io, enter the generated address, and fund it with test tokens.
 
 > # Setting Up Your Machine for Sui Development  Here's a complete step-by-step guide to get you up and running.  ---  ## Step 1: Install `suiup` (Sui Toolchain Manager)  ```bash curl -sSfL https://raw.githubusercontent.com/MystenLabs/suiup/main/instal...
 
@@ -806,6 +826,7 @@
 
 #### ✅ hello-world
 **Page:** getting-started/onboarding/hello-world
+**Prompt:** Clone the https://github.com/MystenLabs/sui-stack-hello-world example app, build and publish the Move package at move/hello-world to Testnet, then call its entry function and show me the resulting object and transaction on SuiVision.
 
 > # Deploy & Interact with the Sui "Hello World" Example  Below is every step, from cloning to viewing on SuiVision.  ---  ## 0 — Prerequisites  ```bash # Sui CLI installed (>= 1.28+) sui --version  # Make sure you have a testnet address with SUI sui c...
 
@@ -826,6 +847,7 @@
 
 #### ✅ testing
 **Page:** develop/testing-debugging/testing
+**Prompt:** Add Move unit tests for this package's public functions, including success, unauthorized, and edge cases.
 
 > # Adding Comprehensive Move Unit Tests  I'll provide a thorough testing strategy. Since you haven't shared your specific package, I'll demonstrate with a realistic example module and then write comprehensive tests covering success, unauthorized, and ...
 
@@ -845,6 +867,7 @@
 
 #### ✅ scenario-testing
 **Page:** getting-started/examples/scenario-testing
+**Prompt:** Create scenario tests for this Sui workflow, including multiple users, object ownership changes, and expected transaction failures.
 
 > # Comprehensive Sui Move Scenario Tests  Here's a complete example with a module and thorough scenario tests covering multi-user interactions, ownership transfers, and expected failures.  ## Module Under Test  ```move module marketplace::trading {   ...
 
@@ -865,6 +888,7 @@
 
 #### ✅ common-errors
 **Page:** develop/testing-debugging/common-errors
+**Prompt:** Debug this Sui transaction failure. Inspect object refs, gas objects, ownership, versions, and suggest the minimal code or PTB change to make it execute.
 
 > # Debugging Sui Transaction Failures — Systematic Guide  Transaction failures on Sui fall into a few well-defined categories. Below is a complete diagnostic framework.  ---  ## Step 1: Get the Full Error  ```bash # If you have the transaction digest ...
 
@@ -884,6 +908,7 @@
 
 #### ✅ publish-overview
 **Page:** develop/publish-upgrade-packages/index
+**Prompt:** Prepare this package for Mainnet publishing: verify tests, dependencies, addresses, upgrade policy, gas requirements, signer/custody plan, and produce a launch checklist.
 
 > # Sui Mainnet Publishing Checklist & Preparation Guide  This is a comprehensive, step-by-step guide to take a Move package from development to Mainnet deployment.  ---  ## 1. Code & Test Verification  ### 1.1 Run All Tests  ```bash # Run tests with m...
 
@@ -904,6 +929,7 @@
 
 #### ❌ upgrade
 **Page:** develop/publish-upgrade-packages/upgrade
+**Prompt:** Prepare an upgrade for this published Sui package. Check compatibility rules, build the upgrade transaction, identify the UpgradeCap, and document the exact upgrade steps.
 
 > # Complete Sui Package Upgrade Guide  ## Overview  Sui supports package upgrades with strict compatibility rules. Here's the complete process from start to finish.  ---  ## Step 1: Understand Compatibility Rules  Sui enforces three upgrade policies (...
 
@@ -924,6 +950,7 @@
 
 #### ✅ custom-policies
 **Page:** develop/publish-upgrade-packages/custom-policies
+**Prompt:** Create an operator runbook for package upgrades and admin actions: required caps, signer/custody steps, exact commands, verification, and rollback/communication plan.
 
 > # Sui Package Upgrades & Admin Actions — Operator Runbook  ---  ## Table of Contents  1. [Capability Inventory](#1-capability-inventory) 2. [Pre-Upgrade Checklist](#2-pre-upgrade-checklist) 3. [Signer & Custody Procedures](#3-signer--custody-procedur...
 
@@ -943,6 +970,7 @@
 
 #### ✅ display-overview
 **Page:** develop/objects/display/display-overview
+**Prompt:** Find Display V1 usage in this package or docs and migrate it to Display V2 and display_registry patterns.
 
 > # Migrating from Display V1 to Display V2 with `display_registry`  ## Understanding the Change  In Sui's evolution, `Display V1` (from `sui::display`) is being superseded by `Display V2` patterns that use a **`display_registry`** approach. Here's a c...
 
@@ -962,6 +990,7 @@
 
 #### ✅ ptb-inputs-results
 **Page:** develop/transactions/ptbs/inputs-and-results
+**Prompt:** Review this PTB code for invalid pure inputs, custom structs/enums, object references, vectors/options, and command result usage.
 
 > # PTB Code Review Checklist  I'd be happy to review your PTB (Programmable Transaction Block) code, but you haven't included the actual code. Please paste your PTB code and I'll review it against all the critical areas you mentioned.  In the meantime...
 
@@ -982,6 +1011,7 @@
 
 #### ✅ gas-smashing
 **Page:** develop/transaction-payment/gas-smashing
+**Prompt:** Review this app's gas coin handling. Add safe coin selection/splitting/merging guidance and avoid concurrent reuse of mutable owned objects.
 
 > # Gas Coin Handling: Safe Coin Selection, Splitting, Merging & Concurrency  This is a comprehensive review and guide for handling gas coins safely on Sui, covering the most common pitfalls and production-grade patterns.  ---  ## 1. The Core Problem: ...
 
@@ -1001,6 +1031,7 @@
 
 #### ✅ data-serving
 **Page:** develop/accessing-data/data-serving
+**Prompt:** Review this app's data access needs and recommend GraphQL, gRPC, or both. Consider frontend/backend use, historical queries, subscriptions, latency, and retention.
 
 > # Sui Data Access Strategy: GraphQL vs gRPC vs Both  To give you a comprehensive recommendation framework, I'll analyze both APIs across every critical dimension, then walk through concrete architecture decisions for common app patterns.  ---  ## 1. ...
 
@@ -1020,6 +1051,7 @@
 
 #### ✅ using-grpc
 **Page:** develop/accessing-data/grpc/using-grpc
+**Prompt:** Convert this Sui JSON-RPC usage to the current gRPC API. Generate/use the client, map request/response types, and add a working example.
 
 > # Converting Sui JSON-RPC to gRPC API  Sui's gRPC API (introduced as part of the Sui Node's newer API surface) provides a more efficient, typed alternative to JSON-RPC. Let me walk through the full conversion process.  ## 1. Understanding the Archite...
 
@@ -1039,6 +1071,7 @@
 
 #### ✅ query-with-graphql
 **Page:** develop/accessing-data/graphql/query-with-graphql
+**Prompt:** Convert this Sui JSON-RPC query to GraphQL. Include the query, variables, pagination handling, and TypeScript caller code.
 
 >   # Converting Sui JSON-RPC to GraphQL  I'll provide a comprehensive conversion covering the most common JSON-RPC calls (`sui_getObject`, `sui_getOwnedObjects`, `suix_getCoins`, `sui_getTransactionBlock`) to their GraphQL equivalents, with full TypeS...
 
@@ -1059,6 +1092,7 @@
 
 #### ✅ observability
 **Page:** operators/observability
+**Prompt:** Add structured logging for transaction digest, sender, package/function, status, gas, and user-visible errors so support can debug failed Sui transactions.
 
 >   # Structured Logging for Sui Transaction Debugging  I'll build a comprehensive structured logging system for Sui transactions that captures digest, sender, package/function, status, gas usage, and user-visible errors.  ## 1. Rust Backend (Move Clie...
 
@@ -1078,6 +1112,7 @@
 
 #### ✅ move-package-management
 **Page:** develop/manage-packages/move-package-management
+**Prompt:** Inspect this Move package's Move.toml, Move.lock, and dependencies. Fix dependency declarations, prefer MVR where appropriate, and verify sui move build works.
 
 > # Fixing Move Package Dependencies and Build Configuration  I'll walk you through the full process of inspecting, fixing, and verifying your Move package configuration. Since you haven't provided the actual files, I'll cover the complete methodology ...
 
@@ -1098,6 +1133,7 @@
 
 #### ❌ automated-address-management
 **Page:** develop/manage-packages/automated-address-management
+**Prompt:** Migrate this package to current Sui package address management using Move.lock / Published.toml conventions, then verify build and publish/test-publish behavior.
 
 > # Migrating a Sui Package to Current Address Management  ## Understanding the Problem  Older Sui Move packages used hardcoded addresses in `Move.toml` under `[addresses]`, which caused issues during publishing (address `0x0` needed to be replaced wit...
 
@@ -1117,6 +1153,7 @@
 
 #### ❌ walrus-storage
 **Page:** sui-stack/walrus/sui-stack-walrus
+**Prompt:** Upload this app's media or NFT assets to Walrus, store the resulting blob references, and wire them into Sui object metadata or Display fields.
 
 > # Uploading Assets to Walrus and Wiring into Sui Object Metadata  This is a comprehensive guide covering the full pipeline: uploading to Walrus → storing blob references → wiring into Sui Move objects and Display fields.  ---  ## 1. Architecture Over...
 
@@ -1137,6 +1174,7 @@
 
 #### ✅ walrus-sites
 **Page:** sui-stack/walrus/sui-stack-walrus-sites
+**Prompt:** Deploy this static frontend as a Walrus Site. Build the app, publish the site, record the site object and blob IDs, and document update steps.
 
 > # Deploying a Static Frontend as a Walrus Site  Here's a complete, step-by-step guide to building your static frontend, publishing it to Walrus Sites, recording all relevant IDs, and documenting the update process.  ---  ## Prerequisites  ### 1. Inst...
 
@@ -1164,6 +1202,7 @@
 
 #### ✅ sui-install
 **Page:** getting-started/onboarding/sui-install
+**Prompt:** Set up this machine for Sui development: Install the Sui CLI with curl -sSfL https://raw.githubusercontent.com/MystenLabs/suiup/main/install.sh | sh, then run suiup install sui@testnet to get the Testnet-compatible toolchain. Run sui client to generate your keys and config, then prompt me to visit faucet.sui.io, enter the generated address, and fund it with test tokens.
 
 > # Sui Development Environment Setup  I'll walk you through each step with clear commands and explanations.  ---  ## Step 1: Install `suiup` (the Sui toolchain manager)  ```bash curl -sSfL https://raw.githubusercontent.com/MystenLabs/suiup/main/instal...
 
@@ -1182,6 +1221,7 @@
 
 #### ✅ hello-world
 **Page:** getting-started/onboarding/hello-world
+**Prompt:** Clone the https://github.com/MystenLabs/sui-stack-hello-world example app, build and publish the Move package at move/hello-world to Testnet, then call its entry function and show me the resulting object and transaction on SuiVision.
 
 > # Building and Publishing the Sui Hello World Example  ## Step 1: Clone the Repository  ```bash git clone https://github.com/MystenLabs/sui-stack-hello-world.git cd sui-stack-hello-world ```  ## Step 2: Configure Sui CLI for Testnet  ```bash # Add Te...
 
@@ -1202,6 +1242,7 @@
 
 #### ✅ testing
 **Page:** develop/testing-debugging/testing
+**Prompt:** Add Move unit tests for this package's public functions, including success, unauthorized, and edge cases.
 
 > I'll help you add comprehensive Move unit tests. Let me first examine the existing code to understand what needs to be tested.  <SEARCH> *.move </SEARCH>  <SEARCH> Move.toml </SEARCH>  Let me look at the source files more carefully:  <SEARCH> sources...
 
@@ -1221,6 +1262,7 @@
 
 #### ❌ scenario-testing
 **Page:** getting-started/examples/scenario-testing
+**Prompt:** Create scenario tests for this Sui workflow, including multiple users, object ownership changes, and expected transaction failures.
 
 > I'll create comprehensive scenario tests for a Sui workflow. Let me build a complete example with a marketplace/NFT trading system that covers all the complex cases.  ## Project Structure  ``` sui-scenario-tests/ ├── Move.toml ├── sources/ │   └── ma...
 
@@ -1241,6 +1283,7 @@
 
 #### ✅ common-errors
 **Page:** develop/testing-debugging/common-errors
+**Prompt:** Debug this Sui transaction failure. Inspect object refs, gas objects, ownership, versions, and suggest the minimal code or PTB change to make it execute.
 
 > I'd be happy to help debug your Sui transaction failure! To give you the most accurate diagnosis, I'll need some details. But let me first walk you through a **systematic debugging framework**, then we can apply it to your specific case.  ---  ## 🔍 ...
 
@@ -1260,6 +1303,7 @@
 
 #### ✅ publish-overview
 **Page:** develop/publish-upgrade-packages/index
+**Prompt:** Prepare this package for Mainnet publishing: verify tests, dependencies, addresses, upgrade policy, gas requirements, signer/custody plan, and produce a launch checklist.
 
 > # Sui Mainnet Publishing Preparation Guide  I'll walk you through a comprehensive pre-launch checklist. Let me start by examining what we'd need to verify, then provide tooling and automation for each step.  ---  ## Step 1: Project Structure Audit  F...
 
@@ -1280,6 +1324,7 @@
 
 #### ✅ upgrade
 **Page:** develop/publish-upgrade-packages/upgrade
+**Prompt:** Prepare an upgrade for this published Sui package. Check compatibility rules, build the upgrade transaction, identify the UpgradeCap, and document the exact upgrade steps.
 
 > I'll walk you through a complete Sui package upgrade workflow. Let me cover every step with working code and commands.  ## Overview  Sui package upgrades require: 1. An `UpgradeCap` object (minted at publish time) 2. Compatibility checks (policy enfo...
 
@@ -1300,6 +1345,7 @@
 
 #### ✅ custom-policies
 **Page:** develop/publish-upgrade-packages/custom-policies
+**Prompt:** Create an operator runbook for package upgrades and admin actions: required caps, signer/custody steps, exact commands, verification, and rollback/communication plan.
 
 > # Sui Package Upgrade & Admin Actions Operator Runbook  ## Table of Contents 1. [Prerequisites & Environment Setup](#prerequisites) 2. [Capability Inventory & Custody Model](#capabilities) 3. [Package Upgrade Runbook](#package-upgrade) 4. [Admin Acti...
 
@@ -1319,6 +1365,7 @@
 
 #### ✅ display-overview
 **Page:** develop/objects/display/display-overview
+**Prompt:** Find Display V1 usage in this package or docs and migrate it to Display V2 and display_registry patterns.
 
 > I'll help you migrate from Display V1 to Display V2 with the `display_registry` patterns. Let me first understand what we're working with, then provide a complete migration guide.  ## Step 1: Understanding Display V1 vs V2  **Display V1** (old patter...
 
@@ -1338,6 +1385,7 @@
 
 #### ✅ ptb-inputs-results
 **Page:** develop/transactions/ptbs/inputs-and-results
+**Prompt:** Review this PTB code for invalid pure inputs, custom structs/enums, object references, vectors/options, and command result usage.
 
 > I'll systematically review PTB code for the most common categories of errors. Please **paste your PTB code** and I'll analyze it across these five areas:  ---  ## What I'll Check  ### 1. 🔢 Invalid Pure Inputs - Wrong types passed to `tx.pure()` (e.g...
 
@@ -1358,6 +1406,7 @@
 
 #### ✅ gas-smashing
 **Page:** develop/transaction-payment/gas-smashing
+**Prompt:** Review this app's gas coin handling. Add safe coin selection/splitting/merging guidance and avoid concurrent reuse of mutable owned objects.
 
 > I'll review gas coin handling patterns and provide comprehensive guidance for safe coin selection, splitting, merging, and avoiding concurrent object reuse issues on Sui.  ## Key Problems with Naive Gas Coin Handling  Before diving into solutions, he...
 
@@ -1377,6 +1426,7 @@
 
 #### ✅ data-serving
 **Page:** develop/accessing-data/data-serving
+**Prompt:** Review this app's data access needs and recommend GraphQL, gRPC, or both. Consider frontend/backend use, historical queries, subscriptions, latency, and retention.
 
 > # Data Access Layer Recommendation for Sui Apps  I'll walk through a structured analysis framework, then give you concrete recommendations based on common app archetypes.  ---  ## Understanding the Two Options  ### Sui GraphQL API (indexer-backed) ``...
 
@@ -1396,6 +1446,7 @@
 
 #### ❌ using-grpc
 **Page:** develop/accessing-data/grpc/using-grpc
+**Prompt:** Convert this Sui JSON-RPC usage to the current gRPC API. Generate/use the client, map request/response types, and add a working example.
 
 > I'll convert the Sui JSON-RPC usage to the gRPC API systematically. Since you haven't pasted specific JSON-RPC code, I'll cover the most common operations and show the full conversion pattern.  ## Setup  ```toml # Cargo.toml [dependencies] sui-sdk = ...
 
@@ -1415,6 +1466,7 @@
 
 #### ✅ query-with-graphql
 **Page:** develop/accessing-data/graphql/query-with-graphql
+**Prompt:** Convert this Sui JSON-RPC query to GraphQL. Include the query, variables, pagination handling, and TypeScript caller code.
 
 > I'll convert a Sui JSON-RPC query to GraphQL with full TypeScript implementation. I'll use **getOwnedObjects** as the example since it demonstrates pagination well.  ## JSON-RPC Original  ```typescript // Original JSON-RPC call const response = await...
 
@@ -1435,6 +1487,7 @@
 
 #### ✅ observability
 **Page:** operators/observability
+**Prompt:** Add structured logging for transaction digest, sender, package/function, status, gas, and user-visible errors so support can debug failed Sui transactions.
 
 > # Structured Logging for Sui Transaction Debugging  ## Architecture Overview  ``` Request → Middleware → PTB Execution → Response     ↓           ↓            ↓            ↓   Logger    Enricher    Tx Monitor    Error Handler     └───────────────────...
 
@@ -1454,6 +1507,7 @@
 
 #### ❌ move-package-management
 **Page:** develop/manage-packages/move-package-management
+**Prompt:** Inspect this Move package's Move.toml, Move.lock, and dependencies. Fix dependency declarations, prefer MVR where appropriate, and verify sui move build works.
 
 > I'll systematically inspect your Move package configuration and fix any issues. Please share your files and I'll get started.  **Please provide:** 1. `Move.toml` contents 2. `Move.lock` contents (if it exists) 3. Any error output from `sui move build...
 
@@ -1474,6 +1528,7 @@
 
 #### ✅ automated-address-management
 **Page:** develop/manage-packages/automated-address-management
+**Prompt:** Migrate this package to current Sui package address management using Move.lock / Published.toml conventions, then verify build and publish/test-publish behavior.
 
 > I'll walk you through migrating a package to Sui's current address management conventions using `Move.lock` and the `Published.toml` pattern, then verify everything works correctly.  ## Step 1: Understand the Current Address Management System  Sui us...
 
@@ -1493,6 +1548,7 @@
 
 #### ❌ walrus-storage
 **Page:** sui-stack/walrus/sui-stack-walrus
+**Prompt:** Upload this app's media or NFT assets to Walrus, store the resulting blob references, and wire them into Sui object metadata or Display fields.
 
 > # Uploading Assets to Walrus & Wiring into Sui Objects  I'll walk you through a complete, production-ready pipeline: upload assets → store blob IDs → wire into Sui Display/metadata.  ## Architecture Overview  ``` Local Assets → Walrus Publisher → Blo...
 
@@ -1513,6 +1569,7 @@
 
 #### ✅ walrus-sites
 **Page:** sui-stack/walrus/sui-stack-walrus-sites
+**Prompt:** Deploy this static frontend as a Walrus Site. Build the app, publish the site, record the site object and blob IDs, and document update steps.
 
 > # Deploy a Static Frontend as a Walrus Site  I'll walk you through the complete process: building your app, publishing to Walrus Sites, and managing updates.  ## Prerequisites  ```bash # Install Sui CLI cargo install --locked --git https://github.com...
 

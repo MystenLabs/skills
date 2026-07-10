@@ -15,7 +15,9 @@
  */
 
 import { existsSync, readFileSync, readdirSync, writeFileSync } from "fs";
-import { join } from "path";
+import { dirname, join, resolve } from "path";
+
+const ROOT = resolve(dirname(new URL(import.meta.url).pathname), "..");
 
 const artifactDir = process.argv[2];
 if (!artifactDir) {
@@ -23,11 +25,30 @@ if (!artifactDir) {
   process.exit(1);
 }
 
+// ── Load prompt definitions for prompt text display ──────────────────
+let promptDefs = {};
+const promptsPath = join(ROOT, "evals", "agent-prompts", "prompts.json");
+if (existsSync(promptsPath)) {
+  const raw = JSON.parse(readFileSync(promptsPath, "utf-8"));
+  for (const p of raw) promptDefs[p.id] = p;
+}
+
+// ── Parse result file (handles {metadata, results} or plain array) ──
+function parseResultFile(filePath) {
+  const raw = JSON.parse(readFileSync(filePath, "utf-8"));
+  if (Array.isArray(raw)) return { metadata: {}, results: raw };
+  if (raw.results && Array.isArray(raw.results)) return raw;
+  return { metadata: {}, results: raw };
+}
+
 // ── Discover result files ────────────────────────────────────────────
 const modelResults = {};
+const modelMetadata = {};
 const codeResults = [];
 const agentPromptResults = {};
+const agentPromptMetadata = {};
 const agentPromptWithSkillsResults = {};
+const agentPromptWithSkillsMetadata = {};
 let hasFailures = false;
 
 for (const dir of readdirSync(artifactDir, { withFileTypes: true })) {
@@ -37,14 +58,15 @@ for (const dir of readdirSync(artifactDir, { withFileTypes: true })) {
   const evalFile = join(subDir, "eval-results.json");
   if (existsSync(evalFile)) {
     const label = dir.name.replace("eval-results-", "");
-    const results = JSON.parse(readFileSync(evalFile, "utf-8"));
+    const { metadata, results } = parseResultFile(evalFile);
     modelResults[label] = results;
+    modelMetadata[label] = metadata;
     if (results.some((r) => r.status !== "PASS")) hasFailures = true;
   }
 
   const codeEvalFile = join(subDir, "code-eval-results.json");
   if (existsSync(codeEvalFile)) {
-    const results = JSON.parse(readFileSync(codeEvalFile, "utf-8"));
+    const { results } = parseResultFile(codeEvalFile);
     codeResults.push(...results);
     if (results.some((r) => r.status !== "PASS")) hasFailures = true;
   }
@@ -52,16 +74,18 @@ for (const dir of readdirSync(artifactDir, { withFileTypes: true })) {
   const agentPromptFile = join(subDir, "agent-prompt-eval-results.json");
   if (existsSync(agentPromptFile)) {
     const label = dir.name.replace("agent-prompt-results-", "");
-    const results = JSON.parse(readFileSync(agentPromptFile, "utf-8"));
+    const { metadata, results } = parseResultFile(agentPromptFile);
     agentPromptResults[label] = results;
+    agentPromptMetadata[label] = metadata;
     if (results.some((r) => r.status !== "PASS")) hasFailures = true;
   }
 
   const agentPromptWithSkillsFile = join(subDir, "agent-prompt-with-skills-eval-results.json");
   if (existsSync(agentPromptWithSkillsFile)) {
     const label = dir.name.replace("agent-prompt-with-skills-results-", "");
-    const results = JSON.parse(readFileSync(agentPromptWithSkillsFile, "utf-8"));
+    const { metadata, results } = parseResultFile(agentPromptWithSkillsFile);
     agentPromptWithSkillsResults[label] = results;
+    agentPromptWithSkillsMetadata[label] = metadata;
     if (results.some((r) => r.status !== "PASS")) hasFailures = true;
   }
 }
@@ -176,6 +200,22 @@ for (const s of summaryRows) {
   );
 }
 lines.push("");
+
+// ── Model versions ───────────────────────────────────────────────────
+const allMeta = { ...modelMetadata, ...agentPromptMetadata, ...agentPromptWithSkillsMetadata };
+const seenModels = new Map();
+for (const [label, meta] of Object.entries(allMeta)) {
+  if (meta.model) seenModels.set(meta.model, { provider: meta.provider, judge: meta.judge_model, timestamp: meta.timestamp });
+}
+if (seenModels.size > 0) {
+  lines.push("### Models\n");
+  lines.push("| Label | Provider | Model ID | Judge Model |");
+  lines.push("|-------|----------|----------|-------------|");
+  for (const [model, info] of seenModels) {
+    lines.push(`| ${model} | ${info.provider ?? "–"} | \`${model}\` | \`${info.judge ?? "–"}\` |`);
+  }
+  lines.push("");
+}
 
 // ── Knowledge evals detail ───────────────────────────────────────────
 if (models.length > 0) {
@@ -375,7 +415,13 @@ if (agentModels.length > 0) {
     for (const r of results) {
       const icon = statusIcon(r.status);
       lines.push(`#### ${icon} ${r.id}`);
-      lines.push(`**Page:** ${r.source_page ?? "unknown"}\n`);
+      lines.push(`**Page:** ${r.source_page ?? "unknown"}`);
+      const promptDef = promptDefs[r.id];
+      if (promptDef?.prompt) {
+        lines.push(`**Prompt:** ${promptDef.prompt}\n`);
+      } else {
+        lines.push("");
+      }
 
       if (r.response_excerpt) {
         lines.push(`> ${r.response_excerpt.replace(/\n/g, " ").slice(0, 250)}...\n`);
