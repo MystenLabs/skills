@@ -11,15 +11,13 @@
  *   node scripts/run-evals.js                  # run all evals
  *   node scripts/run-evals.js --changed-only   # run evals for skills changed in this PR
  *   node scripts/run-evals.js --skill sui-move  # run evals for a single skill
- *   node scripts/run-evals.js --provider openai # use a different provider (default: anthropic)
- *   node scripts/run-evals.js --model gpt-4o   # override the response model
  *   node scripts/run-evals.js --judge-model claude-haiku-4-5-20251001  # use a cheaper judge
  *   node scripts/run-evals.js --concurrency 5  # run 5 skills in parallel (default: 3)
  *   node scripts/run-evals.js --timeout 60000  # per-eval timeout in ms (default: 120000)
  *
  * Environment:
  *   ANTHROPIC_API_KEY   required
- *   EVAL_MODEL          model for generating responses  (default: claude-sonnet-4-6)
+ *   EVAL_MODEL          model for generating responses  (default: claude-opus-4-6)
  *   JUDGE_MODEL         model for grading responses     (default: claude-haiku-4-5-20251001)
  */
 
@@ -36,36 +34,36 @@ import {
   loadSkillContext,
   parseEvals,
 } from "./lib/utils.js";
-import { createProvider } from "./lib/providers.js";
 
 // ── CLI args ──────────────────────────────────────────────────────────
 const args = process.argv.slice(2);
 const skillFlag = getFlag(args, "skill");
 const judgeModelFlag = getFlag(args, "judge-model");
-const providerFlag = getFlag(args, "provider");
-const modelFlag = getFlag(args, "model");
 const concurrencyFlag = getFlag(args, "concurrency");
 const timeoutFlag = getFlag(args, "timeout");
 const changedOnly = hasFlag(args, "changed-only");
 
-const providerName = providerFlag ?? "anthropic";
-const EVAL_MODEL = modelFlag ?? process.env.EVAL_MODEL ?? "claude-sonnet-4-6";
+const EVAL_MODEL = process.env.EVAL_MODEL ?? "claude-opus-4-6";
 const JUDGE_MODEL = judgeModelFlag ?? process.env.JUDGE_MODEL ?? "claude-haiku-4-5-20251001";
 const MAX_TOKENS_RESPONSE = 4096;
 const MAX_TOKENS_JUDGE = 2048;
 const CONCURRENCY = parseInt(concurrencyFlag ?? "3", 10);
 const EVAL_TIMEOUT = parseInt(timeoutFlag ?? "120000", 10);
 
-const provider = createProvider(providerName);
-const judgeClient = new Anthropic();
+const client = new Anthropic();
 
 // ── Generate a response using the skill context ──────────────────────
 async function generateResponse(skillContext, prompt) {
-  const systemPrompt = `You are an expert Sui blockchain developer assistant. Use the following skill reference to answer the user's question.\n\n${skillContext}`;
-  return provider.generate(systemPrompt, prompt, {
+  const response = await client.messages.create({
     model: EVAL_MODEL,
-    maxTokens: MAX_TOKENS_RESPONSE,
+    max_tokens: MAX_TOKENS_RESPONSE,
+    system: `You are an expert Sui blockchain developer assistant. Use the following skill reference to answer the user's question.\n\n${skillContext}`,
+    messages: [{ role: "user", content: prompt }],
   });
+  return response.content
+    .filter((b) => b.type === "text")
+    .map((b) => b.text)
+    .join("\n");
 }
 
 // ── Judge the response against expectations ──────────────────────────
@@ -97,7 +95,7 @@ Return ONLY valid JSON — an array where each entry has:
 
 Do not include any text outside the JSON array.`;
 
-  const result = await judgeClient.messages.create({
+  const result = await client.messages.create({
     model: JUDGE_MODEL,
     max_tokens: MAX_TOKENS_JUDGE,
     messages: [{ role: "user", content: judgePrompt }],
@@ -212,7 +210,6 @@ async function main() {
   }
 
   console.log(`\nEval runner configuration:`);
-  console.log(`  Provider       : ${providerName}`);
   console.log(`  Response model : ${EVAL_MODEL}`);
   console.log(`  Judge model    : ${JUDGE_MODEL}`);
   console.log(`  Concurrency    : ${CONCURRENCY} evals in parallel`);

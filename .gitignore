@@ -4,10 +4,3 @@
 skills-lock.json
 node_modules/
 .env
-
-# Eval pipeline results
-scripts/eval-results.json
-scripts/code-eval-results.json
-scripts/agent-prompt-eval-results.json
-scripts/agent-prompt-with-skills-eval-results.json
-scripts/skill-impact-report.json
