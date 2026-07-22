@@ -11,7 +11,7 @@ Canonical inventory: https://docs.sui.io/references/sui-sdks
 | Repo | https://github.com/FrankC01/pysui |
 | Install | `pip install pysui` · upgrade: `pip install -U --upgrade-strategy eager pysui` |
 | Maintainer | Community (FrankC01) |
-| Protocols | JSON-RPC, GraphQL, gRPC |
+| Protocols | JSON-RPC (deprecated), GraphQL, gRPC |
 | Supports PTBs | Yes — via `transaction()` with `build()`, `build_and_sign()`, `transaction_data()` |
 
 Most mature community SDK. Sync and async clients. Supports PTB construction and execution.
@@ -37,7 +37,7 @@ Check `docs` directory and `pypi` page for current API — the surface evolves.
 | Repo | https://github.com/block-vision/sui-go-sdk |
 | Install | `go get github.com/block-vision/sui-go-sdk` |
 | Maintainer | Community (BlockVision) |
-| Protocols | Primarily JSON-RPC |
+| Protocols | Primarily JSON-RPC (deprecated) |
 
 Other Go SDKs exist (SuiVision, Pattonkan). `block-vision` is the one listed on docs.sui.io; assess staleness before use.
 
@@ -56,7 +56,7 @@ Other Go SDKs exist (SuiVision, Pattonkan). `block-vision` is the one listed on 
 |---|---|
 | Repo | https://github.com/mcxross/ksui |
 | Maintainer | Community (mcxross) |
-| Use case | Kotlin Multiplatform; JSON-RPC wrapper + crypto utilities |
+| Use case | Kotlin Multiplatform; JSON-RPC wrapper (deprecated) + crypto utilities |
 
 ## Swift — `SuiKit` (`opendive/suikit`)
 
@@ -89,6 +89,6 @@ For React, use `@mysten/dapp-kit-react` instead (official, covered in the `front
 1. **Can you use TypeScript or Rust?** If yes — stop here, use the official SDK.
 2. **Is Python / Go / Swift / Kotlin / Dart a hard requirement?** Check the relevant community SDK for recent commits + protocol support.
 3. **Is the community SDK stale?** Consider FFI-wrapping the Rust SDK (`sui-rust-sdk`) in your target language.
-4. **Still stuck?** Use the community SDK but flag the staleness risk to the user and be prepared to fall back to JSON-RPC / raw BCS construction.
+4. **Still stuck?** Use the community SDK but flag the staleness risk to the user and be prepared to fall back to JSON-RPC (deprecated) / raw BCS construction or wrapping the Rust SDK via FFI.
 
 Always tell the user when they're relying on a community SDK. They may prefer to switch languages for an official SDK.

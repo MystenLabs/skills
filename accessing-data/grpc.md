@@ -18,7 +18,7 @@ From the docs: *"gRPC has built-in support for code generation, allowing you to 
 
 - Multi-entity joins / historical filtered queries / filtered pagination over historical transactions and events. → Use GraphQL RPC.
 - App-specific analytics over millions of events. → Use a custom indexer.
-- Historical data beyond full-node retention. → Both gRPC and GraphQL RPC route to the Archival Store transparently when the operator has configured archival backing. There is no separate archival endpoint to call. If archival is not configured, retention is limited to what the primary store holds. See `archival.md`.
+- Historical data beyond full-node retention. → gRPC does not implicitly fall back to the Archival Store. For historical data beyond full-node retention, gRPC clients must query an Archival Service endpoint directly. GraphQL RPC can route to archival transparently when operator-configured. See `archival.md`.
 
 ## Endpoint URLs
 
@@ -44,7 +44,7 @@ The `SuiGrpcClient` exposes these typed services (protobuf-defined):
 | `signatureVerificationService` | Verify a signature against a message |
 | `subscriptionService` | Streaming subscriptions (where available) |
 
-The **Core API** (`client.core.*`) is a higher-level facade that works identically across `SuiGrpcClient`, `SuiJsonRpcClient`, and `SuiGraphQLClient` for the common CRUD-ish reads.
+The **Core API** (`client.core.*`) is a higher-level facade that works identically across `SuiGrpcClient` and `SuiGraphQLClient` for the common CRUD-ish reads.
 
 ## TypeScript — `SuiGrpcClient`
 
@@ -187,12 +187,12 @@ try {
 
 ## Common mistakes
 
-- Using v1 method names: `client.getObject`, `client.getCoins`, `client.getOwnedObjects` — all v1 JSON-RPC. v2 is `client.core.getObject`, `client.core.listCoins`, `client.core.listOwnedObjects`.
+- Using v1 method names: `client.getObject`, `client.getCoins`, `client.getOwnedObjects` — all from the deprecated v1/JSON-RPC surface. v2 is `client.core.getObject`, `client.core.listCoins`, `client.core.listOwnedObjects`.
 - Using `options: { showEffects: true }` — v1. v2 is `include: { effects: true }`. Note that `include` option keys differ by method — see the table above.
 - Passing `type: '0xpkg::m::T'` to `listOwnedObjects` — wrong. Type filters go under `filter: { StructType: '0xpkg::m::T' }`.
 - Passing `parent:` to `listDynamicFields` — wrong. It's `parentId:`.
 - Using `lastPage.hasNextPage` / `lastPage.nextCursor` on core API results — core `list*` methods return a single `cursor` field (null when done). `hasNextPage` / `pageInfo` is the GraphQL shape, not Core API.
-- Using `getFullnodeUrl` helper — v1 (only for JSON-RPC). For gRPC, pass the URL directly as `baseUrl`.
+- Using `getFullnodeUrl` helper — removed v1 API. For gRPC, pass the URL directly as `baseUrl`.
 - Instantiating `SuiClient` — removed in v2. Use `SuiGrpcClient`.
 - Checking `result.effects?.status?.status` — v1. v2 uses `$kind` discriminant.
 - Polling for events/effects — use streaming.

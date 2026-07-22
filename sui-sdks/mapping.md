@@ -18,7 +18,7 @@ All examples assume a signer is available.
 | Op | TypeScript | Rust (new) |
 |---|---|---|
 | gRPC client | `new SuiGrpcClient({ network, baseUrl })` | `sui_rpc::client::Client::new(url)` |
-| JSON-RPC client | `new SuiJsonRpcClient({ network, url: getJsonRpcFullnodeUrl(n) })` | use legacy `sui-sdk` crate |
+| JSON-RPC client (deprecated) | `new SuiJsonRpcClient({ network, url: getJsonRpcFullnodeUrl(n) })` | use legacy `sui-sdk` crate |
 | GraphQL client | `new SuiGraphQLClient({ network, url })` | `sui_graphql::client::Client::new(url)` |
 
 ## Build a PTB
@@ -145,7 +145,7 @@ txn = SyncTransaction(client=client)
 |---|---|---|---|
 | PTB construction | ✅ | ✅ | ✅ |
 | gRPC | ✅ (`SuiGrpcClient`) | ✅ (`sui-rpc`) | ✅ |
-| JSON-RPC | ✅ (`SuiJsonRpcClient`, deprecated) | ❌ (use legacy `sui-sdk`) | ✅ |
+| JSON-RPC (deprecated) | ✅ (`SuiJsonRpcClient`) | ❌ (use legacy `sui-sdk`) | ✅ |
 | GraphQL | ✅ (`SuiGraphQLClient`) | ✅ (`sui-graphql`) | ✅ |
 | Coin intents | ✅ (`tx.balance()` / `tx.coin()`) | ✅ (`Coin`, `Balance` intents) | partial |
 | MVR name resolution | ✅ (automatic v2) | depends on crate | ❌ |

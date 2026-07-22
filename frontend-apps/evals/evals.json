@@ -111,7 +111,7 @@
       "Registers Web Components once at app entry with `import '@mysten/dapp-kit-core/web'`",
       "Uses @nanostores/vue's useStore on dAppKit.stores.$connection",
       "Renders the Web Component <mysten-dapp-kit-connect-button> with :instance property binding (NOT as an HTML string attribute)",
-      "Reads connection.value.account (Vue reactive ref) — not connection.account directly",
+      "Accesses account from the connection ref — either connection.value.account in script or connection.account in template (Vue auto-unwraps refs in templates)",
       "Does NOT include the `declare module` TypeScript augmentation (that's React-only)",
       "Does NOT import from @mysten/dapp-kit-react"
     ]

@@ -2,7 +2,7 @@
 
 Source: https://docs.sui.io/concepts/data-access/archival-store
 
-**Beta.** The Archival Store is functional but still in beta — expect possible changes to availability, retention guarantees, and operator configuration.
+Generally available. The Archival Store provides long-term historical access to data pruned from full nodes.
 
 ## What it is
 
@@ -21,13 +21,11 @@ Full nodes serve real-time queries. Retaining the entire history on every node w
 
 ## Access model
 
-The Archival Store is **not** accessed via a separate archival API or dedicated endpoint. Instead, it is accessed transparently through the standard Sui data APIs — gRPC and GraphQL RPC — which route to the archival backend when the requested data has been pruned from the primary store.
+How the Archival Store is accessed depends on the API:
 
 **GraphQL RPC** routes supported historical point lookups (transactions, objects, checkpoints) to archival transparently when the operator has configured archival backing. For most apps using a properly configured GraphQL stack, the Archival Store is invisible — you query the same GraphQL endpoint you always use, and the service fetches from archival as needed. Note: this routing is operator-configured — if the GraphQL operator has not set up archival backing, retention is limited to the Postgres database's retention policy.
 
-**gRPC** also serves archival data transparently when the full node operator has configured archival backing. The client queries the same gRPC endpoint as usual; the node resolves pruned data from archival behind the scenes.
-
-In both cases, clients do not need to know whether the data comes from the live store or the archival backend — the routing is handled server-side.
+**gRPC** does **not** implicitly fall back to the Archival Store. Full-node gRPC serves only data within its retention window. For historical data beyond full-node retention, gRPC clients must query an Archival Service endpoint directly. The Archival Service endpoint exposes the same standard `LedgerService` gRPC API as full nodes — clients use the same request types and methods, just pointed at a different URL.
 
 ## When it matters
 
@@ -52,6 +50,6 @@ When seeding a custom `sui-indexer-alt` pipeline from history, point the backfil
 
 ## Common mistakes
 
-- **Assuming full nodes have the whole history.** They don't. Past the pruning horizon, the archival path kicks in — if the operator hasn't configured archival backing, you see "not found."
-- **Trying to call a direct archival API endpoint.** There is no separate archival endpoint for clients to call. The Archival Store is accessed transparently through the standard gRPC and GraphQL RPC APIs. The server routes to archival behind the scenes.
-- **Confusing "Archival Store" with "checkpoint store."** Checkpoint store (GCS buckets) is the canonical checkpoint archive for backfill ingestion. Archival Store is the query-side service that serves pruned reads to gRPC/GraphQL clients. Related but distinct.
+- **Assuming full nodes have the whole history.** They don't. Past the pruning horizon, you see "not found" unless archival is available. GraphQL routes to archival transparently (when operator-configured). For gRPC, you must query an Archival Service endpoint directly.
+- **Assuming gRPC transparently routes to archival.** It does not. Full-node gRPC only serves data within its retention window. For historical gRPC reads, clients need a separate Archival Service endpoint.
+- **Confusing "Archival Store" with "checkpoint store."** Checkpoint store (GCS buckets) is the canonical checkpoint archive for backfill ingestion. Archival Store is the query-side service that serves pruned reads. Related but distinct.

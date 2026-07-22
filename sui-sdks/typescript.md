@@ -45,7 +45,7 @@ const gql = new SuiGraphQLClient({
 
 ### Network URLs
 
-| Network | gRPC | GraphQL | JSON-RPC helper |
+| Network | gRPC | GraphQL | JSON-RPC helper (deprecated) |
 |---|---|---|---|
 | Mainnet | `https://fullnode.mainnet.sui.io:443` | `https://graphql.mainnet.sui.io/graphql` | `getJsonRpcFullnodeUrl('mainnet')` |
 | Testnet | `https://fullnode.testnet.sui.io:443` | `https://graphql.testnet.sui.io/graphql` | `getJsonRpcFullnodeUrl('testnet')` |
@@ -54,7 +54,7 @@ const gql = new SuiGraphQLClient({
 ### Which client to use
 
 - **New code**: `SuiGrpcClient`. Typed protobuf, best throughput, active surface.
-- **Existing v1 migration / JSON-RPC-only infra**: `SuiJsonRpcClient` (legacy — JSON-RPC is deprecated; use only when migrating from v1 or talking to infrastructure that only exposes JSON-RPC).
+- **Existing v1 migration / JSON-RPC-only infra**: `SuiJsonRpcClient` (deprecated — JSON-RPC is deprecated with Sui Foundation mainnet shutdown the week of July 27, 2026; use only as a migration stopgap).
 - **Complex relational queries**: `SuiGraphQLClient` alongside one of the above.
 - **All clients share the v2 `client.core.*` API** for common data access.
 
@@ -290,7 +290,7 @@ Full migration guide: fetch `https://sdk.mystenlabs.com/sui/migrations/sui-2.0/l
 |---|---|
 | `@mysten/sui.js` | `@mysten/sui` |
 | `TransactionBlock` | `Transaction` |
-| `SuiClient` + `getFullnodeUrl` | `SuiGrpcClient` + `baseUrl` (or `SuiJsonRpcClient` + `getJsonRpcFullnodeUrl`) |
+| `SuiClient` + `getFullnodeUrl` | `SuiGrpcClient` + `baseUrl` (or `SuiJsonRpcClient` + `getJsonRpcFullnodeUrl` as deprecated stopgap) |
 | `client.getObject({ id, options: {...} })` | `client.core.getObject({ objectId, include: {...} })` |
 | `client.getOwnedObjects` | `client.core.listOwnedObjects` |
 | `client.getCoins` | `client.core.listCoins` |
@@ -326,7 +326,7 @@ All `@mysten/*` packages are ESM-only:
 | `import { ... } from '@mysten/sui.js'` | `import { ... } from '@mysten/sui'` |
 | `new TransactionBlock()` | `new Transaction()` |
 | `client.signAndExecuteTransactionBlock(...)` | `keypair.signAndExecuteTransaction({ transaction, client })` |
-| `SuiClient` | `SuiGrpcClient` (or `SuiJsonRpcClient` — legacy, JSON-RPC is deprecated) |
+| `SuiClient` | `SuiGrpcClient` (or `SuiJsonRpcClient` — deprecated, JSON-RPC shutdown week of July 27, 2026) |
 | Hardcoding `tx.object(Inputs.ObjectRef({ version, digest }))` for online code | `tx.object('0x...')` — let SDK resolve |
 | `tx.pure(100)` untyped | `tx.pure.u64(100)` |
 | Not checking `result.$kind` | Always check for `'FailedTransaction'` |

@@ -34,7 +34,7 @@ If unsure about any specific API in any SDK, fetch from the relevant doc page �
 
 ### typescript — TypeScript SDK (`@mysten/sui` v2)
 **Path:** `typescript.md`
-**Load when:** writing, reviewing, or migrating TypeScript/JavaScript code that imports `@mysten/sui`, constructing PTBs in TS, choosing between `SuiGrpcClient` / `SuiJsonRpcClient` / `SuiGraphQLClient`, using the v2 Core API, or migrating from SDK v1 (`@mysten/sui.js`).
+**Load when:** writing, reviewing, or migrating TypeScript/JavaScript code that imports `@mysten/sui`, constructing PTBs in TS, choosing between `SuiGrpcClient` / `SuiGraphQLClient`, using the v2 Core API, or migrating from SDK v1 (`@mysten/sui.js`).
 **Covers:** install, imports, client classes and when to use each, v2 Core API, PTB construction, pure/object inputs, balance and coin intents, execution & status checking, `waitForTransaction`, keypairs, offline building, sponsored transactions, v1→v2 migration table, `$extend` pattern for kiosk/suins/deepbook/walrus/seal/zksend.
 
 ### rust — Rust SDK (`sui-*` crates)
@@ -80,8 +80,8 @@ If unsure about any specific API in any SDK, fetch from the relevant doc page �
 
 - **Two officially-supported SDKs.** TypeScript (`@mysten/sui`) and Rust (`sui-rust-sdk` crates). Both are maintained by Mysten Labs and updated alongside protocol changes. For performance-critical paths in non-Rust languages, `sui-rust-sdk` can be called via FFI (Foreign Function Interface) from Python, Go, Swift, etc., giving those languages access to the official SDK without relying on community wrappers.
 - **Everything else is community.** Python (`pysui`), Go (`block-vision/sui-go-sdk`), Dart (`mofalabs/sui`), Kotlin (`mcxross/ksui`), Swift (`opendive/suikit`), Vue (`SuiFansCN/suiue`). They typically lag protocol updates and feature coverage varies. Treat them as best-effort.
-- **The TS SDK has two client generations.** v1 used `SuiClient` + `@mysten/sui.js`. v2 uses `SuiGrpcClient` / `SuiJsonRpcClient` / `SuiGraphQLClient` from `@mysten/sui`. JSON-RPC is deprecated; gRPC is recommended for new code.
-- **The Rust SDK has two generations.** The new modular crates (`sui-sdk-types`, `sui-crypto`, `sui-rpc`, `sui-transaction-builder`) are the recommended surface. The "legacy Rust SDK" is the monolithic `sui-sdk` crate in the sui monorepo; it supports JSON-RPC with forward/backward compatibility and is still used by many existing projects, but is not the recommended target for new code.
+- **The TS SDK has two client generations.** v1 used `SuiClient` + `@mysten/sui.js`. v2 uses `SuiGrpcClient` / `SuiJsonRpcClient` / `SuiGraphQLClient` from `@mysten/sui`. JSON-RPC is deprecated; gRPC is the default for new code.
+- **The Rust SDK has two generations.** The new modular crates (`sui-sdk-types`, `sui-crypto`, `sui-rpc`, `sui-transaction-builder`) are the recommended surface. The "legacy Rust SDK" is the monolithic `sui-sdk` crate in the sui monorepo; it uses JSON-RPC (deprecated) and is not the recommended target for new code.
 - **Every `@mysten/*` package ships LLM-ready docs.** Look for `node_modules/@mysten/sui/docs/llms-index.md` and follow its pointers before asking the user to clarify APIs. Matches the installed version exactly.
 - **Frameworks on top of SDKs.** `@mysten/dapp-kit-react` (React wallet integration; `@mysten/dapp-kit-core` for Vue/vanilla/Svelte/Web Components), `@mysten/kiosk`, `@mysten/suins`, `@mysten/deepbook-v3`, `@mysten/walrus`, `@mysten/seal`, `@mysten/zksend`, `@mysten/enoki` — all are thin layers over `@mysten/sui`. The Mysten extensions integrate via the v2 `client.$extend(...)` pattern; dApp Kit does not (it's a React framework, not a client extension — see `frontend-apps` skill). The bare `@mysten/dapp-kit` package name is the deprecated JSON-RPC-only predecessor.
 
@@ -89,7 +89,7 @@ If unsure about any specific API in any SDK, fetch from the relevant doc page �
 
 1. **Default to TypeScript or Rust, but respect language constraints.** For any new Sui project, recommend TypeScript (`@mysten/sui`) or Rust (`sui-rust-sdk` crates) — unless the user has named a language (Go, Python, Dart, Kotlin, Swift, Vue) or said "my team uses X". Then `community.md` is the load: name the canonical community SDK (`block-vision/sui-go-sdk` for Go, `pysui` for Python, etc.), flag the staleness risk, and offer FFI-to-Rust as a fallback. **Do not recommend TypeScript or Rust as a replacement language** when the user has stated their team's language. For example, if the user says "my team uses Go", do not suggest rewriting in TypeScript — recommend the Go community SDK and/or Rust via FFI.
 2. **For TypeScript, always use `@mysten/sui`, never `@mysten/sui.js`.** The `.js`-suffixed package is frozen at v1 and will not receive updates. Legacy code using it should be migrated.
-3. **For TypeScript v2, use `SuiGrpcClient` by default.** `SuiJsonRpcClient` exists for legacy compatibility; `SuiGraphQLClient` is for specialized query flows. See `typescript.md` for the decision.
+3. **For TypeScript v2, use `SuiGrpcClient` by default.** `SuiJsonRpcClient` exists for legacy compatibility but JSON-RPC is deprecated; `SuiGraphQLClient` is for specialized relational query flows. See `typescript.md` for the decision.
 4. **For Rust, prefer `sui-rust-sdk` crates over the legacy monorepo `sui-sdk`.** Import `sui-transaction-builder`, `sui-sdk-types`, `sui-crypto`, `sui-rpc` individually — pay only for what you use.
 5. **Check `node_modules/@mysten/*/docs/llms-index.md` before writing TS code.** If the project has `@mysten/sui` installed, those docs are the authoritative, version-matched source. Read the index, then the targeted page.
 6. **Do not mix v1 and v2 TS patterns.** Code that uses `SuiClient`, `TransactionBlock`, `getFullnodeUrl`, `options: { showEffects }`, `signAndExecuteTransactionBlock`, or `result.effects?.status?.status` is v1. Migrate wholesale or keep everything on v1 — a half-migrated file is a bug surface.
@@ -101,11 +101,11 @@ If unsure about any specific API in any SDK, fetch from the relevant doc page �
 ### Common mistakes
 
 - **Calling a community SDK "the Python SDK" or "the Go SDK" as if official.** There is no official Python or Go SDK. Name the specific package (`pysui`, `block-vision/sui-go-sdk`) and flag it as community.
-- **Telling users `SuiClient` is the recommended client.** That was v1. v2 uses `SuiGrpcClient` (or `SuiJsonRpcClient` for legacy flows).
+- **Telling users `SuiClient` is the recommended client.** That was v1. v2 uses `SuiGrpcClient` (or `SuiJsonRpcClient` as a deprecated migration stopgap).
 - **Recommending `@mysten/sui.js`.** Deprecated package name. Always `@mysten/sui`.
 - **Confusing the two Rust SDKs.** The new `sui-rust-sdk` crates (on `crates.io` as separate crates like `sui-sdk-types` / `sui-transaction-builder` / `sui-rpc`) are distinct from the legacy `sui-sdk` crate in the sui monorepo. New code should use the former.
 - **Fetching TS docs from the web when they're installed locally.** If the project has `@mysten/sui` installed, read `node_modules/@mysten/sui/docs/llms-index.md` instead — it matches the installed version.
 - **Hardcoding a specific SDK version.** SDK APIs evolve. Prefer "install the latest `@mysten/sui`" and then consult the bundled docs, rather than pinning advice to a version.
 - **Recommending `@mysten/dapp-kit` for backend code.** dApp Kit is a React-oriented frontend framework. Backend or CLI code should use `@mysten/sui` directly.
 - **Providing React hook details instead of routing to the `frontend-apps` skill.** When a user asks about React hooks, wallet connection patterns, or dApp Kit query patterns, do not answer with hook-level code from this skill. Instead, explicitly tell the user: "For React hook details, see the `frontend-apps` skill." This skill covers SDK selection and `Transaction` construction only — the `frontend-apps` skill has the hook-level guidance.
-- **Using JSON-RPC as the default for any client.** JSON-RPC is deprecated for the TS SDK; the legacy Rust SDK supports it but the new Rust SDK does not. Default to gRPC.
+- **Using JSON-RPC as the default for any client.** JSON-RPC is deprecated; Sui Foundation mainnet full nodes will disable it the week of July 27, 2026. Default to gRPC (or GraphQL for relational queries). `SuiJsonRpcClient` still exists for migration but should not be the default.

@@ -7,9 +7,9 @@ Source: https://github.com/MystenLabs/sui-rust-sdk · https://docs.rs/sui-transa
 There are two. They serve different projects:
 
 - **Recommended: `sui-rust-sdk` family of crates** (this page). Modular, published on `crates.io` as independent crates. Pay only for what you use, wasm-compatible where possible.
-- **Legacy: the `sui-sdk` crate in the `MystenLabs/sui` monorepo.** Monolithic, JSON-RPC-based, forward/backward-compatible. Still used by many existing projects but not the recommended target for new code. Docs: https://docs.sui.io/references/rust-sdk.
+- **Legacy: the `sui-sdk` crate in the `MystenLabs/sui` monorepo.** Monolithic, JSON-RPC-based (deprecated). Still used by some existing projects but not the recommended target for new code. Docs: https://docs.sui.io/references/rust-sdk.
 
-New code → use the modular crates. Existing code on the legacy `sui-sdk` crate → can stay there; migrate if you need gRPC or want to drop JSON-RPC.
+New code → use the modular crates. Existing code on the legacy `sui-sdk` crate → can stay there for now; migrate if you need gRPC or want to move off JSON-RPC before the mainnet shutdown (week of July 27, 2026).
 
 ## Crates
 
@@ -166,7 +166,7 @@ Typed queries are built with `sui-graphql-macros`.
 
 ## Legacy `sui-sdk` crate (older monolithic)
 
-Lives in `MystenLabs/sui/crates/sui-sdk`. Monolithic, JSON-RPC-based.
+Lives in `MystenLabs/sui/crates/sui-sdk`. Monolithic, JSON-RPC-based (deprecated).
 
 ```rust
 use sui_sdk::SuiClientBuilder;
@@ -177,7 +177,7 @@ let owned = client.read_api().get_owned_objects(address, None, None, None).await
 
 When to use:
 - Existing codebase already uses it.
-- You need JSON-RPC compatibility with older fullnodes.
+- You need JSON-RPC compatibility with older infrastructure (deprecated — Sui Foundation mainnet shutdown week of July 27, 2026).
 
 Otherwise: migrate to the new modular crates.
 
