@@ -90,15 +90,35 @@ core = { local = "../core" }
 
 ### Move.toml (current format — Sui CLI v1.63+)
 
-The new package management format introduced in Sui CLI v1.63 resolves the Sui framework dependency automatically. You do not need to specify it in `[dependencies]`. A minimal `Move.toml` is:
+> **CRITICAL: The Sui framework dependency is automatic. Do NOT add it to Move.toml.**
+
+A correct, minimal `Move.toml` for any Sui Move project is:
 
 ```toml
 [package]
 name = "my_project"
 edition = "2024"
+# No [dependencies] section needed — Sui framework is resolved automatically
 ```
 
-Do **not** add a `[dependencies]` section for the Sui framework or MoveStdlib — the 2024 edition resolves them automatically. Do **not** add or suggest a `Sui = { git = "..." }` dependency line — this is a legacy format that errors out on current CLI versions. Only add `[dependencies]` when you need third-party or local packages (e.g., MVR dependencies).
+This is **all you need**. The `edition = "2024"` line tells the CLI to resolve Sui and MoveStdlib automatically. There is no `[dependencies]` section unless you need third-party or local packages.
+
+**All of these are WRONG and will error:**
+```toml
+# WRONG — legacy system name error:
+Sui = { git = "https://github.com/MystenLabs/sui.git", subdir = "crates/sui-framework/packages/sui-framework", rev = "framework/testnet" }
+
+# WRONG — version syntax doesn't exist:
+sui = { version = "0.34.0" }
+
+# WRONG — local path doesn't exist:
+Sui = { local = "../sui-framework" }
+
+# WRONG — implicit dependency error:
+sui = { package = "sui", version = "0.1.0" }
+```
+
+Only add `[dependencies]` when you need third-party or local packages (e.g., MVR or sibling workspace packages).
 
 **Migrating from `[addresses]`:** The old `[addresses]` section with `my_project = "0x0"` is no longer needed and should be removed. If your project previously used `[addresses]` to set package addresses for different networks, replace it with an `[environments]` section that maps environment names to chain IDs:
 
@@ -132,9 +152,12 @@ To publish to a different environment (for example, after publishing to Testnet,
 
 ### Inspecting Move.lock
 
+> **Note:** `Move.lock` is auto-generated — never copy its contents into `Move.toml`. The git URLs below appear in `Move.lock` only, not in `Move.toml`.
+
 `Move.lock` contains one `[pinned.<env>.<Dependency>]` section per resolved dependency per environment. Each section records the git source, revision, manifest digest, and dependency graph. Example:
 
 ```toml
+# This is Move.lock (auto-generated) — NOT Move.toml
 [pinned.testnet.Sui]
 source = { git = "https://github.com/MystenLabs/sui.git", subdir = "crates/sui-framework/packages/sui-framework", rev = "73dd2c..." }
 use_environment = "testnet"
