@@ -408,6 +408,21 @@ These are frequently hallucinated or confused APIs. **Always use the correct ver
 | `vector::push_back(&mut v, x)` | `v.push_back(x)` | Use method syntax in Move 2024. |
 | `coin::mint_for_testing(...)` | `coin::mint_for_testing<T>(amount, ctx)` | Needs explicit type parameter `<T>` and `&mut TxContext`. |
 | `object::new(ctx)` inside struct literal | `let id = object::new(ctx);` then use `id` | Create the UID first, then use it in the struct. |
+| `borrow_global<T>(addr)` | Not available — use object references | Sui Move does NOT have `borrow_global`. This is an Aptos/Diem function. In Sui, pass objects as function parameters (`&T` or `&mut T`). |
+| `create_signer(addr)` | Not available — use `TxContext` | Sui does NOT have `create_signer`. The signer is implicit via `ctx: &mut TxContext`. Use `ctx.sender()` for the sender address. |
+| `create_clock()` | Pass `&Clock` as a parameter | Sui does NOT have `create_clock`. The Clock is a shared object at `0x6`. Pass it as `clock: &Clock` in function params. In tests, use `clock::create_for_testing(ctx)`. |
+| `vector::matches(...)` | Use `vector::contains(&v, &elem)` or loop | There is no `matches` function on vectors. Use `v.contains(&elem)` or iterate manually. |
+| `table::keys(...)` | Iterate with known keys or use a separate vector | Sui `Table` does not have a `keys()` method. Track keys separately in a `vector` if you need enumeration. |
+
+### Sui Move is NOT Aptos Move
+
+Sui Move and Aptos Move diverged significantly. **Do not use Aptos/Diem patterns:**
+
+- **No `borrow_global` / `move_from` / `move_to`** — Sui uses object-centric storage. Objects are passed as function parameters, not borrowed from global storage.
+- **No `create_signer`** — Sui uses `TxContext` for sender identity. `ctx.sender()` returns the sender address.
+- **No `acquires` keyword** — Sui functions don't acquire resources. Objects are passed explicitly.
+- **No global storage operators** — In Sui, objects are owned, shared, or immutable. Access them via transfer, dynamic fields, or function parameters.
+- **The Clock is shared, not created** — Pass `clock: &sui::clock::Clock` as a parameter. The Clock lives at address `0x6`. In tests, create with `sui::clock::create_for_testing(ctx)`.
 
 ### Correct event emission pattern
 
