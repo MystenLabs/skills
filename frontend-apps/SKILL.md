@@ -19,7 +19,7 @@ description: >
 Browser Sui apps fail for a consistent set of reasons:
 
 1. **Wrong package.** `@mysten/dapp-kit` (no suffix) is the legacy JSON-RPC-only package — **deprecated**. New code uses `@mysten/dapp-kit-react` or `@mysten/dapp-kit-core`.
-2. **Wrong client.** dApp Kit takes a `SuiGrpcClient` (recommended) in `createDAppKit`'s `createClient`. Passing a `SuiJsonRpcClient` defeats the point of the new package.
+2. **Wrong client.** dApp Kit takes a `SuiGrpcClient` (recommended) in `createDAppKit`'s `createClient`. Do not pass `SuiJsonRpcClient` — JSON-RPC is deprecated.
 3. **Old provider stack.** Code often tries the v1 pattern: `QueryClientProvider` → `SuiClientProvider` → `WalletProvider`. That's gone. New pattern: `createDAppKit` factory + `DAppKitProvider` (or a non-React equivalent).
 4. **Dead hooks.** `useSuiClientQuery`, `useSuiClientInfiniteQuery`, `useSignAndExecuteTransaction` (mutation hook), `useConnectWallet`, `useDisconnectWallet`, `useSuiClient`, `useSuiClientContext` — **removed**. Replaced by `useCurrentClient` / `useCurrentNetwork` / `useDAppKit()` (imperative methods) + your own TanStack Query wrappers.
 5. **Skipping `waitForTransaction` between execute and refetch.** Fullnodes index transactions asynchronously — invalidating TanStack caches immediately after `signAndExecuteTransaction` refetches stale data.
@@ -60,7 +60,7 @@ If unsure about any API, fetch from the relevant page — do not extrapolate fro
 
 ### limitations — What frontends can't or shouldn't do
 **Path:** `limitations.md`
-**Load when:** a user is designing something that feels like it crosses a browser-environment boundary. Covers: no backend-only features (gas station internals, validator keys), browser/SSR caveats, auto-connect reliability, JSON-RPC-specific features that don't have gRPC equivalents yet, and the "don't put secrets in the browser" rules.
+**Load when:** a user is designing something that feels like it crosses a browser-environment boundary. Covers: no backend-only features (gas station internals, validator keys), browser/SSR caveats, auto-connect reliability, and the "don't put secrets in the browser" rules.
 
 ## Routing guide
 
@@ -84,7 +84,7 @@ If unsure about any API, fetch from the relevant page — do not extrapolate fro
 
 - **Two packages, one API.** `@mysten/dapp-kit-react` wraps `@mysten/dapp-kit-core`. `createDAppKit` exists in both; actions (`signAndExecuteTransaction`, `signTransaction`, `switchNetwork`, `connectWallet`, `disconnectWallet`) are identical. What differs is how you read reactive state: React uses hooks; non-React reads nanostores stores.
 - **One instance, many networks.** `createDAppKit({ networks: [...], createClient })` creates one dApp Kit instance that knows about multiple networks. `dAppKit.switchNetwork(name)` changes the active one. The `createClient` factory is called once per network, lazily.
-- **gRPC by default.** The new dApp Kit is built for `SuiGrpcClient`. JSON-RPC is legacy; don't pass `SuiJsonRpcClient` to `createClient`.
+- **gRPC by default.** The new dApp Kit is built for `SuiGrpcClient`. JSON-RPC is deprecated; use `SuiGrpcClient` in `createClient`.
 - **Wallets are browser-only.** Wallet detection uses `window.navigator.wallets` and CustomEvents. Any component that touches wallet state must be client-side rendered. In Next.js / SSR frameworks this means `'use client'` on wallet-aware components.
 - **The wallet owns gas.** Apps build the `Transaction` and pass it to the wallet. The wallet picks gas coins, sets budget (via dry-run), and signs. Never call `tx.build()` + pass bytes unless it's a sponsored flow — see `transactions.md`.
 - **Fullnodes are eventually consistent.** `signAndExecuteTransaction` returns a digest before the data is queryable. Always `waitForTransaction` before refetching.
@@ -92,7 +92,7 @@ If unsure about any API, fetch from the relevant page — do not extrapolate fro
 ### Rules
 
 1. **Use `@mysten/dapp-kit-react` or `@mysten/dapp-kit-core`** — never the bare `@mysten/dapp-kit` in new code. That package is JSON-RPC-only and deprecated.
-2. **Use `SuiGrpcClient` in `createClient`.** Not `SuiJsonRpcClient`. Not `SuiClient` — `SuiClient` is removed in v2; use `SuiGrpcClient` from `@mysten/sui/grpc`.
+2. **Use `SuiGrpcClient` in `createClient`.** Not `SuiClient` — `SuiClient` is removed in v2; use `SuiGrpcClient` from `@mysten/sui/grpc`.
 3. **Use `createDAppKit` + `DAppKitProvider`.** Not the three-provider stack (`QueryClientProvider` + `SuiClientProvider` + `WalletProvider`). You still wrap with `QueryClientProvider` if you use TanStack Query for data fetching, but dApp Kit itself doesn't need it.
 4. **Include the `declare module` TypeScript augmentation** so hooks get proper types without passing the instance manually.
 5. **Do not use the removed hooks.** `useSuiClientQuery` / `useSuiClientInfiniteQuery` / `useSuiClientContext` / `useSuiClient` / `useSignAndExecuteTransaction` (mutation hook) / `useConnectWallet` / `useDisconnectWallet` — gone. Use `useCurrentClient` + `useQuery`/`useInfiniteQuery` + `useDAppKit()` imperative methods.

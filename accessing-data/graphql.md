@@ -2,12 +2,10 @@
 
 Source: https://docs.sui.io/concepts/data-access/graphql-rpc
 
-**Beta.** GraphQL RPC is functional and actively used but still in beta — breaking schema changes are possible. Plan for schema drift and pin to a known-good schema version when stability matters.
-
-Reads from three backing stores and also supports transaction submission and dry-run:
+Generally available. Reads from three backing stores and also supports transaction submission and dry-run:
 1. The **General-Purpose Indexer**'s Postgres (primary source — indexed, filterable).
 2. A **full node** (live tip-of-chain reads the indexer hasn't caught up to).
-3. The **Archival Store** (historical data pruned from full nodes — also beta).
+3. The **Archival Store** (historical data pruned from full nodes — when operator-configured).
 
 GraphQL RPC routes each query to whichever backing store is right. Clients don't pick.
 
@@ -206,7 +204,7 @@ Limitations in execution-attached scope:
 
 ## Operational notes
 
-- Rate limits on public endpoints can be tight. Run your own General-Purpose Indexer for production-scale traffic.
+- Rate limits on public endpoints can be tight. For production-scale traffic, use a provider endpoint or operate your own GraphQL stack (which runs atop the General-Purpose Indexer). This is not the same as building a custom `sui-indexer-alt` pipeline — it's just self-hosting the standard GraphQL service.
 - GraphQL currently supports filtered pagination over historical transactions and events that gRPC does not yet offer.
 - Archival routing is operator-configured: the GraphQL service routes supported historical point lookups to Archival when the operator has set it up. Without archival configuration, retention is limited to the Postgres database's retention policy.
 

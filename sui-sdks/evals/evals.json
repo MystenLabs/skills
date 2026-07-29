@@ -7,7 +7,7 @@
       "https://github.com/MystenLabs/sui-rust-sdk",
       "https://github.com/block-vision/sui-go-sdk"
     ],
-    "expected_output": "Explains there is no official Go SDK — only the community block-vision/sui-go-sdk is listed on docs.sui.io. Recommends either (a) using the official Rust SDK (sui-rust-sdk crates) behind a Go↔Rust FFI boundary for protocol-accurate access, or (b) using block-vision/sui-go-sdk with a warning about community-maintained staleness risk. Notes that for raw throughput, gRPC via the sui-rpc crate (Rust) is the performance ceiling; JSON-RPC via a community Go SDK is lower-ceiling.",
+    "expected_output": "Explains there is no official Go SDK — only the community block-vision/sui-go-sdk is listed on docs.sui.io. Recommends either (a) using the official Rust SDK (sui-rust-sdk crates) behind a Go↔Rust FFI boundary for protocol-accurate access, or (b) using block-vision/sui-go-sdk with a warning about community-maintained staleness risk. Notes that for raw throughput, gRPC via the sui-rpc crate (Rust) is the performance ceiling; JSON-RPC (deprecated) via a community Go SDK is lower-ceiling.",
     "expectations": [
       "Correctly states there is NO official Go SDK maintained by Mysten Labs",
       "Names block-vision/sui-go-sdk as the canonical community Go SDK (matches docs.sui.io listing)",
@@ -24,12 +24,12 @@
       "https://sdk.mystenlabs.com/sui/clients",
       "https://sdk.mystenlabs.com/sui"
     ],
-    "expected_output": "Recommends SuiGrpcClient from '@mysten/sui/grpc' as the default for new code. Shows instantiation with both network and baseUrl parameters, pointing to https://fullnode.mainnet.sui.io:443. Explains SuiJsonRpcClient is legacy (JSON-RPC deprecated) and SuiGraphQLClient is for specialized relational queries. Notes all three share the client.core.* data access API.",
+    "expected_output": "Recommends SuiGrpcClient from '@mysten/sui/grpc' as the default for new code. Shows instantiation with both network and baseUrl parameters, pointing to https://fullnode.mainnet.sui.io:443. Explains SuiJsonRpcClient is legacy (JSON-RPC deprecated, mainnet shutdown week of July 27, 2026) and SuiGraphQLClient is for specialized relational queries. Notes all three share the client.core.* data access API.",
     "expectations": [
       "Imports SuiGrpcClient from '@mysten/sui/grpc' (not SuiClient from '@mysten/sui/client')",
       "Passes BOTH network: 'mainnet' AND baseUrl to the constructor",
       "Uses the correct mainnet gRPC URL: https://fullnode.mainnet.sui.io:443",
-      "Explicitly labels SuiJsonRpcClient as legacy / JSON-RPC deprecated",
+      "Explicitly labels SuiJsonRpcClient as legacy / JSON-RPC deprecated with mainnet shutdown date",
       "Does NOT use getFullnodeUrl (v1 helper) — that's for v1 SuiClient which was removed",
       "Does NOT recommend @mysten/sui.js (deprecated package)"
     ]
@@ -77,11 +77,11 @@
       "https://sdk.mystenlabs.com/sui/migrations/sui-2.0/llms.txt",
       "https://sdk.mystenlabs.com/sui"
     ],
-    "expected_output": "The fully migrated v2 file: imports from @mysten/sui (not @mysten/sui.js), uses SuiGrpcClient (or SuiJsonRpcClient) with network + baseUrl (or getJsonRpcFullnodeUrl), Transaction instead of TransactionBlock, typed tx.pure.u64(), tx.pure.address(), signAndExecuteTransaction, transaction: (not transactionBlock:), include: { effects: true }, result.$kind === 'FailedTransaction' check, waitForTransaction.",
+    "expected_output": "The fully migrated v2 file: imports from @mysten/sui (not @mysten/sui.js), uses SuiGrpcClient (or SuiJsonRpcClient as deprecated stopgap) with network + baseUrl (or getJsonRpcFullnodeUrl), Transaction instead of TransactionBlock, typed tx.pure.u64(), tx.pure.address(), signAndExecuteTransaction, transaction: (not transactionBlock:), include: { effects: true }, result.$kind === 'FailedTransaction' check, waitForTransaction.",
     "expectations": [
       "All imports from @mysten/sui (subpaths like '@mysten/sui/grpc', '@mysten/sui/transactions') — NO @mysten/sui.js remaining",
       "TransactionBlock replaced with Transaction everywhere",
-      "SuiClient + getFullnodeUrl replaced with SuiGrpcClient + baseUrl (or SuiJsonRpcClient + getJsonRpcFullnodeUrl)",
+      "SuiClient + getFullnodeUrl replaced with SuiGrpcClient + baseUrl (or SuiJsonRpcClient + getJsonRpcFullnodeUrl as deprecated stopgap)",
       "Client constructor has the network parameter",
       "txb.pure(1_000_000) replaced with tx.pure.u64(1_000_000) or tx.pure.u64(1_000_000n)",
       "txb.pure('0xrecipient') replaced with tx.pure.address('0xrecipient')",
@@ -145,7 +145,7 @@
       "Notes that dApp Kit wraps submission, it doesn't replace @mysten/sui's Transaction",
       "Does NOT tell the user they can pick one or the other (both are needed for React wallet flow)",
       "Does NOT confuse dApp Kit with @mysten/sui as if they were alternatives",
-      "Does NOT recommend the bare @mysten/dapp-kit package (deprecated JSON-RPC predecessor)"
+      "Does NOT recommend the bare @mysten/dapp-kit package (deprecated JSON-RPC-only predecessor)"
     ]
   }
 ]

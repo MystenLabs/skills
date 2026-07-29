@@ -26,7 +26,7 @@ If a user asks for a pure-frontend version of any of these, explain the constrai
 
 The new v2 dApp Kit is built around `SuiGrpcClient`. Some older JSON-RPC-only features don't have gRPC equivalents yet — or the mapping is still shifting. If a user asks for something specific and you can't find it in the v2 docs:
 
-- Check whether it's a JSON-RPC-only method and the user wants to stay on gRPC → may need to fall back to `SuiJsonRpcClient` alongside the dApp Kit client.
+- Check whether it's a JSON-RPC-only method and the user wants to stay on gRPC → may need to fall back to `SuiJsonRpcClient` alongside the dApp Kit client (deprecated, but still available as a migration surface).
 - Check the `@mysten/dapp-kit-core` changelog for breaking changes.
 - If genuinely missing, document the gap to the user rather than fabricating an API.
 

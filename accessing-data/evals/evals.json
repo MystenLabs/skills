@@ -6,15 +6,15 @@
       "https://docs.sui.io/concepts/data-access/data-serving",
       "https://sdk.mystenlabs.com/sui"
     ],
-    "expected_output": "Recommends gRPC via SuiGrpcClient, imported from '@mysten/sui/grpc'. Shows client instantiation with network + baseUrl (https://fullnode.mainnet.sui.io:443). Uses client.core.listBalances and client.core.listOwnedObjects. Explicitly does NOT recommend JSON-RPC and notes it is deprecated with a July 2026 sunset.",
+    "expected_output": "Recommends gRPC via SuiGrpcClient, imported from '@mysten/sui/grpc'. Shows client instantiation with network + baseUrl (https://fullnode.mainnet.sui.io:443). Uses client.core.listBalances and client.core.listOwnedObjects. Does not recommend JSON-RPC.",
     "expectations": [
       "Recommends gRPC / SuiGrpcClient, NOT JSON-RPC / SuiClient / SuiJsonRpcClient",
       "Imports SuiGrpcClient from '@mysten/sui/grpc'",
       "Passes both network and baseUrl to the constructor",
       "Uses client.core.listBalances (v2 Core API) for balance read",
       "Uses client.core.listOwnedObjects for owned objects",
-      "Explicitly flags JSON-RPC as deprecated / names the July 2026 sunset date",
-      "Does NOT use client.getBalance / client.getOwnedObjects (v1 JSON-RPC method names)"
+      "Does NOT recommend JSON-RPC / SuiJsonRpcClient for new code",
+      "Does NOT use client.getBalance / client.getOwnedObjects (v1 method names)"
     ]
   },
   {
@@ -24,11 +24,11 @@
       "https://docs.sui.io/concepts/data-access/data-serving",
       "https://docs.sui.io/concepts/data-access/graphql-rpc"
     ],
-    "expected_output": "For a dashboard that combines multiple entity types in one view, GraphQL RPC is the best fit — it can return balances + transactions + owned objects in a single query, reducing round trips. Notes GraphQL RPC is beta. For individual per-entity reads (just a balance, just a tx), gRPC is still fine. Shows a sketch of a combined GraphQL query.",
+    "expected_output": "For a dashboard that combines multiple entity types in one view, GraphQL RPC is the best fit — it can return balances + transactions + owned objects in a single query, reducing round trips. For individual per-entity reads (just a balance, just a tx), gRPC is still fine. Shows a sketch of a combined GraphQL query.",
     "expectations": [
       "Recommends GraphQL RPC for the multi-entity dashboard case",
       "Explains the rationale: one request instead of multiple (reduced round trips, composable queries)",
-      "Flags GraphQL RPC as beta status",
+      "Identifies GraphQL RPC as GA (not beta)",
       "Shows a GraphQL query that fetches balances, transactions, and owned objects together",
       "Does NOT recommend JSON-RPC",
       "Does NOT recommend building a custom indexer for this use case (hosted APIs cover it)"
@@ -77,10 +77,10 @@
       "https://docs.sui.io/concepts/data-access/data-serving",
       "https://sdk.mystenlabs.com/sui"
     ],
-    "expected_output": "Identifies this as legacy JSON-RPC / v1 SDK code. Notes JSON-RPC is deprecated (July 2026 sunset). Migrates to SuiGrpcClient from '@mysten/sui/grpc' with network + baseUrl. Renames methods: getBalance → client.core.listBalances (or similar v2 Core API), getOwnedObjects → client.core.listOwnedObjects, getTransactionBlock → client.core.getTransaction. Replaces options: { show*: true } with include: { ... }. Does the full migration.",
+    "expected_output": "Identifies this as legacy v1 SDK code using the deprecated JSON-RPC surface. Notes JSON-RPC is deprecated with mainnet shutdown the week of July 27, 2026. Migrates to SuiGrpcClient from '@mysten/sui/grpc' with network + baseUrl. Renames methods: getBalance → client.core.listBalances (or similar v2 Core API), getOwnedObjects → client.core.listOwnedObjects, getTransactionBlock → client.core.getTransaction. Replaces options: { show*: true } with include: { ... }. Does the full migration.",
     "expectations": [
-      "Identifies the code as deprecated JSON-RPC / v1 SDK",
-      "States JSON-RPC is deprecated with a July 2026 sunset (or equivalent language)",
+      "Identifies the code as using the deprecated JSON-RPC / v1 SDK surface",
+      "States JSON-RPC is deprecated with a mainnet shutdown date (or equivalent language)",
       "Replaces SuiClient with SuiGrpcClient from '@mysten/sui/grpc'",
       "Removes getFullnodeUrl (v1 helper) and passes baseUrl directly",
       "Adds the network parameter",
@@ -99,14 +99,14 @@
       "https://docs.sui.io/concepts/data-access/archival-store",
       "https://docs.sui.io/concepts/data-access/graphql-rpc"
     ],
-    "expected_output": "Explains that full nodes prune old object versions. The Archival Store retains them. Access is NOT via a direct archival API call — it's transparent: you query GraphQL RPC for the specific version, and the service routes to archival for pruned data. Shows a GraphQL query for object at a specific past version. Notes Archival Store is in beta.",
+    "expected_output": "Explains that full nodes prune old object versions. The Archival Store retains them. For GraphQL RPC, access is transparent: you query for the specific version, and the service routes to archival for pruned data (when operator-configured). For gRPC, clients must query an Archival Service endpoint directly for historical data beyond full-node retention. Shows a GraphQL query for object at a specific past version.",
     "expectations": [
       "Correctly identifies that full nodes prune old object versions (retention is limited)",
       "Identifies the Archival Store as the service that retains pruned history",
-      "States that the Archival Store is accessed transparently via gRPC or GraphQL RPC — NOT via a direct archival API",
+      "States that GraphQL RPC routes to the Archival Store transparently (when operator-configured); gRPC clients need a separate Archival Service endpoint",
       "Shows a GraphQL query that requests a specific past object version (e.g., object(address: ..., version: ...))",
-      "Flags Archival Store as beta",
-      "Does NOT recommend a direct 'archival API' endpoint call"
+      "Identifies Archival Store as GA (not beta)",
+      "For gRPC archival, recommends an Archival Service endpoint running the standard LedgerService API — does NOT invent a separate non-standard archival API"
     ]
   },
   {
@@ -115,13 +115,13 @@
     "sources": [
       "https://docs.sui.io/concepts/data-access/data-serving"
     ],
-    "expected_output": "Recommends gRPC streaming / subscription (client.subscriptionService or equivalent streaming RPC). Rationale: gRPC streams push events as they occur, whereas JSON-RPC / REST require polling and have higher latency. Shows a minimal example of iterating a server-stream. Discourages polling as wasteful and slow.",
+    "expected_output": "Recommends gRPC streaming / subscription (client.subscriptionService or equivalent streaming RPC). Rationale: gRPC streams push events as they occur with low latency. Shows a minimal example of iterating a server-stream. Discourages polling as wasteful and slow.",
     "expectations": [
       "Recommends gRPC streaming / subscription for real-time event ingestion",
       "Mentions the SuiGrpcClient's subscription service (or equivalent streaming RPC path)",
       "Explicitly discourages polling (getEvents / getTransactionBlocks in a loop) as the wrong pattern",
       "Explains latency / cost tradeoff: streaming push vs polling pull",
-      "Does NOT recommend JSON-RPC",
+      "Does NOT recommend JSON-RPC or polling",
       "Does NOT recommend GraphQL RPC for this case (GraphQL is request/response, not streaming)"
     ]
   },

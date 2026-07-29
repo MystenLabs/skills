@@ -186,7 +186,7 @@ const value = result.dynamicField?.json;
 // const parsed = bcs.u64().parse(Uint8Array.from(raw));
 ```
 
-**JSON-RPC difference:** the legacy `SuiJsonRpcClient.getDynamicFieldObject` accepts `{ type: 'address', value: '0xABC...' }` — plain JSON, no serialization. If you're migrating from JSON-RPC to gRPC, this is the key change.
+**JSON-RPC difference:** the deprecated `SuiJsonRpcClient.getDynamicFieldObject` accepts `{ type: 'address', value: '0xABC...' }` — plain JSON, no serialization. If you're migrating from JSON-RPC to gRPC, this is the key change.
 
 ## Cache invalidation after transactions
 
