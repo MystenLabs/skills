@@ -392,3 +392,16 @@ Move struct fields are private to the defining module. This is load-bearing for 
 
 - `()` is not a nameable type in macro return position. `public macro fun foo<$T, $R>(...) -> $R` fails when the caller substitutes `()`. Fix: return a value or have a separate void macro.
 - Macros expand in caller-module scope for privacy. A macro touching private fields can only be invoked from inside the defining package — macros are not a privacy escape hatch.
+
+### Common API mistakes
+
+These are frequently hallucinated or confused APIs. Use the correct versions:
+
+| Wrong | Correct | Notes |
+|---|---|---|
+| `event::emit_event(...)` | `sui::event::emit(...)` | There is no `emit_event` function |
+| `transfer::transfer_coin(...)` | `transfer::public_transfer(coin, addr)` | Use `public_transfer` for objects with `store` |
+| `ctx` as a standalone value | `ctx: &mut TxContext` as a function parameter | `ctx` is a parameter name, not a global — always declare it in the function signature |
+| `sui::test_utils::destroy(x)` | `std::unit_test::destroy(x)` | `test_utils::destroy` is deprecated |
+| `vector::empty()` | `vector[]` | Use literal syntax in Move 2024 |
+| `coin::mint_for_testing(...)` | `sui::coin::mint_for_testing<T>(amount, ctx)` | Needs explicit type parameter and TxContext |
