@@ -103,12 +103,94 @@ edition = "2024"
 
 This is **all you need**. The `edition = "2024"` line tells the CLI to resolve Sui and MoveStdlib automatically. There is no `[dependencies]` section unless you need third-party or local packages.
 
-**All of these are WRONG and will error:**
+### Complete working project templates
+
+**Always use these exact templates when generating Move projects.** Copy them verbatim — do not modify the Move.toml format.
+
+#### Template: Single Move package with TypeScript client
+
+```
+project/
+├── move/
+│   ├── Move.toml
+│   └── sources/
+│       └── my_module.move
+└── client/
+    ├── package.json
+    └── src/
+        └── index.ts
+```
+
+**move/Move.toml** — copy exactly:
+```toml
+[package]
+name = "my_project"
+edition = "2024"
+```
+
+**move/sources/my_module.move** — starter pattern:
+```move
+module my_project::my_module;
+
+use sui::event;
+
+public struct MyEvent has copy, drop {
+    value: u64,
+}
+
+public fun do_something(ctx: &mut TxContext) {
+    event::emit(MyEvent { value: 42 });
+}
+```
+
+**client/package.json** — copy exactly:
+```json
+{
+  "name": "my-client",
+  "type": "module",
+  "dependencies": {
+    "@mysten/sui": "^1.0.0"
+  }
+}
+```
+
+**client/tsconfig.json** — copy exactly:
+```json
+{
+  "compilerOptions": {
+    "moduleResolution": "nodenext",
+    "module": "nodenext",
+    "target": "es2022",
+    "strict": true
+  }
+}
+```
+
+#### Template: Move package with frontend
+
+Same as above, plus a `frontend/` directory:
+
+**frontend/package.json** — copy exactly:
+```json
+{
+  "name": "my-frontend",
+  "type": "module",
+  "dependencies": {
+    "@mysten/sui": "^1.0.0",
+    "@mysten/dapp-kit": "^1.0.0",
+    "react": "^19.0.0"
+  }
+}
+```
+
+### Wrong formats that WILL error
+
+**All of these are WRONG and will cause build failures:**
 ```toml
 # WRONG — legacy system name error:
 Sui = { git = "https://github.com/MystenLabs/sui.git", subdir = "crates/sui-framework/packages/sui-framework", rev = "framework/testnet" }
 
-# WRONG — version syntax doesn't exist:
+# WRONG — version syntax doesn't exist in Move:
 sui = { version = "0.34.0" }
 
 # WRONG — local path doesn't exist:
@@ -116,6 +198,10 @@ Sui = { local = "../sui-framework" }
 
 # WRONG — implicit dependency error:
 sui = { package = "sui", version = "0.1.0" }
+
+# WRONG — cannot override system environments:
+[environments]
+testnet = "4c78adac"
 ```
 
 Only add `[dependencies]` when you need third-party or local packages (e.g., MVR or sibling workspace packages).

@@ -22,7 +22,9 @@ public fun create_item(ctx: &mut TxContext) {
 }
 ```
 
-Event structs must have `copy` and `drop` abilities. The function is `event::emit(...)` — there is NO `emit_event` function. Always use `sui::event::emit`.
+Event structs must have `copy` and `drop` abilities.
+
+> **IMPORTANT:** The function is `event::emit(...)`. There is NO `emit_event` function anywhere in the Sui framework. Never write `emit_event(...)`, `event::emit_event(...)`, or any variant — the only correct call is `event::emit(MyEventStruct { ... })`.
 
 Subscribe to events offchain using the Sui TypeScript SDK or GraphQL API, filtering by event type.
 

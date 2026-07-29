@@ -395,13 +395,53 @@ Move struct fields are private to the defining module. This is load-bearing for 
 
 ### Common API mistakes
 
-These are frequently hallucinated or confused APIs. Use the correct versions:
+These are frequently hallucinated or confused APIs. **Always use the correct version.**
 
 | Wrong | Correct | Notes |
 |---|---|---|
-| `event::emit_event(...)` | `sui::event::emit(...)` | There is no `emit_event` function |
-| `transfer::transfer_coin(...)` | `transfer::public_transfer(coin, addr)` | Use `public_transfer` for objects with `store` |
-| `ctx` as a standalone value | `ctx: &mut TxContext` as a function parameter | `ctx` is a parameter name, not a global — always declare it in the function signature |
-| `sui::test_utils::destroy(x)` | `std::unit_test::destroy(x)` | `test_utils::destroy` is deprecated |
-| `vector::empty()` | `vector[]` | Use literal syntax in Move 2024 |
-| `coin::mint_for_testing(...)` | `sui::coin::mint_for_testing<T>(amount, ctx)` | Needs explicit type parameter and TxContext |
+| `event::emit_event(...)` | `event::emit(MyEvent { ... })` | There is NO `emit_event` function. The function is `sui::event::emit`. |
+| `emit_event(...)` | `event::emit(...)` | Same — no `emit_event` exists anywhere in the Sui framework. |
+| `transfer::transfer_coin(...)` | `transfer::public_transfer(coin, addr)` | There is NO `transfer_coin`. Use `public_transfer` for objects with `store`. |
+| `ctx` used as standalone | `ctx: &mut TxContext` declared as parameter | `ctx` is a parameter name, not a global. Declare it in every function that needs it. |
+| `sui::test_utils::destroy(x)` | `std::unit_test::destroy(x)` | `test_utils::destroy` is deprecated. Use `std::unit_test::destroy`. |
+| `vector::empty()` | `vector[]` | Use literal syntax in Move 2024. |
+| `vector::push_back(&mut v, x)` | `v.push_back(x)` | Use method syntax in Move 2024. |
+| `coin::mint_for_testing(...)` | `coin::mint_for_testing<T>(amount, ctx)` | Needs explicit type parameter `<T>` and `&mut TxContext`. |
+| `object::new(ctx)` inside struct literal | `let id = object::new(ctx);` then use `id` | Create the UID first, then use it in the struct. |
+
+### Correct event emission pattern
+
+**Always write events exactly like this:**
+
+```move
+use sui::event;
+
+public struct TransferCompleted has copy, drop {
+    sender: address,
+    recipient: address,
+    amount: u64,
+}
+
+public fun transfer_tokens(recipient: address, amount: u64, ctx: &mut TxContext) {
+    // ... transfer logic ...
+    event::emit(TransferCompleted {
+        sender: ctx.sender(),
+        recipient,
+        amount,
+    });
+}
+```
+
+### Correct test cleanup pattern
+
+```move
+#[test]
+fun test_example() {
+    use std::unit_test::destroy;  // NOT sui::test_utils::destroy
+
+    let mut ctx = tx_context::dummy();
+    let item = create_item(&mut ctx);
+    // ... assertions ...
+    destroy(item);
+}
+```
