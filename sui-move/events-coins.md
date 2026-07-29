@@ -22,7 +22,9 @@ public fun create_item(ctx: &mut TxContext) {
 }
 ```
 
-Event structs must have `copy` and `drop` abilities. Subscribe to events offchain using the Sui TypeScript SDK or GraphQL API, filtering by event type.
+Event structs must have `copy` and `drop` abilities. The function is `event::emit(...)` — there is NO `emit_event` function. Always use `sui::event::emit`.
+
+Subscribe to events offchain using the Sui TypeScript SDK or GraphQL API, filtering by event type.
 
 ## Coin operations
 

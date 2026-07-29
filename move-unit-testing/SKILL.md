@@ -142,7 +142,7 @@ fun mint_returns_correct_value() {
     let mut scenario = test_scenario::begin(@0xA);
     let item = app::create_item(100, scenario.ctx());
     assert_eq!(item.value(), 100);
-    test_utils::destroy(item);
+    std::unit_test::destroy(item);
     scenario.end();
 }
 
@@ -152,7 +152,7 @@ fun mint_returns_correct_value() {
     let ctx = &mut tx_context::dummy();
     let item = app::create_item(100, ctx);
     assert_eq!(item.value(), 100);
-    test_utils::destroy(item);
+    std::unit_test::destroy(item);
 }
 ```
 
@@ -258,17 +258,19 @@ fun init_creates_admin_cap() {
 
 Note: modules typically expose a `init_for_testing` or `test_init` helper since `init` itself is not directly callable in tests. Use `#[test_only]` to gate these helpers.
 
-## Use `test_utils::destroy` for Cleanup
+## Use `std::unit_test::destroy` for Cleanup
 
-Use the standard `test_utils::destroy` function to clean up test objects. Do not write custom `destroy_for_testing` functions.
+Use `std::unit_test::destroy` to clean up test objects. The old `sui::test_utils::destroy` is **deprecated**.
 
 ```move
+// WRONG — deprecated
+use sui::test_utils::destroy;
+
 // WRONG — custom cleanup functions
 nft.destroy_for_testing();
-app.destroy_for_testing();
 
-// CORRECT — standard destroy
-use sui::test_utils::destroy;
+// CORRECT — use std::unit_test::destroy
+use std::unit_test::destroy;
 
 destroy(nft);
 destroy(app);
