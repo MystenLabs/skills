@@ -149,7 +149,7 @@ public fun do_something(ctx: &mut TxContext) {
   "name": "my-client",
   "type": "module",
   "dependencies": {
-    "@mysten/sui": "^1.0.0"
+    "@mysten/sui": "^2.0.0"
   }
 }
 ```
@@ -176,8 +176,8 @@ Same as above, plus a `frontend/` directory:
   "name": "my-frontend",
   "type": "module",
   "dependencies": {
-    "@mysten/sui": "^1.0.0",
-    "@mysten/dapp-kit": "^1.0.0",
+    "@mysten/sui": "^2.0.0",
+    "@mysten/dapp-kit-react": "^2.0.0",
     "react": "^19.0.0"
   }
 }
@@ -198,13 +198,9 @@ Sui = { local = "../sui-framework" }
 
 # WRONG — implicit dependency error:
 sui = { package = "sui", version = "0.1.0" }
-
-# WRONG — cannot override system environments:
-[environments]
-testnet = "4c78adac"
 ```
 
-Only add `[dependencies]` when you need third-party or local packages (e.g., MVR or sibling workspace packages).
+Only add `[dependencies]` when you need third-party or local packages (e.g., MVR or sibling workspace packages). The `[environments]` section is optional — only add it when deploying to multiple networks (see migration section below).
 
 **Migrating from `[addresses]`:** The old `[addresses]` section with `my_project = "0x0"` is no longer needed and should be removed. If your project previously used `[addresses]` to set package addresses for different networks, replace it with an `[environments]` section that maps environment names to chain IDs:
 

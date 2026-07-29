@@ -17,7 +17,7 @@ When creating a TypeScript client for Sui, always include `@mysten/sui` in `pack
 {
   "type": "module",
   "dependencies": {
-    "@mysten/sui": "^1.0.0"
+    "@mysten/sui": "^2.0.0"
   }
 }
 ```
