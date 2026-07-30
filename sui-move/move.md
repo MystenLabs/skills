@@ -392,3 +392,71 @@ Move struct fields are private to the defining module. This is load-bearing for 
 
 - `()` is not a nameable type in macro return position. `public macro fun foo<$T, $R>(...) -> $R` fails when the caller substitutes `()`. Fix: return a value or have a separate void macro.
 - Macros expand in caller-module scope for privacy. A macro touching private fields can only be invoked from inside the defining package — macros are not a privacy escape hatch.
+
+### Common API mistakes
+
+These are frequently hallucinated or confused APIs. **Always use the correct version.**
+
+| Wrong | Correct | Notes |
+|---|---|---|
+| `event::emit_event(...)` | `event::emit(MyEvent { ... })` | There is NO `emit_event` function. The function is `sui::event::emit`. |
+| `emit_event(...)` | `event::emit(...)` | Same — no `emit_event` exists anywhere in the Sui framework. |
+| `transfer::transfer_coin(...)` | `transfer::public_transfer(coin, addr)` | There is NO `transfer_coin`. Use `public_transfer` for objects with `store`. |
+| `ctx` used as standalone | `ctx: &mut TxContext` declared as parameter | `ctx` is a parameter name, not a global. Declare it in every function that needs it. |
+| `sui::test_utils::destroy(x)` | `std::unit_test::destroy(x)` | `test_utils::destroy` is deprecated. Use `std::unit_test::destroy`. |
+| `vector::empty()` | `vector[]` | Use literal syntax in Move 2024. |
+| `vector::push_back(&mut v, x)` | `v.push_back(x)` | Use method syntax in Move 2024. |
+| `coin::mint_for_testing(...)` | `coin::mint_for_testing<T>(amount, ctx)` | Needs explicit type parameter `<T>` and `&mut TxContext`. |
+| `object::new(ctx)` inside struct literal | `let id = object::new(ctx);` then use `id` | Create the UID first, then use it in the struct. |
+| `borrow_global<T>(addr)` | Not available — use object references | Sui Move does NOT have `borrow_global`. This is an Aptos/Diem function. In Sui, pass objects as function parameters (`&T` or `&mut T`). |
+| `create_signer(addr)` | Not available — use `TxContext` | Sui does NOT have `create_signer`. The signer is implicit via `ctx: &mut TxContext`. Use `ctx.sender()` for the sender address. |
+| `create_clock()` | Pass `&Clock` as a parameter | Sui does NOT have `create_clock`. The Clock is a shared object at `0x6`. Pass it as `clock: &Clock` in function params. In tests, use `clock::create_for_testing(ctx)`. |
+| `vector::matches(...)` | Use `vector::contains(&v, &elem)` or loop | There is no `matches` function on vectors. Use `v.contains(&elem)` or iterate manually. |
+| `table::keys(...)` | Iterate with known keys or use a separate vector | Sui `Table` does not have a `keys()` method. Track keys separately in a `vector` if you need enumeration. |
+
+### Sui Move is NOT Aptos Move
+
+Sui Move and Aptos Move diverged significantly. **Do not use Aptos/Diem patterns:**
+
+- **No `borrow_global` / `move_from` / `move_to`** — Sui uses object-centric storage. Objects are passed as function parameters, not borrowed from global storage.
+- **No `create_signer`** — Sui uses `TxContext` for sender identity. `ctx.sender()` returns the sender address.
+- **No `acquires` keyword** — Sui functions don't acquire resources. Objects are passed explicitly.
+- **No global storage operators** — In Sui, objects are owned, shared, or immutable. Access them via transfer, dynamic fields, or function parameters.
+- **The Clock is shared, not created** — Pass `clock: &sui::clock::Clock` as a parameter. The Clock lives at address `0x6`. In tests, create with `sui::clock::create_for_testing(ctx)`.
+
+### Correct event emission pattern
+
+**Always write events exactly like this:**
+
+```move
+use sui::event;
+
+public struct TransferCompleted has copy, drop {
+    sender: address,
+    recipient: address,
+    amount: u64,
+}
+
+public fun transfer_tokens(recipient: address, amount: u64, ctx: &mut TxContext) {
+    // ... transfer logic ...
+    event::emit(TransferCompleted {
+        sender: ctx.sender(),
+        recipient,
+        amount,
+    });
+}
+```
+
+### Correct test cleanup pattern
+
+```move
+#[test]
+fun test_example() {
+    use std::unit_test::destroy;  // NOT sui::test_utils::destroy
+
+    let mut ctx = tx_context::dummy();
+    let item = create_item(&mut ctx);
+    // ... assertions ...
+    destroy(item);
+}
+```

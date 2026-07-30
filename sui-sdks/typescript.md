@@ -9,6 +9,31 @@ npm install @mysten/sui
 
 **Never** `npm install @mysten/sui.js` — frozen at v1.
 
+### Minimal project setup
+
+When creating a TypeScript client for Sui, always include `@mysten/sui` in `package.json`:
+
+```json
+{
+  "type": "module",
+  "dependencies": {
+    "@mysten/sui": "^2.0.0"
+  }
+}
+```
+
+```json
+// tsconfig.json
+{
+  "compilerOptions": {
+    "moduleResolution": "nodenext",
+    "module": "nodenext",
+    "target": "es2022",
+    "strict": true
+  }
+}
+```
+
 All imports use subpath exports:
 ```ts
 import { Transaction } from '@mysten/sui/transactions';
