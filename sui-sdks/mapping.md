@@ -85,21 +85,21 @@ txn = SyncTransaction(client=client)
 
 | TS | `const result = await keypair.signAndExecuteTransaction({ transaction: tx, client });` |
 |---|---|
-| Rust | build → sign with `sui-crypto` → `client.transaction_execution_service().execute_transaction(tx, vec![sig]).await` |
+| Rust | build → sign with `sui-crypto` → `client.execution_client().execute_transaction(tx, vec![sig]).await` |
 | Python | `result = txn.execute(gas_budget='10000000')` |
 
 ### Wait for indexing
 
 | TS | `await client.waitForTransaction({ digest });` |
 |---|---|
-| Rust | Poll `ledger_service().get_transaction(digest)` until finalized |
+| Rust | Poll `ledger_client().get_transaction(digest)` until finalized |
 | Python | `client.wait_for_transaction(digest)` |
 
 ### Dry run / simulate
 
 | TS | `await client.simulateTransaction({ transaction: tx, sender });` |
 |---|---|
-| Rust | `client.transaction_execution_service().dry_run_transaction(...).await` |
+| Rust | `client.execution_client().dry_run_transaction(...).await` |
 | Python | `txn.inspect_for_result()` / `txn.inspect_all()` |
 
 ## Data access
@@ -108,29 +108,43 @@ txn = SyncTransaction(client=client)
 
 | TS | `await client.core.getObject({ objectId, include: { content: true } });` |
 |---|---|
-| Rust | `client.ledger_service().get_object(ObjectId, read_mask).await` |
+| Rust | `client.ledger_client().get_object(ObjectId, read_mask).await` |
 | Python | `client.get_object('0x...')` |
 
 ### List owned objects (paginated)
 
 | TS | `await client.core.listOwnedObjects({ owner, filter: { StructType }, limit: 50 });` |
 |---|---|
-| Rust | `client.state_service().list_owned_objects(owner, object_type).await` |
+| Rust | `client.state_client().list_owned_objects(owner, object_type).await` |
 | Python | `client.get_owned_objects(owner='0x...')` |
 
 ### List balances
 
 | TS | `await client.core.listBalances({ owner });` |
 |---|---|
-| Rust | `client.ledger_service().list_balances(owner).await` |
+| Rust | `client.ledger_client().list_balances(owner).await` |
 | Python | `client.get_all_balances(owner='0x...')` |
 
 ### Get transaction
 
 | TS | `await client.core.getTransaction({ digest, include: { effects: true } });` |
 |---|---|
-| Rust | `client.ledger_service().get_transaction(digest).await` |
+| Rust | `client.ledger_client().get_transaction(digest).await` |
 | Python | `client.get_transaction(digest=...)` |
+
+### List transactions (filtered, paginated)
+
+| TS | `await client.core.listTransactions({ filter: { sender }, order: 'descending', limit: 50 });` |
+|---|---|
+| Rust | `client.ledger_client().list_transactions(...)` — GA in `sui-rpc` ≥ 0.3.2 (streaming RPC). Accessor is `ledger_client()`, not `ledger_service()`. |
+| Python | N/A — use TS/Rust or GraphQL |
+
+### List events (filtered, paginated)
+
+| TS | `await client.core.listEvents({ filter: { eventType: 'pkg::mod::Event' }, limit: 50 });` |
+|---|---|
+| Rust | `client.ledger_client().list_events(...)` — GA in `sui-rpc` ≥ 0.3.2 (streaming RPC). Accessor is `ledger_client()`, not `ledger_service()`. |
+| Python | N/A — use TS/Rust or GraphQL |
 
 ## Error / status shape
 
@@ -157,7 +171,7 @@ txn = SyncTransaction(client=client)
 
 ## Porting gotchas
 
-- **Object input**: TS resolves versions automatically (`tx.object('0x..')`); Rust requires you to supply the `ObjectInput` ref. When porting TS → Rust, insert a preparatory `client.ledger_service().get_object(...)` to fetch the ref first.
+- **Object input**: TS resolves versions automatically (`tx.object('0x..')`); Rust requires you to supply the `ObjectInput` ref. When porting TS → Rust, insert a preparatory `client.ledger_client().get_object(...)` to fetch the ref first.
 - **Pure typing**: TS uses typed helpers (`tx.pure.u64`); Rust uses generic BCS serialization (`tx.pure(&value)`). The Python SDK passes typed wrapper classes (`SuiU64`).
 - **Async model**: Rust is explicitly async (`.await` everywhere); TS is async but the builder is sync until `.build` or `.sign`; pysui has both sync and async clients — don't mix in the same program.
 - **Gas config defaults**: TS auto-resolves gas via dry-run; Rust's offline `try_build` does not — you must set budget/price or use the `intents` feature with `build(client).await`.

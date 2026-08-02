@@ -187,9 +187,28 @@ await client.core.getCoinMetadata({ coinType });
 await client.core.getTransaction({ digest, include: {...} });
 await client.simulateTransaction({ transaction: tx });
 await client.core.executeTransaction({ transaction: bytes, signatures: [...], include: {...} });
+
+// Filtered query methods — transactions and events, cursor-paginated
+const page = await client.core.listTransactions({
+  filter: { sender: '0x...' },           // or { function: '0xpkg::mod::fn' } (pkg, pkg::mod, or pkg::mod::fn)
+  order: 'descending',                    // 'ascending' (default) | 'descending'
+  limit: 50,                              // default 50
+  include: { effects: true },             // same include options as getTransaction
+});
+// page: { transactions, hasNextPage, startCursor, endCursor }
+// Page back with `before: page.endCursor`, poll for new items with `after: page.startCursor`.
+// `after` implies ascending; `before` implies descending; at most one bound per call.
+
+const events = await client.core.listEvents({
+  filter: { eventType: '0xpkg::mod::Minted' },  // or { sender }, { emitModule: '0xpkg::mod' }
+  limit: 100,
+});
+// page: { events, hasNextPage, startCursor, endCursor }
+// Each EventEntry carries checkpoint, transactionDigest, eventIndex in addition to the event fields.
+// Event filters take exactly one of: sender | emitModule ('pkg::mod') | eventType ('pkg::mod' or full type).
 ```
 
-Pagination: core `list*` methods return a single nullable `cursor`. Iterate while non-null, passing it back as the next call's `cursor`.
+Pagination: core object/coin `list*` methods return a single nullable `cursor` — iterate while non-null, passing it back as the next call's `cursor`. The query methods (`listTransactions` / `listEvents`) return `hasNextPage` + `startCursor` / `endCursor` and continue via `after` (ascending) / `before` (descending).
 
 **Include options** (replaces v1's `options: { show*: true }`). Keys differ by method:
 - Object reads (`getObject`, `getObjects`, `listOwnedObjects`): `content`, `previousTransaction`, `json`, `objectBcs`, `display`.
@@ -324,6 +343,8 @@ Full migration guide: fetch `https://sdk.mystenlabs.com/sui/migrations/sui-2.0/l
 | `client.waitForTransactionBlock` | `client.waitForTransaction` |
 | `client.devInspectTransactionBlock` | `client.simulateTransaction` |
 | `client.executeTransactionBlock` | `client.core.executeTransaction` |
+| `client.queryTransactionBlocks` | `client.core.listTransactions` (or raw `client.ledgerService.listTransactions` for richer DNF filters) |
+| `client.queryEvents` | `client.core.listEvents` (or raw `client.ledgerService.listEvents`) |
 | `options: { showEffects: true }` | `include: { effects: true }` (always show this pattern explicitly — do not omit it by saying effects are returned by default) |
 | `result.effects?.status?.status === 'success'` | `result.$kind !== 'FailedTransaction'` |
 | `txb.pure(value)` untyped | `tx.pure.u64(value)` / typed helpers |

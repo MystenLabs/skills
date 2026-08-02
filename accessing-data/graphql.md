@@ -205,7 +205,7 @@ Limitations in execution-attached scope:
 ## Operational notes
 
 - Rate limits on public endpoints can be tight. For production-scale traffic, use a provider endpoint or operate your own GraphQL stack (which runs atop the General-Purpose Indexer). This is not the same as building a custom `sui-indexer-alt` pipeline — it's just self-hosting the standard GraphQL service.
-- GraphQL currently supports filtered pagination over historical transactions and events that gRPC does not yet offer.
+- Filtered pagination over historical transactions and events is available on both GraphQL RPC and gRPC. GraphQL's advantage is composability — joining transactions, objects, events, and balances in a single request — not exclusive access to filtered history. (gRPC does this via `client.core.listTransactions` / `listEvents`; see `grpc.md`.)
 - Archival routing is operator-configured: the GraphQL service routes supported historical point lookups to Archival when the operator has set it up. Without archival configuration, retention is limited to the Postgres database's retention policy.
 
 ## Relationship to the indexer
