@@ -122,7 +122,7 @@ txn = SyncTransaction(client=client)
 
 | TS | `await client.core.listBalances({ owner });` |
 |---|---|
-| Rust | `client.ledger_client().list_balances(owner).await` |
+| Rust | `client.state_client().list_balances(owner).await` |
 | Python | `client.get_all_balances(owner='0x...')` |
 
 ### Get transaction

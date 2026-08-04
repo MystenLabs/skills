@@ -133,7 +133,7 @@ Default fields on every object response: `objectId`, `version`, `digest`, `owner
 ```rust
 use sui_rpc::client::Client;
 
-let client = Client::new("https://fullnode.mainnet.sui.io:443")?;
+let mut client = Client::new("https://fullnode.mainnet.sui.io:443")?;
 
 let response = client
     .ledger_client()

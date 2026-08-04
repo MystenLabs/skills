@@ -139,7 +139,7 @@ The `sui-rpc` crate is the gRPC client. Pattern:
 ```rust
 use sui_rpc::client::Client;
 
-let client = Client::new("https://fullnode.mainnet.sui.io:443")?;
+let mut client = Client::new("https://fullnode.mainnet.sui.io:443")?;
 let response = client
     .execution_client()
     .execute_transaction(transaction, vec![signature])
