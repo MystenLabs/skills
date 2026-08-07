@@ -1,18 +1,42 @@
-{
-  "skill_name": "composable-move-functions",
-  "evals": [
-    {
-      "id": "composable-code-return-pattern",
-      "prompt": "Write a Move module for minting NFTs on Sui. The mint function should be composable so callers can decide what to do with the NFT after minting (transfer it, wrap it, add to a collection, etc.).",
-      "check": "build",
-      "expected_result": "pass",
-      "package_name": "test_project",
-      "expectations": [
-        "Code compiles with sui move build",
-        "Mint function returns the NFT instead of transferring it internally",
-        "Functions use 'public' visibility (not 'public entry' or 'entry')",
-        "NFT struct has key and store abilities for composability"
-      ]
-    }
-  ]
-}
+[
+  {
+    "id": "composable-code-return-pattern",
+    "prompt": "Write a Move module for minting NFTs on Sui. The mint function should be composable so callers can decide what to do with the NFT after minting (transfer it, wrap it, add to a collection, etc.).",
+    "check": "build",
+    "expected_result": "pass",
+    "package_name": "test_project",
+    "expectations": [
+      "Code compiles with sui move build",
+      "Mint function returns the NFT instead of transferring it internally",
+      "Functions use 'public' visibility (not 'public entry' or 'entry')",
+      "NFT struct has key and store abilities for composability"
+    ]
+  },
+  {
+    "id": "public-not-entry-return",
+    "prompt": "Write a Move module called 'composable' with an Item struct (has key, store) with id: UID and value: u64 fields. Write a public function create_item that takes a value and TxContext, creates the Item, and RETURNS it (do not transfer it inside the function). Write a second public function that takes an Item and a recipient address and transfers it. Include tests.",
+    "package_name": "composable",
+    "check": "test",
+    "expected_result": "pass",
+    "forbidden_patterns": [
+      "public entry fun create_item"
+    ],
+    "sources": [
+      "https://move-book.com/programmability/module-initializer"
+    ]
+  },
+  {
+    "id": "composable-ptb-friendly",
+    "prompt": "Write a Move module called 'shop' with a Shop shared object and a ShopItem object (has key, store). Write a public function buy_item that takes payment as Coin<SUI>, creates a ShopItem, and RETURNS it rather than transferring internally. The caller (PTB) should handle the transfer. Include an init function that shares the Shop.",
+    "package_name": "shop",
+    "check": "build",
+    "expected_result": "pass",
+    "forbidden_patterns": [
+      "entry fun buy_item"
+    ],
+    "sources": [
+      "https://move-book.com/programmability/module-initializer",
+      "https://move-book.com/programmability/events"
+    ]
+  }
+]

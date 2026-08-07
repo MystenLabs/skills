@@ -1,0 +1,20 @@
+[
+  {
+    "id": "dapp-kit-react-setup",
+    "prompt": "Write two TypeScript React files for a Sui dApp. First, a dapp-kit.ts config file that imports createDAppKit from '@mysten/dapp-kit-react' and SuiGrpcClient from '@mysten/sui/grpc', creates a dAppKit instance with testnet network config. Second, an App.tsx that imports DAppKitProvider from '@mysten/dapp-kit-react' and ConnectButton from '@mysten/dapp-kit-react/ui', wraps the app in DAppKitProvider passing the dAppKit instance.",
+    "package_name": "dapp_setup",
+    "check": "build",
+    "expected_result": "pass",
+    "forbidden_patterns": ["@mysten/sui.js", "SuiClient", "@mysten/dapp-kit/src"],
+    "sources": ["https://sdk.mystenlabs.com/dapp-kit/getting-started/react"]
+  },
+  {
+    "id": "dapp-kit-wallet-hooks",
+    "prompt": "Write a TypeScript React component called WalletStatus that uses useCurrentAccount, useCurrentWallet, and useCurrentNetwork hooks from '@mysten/dapp-kit-react'. Display the wallet name, address, and network when connected. Show a connect prompt when no account is available.",
+    "package_name": "wallet_hooks",
+    "check": "build",
+    "expected_result": "pass",
+    "forbidden_patterns": ["@mysten/sui.js", "useWallet", "useSuiClient"],
+    "sources": ["https://sdk.mystenlabs.com/dapp-kit/getting-started/react"]
+  }
+]

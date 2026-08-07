@@ -1,20 +1,49 @@
-{
-  "skill_name": "move-unit-testing",
-  "evals": [
-    {
-      "id": "unit-testing-code-test-scenario",
-      "prompt": "Write a simple token module on Sui with mint and burn functions, and include tests that verify minting creates a token with the right value and burning destroys it.",
-      "check": "test",
-      "expected_result": "pass",
-      "package_name": "test_project",
-      "expectations": [
-        "Code compiles with sui move build",
-        "All tests pass with sui move test",
-        "Test module is marked #[test_only]",
-        "Tests use sui::test_scenario for multi-transaction scenarios",
-        "At least one test verifies the minted token's value",
-        "Token struct has store ability if tests use transfer::public_transfer"
-      ]
-    }
-  ]
-}
+[
+  {
+    "id": "unit-testing-code-test-scenario",
+    "prompt": "Write a simple token module on Sui with mint and burn functions, and include tests that verify minting creates a token with the right value and burning destroys it.",
+    "check": "test",
+    "expected_result": "pass",
+    "package_name": "test_project",
+    "expectations": [
+      "Code compiles with sui move build",
+      "All tests pass with sui move test",
+      "Test module is marked #[test_only]",
+      "Tests use sui::test_scenario for multi-transaction scenarios",
+      "At least one test verifies the minted token's value",
+      "Token struct has store ability if tests use transfer::public_transfer"
+    ]
+  },
+  {
+    "id": "basic-test-structure",
+    "prompt": "Write a Move module called 'math' with a public function add(a: u64, b: u64): u64 and a public function divide(a: u64, b: u64): u64 that aborts with code 1 on division by zero. Write tests: one that verifies add works, one that verifies divide works, and one with #[expected_failure(abort_code = 1)] that tests division by zero aborts correctly. Use assert_eq! from std::unit_test.",
+    "package_name": "math",
+    "check": "test",
+    "expected_result": "pass",
+    "sources": [
+      "https://move-book.com/move-basics/testing"
+    ]
+  },
+  {
+    "id": "test-with-ctx-and-destroy",
+    "prompt": "Write a Move module called 'nft' with an NFT struct (has key) with id: UID and name: String. Write a public function mint that takes a name String and TxContext and returns an NFT. Write a #[test] function that creates a dummy context with tx_context::dummy(), mints an NFT, verifies the name field, then destroys it with std::unit_test::destroy. Use #[test_only] for test imports.",
+    "package_name": "nft",
+    "check": "test",
+    "expected_result": "pass",
+    "sources": [
+      "https://move-book.com/move-basics/testing",
+      "https://move-book.com/storage/key-ability"
+    ]
+  },
+  {
+    "id": "test-event-emission",
+    "prompt": "Write a Move module called 'counter' with a Counter object (has key) with id: UID and value: u64. Write a CounterIncremented event (has copy, drop) with counter_id: ID and new_value: u64. Write an increment function that updates the value and emits the event. Write a test that increments, then verifies the event using event::num_events() and event::events_by_type<CounterIncremented>(). Destroy objects with std::unit_test::destroy.",
+    "package_name": "counter",
+    "check": "test",
+    "expected_result": "pass",
+    "sources": [
+      "https://move-book.com/programmability/events",
+      "https://move-book.com/move-basics/testing"
+    ]
+  }
+]

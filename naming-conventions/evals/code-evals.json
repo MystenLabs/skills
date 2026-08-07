@@ -1,21 +1,29 @@
-{
-  "skill_name": "naming-conventions",
-  "evals": [
-    {
-      "id": "naming-code-conventions",
-      "prompt": "Write a Move module for a simple NFT marketplace on Sui. Include an admin capability, listings, events for when listings are created, error constants, and functions to create and query listings.",
-      "check": "build",
-      "expected_result": "pass",
-      "package_name": "test_project",
-      "expectations": [
-        "Code compiles with sui move build",
-        "Error constants use E prefix with PascalCase (e.g., ENotAuthorized)",
-        "Regular constants use SCREAMING_SNAKE_CASE (e.g., MAX_PRICE)",
-        "Capability struct uses Cap suffix (e.g., AdminCap, MarketplaceCap)",
-        "Event structs use PascalCase past-tense (e.g., ListingCreated)",
-        "Functions use snake_case (e.g., create_listing)",
-        "Getter functions do not use get_ prefix (e.g., listing_price not get_listing_price)"
-      ]
-    }
-  ]
-}
+[
+  {
+    "id": "naming-code-conventions",
+    "prompt": "Write a Move module for a simple NFT marketplace on Sui. Include an admin capability, listings, events for when listings are created, error constants, and functions to create and query listings.",
+    "check": "build",
+    "expected_result": "pass",
+    "package_name": "test_project",
+    "expectations": [
+      "Code compiles with sui move build",
+      "Error constants use E prefix with PascalCase (e.g., ENotAuthorized)",
+      "Regular constants use SCREAMING_SNAKE_CASE (e.g., MAX_PRICE)",
+      "Capability struct uses Cap suffix (e.g., AdminCap, MarketplaceCap)",
+      "Event structs use PascalCase past-tense (e.g., ListingCreated)",
+      "Functions use snake_case (e.g., create_listing)",
+      "Getter functions do not use get_ prefix (e.g., listing_price not get_listing_price)"
+    ]
+  },
+  {
+    "id": "naming-structs-errors-events",
+    "prompt": "Write a Move module called 'registry' with: a Registry shared object (has key) with id: UID and entries: u64, an AdminCap capability (has key, store) with id: UID, a RegistryCreated event (has copy, drop), and error constants ENotAuthorized and EAlreadyExists as const u64. Write an init function that creates and shares the Registry and transfers AdminCap to sender. Write a register function guarded by AdminCap that increments entries and emits RegistryCreated. Include a test.",
+    "package_name": "registry",
+    "check": "test",
+    "expected_result": "pass",
+    "sources": [
+      "https://move-book.com/programmability/module-initializer",
+      "https://move-book.com/programmability/events"
+    ]
+  }
+]

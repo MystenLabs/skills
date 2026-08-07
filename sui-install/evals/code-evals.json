@@ -1,0 +1,10 @@
+[
+  {
+    "id": "suiup-install-commands",
+    "prompt": "Write a bash script that installs the Sui CLI using suiup. The script should: download and run the suiup installer from https://raw.githubusercontent.com/MystenLabs/suiup/main/install.sh, install the sui component with 'suiup install --yes sui', add $HOME/.local/bin to PATH, and verify the installation by printing the sui version.",
+    "package_name": "install_script",
+    "check": "build",
+    "expected_result": "pass",
+    "sources": ["https://docs.sui.io/getting-started/onboarding/sui-install"]
+  }
+]

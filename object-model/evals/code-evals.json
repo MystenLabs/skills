@@ -1,44 +1,72 @@
-{
-  "skill_name": "object-model",
-  "evals": [
-    {
-      "id": "object-model-code-shared-object",
-      "prompt": "I need a message board where anyone can post messages. Write the Move code for Sui.",
-      "check": "build",
-      "expected_result": "pass",
-      "package_name": "test_project",
-      "expectations": [
-        "Code compiles with sui move build",
-        "Board object is shared using transfer::share_object or transfer::public_share_object",
-        "Messages are stored in a collection (vector, Table, etc.)",
-        "Post function takes the board by mutable reference (&mut)"
-      ]
-    },
-    {
-      "id": "object-model-code-dynamic-fields",
-      "prompt": "Write a Move module for Sui where a Player object has an inventory that can hold different types of game items (swords, shields, potions) using dynamic object fields. Include functions to add and remove items by name.",
-      "check": "build",
-      "expected_result": "pass",
-      "package_name": "test_project",
-      "expectations": [
-        "Code compiles with sui move build",
-        "Uses dynamic fields or dynamic object fields for heterogeneous storage",
-        "Player/inventory object has key ability",
-        "Add and remove functions use generic type parameters for items"
-      ]
-    },
-    {
-      "id": "object-model-code-wrapping",
-      "prompt": "I want to build a lockbox that wraps another object inside it. The owner can lock an item and later unlock it to get the item back. Write the Move module.",
-      "check": "build",
-      "expected_result": "pass",
-      "package_name": "test_project",
-      "expectations": [
-        "Code compiles with sui move build",
-        "Item is stored as a direct field inside the Lockbox struct (wrapping pattern)",
-        "Unlock function takes Lockbox by value, unpacks it, and returns the inner item",
-        "Lockbox UID is deleted when unlocking"
-      ]
-    }
-  ]
-}
+[
+  {
+    "id": "object-model-code-shared-object",
+    "prompt": "I need a message board where anyone can post messages. Write the Move code for Sui.",
+    "check": "build",
+    "expected_result": "pass",
+    "package_name": "test_project",
+    "expectations": [
+      "Code compiles with sui move build",
+      "Board object is shared using transfer::share_object or transfer::public_share_object",
+      "Messages are stored in a collection (vector, Table, etc.)",
+      "Post function takes the board by mutable reference (&mut)"
+    ]
+  },
+  {
+    "id": "object-model-code-dynamic-fields",
+    "prompt": "Write a Move module for Sui where a Player object has an inventory that can hold different types of game items (swords, shields, potions) using dynamic object fields. Include functions to add and remove items by name.",
+    "check": "build",
+    "expected_result": "pass",
+    "package_name": "test_project",
+    "expectations": [
+      "Code compiles with sui move build",
+      "Uses dynamic fields or dynamic object fields for heterogeneous storage",
+      "Player/inventory object has key ability",
+      "Add and remove functions use generic type parameters for items"
+    ]
+  },
+  {
+    "id": "object-model-code-wrapping",
+    "prompt": "I want to build a lockbox that wraps another object inside it. The owner can lock an item and later unlock it to get the item back. Write the Move module.",
+    "check": "build",
+    "expected_result": "pass",
+    "package_name": "test_project",
+    "expectations": [
+      "Code compiles with sui move build",
+      "Item is stored as a direct field inside the Lockbox struct (wrapping pattern)",
+      "Unlock function takes Lockbox by value, unpacks it, and returns the inner item",
+      "Lockbox UID is deleted when unlocking"
+    ]
+  },
+  {
+    "id": "object-with-key-store",
+    "prompt": "Write a Move module called 'assets' with a Wallet object (has key, store) with id: UID, owner: address, and balance: u64. Write a public function new that takes owner address, balance, and TxContext and returns a Wallet. Write a public function deposit that takes &mut Wallet and amount: u64 and adds to balance. Include a test that creates a wallet, deposits, and verifies the balance. Destroy with std::unit_test::destroy.",
+    "package_name": "assets",
+    "check": "test",
+    "expected_result": "pass",
+    "sources": [
+      "https://move-book.com/storage/key-ability"
+    ]
+  },
+  {
+    "id": "shared-object-pattern",
+    "prompt": "Write a Move module called 'bulletin' with a Board shared object (has key) with id: UID and posts: vector<String>. Write an init function that creates and shares an empty Board using transfer::share_object. Write a public function add_post that takes &mut Board and a String and pushes it. Include a test using tx_context::dummy().",
+    "package_name": "bulletin",
+    "check": "test",
+    "expected_result": "pass",
+    "sources": [
+      "https://move-book.com/programmability/module-initializer",
+      "https://move-book.com/move-basics/vector"
+    ]
+  },
+  {
+    "id": "dynamic-fields",
+    "prompt": "Write a Move module called 'character' that demonstrates dynamic fields. Create a Character object (has key) with id: UID. Create a Hat struct (has key, store) with id: UID and color: u32. Use sui::dynamic_field to add a Hat to a Character by key b\"hat\", borrow_mut to change its color, check exists_, and remove it. Include a test that exercises all operations. Destroy all objects with std::unit_test::destroy.",
+    "package_name": "character",
+    "check": "test",
+    "expected_result": "pass",
+    "sources": [
+      "https://move-book.com/programmability/dynamic-fields"
+    ]
+  }
+]

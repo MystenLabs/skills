@@ -1,0 +1,29 @@
+[
+  {
+    "id": "grpc-client-setup",
+    "prompt": "Write a TypeScript file that sets up a Sui client. Import SuiGrpcClient from '@mysten/sui/grpc'. Import Ed25519Keypair from '@mysten/sui/keypairs/ed25519'. Create a client connected to devnet with baseUrl. Create a random keypair, print its address using toSuiAddress(), and query the balance using client.getBalance({ owner: address }).",
+    "package_name": "client_setup",
+    "check": "build",
+    "expected_result": "pass",
+    "forbidden_patterns": ["SuiClient", "@mysten/sui.js", "getFullnodeUrl", "new SuiClient"],
+    "sources": ["https://sdk.mystenlabs.com/typescript"]
+  },
+  {
+    "id": "keypair-from-private-key",
+    "prompt": "Write a TypeScript file that loads a keypair from a Bech32-encoded private key. Import decodeSuiPrivateKey from '@mysten/sui/cryptography', import Ed25519Keypair from '@mysten/sui/keypairs/ed25519'. Decode the private key with decodeSuiPrivateKey, check the scheme is 'ED25519', create the keypair with Ed25519Keypair.fromSecretKey(secretKey), and print the address.",
+    "package_name": "keypair_decode",
+    "check": "build",
+    "expected_result": "pass",
+    "forbidden_patterns": ["@mysten/sui.js", "fromHEX"],
+    "sources": ["https://sdk.mystenlabs.com/typescript/cryptography/keypairs"]
+  },
+  {
+    "id": "sign-and-execute-transaction",
+    "prompt": "Write a TypeScript file that creates a SuiGrpcClient, builds a Transaction that transfers SUI using coinWithBalance, then signs and executes it using keypair.signAndExecuteTransaction({ transaction, client, include: { effects: true } }). Check the result for FailedTransaction and print the digest on success.",
+    "package_name": "sign_execute",
+    "check": "build",
+    "expected_result": "pass",
+    "forbidden_patterns": ["@mysten/sui.js", "SuiClient", "getFullnodeUrl"],
+    "sources": ["https://sdk.mystenlabs.com/typescript"]
+  }
+]

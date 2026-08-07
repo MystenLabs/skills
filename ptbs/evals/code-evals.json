@@ -1,0 +1,20 @@
+[
+  {
+    "id": "ptb-transfer-sui",
+    "prompt": "Write a TypeScript file that builds a Sui PTB (Programmable Transaction Block) to transfer SUI to a recipient. Import Transaction and coinWithBalance from '@mysten/sui/transactions', import MIST_PER_SUI from '@mysten/sui/utils'. Create a Transaction, use tx.transferObjects with coinWithBalance to send 0.1 SUI to a recipient address. Print the transaction structure.",
+    "package_name": "ptb_transfer",
+    "check": "build",
+    "expected_result": "pass",
+    "forbidden_patterns": ["TransactionBlock", "@mysten/sui.js", "getFullnodeUrl"],
+    "sources": ["https://sdk.mystenlabs.com/typescript"]
+  },
+  {
+    "id": "ptb-move-call",
+    "prompt": "Write a TypeScript file that builds a Sui PTB with a moveCall. Import Transaction from '@mysten/sui/transactions'. Create a Transaction, add a tx.moveCall with a target string in the format 'package::module::function', pass object arguments with tx.object() and pure arguments with tx.pure.u64(). Show how to chain the result into a tx.transferObjects call.",
+    "package_name": "ptb_movecall",
+    "check": "build",
+    "expected_result": "pass",
+    "forbidden_patterns": ["TransactionBlock", "@mysten/sui.js"],
+    "sources": ["https://sdk.mystenlabs.com/typescript"]
+  }
+]

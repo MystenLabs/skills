@@ -1,19 +1,87 @@
-{
-  "skill_name": "modern-move-syntax",
-  "evals": [
-    {
-      "id": "modern-syntax-code-2024-features",
-      "prompt": "Write a Sui Move module for a tagged item collection. Items should have a name and a list of string tags. Include functions to create items, add tags, count tags, and destroy items.",
-      "check": "build",
-      "expected_result": "pass",
-      "package_name": "test_project",
-      "expectations": [
-        "Code compiles with sui move build",
-        "Uses Move 2024 module declaration (semicolon, no outer braces)",
-        "Uses method syntax (e.g., vector.push_back(), .length()) instead of legacy function-call syntax",
-        "Uses 'public struct' visibility keyword",
-        "Uses b\"...\".to_string() for string literals"
-      ]
-    }
-  ]
-}
+[
+  {
+    "id": "modern-syntax-code-2024-features",
+    "prompt": "Write a Sui Move module for a tagged item collection. Items should have a name and a list of string tags. Include functions to create items, add tags, count tags, and destroy items.",
+    "check": "build",
+    "expected_result": "pass",
+    "package_name": "test_project",
+    "expectations": [
+      "Code compiles with sui move build",
+      "Uses Move 2024 module declaration (semicolon, no outer braces)",
+      "Uses method syntax (e.g., vector.push_back(), .length()) instead of legacy function-call syntax",
+      "Uses 'public struct' visibility keyword",
+      "Uses b\"...\".to_string() for string literals"
+    ]
+  },
+  {
+    "id": "vector-method-syntax",
+    "prompt": "Write a Move module called 'vector_demo' that demonstrates modern 2024 edition vector operations. Create a vector of u64 values using the vector literal syntax, push 3 items using method syntax, check the length using method syntax, pop the last element, and use the index syntax to read and modify elements. Include a test that verifies all operations.",
+    "package_name": "vector_demo",
+    "check": "test",
+    "expected_result": "pass",
+    "forbidden_patterns": [
+      "vector::push_back",
+      "vector::pop_back",
+      "vector::length",
+      "vector::is_empty",
+      "vector::borrow"
+    ],
+    "sources": [
+      "https://move-book.com/move-basics/vector"
+    ]
+  },
+  {
+    "id": "option-method-syntax",
+    "prompt": "Write a Move module called 'option_demo' that demonstrates modern 2024 edition option operations. Create an Option<u64> with some(10), check is_some() and is_none() using method syntax, borrow the inner value, extract it, and verify the option is now none. Include a test.",
+    "package_name": "option_demo",
+    "check": "test",
+    "expected_result": "pass",
+    "forbidden_patterns": [
+      "option::is_some(",
+      "option::is_none(",
+      "option::borrow(",
+      "option::extract(",
+      "option::destroy_some("
+    ],
+    "sources": [
+      "https://move-book.com/move-basics/option"
+    ]
+  },
+  {
+    "id": "string-creation-syntax",
+    "prompt": "Write a Move module called 'string_demo' that creates strings using byte literal syntax b\"hello\".to_string(), performs append, checks length, and uses substring. Include a test that verifies the string operations.",
+    "package_name": "string_demo",
+    "check": "test",
+    "expected_result": "pass",
+    "forbidden_patterns": [
+      "string::utf8(b\"",
+      "std::string::utf8"
+    ],
+    "sources": [
+      "https://move-book.com/move-basics/string"
+    ]
+  },
+  {
+    "id": "event-emit-syntax",
+    "prompt": "Write a Move module called 'event_demo' with an Item struct (has key) and an ItemPurchased event struct (has copy, drop) containing item: ID and price: u64 fields. Write a function that creates an Item, emits an ItemPurchased event using event::emit without explicit type parameters, and returns the Item. Include a test that verifies the event was emitted using event::num_events() and event::events_by_type.",
+    "package_name": "event_demo",
+    "check": "test",
+    "expected_result": "pass",
+    "forbidden_patterns": [
+      "event::emit<"
+    ],
+    "sources": [
+      "https://move-book.com/programmability/events"
+    ]
+  },
+  {
+    "id": "vector-macros",
+    "prompt": "Write a Move module called 'macro_demo' that uses vector macros: count! to count even numbers, map! to double values, fold! to sum all elements, and do! to iterate. Include a test verifying each macro result.",
+    "package_name": "macro_demo",
+    "check": "test",
+    "expected_result": "pass",
+    "sources": [
+      "https://move-book.com/move-basics/vector"
+    ]
+  }
+]
