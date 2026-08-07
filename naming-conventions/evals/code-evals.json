@@ -5,6 +5,17 @@
     "package_name": "marketplace",
     "check": "build",
     "expected_result": "pass",
-    "sources": ["https://move-book.com/programmability/module-initializer", "https://move-book.com/programmability/events"]
+    "sources": [
+      "https://move-book.com/programmability/module-initializer",
+      "https://move-book.com/programmability/events"
+    ],
+    "expectations": [
+      "Code compiles with sui move build",
+      "Error constants use E prefix with PascalCase (e.g., ENotAuthorized)",
+      "Capability struct uses Cap suffix (e.g., AdminCap)",
+      "Event structs use PascalCase (e.g., ListingCreated, ItemSold)",
+      "Functions use snake_case (e.g., create_listing, buy_item)",
+      "Marketplace is a shared object created in init"
+    ]
   }
 ]

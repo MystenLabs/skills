@@ -5,8 +5,22 @@
     "package_name": "transfer_sui",
     "check": "build",
     "expected_result": "pass",
-    "forbidden_patterns": ["@mysten/sui.js", "SuiClient", "getFullnodeUrl", "TransactionBlock"],
-    "sources": ["https://sdk.mystenlabs.com/typescript"]
+    "forbidden_patterns": [
+      "@mysten/sui.js",
+      "SuiClient",
+      "getFullnodeUrl",
+      "TransactionBlock"
+    ],
+    "sources": [
+      "https://sdk.mystenlabs.com/typescript"
+    ],
+    "expectations": [
+      "Code compiles (TypeScript valid)",
+      "Uses SuiGrpcClient from @mysten/sui/grpc",
+      "Uses Transaction and coinWithBalance from @mysten/sui/transactions",
+      "Checks result.$kind === 'FailedTransaction' for error handling",
+      "Prints transaction digest on success"
+    ]
   },
   {
     "id": "gasless-usdc-transfer",
@@ -14,8 +28,21 @@
     "package_name": "gasless_usdc",
     "check": "build",
     "expected_result": "pass",
-    "forbidden_patterns": ["@mysten/sui.js", "SuiClient", "getFullnodeUrl"],
-    "sources": ["https://docs.sui.io/develop/transaction-payment/gasless-stablecoin-transfers"]
+    "forbidden_patterns": [
+      "@mysten/sui.js",
+      "SuiClient",
+      "getFullnodeUrl"
+    ],
+    "sources": [
+      "https://docs.sui.io/develop/transaction-payment/gasless-stablecoin-transfers"
+    ],
+    "expectations": [
+      "Code compiles (TypeScript valid)",
+      "Uses balance::send_funds as the moveCall target",
+      "Specifies USDC type as typeArguments",
+      "Uses tx.balance() for the amount input",
+      "Transaction is gasless (zero gas cost for allowlisted stablecoins)"
+    ]
   },
   {
     "id": "address-balance-send-receive",
@@ -23,7 +50,20 @@
     "package_name": "address_balance",
     "check": "build",
     "expected_result": "pass",
-    "forbidden_patterns": ["@mysten/sui.js", "SuiClient", "getFullnodeUrl"],
-    "sources": ["https://docs.sui.io/onchain-finance/choose-payments-model"]
+    "forbidden_patterns": [
+      "@mysten/sui.js",
+      "SuiClient",
+      "getFullnodeUrl"
+    ],
+    "sources": [
+      "https://docs.sui.io/onchain-finance/choose-payments-model"
+    ],
+    "expectations": [
+      "Code compiles (TypeScript valid)",
+      "Sends using balance::send_funds (not transferObjects with Coin)",
+      "Withdraws using coin::redeem_funds with tx.withdrawal()",
+      "Uses SuiGrpcClient from @mysten/sui/grpc",
+      "Demonstrates both send-to-balance and withdraw-from-balance patterns"
+    ]
   }
 ]
