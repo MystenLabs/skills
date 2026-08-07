@@ -1,107 +1,42 @@
 [
   {
-    "id": "sui-move-code-nft-struct",
-    "prompt": "I want to create a simple NFT on Sui. It should have a name and a description, and anyone should be able to transfer it. Write the Move module for me.",
-    "check": "build",
-    "expected_result": "pass",
-    "package_name": "test_project",
-    "expectations": [
-      "Code compiles with sui move build",
-      "Struct has key and store abilities (store needed for public transfer)",
-      "Struct has id: UID as first field",
-      "Uses Move 2024 edition syntax (module declaration with semicolon)",
-      "Includes a constructor function that takes &mut TxContext"
-    ]
-  },
-  {
-    "id": "sui-move-code-custom-coin",
-    "prompt": "How do I create a new fungible token on Sui? Write me a complete module with minting capability.",
-    "check": "build",
-    "expected_result": "pass",
-    "package_name": "test_project",
-    "expectations": [
-      "Code compiles with sui move build",
-      "Uses One-Time Witness pattern (struct named after module in ALL CAPS with drop ability)",
-      "Calls coin::create_currency in the init function",
-      "Handles TreasuryCap and CoinMetadata correctly",
-      "Includes a mint function that uses the TreasuryCap"
-    ]
-  },
-  {
-    "id": "sui-move-code-events",
-    "prompt": "I'm building a name registry on Sui where users can claim names. I want to emit events when names are registered. Write the Move code.",
-    "check": "build",
-    "expected_result": "pass",
-    "package_name": "test_project",
-    "expectations": [
-      "Code compiles with sui move build",
-      "Event struct has copy and drop abilities",
-      "Uses sui::event::emit to emit events",
-      "Registry is a shared object",
-      "Uses a collection type (Table, VecMap, etc.) for name storage"
-    ]
-  },
-  {
-    "id": "sui-move-code-destroy-object",
-    "prompt": "Write a Move module for an event ticket that can be used exactly once. After use, the ticket should be destroyed. The ticket should not be transferable by the holder.",
-    "check": "build",
-    "expected_result": "pass",
-    "package_name": "test_project",
-    "expectations": [
-      "Code compiles with sui move build",
-      "Ticket struct has key but NOT store (non-transferable by holder)",
-      "Includes a function that destroys the ticket by unpacking and calling id.delete()",
-      "Uses Move 2024 edition syntax"
-    ]
-  },
-  {
-    "id": "sui-move-code-counter-with-tests",
-    "prompt": "Build me a shared counter on Sui with increment and read functions. Include unit tests.",
+    "id": "simple-nft",
+    "prompt": "I want to create a simple NFT on Sui. It should have a name and a description, and anyone should be able to transfer it. Write the Move module with a mint function and tests.",
+    "package_name": "simple_nft",
     "check": "test",
     "expected_result": "pass",
-    "package_name": "test_project",
-    "expectations": [
-      "Code compiles with sui move build",
-      "All tests pass with sui move test",
-      "Counter is shared via transfer::share_object",
-      "Test module uses sui::test_scenario or #[test] functions",
-      "At least one test verifies incrementing works correctly"
-    ]
+    "sources": ["https://move-book.com/storage/key-ability"]
   },
   {
-    "id": "full-module-lifecycle",
-    "prompt": "Write a Move module called 'token_registry' with: a Registry shared object (has key) with id: UID and count: u64, a Token object (has key, store) with id: UID, name: String, and serial: u64, a TokenMinted event (has copy, drop) with token_id: ID and serial: u64. Write an init function that creates and shares the Registry. Write a public function mint_token that takes &mut Registry, name: String, and TxContext, increments count, creates a Token, emits TokenMinted, and returns the Token. Include tests verifying minting increments count and emits the correct event.",
-    "package_name": "token_registry",
-    "check": "test",
+    "id": "fungible-token-otw",
+    "prompt": "How do I create a new fungible token on Sui? Write me a complete module with a One-Time Witness, coin::create_currency in init, and a mint function that uses the TreasuryCap.",
+    "package_name": "my_token",
+    "check": "build",
     "expected_result": "pass",
-    "sources": [
-      "https://move-book.com/programmability/module-initializer",
-      "https://move-book.com/programmability/events",
-      "https://move-book.com/storage/key-ability"
-    ]
+    "sources": ["https://docs.sui.io/onchain-finance/fungible-tokens/create-a-fungible-token"]
   },
   {
-    "id": "capability-pattern",
-    "prompt": "Write a Move module called 'admin' demonstrating the capability pattern. Create an AdminCap (has key, store) with id: UID. Create a Config shared object (has key) with id: UID and fee_bps: u64. In init, share Config and transfer AdminCap to sender. Write a public function update_fee that requires &AdminCap, takes &mut Config and new_fee: u64. Include a test that calls init, then update_fee.",
-    "package_name": "admin",
+    "id": "name-registry-events",
+    "prompt": "I'm building a name registry on Sui where users can claim names. The registry is a shared object. I want to emit events when names are registered. Names should be stored in a Table. Write the Move code with tests.",
+    "package_name": "name_registry",
     "check": "test",
     "expected_result": "pass",
-    "sources": [
-      "https://move-book.com/programmability/module-initializer"
-    ]
+    "sources": ["https://move-book.com/programmability/events", "https://move-book.com/programmability/module-initializer"]
   },
   {
-    "id": "coin-operations",
-    "prompt": "Write a Move module called 'payment' that demonstrates coin operations. Write a public function split_and_send that takes a &mut Coin<SUI>, amount: u64, recipient: address, and TxContext. It should split the specified amount from the coin using .split() method syntax and transfer the split coin to the recipient using transfer::public_transfer. Include a test.",
-    "package_name": "payment",
-    "check": "test",
+    "id": "one-time-ticket",
+    "prompt": "Write a Move module for an event ticket that can be used exactly once. After use, the ticket should be destroyed. The ticket should not be transferable by the holder (key only, no store).",
+    "package_name": "ticket",
+    "check": "build",
     "expected_result": "pass",
-    "forbidden_patterns": [
-      "coin::split(",
-      "coin::value("
-    ],
-    "sources": [
-      "https://move-book.com/move-basics/vector"
-    ]
+    "sources": ["https://move-book.com/storage/key-ability"]
+  },
+  {
+    "id": "witness-gated-mint",
+    "prompt": "Build a regulated coin on Sui using the Witness pattern. Only the module that provides the witness type should be able to mint, burn, and transfer. Write the Move code.",
+    "package_name": "regulated_coin",
+    "check": "build",
+    "expected_result": "pass",
+    "sources": ["https://move-book.com/programmability/witness-pattern"]
   }
 ]

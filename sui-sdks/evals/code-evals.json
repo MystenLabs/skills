@@ -1,29 +1,29 @@
 [
   {
-    "id": "grpc-client-setup",
-    "prompt": "Write a TypeScript file that sets up a Sui client. Import SuiGrpcClient from '@mysten/sui/grpc'. Import Ed25519Keypair from '@mysten/sui/keypairs/ed25519'. Create a client connected to devnet with baseUrl. Create a random keypair, print its address using toSuiAddress(), and query the balance using client.getBalance({ owner: address }).",
-    "package_name": "client_setup",
+    "id": "transfer-sui-e2e",
+    "prompt": "Write a complete TypeScript script that creates a SuiGrpcClient, builds a transaction to transfer 0.1 SUI to a recipient using coinWithBalance and transferObjects, signs and executes it with a keypair, checks for FailedTransaction, and prints the digest.",
+    "package_name": "transfer_sui",
     "check": "build",
     "expected_result": "pass",
-    "forbidden_patterns": ["SuiClient", "@mysten/sui.js", "getFullnodeUrl", "new SuiClient"],
+    "forbidden_patterns": ["@mysten/sui.js", "SuiClient", "getFullnodeUrl", "TransactionBlock"],
     "sources": ["https://sdk.mystenlabs.com/typescript"]
   },
   {
-    "id": "keypair-from-private-key",
-    "prompt": "Write a TypeScript file that loads a keypair from a Bech32-encoded private key. Import decodeSuiPrivateKey from '@mysten/sui/cryptography', import Ed25519Keypair from '@mysten/sui/keypairs/ed25519'. Decode the private key with decodeSuiPrivateKey, check the scheme is 'ED25519', create the keypair with Ed25519Keypair.fromSecretKey(secretKey), and print the address.",
-    "package_name": "keypair_decode",
-    "check": "build",
-    "expected_result": "pass",
-    "forbidden_patterns": ["@mysten/sui.js", "fromHEX"],
-    "sources": ["https://sdk.mystenlabs.com/typescript/cryptography/keypairs"]
-  },
-  {
-    "id": "sign-and-execute-transaction",
-    "prompt": "Write a TypeScript file that creates a SuiGrpcClient, builds a Transaction that transfers SUI using coinWithBalance, then signs and executes it using keypair.signAndExecuteTransaction({ transaction, client, include: { effects: true } }). Check the result for FailedTransaction and print the digest on success.",
-    "package_name": "sign_execute",
+    "id": "gasless-usdc-transfer",
+    "prompt": "Write a TypeScript script that sends USDC using gasless stablecoin transfers on Sui mainnet. Use balance::send_funds via a moveCall with the USDC type argument. The transaction should have zero gas cost. Use SuiGrpcClient from @mysten/sui/grpc.",
+    "package_name": "gasless_usdc",
     "check": "build",
     "expected_result": "pass",
     "forbidden_patterns": ["@mysten/sui.js", "SuiClient", "getFullnodeUrl"],
-    "sources": ["https://sdk.mystenlabs.com/typescript"]
+    "sources": ["https://docs.sui.io/develop/transaction-payment/gasless-stablecoin-transfers"]
+  },
+  {
+    "id": "address-balance-send-receive",
+    "prompt": "Write a TypeScript script that demonstrates sending SUI to an address balance (not as a Coin object) using balance::send_funds, and then withdrawing from the address balance using coin::redeem_funds. Use SuiGrpcClient and Transaction from the Sui SDK.",
+    "package_name": "address_balance",
+    "check": "build",
+    "expected_result": "pass",
+    "forbidden_patterns": ["@mysten/sui.js", "SuiClient", "getFullnodeUrl"],
+    "sources": ["https://docs.sui.io/onchain-finance/choose-payments-model"]
   }
 ]
