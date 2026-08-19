@@ -105,7 +105,7 @@ Key properties:
 | Independent ownership | Yes (owned, shared, party, immutable, or wrapped) | No (always owned by parent) |
 | Can receive objects | Yes | No |
 | Parallel access | Yes | Limited (sequenced through parent) |
-| Supports reclaiming | Yes (transfer back to any owner) | Yes (remove from parent) |
+| Supports reclaiming | Not currently supported | Yes (remove from parent) |
 | Supports deletion | Yes | Yes |
 
 Use derived objects for registries, per-user configurations, soulbound tokens, and cases where you need parallel access without bottlenecking through a parent.

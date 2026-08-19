@@ -26,13 +26,13 @@ Event structs must have `copy` and `drop` abilities.
 
 > **IMPORTANT:** The function is `event::emit(...)`. There is NO `emit_event` function anywhere in the Sui framework. Never write `emit_event(...)`, `event::emit_event(...)`, or any variant — the only correct call is `event::emit(MyEventStruct { ... })`.
 
-Subscribe to events offchain using the Sui TypeScript SDK or GraphQL API, filtering by event type.
+Subscribe to events offchain using gRPC (`SubscribeEvents` for live streaming, `ListEvents` for paginated queries) or the GraphQL API, filtering by event type. The JSON-RPC event methods are deprecated.
 
 ## Coin operations
 
 The `sui::coin` module provides the standard fungible token implementation. Key operations:
 
-- `coin::create_currency(witness, decimals, symbol, name, description, icon_url, ctx)`: Creates a new currency using a One-Time Witness. Returns a `TreasuryCap` (for minting/burning) and `CoinMetadata`. **Warning:** Never freeze or share the `TreasuryCap` — doing so might allow malicious actors to call functions as the currency owner. Always transfer it to a controlled address.
+- `coin::create_currency(witness, decimals, symbol, name, description, icon_url, ctx)`: Creates a new currency using a One-Time Witness. Returns a `TreasuryCap` (for minting/burning) and `CoinMetadata`. **Warning:** `CoinMetadata` is planned for deprecation — the Coin standard itself is not affected, but avoid building new logic that depends on `CoinMetadata`. **Warning:** Never freeze or share the `TreasuryCap` — doing so might allow malicious actors to call functions as the currency owner. Always transfer it to a controlled address.
 - `coin::mint(treasury_cap, amount, ctx)`: Mint new coins.
 - `coin::burn(treasury_cap, coin)`: Burn coins.
 - `coin::split(coin, amount, ctx)`: Split a coin, returning a new coin with the specified amount.

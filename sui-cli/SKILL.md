@@ -47,7 +47,7 @@ Every transaction on Sui requires SUI tokens to pay gas. The total gas cost is:
 - **Storage cost:** The cost of storing new or expanded objects onchain. You pay for the bytes your objects occupy.
 - **Storage rebate:** When a transaction deletes objects or reduces their size, you receive a rebate for the storage freed. This incentivizes cleaning up unused state.
 
-The gas budget (`--gas-budget`) sets the maximum you are willing to pay. If the transaction exceeds the budget, it aborts. On Testnet and Devnet, tokens are free through faucets (see the `sui-client` skill for faucet methods). Gas prices can vary per epoch; query the current gas price through the RPC.
+The gas budget (`--gas-budget`) sets the maximum you are willing to pay. If the transaction exceeds the budget, it fails and a portion of the gas budget is still charged. On Testnet and Devnet, tokens are free through faucets (see the `sui-client` skill for faucet methods). Gas prices can vary per epoch; query the current gas price through the RPC.
 
 ## Epochs
 

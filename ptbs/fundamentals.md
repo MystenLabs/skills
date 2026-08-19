@@ -52,7 +52,7 @@ Commands reference values via four `Argument` kinds:
 - **`Input(u16)`** — input at index `u16` in the `inputs` vector.
 - **`GasCoin`** — the SUI coin paying for gas. **Always present in every transaction**, even when using address-balance payment. When paying with address balances, an ephemeral gas coin is created for the transaction and deleted at the end if not transferred. Special rules:
   - Can be used by `&` or `&mut` anywhere.
-  - Can be passed by value **only** to `TransferObjects` (or `sui::coin::send_funds` once available).
+  - Can be passed by value **only** to `TransferObjects` or `sui::coin::send_funds`.
   - To get an owned `Coin<SUI>` from the gas coin, split it first: `SplitCoins(GasCoin, [amount])`.
   - In sponsored transactions, the **sender** can still use the GasCoin (which belongs to the sponsor). Sponsors should validate submitted PTBs to ensure the gas coin is not misused.
 - **`Result(u16)`** — shorthand for `NestedResult(i, 0)`. Valid only when command `i` has exactly one return value.
@@ -107,7 +107,7 @@ For each argument position:
 
 - Every value created or returned by a Move command must be **consumed** by end of tx: transferred, destroyed, or passed into another command. Exception: values whose type has `drop` can be left to drop.
 - Shared objects **cannot** be transferred or frozen at tx end (the ops "succeed" during execution but the tx fails at commit).
-- Shared objects can be wrapped or converted to dynamic fields mid-execution, but must be re-shared or deleted before commit.
+- Shared objects **cannot** be wrapped or converted to dynamic fields mid-execution — doing so causes the transaction to fail. Shared objects must be re-shared or deleted before commit.
 - Gas coin returns to its owner; remaining budget refunded.
 
 ### Hot-potato cliques (non-public `entry` calls)

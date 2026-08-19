@@ -162,7 +162,7 @@ When using a concrete client like `SuiGrpcClient`, call methods directly:
 ```ts
 await client.getObject({ objectId, include: { content: true } });
 await client.getObjects({ objectIds: [...], include: { content: true } });
-await client.listOwnedObjects({ owner, filter: { StructType: '0xpkg::nft::NFT' }, limit: 50 });
+await client.listOwnedObjects({ owner, type: '0xpkg::nft::NFT', limit: 50 });
 await client.listCoins({ owner, coinType, limit: 50 });
 await client.listBalances({ owner });
 await client.getBalance({ owner, coinType: '0x2::sui::SUI' });
