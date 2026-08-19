@@ -40,7 +40,7 @@ If unsure about any detail, fetch the relevant page before answering. Do not gue
 ### contract-info — Contract Addresses, Coins, and Pools
 **Path:** `contract-info.md`
 **Load when:** the user needs mainnet package IDs, pool object IDs, supported coin types and decimals, pool fee configurations, or registry addresses.
-**Covers:** current and historical package versions, all supported tokens with type addresses and decimals, all 24 mainnet trading pools with IDs and fee tiers.
+**Covers:** current and historical package versions, all supported tokens with type addresses and decimals, all 23 mainnet trading pools with IDs and fee tiers.
 
 ---
 
@@ -69,7 +69,7 @@ If unsure about any detail, fetch the relevant page before answering. Do not gue
 
 - **BalanceManager.** A shared object that holds a user's balances across all pools. Required for all trading operations (except direct swaps). Supports delegated access via TradeCap, DepositCap, and WithdrawCap.
 
-- **DEEP token.** The protocol's governance and fee token. Users stake DEEP for reduced trading fees and can propose/vote on pool parameters (taker/maker fees, stake requirements). Fees can be paid in DEEP (default) or in the input token (at a 25% premium).
+- **DEEP token.** The protocol's governance and fee token. Users stake DEEP for reduced taker fees (staking can halve taker fees when stake and volume thresholds are met) and can propose/vote on pool parameters (taker/maker fees, stake requirements). Fees can be paid in DEEP (default) or in the input token (at a 25% premium).
 
 - **Whitelisted pools.** DEEP/SUI and DEEP/USDC pools have 0% taker and maker fees, serving as gateway liquidity for the DEEP token.
 

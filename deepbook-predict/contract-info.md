@@ -48,6 +48,16 @@ Monitor these four Sui events for real-time oracle state updates:
 | `OracleSettled` | Oracle settled at expiry |
 | `OracleActivated` | New oracle activated |
 
+## TypeScript SDK
+
+The `@mysten/deepbook-predict` npm package (v0.2.1) provides a dedicated TypeScript SDK for interacting with the Predict protocol:
+
+```bash
+npm install @mysten/deepbook-predict
+```
+
+This SDK wraps the raw Move calls into higher-level helpers for manager creation, minting, redemption, and LP operations. You can also build transactions directly using `@mysten/sui` for lower-level control.
+
 ## Source repository
 
 The Predict contracts are in the `predict-testnet-4-16` branch of the [deepbookv3 repository](https://github.com/MystenLabs/deepbookv3). Key packages:

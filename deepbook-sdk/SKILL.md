@@ -35,7 +35,7 @@ Do not guess or extrapolate from other SDKs or libraries.
 ### client-setup — Client Initialization and BalanceManager Lifecycle
 **Path:** `client-setup.md`
 **Load when:** setting up a DeepBook client, creating or reusing a BalanceManager, configuring the SDK for testnet or mainnet, or understanding the three-tier setup pattern (read-only, basic, advanced).
-**Covers:** SDK installation, `DeepBookClient` construction, `SuiGrpcClient` usage, keypair setup, BalanceManager creation and reuse, deposits and withdrawals, the sandbox setup patterns.
+**Covers:** SDK installation, `SuiGrpcClient` construction with `$extend(deepbook({...}))`, keypair setup, BalanceManager creation and reuse, deposits and withdrawals, the sandbox setup patterns.
 
 ### trading — Orders, Swaps, and Order Lifecycle
 **Path:** `trading.md`
@@ -72,7 +72,7 @@ Do not guess or extrapolate from other SDKs or libraries.
 
 ### Key concepts
 
-- **DeepBookClient.** The SDK extends a `SuiGrpcClient` with DeepBook-specific transaction builders. Methods follow a curried pattern: `client.deepbook.method({ params })(tx)` where `tx` is a `Transaction` object.
+- **DeepBook client via `$extend`.** The SDK uses the `deepbook` function (imported from `@mysten/deepbook-v3`) with `SuiGrpcClient.$extend(deepbook({...}))` to add DeepBook-specific transaction builders. Methods follow a curried pattern under two namespaces: `client.deepbook.deepBook.method({ params })(tx)` for trading operations and `client.deepbook.balanceManager.method({ params })(tx)` for balance management, where `tx` is a `Transaction` object.
 
 - **Pool and coin keys.** The SDK references pools and coins by string keys (e.g., `"DEEP_SUI"`, `"SUI"`) rather than raw on-chain addresses. The SDK maps these to the correct addresses per network.
 

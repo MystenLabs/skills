@@ -28,7 +28,7 @@
         "The response mentions 80% as the typical optimal utilization",
         "The response shows the dramatic rate jump (e.g., 12% at 80% to 62% at 90% for USDC)",
         "The response explains supply rate = borrowRate × utilization × (1 - protocolSpread)",
-        "The response mentions that interest accrues continuously, causing debt to grow even with stable prices"
+        "The response mentions that interest accrues at event-driven intervals (not continuously), causing debt to grow over time even with stable prices"
       ],
       "sources": [
         "https://docs.sui.io/onchain-finance/deepbook/deepbook-margin/contract-information/interest-rates"

@@ -5,7 +5,7 @@
 DeepBook supports two fee payment methods per order, controlled by the `payWithDeep` flag:
 
 - **DEEP (default):** The pool prices fees using its on-chain DEEP conversion rate. This is the cheaper option.
-- **Input token:** The pool charges a 25% premium over DEEP-denominated fees (approximately 20% more expensive than DEEP).
+- **Input token:** The pool charges a 25% premium over DEEP-denominated fees.
 
 Paying in DEEP requires the pool to have a DEEP price point. Established pools have one. A brand-new permissionless pool can only charge input-token fees until an operator adds a price point from a reference pool.
 
@@ -67,7 +67,7 @@ Two methods:
 Use `getQuantityOut` to simulate a trade and determine the exact DEEP needed for fees:
 
 ```typescript
-const result = await client.deepbook.getQuantityOut({
+const result = await client.deepbook.deepBook.getQuantityOut({
   poolKey: "SUI_USDC",
   baseQuantity: 10,
   quoteQuantity: 0,
@@ -79,7 +79,7 @@ const result = await client.deepbook.getQuantityOut({
 
 ```typescript
 const tx = new Transaction();
-client.deepbook.depositIntoManager("MANAGER_1", "DEEP", 100)(tx);
+client.deepbook.balanceManager.depositIntoManager("MANAGER_1", "DEEP", 100)(tx);
 await signAndExecute(tx);
 ```
 
@@ -89,13 +89,17 @@ If you have SUI but no DEEP, swap on the whitelisted DEEP/SUI pool (0% fees):
 
 ```typescript
 const tx = new Transaction();
-client.deepbook.swapExactQuoteForBase({
-  poolKey: "DEEP_SUI",
-  amount: 1,            // SUI to spend
-  deepAmount: 0,        // whitelisted pool — no DEEP needed for fees
-  minOut: 0,
-})(tx);
+const [baseCoin, quoteCoin, deepCoin] = tx.add(
+  client.deepbook.deepBook.swapExactQuoteForBase({
+    poolKey: "DEEP_SUI",
+    amount: 1,            // SUI to spend
+    deepAmount: 0,        // whitelisted pool — no DEEP needed for fees
+    minOut: 0,
+  })
+);
 
+// Transfer returned coins back to sender — required or coins are destroyed
+tx.transferObjects([baseCoin, quoteCoin, deepCoin], keypair.toSuiAddress());
 await signAndExecute(tx);
 ```
 

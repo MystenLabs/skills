@@ -100,6 +100,7 @@ Do not guess or extrapolate from other protocols.
 3. **Do not borrow from a pool and trade in the same pool within one transaction.** The borrowed funds are not available for trading, and the combined operations can fail.
 4. **Use `generate_proof_as_owner` for owner operations** and `generate_proof_as_trader` for delegated operations via TradeCap.
 5. **Cap limit: 1,000 total capabilities per BalanceManager** (across TradeCap, DepositCap, and WithdrawCap combined).
+6. **Use `_v2` variants for functions that have them.** The unsuffixed originals (e.g., `new_with_custom_owner_caps`) are deprecated stubs that abort. Always use the `_v2` suffix (e.g., `new_with_custom_owner_caps_v2`).
 
 ### Common mistakes
 
@@ -107,3 +108,5 @@ Do not guess or extrapolate from other protocols.
 - **Forgetting to return the FlashLoan.** The transaction compiles but aborts at runtime because the hot potato cannot be dropped.
 - **Trading in the same pool you borrowed from.** Flash-loaned funds are locked in the FlashLoan object and unavailable for order settlement, causing the trade to fail.
 - **Using `generate_proof_as_owner` from a non-owner address.** Only the BalanceManager owner can generate an owner proof. Delegated traders must use `generate_proof_as_trader` with a valid TradeCap.
+- **Forgetting `ctx` on `generate_proof_as_trader`.** The function takes `(balance_manager, trade_cap, ctx)` — omitting `ctx: &TxContext` causes a compilation error.
+- **Calling deprecated unsuffixed functions.** Functions like `new_with_custom_owner_caps` are stubs that `abort 1337`. Use the `_v2` variant instead.

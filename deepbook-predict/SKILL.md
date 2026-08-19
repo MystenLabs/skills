@@ -19,9 +19,9 @@ description: >
 
 > **MCP tool:** When available in your environment, also query the Sui documentation MCP server (`https://sui.mcp.kapa.ai`) for up-to-date answers. Use it for verification and for details not covered by these reference files.
 
-> **Source constraint:** All information in this skill is sourced exclusively from [docs.sui.io](https://docs.sui.io/onchain-finance/deepbook/deepbook-predict) and the [deepbookv3 repository](https://github.com/MystenLabs/deepbookv3) (`predict-testnet-4-16` branch). When extending or updating this skill, only pull from these sources. Do not use third-party blogs, tutorials, or unofficial documentation.
+> **Source constraint:** All information in this skill is sourced exclusively from [docs.sui.io](https://docs.sui.io/onchain-finance/deepbook/deepbook-predict), the [deepbookv3 repository](https://github.com/MystenLabs/deepbookv3) (`predict-testnet-4-16` branch), and the [`@mysten/deepbook-predict` npm package](https://www.npmjs.com/package/@mysten/deepbook-predict). When extending or updating this skill, only pull from these sources. Do not use third-party blogs, tutorials, or unofficial documentation.
 
-DeepBook Predict is an expiry-based prediction market protocol on Sui where applications establish markets and users take binary or vertical range positions priced against oracle data. There is no dedicated TypeScript SDK — developers build transactions directly using the Sui TypeScript SDK (`@mysten/sui`). Common mistakes include treating Predict as a perpetual market (it is expiry-based), minting and depositing in the same transaction as PredictManager creation (the manager must be shared first), and using hardcoded testnet IDs as permanent addresses.
+DeepBook Predict is an expiry-based prediction market protocol on Sui where applications establish markets and users take binary or vertical range positions priced against oracle data. The `@mysten/deepbook-predict` npm package (v0.2.1) provides a dedicated TypeScript SDK for interacting with the protocol; alternatively, developers can build transactions directly using the Sui TypeScript SDK (`@mysten/sui`). Common mistakes include treating Predict as a perpetual market (it is expiry-based), minting and depositing in the same transaction as PredictManager creation (the manager must be shared first), and using hardcoded testnet IDs as permanent addresses. Smart contracts are currently on Testnet and may change before Mainnet deployment.
 
 This skill routes to focused reference files. Load only the ones relevant to the current task.
 
@@ -92,7 +92,7 @@ Do not guess or extrapolate from other prediction market protocols.
 
 - **DUSDC.** The quote asset used for all Predict operations. Obtained via the testnet token request form.
 
-- **No dedicated SDK.** Build transactions directly using `@mysten/sui`. There is no `@mysten/deepbook-predict` package.
+- **Dedicated SDK available.** The `@mysten/deepbook-predict` npm package (v0.2.1) provides a dedicated TypeScript SDK for interacting with DeepBook Predict. Install via `npm install @mysten/deepbook-predict`. You can also build transactions directly using `@mysten/sui` if you prefer lower-level control.
 
 ### Rules
 

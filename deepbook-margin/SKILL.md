@@ -88,7 +88,7 @@ Do not guess or extrapolate from other leverage protocols.
   - **Target liquidation risk ratio** — liquidation restores position to this level
   - **Liquidation risk ratio** — permissionless liquidation triggered at or below this
 
-- **Kinked interest model.** Borrow rates rise gently below optimal utilization (typically 80%), then spike sharply above it. Interest accrues continuously, causing debt to grow even when prices are stable.
+- **Kinked interest model.** Borrow rates rise gently below optimal utilization (typically 80%), then spike sharply above it. Interest accrues at event-driven intervals (whenever pool state changes), not continuously — but the effect is that debt grows over time even when prices are stable.
 
 - **Permissionless liquidation.** Once risk ratio reaches the liquidation threshold, anyone can liquidate the position. There is no grace period. Liquidators receive collateral rewards (typically 2%) and the pool takes additional rewards (typically 3%).
 
@@ -103,7 +103,7 @@ Do not guess or extrapolate from other leverage protocols.
 
 ### Common mistakes
 
-- **Ignoring interest accrual.** Debt grows continuously. A position can drift toward liquidation purely from accumulated interest, even with stable prices.
+- **Ignoring interest accrual.** Debt grows at event-driven intervals (whenever pool state changes — borrows, repays, liquidations). A position can drift toward liquidation purely from accumulated interest, even with stable prices.
 - **Not monitoring risk ratio.** There is no grace period before liquidation. Integrators must surface the risk ratio and its distance to the liquidation threshold to users.
 - **Creating new MarginManagers per run.** This fragments collateral. Use `findMarginManagerId` to discover existing managers before creating new ones.
 - **Borrowing and trading in the same pool without oracle freshness checks.** If the Pyth price exceeds the pool's maximum age, the operation reverts.

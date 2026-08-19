@@ -141,14 +141,31 @@ public fun swap_exact_quote_for_base<BaseAsset, QuoteAsset>(
 public fun swap_exact_base_for_quote_with_manager<BaseAsset, QuoteAsset>(
     pool: &mut Pool<BaseAsset, QuoteAsset>,
     balance_manager: &mut BalanceManager,
-    trade_proof: &TradeProof,
+    trade_cap: &TradeCap,
+    deposit_cap: &DepositCap,
+    withdraw_cap: &WithdrawCap,
     base_in: Coin<BaseAsset>,
-    deep_in: Coin<DEEP>,
     min_quote_out: u64,
     clock: &Clock,
     ctx: &mut TxContext,
 ): (Coin<BaseAsset>, Coin<QuoteAsset>)
 ```
+
+```move
+public fun swap_exact_quote_for_base_with_manager<BaseAsset, QuoteAsset>(
+    pool: &mut Pool<BaseAsset, QuoteAsset>,
+    balance_manager: &mut BalanceManager,
+    trade_cap: &TradeCap,
+    deposit_cap: &DepositCap,
+    withdraw_cap: &WithdrawCap,
+    quote_in: Coin<QuoteAsset>,
+    min_base_out: u64,
+    clock: &Clock,
+    ctx: &mut TxContext,
+): (Coin<BaseAsset>, Coin<QuoteAsset>)
+```
+
+The `_with_manager` swap variants take three capability references (`TradeCap`, `DepositCap`, `WithdrawCap`) instead of a `TradeProof` and do not require a separate `deep_in` coin — fees are handled through the BalanceManager.
 
 ### Swap simulation
 

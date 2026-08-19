@@ -1,17 +1,18 @@
 # Testnet Integration Workflow
 
-Complete workflow for interacting with DeepBook Predict on Sui Testnet using the Sui TypeScript SDK. There is no dedicated Predict SDK — build transactions directly.
+Complete workflow for interacting with DeepBook Predict on Sui Testnet. You can use the dedicated `@mysten/deepbook-predict` SDK (v0.2.1) or build transactions directly with `@mysten/sui`. The examples below show raw Move calls; the `@mysten/deepbook-predict` package wraps these into higher-level helpers.
 
 ## Prerequisites
 
 - Sui TypeScript SDK: `npm install @mysten/sui`
+- DeepBook Predict SDK (optional): `npm install @mysten/deepbook-predict`
 - Testnet SUI for gas (from the Sui faucet)
 - DUSDC as quote asset (from the DeepBook Predict testnet token request form)
 
 ## Configuration
 
 ```typescript
-import { SuiGrpcClient } from "@mysten/sui/client";
+import { SuiGrpcClient } from "@mysten/sui/grpc";
 import { Ed25519Keypair } from "@mysten/sui/keypairs/ed25519";
 import { Transaction } from "@mysten/sui/transactions";
 
@@ -20,7 +21,7 @@ const PREDICT_OBJECT_ID = "0xc8736204d12f0a7277c86388a68bf8a194b0a14c5538ad13f22
 const QUOTE_TYPE = "0xe95040085976bfd54a1a07225cd46c8a2b4e8e2b6732f140a0fc49850ba73e1a::dusdc::DUSDC";
 const SERVER_URL = "https://predict-server.testnet.mystenlabs.com";
 
-const client = new SuiGrpcClient({ url: "https://fullnode.testnet.sui.io:443" });
+const client = new SuiGrpcClient({ network: "testnet" });
 const keypair = Ed25519Keypair.fromSecretKey(/* your key */);
 ```
 
@@ -34,12 +35,14 @@ The PredictManager is a shared account that holds DUSDC and tracks positions. It
 function createManager(): Transaction {
     const tx = new Transaction();
     tx.moveCall({
-        target: `${PACKAGE_ID}::predict_manager::create_manager`,
-        arguments: [tx.object(PREDICT_OBJECT_ID)],
+        target: `${PACKAGE_ID}::predict::create_manager`,
+        arguments: [],
     });
     return tx;
 }
 ```
+
+> **Note:** `predict::create_manager` takes no arguments besides the transaction context (which the runtime supplies automatically). The function is in the `predict` module, not `predict_manager`.
 
 Extract the PredictManager object ID from the transaction's `objectChanges` (look for the created shared object with type containing `PredictManager`). Persist this ID for subsequent transactions.
 
@@ -94,8 +97,10 @@ function mintBinaryUp(
     const tx = new Transaction();
     // Build market key for "up" direction
     const marketKey = tx.moveCall({
-        target: `${PACKAGE_ID}::market_key::new_binary_up`,
+        target: `${PACKAGE_ID}::market_key::up`,
         arguments: [
+            tx.pure.id(oracleId),
+            tx.pure.u64(expiry),
             tx.pure.u64(strike),
         ],
     });
@@ -123,8 +128,12 @@ Pays full notional if settlement price is at or below the strike:
 ```typescript
 // Same as above but use:
 const marketKey = tx.moveCall({
-    target: `${PACKAGE_ID}::market_key::new_binary_down`,
-    arguments: [tx.pure.u64(strike)],
+    target: `${PACKAGE_ID}::market_key::down`,
+    arguments: [
+        tx.pure.id(oracleId),
+        tx.pure.u64(expiry),
+        tx.pure.u64(strike),
+    ],
 });
 ```
 
@@ -141,21 +150,22 @@ function mintRange(
     quantity: number,
 ): Transaction {
     const tx = new Transaction();
-    const marketKey = tx.moveCall({
-        target: `${PACKAGE_ID}::market_key::new_range`,
+    const rangeKey = tx.moveCall({
+        target: `${PACKAGE_ID}::range_key::new`,
         arguments: [
+            tx.pure.id(oracleId),
             tx.pure.u64(lowerStrike),
             tx.pure.u64(higherStrike),
         ],
     });
     tx.moveCall({
-        target: `${PACKAGE_ID}::predict::mint`,
+        target: `${PACKAGE_ID}::predict::mint_range`,
         typeArguments: [QUOTE_TYPE],
         arguments: [
             tx.object(PREDICT_OBJECT_ID),
             tx.object(managerId),
             tx.object(oracleId),
-            marketKey,
+            rangeKey,
             tx.pure.u64(quantity),
             tx.object("0x6"),
         ],
@@ -205,42 +215,52 @@ After the oracle settles, winning positions pay full notional and losing positio
 ### Supply DUSDC for PLP
 
 ```typescript
-function supplyLiquidity(managerId: string, amount: number): Transaction {
+function supplyLiquidity(managerId: string, coinId: string, amount: number): Transaction {
     const tx = new Transaction();
-    tx.moveCall({
+    // Split off the exact amount to supply as a Coin object
+    const [coin] = tx.splitCoins(tx.object(coinId), [amount]);
+    // supply takes a Coin<QUOTE> and returns a Coin<PLP>
+    const plpCoin = tx.moveCall({
         target: `${PACKAGE_ID}::predict::supply`,
         typeArguments: [QUOTE_TYPE],
         arguments: [
             tx.object(PREDICT_OBJECT_ID),
-            tx.object(managerId),
-            tx.pure.u64(amount),
+            coin,
             tx.object("0x6"),
         ],
     });
+    // Transfer the returned PLP coin to the caller
+    tx.transferObjects([plpCoin], keypair.toSuiAddress());
     return tx;
 }
 ```
 
-Initial deposits are valued 1:1 (1 DUSDC = 1 PLP). Subsequent deposits are proportional to the vault's current NAV.
+`supply` takes a `Coin<QUOTE>` (not a u64 amount) and returns a `Coin<PLP>`. Initial deposits are valued 1:1 (1 DUSDC = 1 PLP). Subsequent deposits are proportional to the vault's current NAV.
 
 ### Withdraw PLP
 
 ```typescript
-function withdrawLiquidity(managerId: string, plpAmount: number): Transaction {
+function withdrawLiquidity(plpCoinId: string, amount: number): Transaction {
     const tx = new Transaction();
-    tx.moveCall({
+    // Split off the exact PLP amount to withdraw as a Coin object
+    const [plpCoin] = tx.splitCoins(tx.object(plpCoinId), [amount]);
+    // withdraw takes a Coin<PLP> and returns a Coin<QUOTE>
+    const quoteCoin = tx.moveCall({
         target: `${PACKAGE_ID}::predict::withdraw`,
         typeArguments: [QUOTE_TYPE],
         arguments: [
             tx.object(PREDICT_OBJECT_ID),
-            tx.object(managerId),
-            tx.pure.u64(plpAmount),
+            plpCoin,
             tx.object("0x6"),
         ],
     });
+    // Transfer the returned DUSDC coin to the caller
+    tx.transferObjects([quoteCoin], keypair.toSuiAddress());
     return tx;
 }
 ```
+
+`withdraw` takes a `Coin<PLP>` (not a u64 amount) and returns a `Coin<QUOTE>` (DUSDC).
 
 Withdrawals are subject to:
 - Sufficient available liquidity after covering maximum payout obligations
@@ -257,3 +277,13 @@ Before relying on the integration:
 5. Test range minting with valid strike pairs
 6. Confirm redemption events and payout deposits
 7. Test LP supply and withdrawal flows
+
+## Alternative: Using the `@mysten/deepbook-predict` SDK
+
+Instead of building raw Move calls as shown above, you can use the dedicated `@mysten/deepbook-predict` package (v0.2.1), which wraps these operations into higher-level helpers:
+
+```bash
+npm install @mysten/deepbook-predict
+```
+
+The SDK provides convenience methods for manager creation, minting, redemption, and LP operations. Refer to the package documentation for the latest API surface. Note that the smart contracts are on Testnet and subject to change before Mainnet deployment.

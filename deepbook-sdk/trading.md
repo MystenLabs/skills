@@ -9,16 +9,18 @@ Limit orders require a BalanceManager with deposited funds. Prices and quantitie
 A `POST_ONLY` order guarantees the order rests on the book as a maker. If it would cross the spread and fill immediately, it is silently rejected — no order is placed and no error is thrown.
 
 ```typescript
+import { OrderType, SelfMatchingOptions } from "@mysten/deepbook-v3";
+
 const tx = new Transaction();
-client.deepbook.placeLimitOrder({
+client.deepbook.deepBook.placeLimitOrder({
   poolKey: "DEEP_SUI",
   balanceManagerKey: "MANAGER_1",
   clientOrderId: "123",         // must be numeric string
   price: 0.03,                  // below market for a bid
   quantity: 100,                // in base asset units
   isBid: true,
-  orderType: "POST_ONLY",
-  selfMatchingOption: "CANCEL_TAKER",
+  orderType: OrderType.POST_ONLY,
+  selfMatchingOption: SelfMatchingOptions.CANCEL_TAKER,
 })(tx);
 
 await signAndExecute(tx);
@@ -30,14 +32,14 @@ A `NO_RESTRICTION` order fills what it can immediately and rests the remainder.
 
 ```typescript
 const tx = new Transaction();
-client.deepbook.placeLimitOrder({
+client.deepbook.deepBook.placeLimitOrder({
   poolKey: "DEEP_SUI",
   balanceManagerKey: "MANAGER_1",
   clientOrderId: "124",
   price: 0.05,                  // at or above market for a bid to cross
   quantity: 50,
   isBid: true,
-  orderType: "NO_RESTRICTION",
+  orderType: OrderType.NO_RESTRICTION,
 })(tx);
 
 await signAndExecute(tx);
@@ -62,13 +64,13 @@ Market orders fill against existing liquidity. On localnet/sandbox, the market m
 
 ```typescript
 const tx = new Transaction();
-client.deepbook.placeMarketOrder({
+client.deepbook.deepBook.placeMarketOrder({
   poolKey: "DEEP_SUI",
   balanceManagerKey: "MANAGER_1",
   clientOrderId: "125",
   quantity: 10,
   isBid: true,
-  selfMatchingOption: "CANCEL_TAKER",
+  selfMatchingOption: SelfMatchingOptions.CANCEL_TAKER,
 })(tx);
 
 // Retry pattern for sandbox market maker rebalance window
@@ -95,14 +97,17 @@ Swaps operate directly on wallet `Coin` objects without a BalanceManager. They p
 
 ```typescript
 const tx = new Transaction();
-client.deepbook.swapExactQuoteForBase({
-  poolKey: "DEEP_SUI",
-  amount: 1,            // quote amount (SUI)
-  deepAmount: 0.1,      // DEEP for fees (overestimate — unused is returned)
-  minOut: 0,            // minimum base received
-})(tx);
+const [baseCoin, quoteCoin, deepCoin] = tx.add(
+  client.deepbook.deepBook.swapExactQuoteForBase({
+    poolKey: "DEEP_SUI",
+    amount: 1,            // quote amount (SUI)
+    deepAmount: 0.1,      // DEEP for fees (overestimate — unused is returned)
+    minOut: 0,            // minimum base received
+  })
+);
 
-// Transfer returned coins back to sender
+// Transfer returned coins back to sender — required or coins are destroyed
+tx.transferObjects([baseCoin, quoteCoin, deepCoin], keypair.toSuiAddress());
 await signAndExecute(tx);
 ```
 
@@ -117,14 +122,18 @@ await signAndExecute(tx);
 
 ```typescript
 const tx = new Transaction();
-client.deepbook.swapExactBaseForQuote({
-  poolKey: "DEEP_SUI",
-  balanceManagerKey: "MANAGER_1",
-  amount: 100,          // base amount
-  deepAmount: 1,
-  minOut: 0,
-})(tx);
+const [baseCoin, quoteCoin, deepCoin] = tx.add(
+  client.deepbook.deepBook.swapExactBaseForQuote({
+    poolKey: "DEEP_SUI",
+    balanceManagerKey: "MANAGER_1",
+    amount: 100,          // base amount
+    deepAmount: 1,
+    minOut: 0,
+  })
+);
 
+// Transfer returned coins back to sender
+tx.transferObjects([baseCoin, quoteCoin, deepCoin], keypair.toSuiAddress());
 await signAndExecute(tx);
 ```
 
@@ -133,7 +142,7 @@ await signAndExecute(tx);
 Use `getQuantityOut` to simulate a swap and determine the exact DEEP required for fees before executing:
 
 ```typescript
-const result = await client.deepbook.getQuantityOut({
+const result = await client.deepbook.deepBook.getQuantityOut({
   poolKey: "DEEP_SUI",
   baseQuantity: 100,
   quoteQuantity: 0,
@@ -145,12 +154,8 @@ const result = await client.deepbook.getQuantityOut({
 ### Order book depth
 
 ```typescript
-const { bids, asks } = await client.deepbook.getLevel2Range(
-  "DEEP_SUI",
-  0.01,    // min price
-  1.0,     // max price
-  true     // isBid
-);
+const { bid_prices, bid_quantities, ask_prices, ask_quantities } =
+  await client.deepbook.getLevel2TicksFromMid("DEEP_SUI", 100); // depth: number of ticks from mid
 ```
 
 ### Mid price calculation
@@ -158,14 +163,12 @@ const { bids, asks } = await client.deepbook.getLevel2Range(
 Calculate mid price from the best bid and ask:
 
 ```typescript
-// Get best bid
-const bids = await client.deepbook.getLevel2Range("DEEP_SUI", 0, 999999, true);
-// Get best ask
-const asks = await client.deepbook.getLevel2Range("DEEP_SUI", 0, 999999, false);
+const { bid_prices, ask_prices } =
+  await client.deepbook.getLevel2TicksFromMid("DEEP_SUI", 1); // depth of 1 for best bid/ask
 
-if (bids.length > 0 && asks.length > 0) {
-  const bestBid = bids[0].price;
-  const bestAsk = asks[0].price;
+if (bid_prices.length > 0 && ask_prices.length > 0) {
+  const bestBid = bid_prices[0];
+  const bestAsk = ask_prices[0];
   const midPrice = (bestBid + bestAsk) / 2;
 }
 ```
@@ -175,7 +178,7 @@ if (bids.length > 0 && asks.length > 0) {
 ### Querying open orders
 
 ```typescript
-const orders = await client.deepbook.accountOpenOrders({
+const orders = await client.deepbook.deepBook.accountOpenOrders({
   poolKey: "DEEP_SUI",
   balanceManagerKey: "MANAGER_1",
 });
@@ -185,7 +188,7 @@ const orders = await client.deepbook.accountOpenOrders({
 ### Getting order details
 
 ```typescript
-const details = await client.deepbook.getAccountOrderDetails({
+const details = await client.deepbook.deepBook.getAccountOrderDetails({
   poolKey: "DEEP_SUI",
   balanceManagerKey: "MANAGER_1",
 });
@@ -198,7 +201,7 @@ Cancel a specific order by ID:
 
 ```typescript
 const tx = new Transaction();
-client.deepbook.cancelOrder({
+client.deepbook.deepBook.cancelOrder({
   poolKey: "DEEP_SUI",
   balanceManagerKey: "MANAGER_1",
   orderId: "123456",
@@ -211,7 +214,7 @@ Cancel all open orders:
 
 ```typescript
 const tx = new Transaction();
-client.deepbook.cancelAllOrders({
+client.deepbook.deepBook.cancelAllOrders({
   poolKey: "DEEP_SUI",
   balanceManagerKey: "MANAGER_1",
 })(tx);
@@ -236,8 +239,8 @@ Fills move funds into settled balances within the BalanceManager. Settled balanc
 
 | Option | Behavior |
 |--------|----------|
-| `SELF_MATCHING_ALLOWED` (default) | Allows self-trades — taker fills against own resting orders |
-| `CANCEL_TAKER` | Cancels the incoming taker order on self-match |
-| `CANCEL_MAKER` | Cancels the resting maker order on self-match |
+| `SelfMatchingOptions.SELF_MATCHING_ALLOWED` (default) | Allows self-trades — taker fills against own resting orders |
+| `SelfMatchingOptions.CANCEL_TAKER` | Cancels the incoming taker order on self-match |
+| `SelfMatchingOptions.CANCEL_MAKER` | Cancels the resting maker order on self-match |
 
-The SDK defaults to `SELF_MATCHING_ALLOWED`. Set explicitly to avoid unintended self-fills when the same account has resting orders on both sides.
+The SDK defaults to `SelfMatchingOptions.SELF_MATCHING_ALLOWED`. Set explicitly to avoid unintended self-fills when the same account has resting orders on both sides.

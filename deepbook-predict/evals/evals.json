@@ -24,10 +24,10 @@
       "prompt": "How do I mint a binary position on DeepBook Predict using TypeScript?",
       "expected_output": "Code showing PredictManager creation (separate transaction), DUSDC deposit, and mint transaction with market key construction.",
       "expectations": [
-        "The response uses @mysten/sui directly (no dedicated Predict SDK)",
+        "The response mentions that @mysten/deepbook-predict is available as a dedicated SDK, or demonstrates using @mysten/sui for raw Move calls",
         "The response creates the PredictManager in a separate transaction from the mint",
         "The response explains why: the manager must be shared before deposits/mints",
-        "The response shows building a market key via market_key::new_binary_up or new_binary_down",
+        "The response shows building a market key via market_key::up(oracle_id, expiry, strike) or market_key::down(oracle_id, expiry, strike)",
         "The response shows the predict::mint move call with the correct arguments",
         "The response mentions fetching oracle data from the public server, not hardcoding"
       ],
@@ -77,7 +77,7 @@
         "The response warns about hardcoding testnet addresses that will change at Mainnet",
         "The response warns about wrong strike ordering for range positions (lower must be < higher)",
         "The response warns about not validating oracle state before minting",
-        "The response mentions that there is no dedicated Predict SDK — use @mysten/sui directly"
+        "The response mentions that @mysten/deepbook-predict (v0.2.1) is available as a dedicated SDK, or that @mysten/sui can be used for raw Move calls"
       ],
       "sources": [
         "https://docs.sui.io/onchain-finance/deepbook/deepbook-predict",

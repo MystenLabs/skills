@@ -22,14 +22,18 @@ Creates a BalanceManager with a specified owner address.
 
 ### With capabilities
 
+> **Deprecated:** `new_with_custom_owner_caps` is a deprecated stub (`abort 1337`). Use the `_v2` variant below.
+
 ```move
-public fun new_with_custom_owner_caps<App>(
+public fun new_with_custom_owner_caps_v2<App: drop>(
+    _witness: App,
+    deepbook_registry: &Registry,
     owner: address,
     ctx: &mut TxContext,
 ): (BalanceManager, DepositCap, WithdrawCap, TradeCap)
 ```
 
-Creates a BalanceManager with an initial set of DepositCap, WithdrawCap, and TradeCap for the specified App type.
+Creates a BalanceManager with an initial set of DepositCap, WithdrawCap, and TradeCap for the specified App type. Requires a witness of the `App` type and a reference to the DeepBook `Registry`.
 
 ## Authorization model
 
@@ -56,6 +60,7 @@ TradeCap holders can place orders and stake, but cannot deposit, withdraw, or ma
 public fun generate_proof_as_trader(
     balance_manager: &mut BalanceManager,
     trade_cap: &TradeCap,
+    ctx: &TxContext,
 ): TradeProof
 ```
 
@@ -100,7 +105,7 @@ public fun revoke_trade_cap(
 )
 ```
 
-Similarly for `revoke_deposit_cap` and `revoke_withdraw_cap`. Revocation removes the cap's ID from the BalanceManager's allowlist, making the cap object unusable.
+`revoke_trade_cap` is the only revocation function. It can also be used to revoke a `DepositCap` or `WithdrawCap` by passing that cap's ID. Revocation removes the cap's ID from the BalanceManager's allowlist, making the cap object unusable.
 
 ## Deposits and withdrawals
 
@@ -160,8 +165,8 @@ Each BalanceManager can be linked to a referral object for a specific pool. Refe
 ```move
 public fun set_balance_manager_referral(
     balance_manager: &mut BalanceManager,
-    referral_id: ID,
-    trade_proof: &TradeProof,
+    referral: &DeepBookPoolReferral,
+    trade_cap: &TradeCap,
 )
 ```
 
@@ -205,7 +210,7 @@ pool.place_limit_order(
 
 ```move
 // Trader holds a TradeCap, not the owner key
-let proof = balance_manager.generate_proof_as_trader(&trade_cap);
+let proof = balance_manager.generate_proof_as_trader(&trade_cap, ctx);
 pool.place_limit_order(
     balance_manager,
     &proof,
@@ -223,8 +228,9 @@ public fun protocol_trade(
     balance_manager: &mut BalanceManager,
     trade_cap: &TradeCap,
     // ... user parameters
+    ctx: &TxContext,
 ) {
-    let proof = balance_manager.generate_proof_as_trader(trade_cap);
+    let proof = balance_manager.generate_proof_as_trader(trade_cap, ctx);
     pool.place_market_order(
         balance_manager,
         &proof,

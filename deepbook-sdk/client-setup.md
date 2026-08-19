@@ -8,26 +8,27 @@ npm install @mysten/deepbook-v3 @mysten/sui
 
 ## Client construction
 
-The `DeepBookClient` extends a `SuiGrpcClient` with DeepBook transaction builders. The SDK uses `$extend` to add a `deepbook` namespace:
+The `deepbook` function extends a `SuiGrpcClient` via `$extend` to add DeepBook transaction builders under a `deepbook` namespace:
 
 ```typescript
-import { SuiGrpcClient } from "@mysten/sui/client";
-import { DeepBookClient } from "@mysten/deepbook-v3";
+import { SuiGrpcClient } from "@mysten/sui/grpc";
+import { deepbook } from "@mysten/deepbook-v3";
 import { Ed25519Keypair } from "@mysten/sui/keypairs/ed25519";
 
-const suiClient = new SuiGrpcClient({ url: "https://sui-testnet.mystenlabs.com:443" });
+const suiClient = new SuiGrpcClient({ network: "testnet" });
 const keypair = new Ed25519Keypair(); // or load from existing key
 
-const client = new DeepBookClient({
-  client: suiClient,
-  keypair,
-  balanceManagers: {
-    MANAGER_1: {
-      address: "0x...", // existing BalanceManager object ID
-      tradeCap: undefined,
+const client = suiClient.$extend(
+  deepbook({
+    address: keypair.toSuiAddress(),
+    balanceManagers: {
+      MANAGER_1: {
+        address: "0x...", // existing BalanceManager object ID
+        tradeCap: undefined,
+      },
     },
-  },
-});
+  })
+);
 ```
 
 The client references pools and coins by SDK keys (e.g., `"DEEP_SUI"`, `"SUI"`) rather than raw on-chain addresses. Default coin and pool maps are included for testnet and mainnet. Custom `PoolMap` and `CoinMap` can override defaults.
@@ -47,17 +48,20 @@ The sandbox examples demonstrate three setup levels with increasing complexity:
 For localnet (sandbox), the client loads pool/coin configuration from a deployment manifest:
 
 ```typescript
-import manifest from "deepbook-sandbox/deployments/localnet.json";
+import manifest from "../../sandbox/deployments/localnet.json";
 
-const client = new DeepBookClient({
-  client: suiClient,
-  keypair,
-  pools: manifest.pools,
-  coins: manifest.coins,
-  packageIds: {
-    deepbook: manifest.packages.deepbook,
-  },
-});
+const suiClient = new SuiGrpcClient({ network: "custom", baseUrl: "http://localhost:9000" });
+
+const client = suiClient.$extend(
+  deepbook({
+    address: keypair.toSuiAddress(),
+    pools: manifest.pools,
+    coins: manifest.coins,
+    packageIds: {
+      deepbook: manifest.packages.deepbook,
+    },
+  })
+);
 ```
 
 ## BalanceManager lifecycle
@@ -70,31 +74,31 @@ A BalanceManager is a shared on-chain object. Create it in a transaction, then e
 import { Transaction } from "@mysten/sui/transactions";
 
 const tx = new Transaction();
-client.deepbook.createBalanceManager()(tx);
+client.deepbook.balanceManager.createAndShareBalanceManager()(tx);
 
 const result = await suiClient.signAndExecuteTransaction({
   transaction: tx,
   signer: keypair,
-  options: { showObjectChanges: true },
 });
 
-// Extract the BalanceManager ID from created objects
-const managerObj = result.objectChanges?.find(
-  (o) => o.type === "created" && o.objectType.includes("BalanceManager")
+// Extract the BalanceManager ID from changed objects in effects
+const managerObj = result.Transaction?.effects?.changedObjects?.find(
+  ([_id, change]) => change.objectType?.includes("BalanceManager")
 );
-const managerId = managerObj?.objectId;
+const managerId = managerObj?.[0];
 ```
 
 After creation, reinitialize the client with the BalanceManager address:
 
 ```typescript
-const client = new DeepBookClient({
-  client: suiClient,
-  keypair,
-  balanceManagers: {
-    MANAGER_1: { address: managerId, tradeCap: undefined },
-  },
-});
+const client = suiClient.$extend(
+  deepbook({
+    address: keypair.toSuiAddress(),
+    balanceManagers: {
+      MANAGER_1: { address: managerId, tradeCap: undefined },
+    },
+  })
+);
 ```
 
 ### Reusing a BalanceManager
@@ -109,7 +113,7 @@ Discover existing BalanceManagers via the DeepBook indexer or by persisting the 
 
 ```typescript
 const tx = new Transaction();
-client.deepbook.depositIntoManager("MANAGER_1", "SUI", 10)(tx);
+client.deepbook.balanceManager.depositIntoManager("MANAGER_1", "SUI", 10)(tx);
 await signAndExecute(tx);
 ```
 
@@ -119,7 +123,7 @@ The SDK automatically scales amounts to coin decimals. Size deposits to your wal
 
 ```typescript
 const tx = new Transaction();
-client.deepbook.withdrawAllFromManager("MANAGER_1", "SUI", recipientAddress)(tx);
+client.deepbook.balanceManager.withdrawAllFromManager("MANAGER_1", "SUI", recipientAddress)(tx);
 await signAndExecute(tx);
 ```
 
@@ -128,21 +132,21 @@ Withdrawals move settled balances back to the wallet. Funds locked in resting or
 ### Checking balances
 
 ```typescript
-const balance = await client.deepbook.checkManagerBalance("MANAGER_1", "SUI");
+const balance = await client.deepbook.balanceManager.checkManagerBalance("MANAGER_1", "SUI");
 ```
 
 ## SDK API overview
 
 ### Read-only operations (no BalanceManager required)
 
-- `checkManagerBalance(managerKey, coinKey)` — query BalanceManager balances
-- `getLevel2Range(poolKey, minPrice, maxPrice, isBid)` — retrieve order book data at specific price levels
+- `client.deepbook.balanceManager.checkManagerBalance(managerKey, coinKey)` — query BalanceManager balances
+- `client.deepbook.getLevel2TicksFromMid(poolKey, depth)` — retrieve order book data around the mid price (returns `{ bid_prices, bid_quantities, ask_prices, ask_quantities }`)
 
 ### BalanceManager operations
 
-- `depositIntoManager(managerKey, coinKey, amount)` — deposit funds
-- `withdrawAllFromManager(managerKey, coinKey, recipient)` — withdraw all settled funds
-- `createBalanceManager()` — create a new BalanceManager
+- `client.deepbook.balanceManager.depositIntoManager(managerKey, coinKey, amount)` — deposit funds
+- `client.deepbook.balanceManager.withdrawAllFromManager(managerKey, coinKey, recipient)` — withdraw all settled funds
+- `client.deepbook.balanceManager.createAndShareBalanceManager()` — create a new BalanceManager
 
 ### Trading operations
 
