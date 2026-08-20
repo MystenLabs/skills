@@ -89,22 +89,16 @@ Post-settlement redemptions can be executed permissionlessly by anyone, not just
 
 ## Oracle data sources
 
-Predict uses two oracle feeds via the Propbook package:
-
-- **Pyth** — normalized spot prices with staleness checks and confidence interval validation
-- **Block Scholes** — forward prices per expiry and SVI (volatility surface) parameters
-
-The Propbook package stores source data; the Predict pricing module validates pricing-safe envelopes.
+Predict uses oracle feeds for pricing positions. The oracle provides spot prices, forward prices per expiry, and SVI (Stochastic Volatility Inspired) parameters for implied volatility.
 
 ## Settlement mechanics
 
-1. After expiry, `try_settle` records the exact spot price from the Propbook history for that timestamp
-2. The oracle transitions to "settled" state
-3. Winning positions can be redeemed for full notional
-4. Losing positions redeem for zero
-5. Vault exposure for that expiry is unwound
-
-Cash always backs payouts — the vault's `ExpiryCash` balance covers payout liability plus escrow for the expiry.
+1. After the expiry timestamp passes, the oracle enters pending settlement
+2. Settlement records the spot price at the expiry timestamp
+3. The oracle transitions to "settled" state
+4. Winning positions can be redeemed for full notional
+5. Losing positions redeem for zero
+6. Vault exposure for that expiry is unwound
 
 ## Pricing
 
@@ -142,14 +136,6 @@ Liquidity providers deposit DUSDC into the vault and receive PLP (Predict LP) to
 - Subsequent deposits and withdrawals are proportional to the vault's current NAV
 - LP returns track vault P&L directly
 
-### Vault NAV
-
-```
-pool_nav = idle_balance + Σ(current_nav per expiry)
-```
-
-Where `current_nav` per expiry is the vault's net position value: collected premiums minus current mark-to-market liability.
-
 ### Exposure limits
 
 The vault enforces exposure limits through total mark-to-market liability checks against configured thresholds. Minting is capped by exposure limits relative to vault value.
@@ -158,4 +144,3 @@ The vault enforces exposure limits through total mark-to-market liability checks
 
 - Withdrawals require sufficient available liquidity after covering maximum payout obligations
 - A rate limiter may throttle large withdrawals
-- LP mark is exact at flush (privileged periodic valuation) — no oracle timing manipulation

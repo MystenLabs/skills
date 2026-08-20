@@ -109,4 +109,5 @@ Do not guess or extrapolate from other prediction market protocols.
 - **Hardcoding testnet addresses.** These will change at Mainnet launch. Fetch configuration dynamically or maintain a config file.
 - **Assuming perpetual positions.** All positions expire. After expiry, the oracle enters pending settlement and then settled state. Unresolved positions must be redeemed post-settlement.
 - **Not validating oracle state before minting.** The mint succeeds only when the oracle is live, the quote asset is accepted, the market key matches the oracle, and the manager holds enough deposited DUSDC.
+- **Not knowing which SDK to use.** The `@mysten/deepbook-predict` package (v0.2.1) provides high-level helpers for Predict operations. For lower-level control, build transactions directly with `@mysten/sui`. Both approaches work — choose based on how much control you need.
 - **Using wrong strike ordering for ranges.** Vertical range keys require `lower_strike < higher_strike`. Reversed strikes cause the mint to fail.

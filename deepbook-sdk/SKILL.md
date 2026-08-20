@@ -94,4 +94,4 @@ Do not guess or extrapolate from other SDKs or libraries.
 - **Using `POST_ONLY` for taker orders.** `POST_ONLY` guarantees the order rests on the book. If it would cross and fill, it is silently rejected — no order is returned and no error is thrown.
 - **Forgetting to deposit before trading.** Orders draw from BalanceManager balances, not wallet balances. Funds must be deposited first.
 - **Not depositing DEEP for fees.** On non-whitelisted pools, DEEP must be in the BalanceManager to pay fees. Without it, trades fail.
-- **Ignoring self-matching.** The SDK defaults to `SELF_MATCHING_ALLOWED`. If the same account has resting orders, a new order can fill against them unintentionally. Set `CANCEL_TAKER` or `CANCEL_MAKER` when needed.
+- **Ignoring self-matching.** When `selfMatchingOption` is not specified, the SDK defaults to `SelfMatchingOptions.SELF_MATCHING_ALLOWED`, which means your taker order can fill against your own resting maker orders. This is often unintentional. Explicitly set `SelfMatchingOptions.CANCEL_TAKER` or `SelfMatchingOptions.CANCEL_MAKER` to prevent self-fills.

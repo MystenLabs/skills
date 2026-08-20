@@ -99,7 +99,7 @@ Do not guess or extrapolate from other protocols.
 2. **Always return flash loan hot potatoes.** The `FlashLoan` struct has no abilities — failing to return it causes a transaction abort.
 3. **Do not borrow from a pool and trade in the same pool within one transaction.** The borrowed funds are not available for trading, and the combined operations can fail.
 4. **Use `generate_proof_as_owner` for owner operations** and `generate_proof_as_trader` for delegated operations via TradeCap.
-5. **Cap limit: 1,000 total capabilities per BalanceManager** (across TradeCap, DepositCap, and WithdrawCap combined).
+5. **Cap limit: 1,000 total capabilities per BalanceManager** (across TradeCap, DepositCap, and WithdrawCap combined). At scale, this limit constrains how many delegated traders a single BalanceManager can support — plan for multiple BalanceManagers if you need more than 1,000 delegated accounts.
 6. **Use `_v2` variants for functions that have them.** The unsuffixed originals (e.g., `new_with_custom_owner_caps`) are deprecated stubs that abort. Always use the `_v2` suffix (e.g., `new_with_custom_owner_caps_v2`).
 
 ### Common mistakes

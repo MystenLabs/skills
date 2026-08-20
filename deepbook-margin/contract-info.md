@@ -2,11 +2,15 @@
 
 All addresses are for Sui Mainnet unless noted otherwise.
 
+> **Version drift warning:** The package ID below is sourced from [docs.sui.io](https://docs.sui.io/onchain-finance/deepbook/deepbook-margin/contract-information). On-chain versions may be ahead — the registry's `allowed_versions` field controls which versions accept calls. Calls through a disabled version abort with `EPackageVersionDisabled`. Always query the registry for the current active version before integrating.
+
 ## Package version
+
+The table below lists the version documented on docs.sui.io. The on-chain active version may be higher.
 
 | Version | Package ID | Date |
 |---------|-----------|------|
-| v3 (current) | `0xfbd322126f1452fd4c89aedbaeb9fd0c44df9b5cedbe70d76bf80dc086031377` | Feb 10, 2026 |
+| v3 (docs) | `0xfbd322126f1452fd4c89aedbaeb9fd0c44df9b5cedbe70d76bf80dc086031377` | Feb 10, 2026 |
 
 **Registry ID:** `0x0e40998b359a9ccbab22a98ed21bd4346abf19158bc7980c8291908086b3a742`
 

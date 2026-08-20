@@ -1,6 +1,6 @@
 {
   "skill_name": "deepbook-overview",
-  "source_constraint": "All facts in these evals must be verifiable against docs.sui.io/onchain-finance/deepbook/deepbookv3 or github.com/MystenLabs/deepbookv3. No third-party blogs, tutorials, or unofficial documentation.",
+  "source_constraint": "All facts in these evals must be verifiable against docs.sui.io/onchain-finance/deepbook/deepbookv3/deepbook or github.com/MystenLabs/deepbookv3. No third-party blogs, tutorials, or unofficial documentation.",
   "evals": [
     {
       "id": 1,
@@ -14,7 +14,7 @@
         "The response notes that DeepBook does not include an end-user interface"
       ],
       "sources": [
-        "https://docs.sui.io/onchain-finance/deepbook/deepbookv3",
+        "https://docs.sui.io/onchain-finance/deepbook/deepbookv3/deepbook",
         "https://github.com/MystenLabs/deepbookv3/blob/main/README.md"
       ]
     },
@@ -30,7 +30,7 @@
         "The response mentions that BigVector uses a B+ tree for efficient order storage"
       ],
       "sources": [
-        "https://docs.sui.io/onchain-finance/deepbook/deepbookv3/design"
+        "https://docs.sui.io/onchain-finance/deepbook/deepbookv3/deepbook/design"
       ]
     },
     {
@@ -46,7 +46,7 @@
         "The response includes the SDK installation: npm install @mysten/deepbook-v3"
       ],
       "sources": [
-        "https://docs.sui.io/onchain-finance/deepbook/deepbookv3"
+        "https://docs.sui.io/onchain-finance/deepbook/deepbookv3/deepbook"
       ]
     },
     {
@@ -61,8 +61,8 @@
         "The response mentions whitelisted pools (DEEP/SUI, DEEP/USDC) have 0% fees"
       ],
       "sources": [
-        "https://docs.sui.io/onchain-finance/deepbook/deepbookv3",
-        "https://docs.sui.io/onchain-finance/deepbook/deepbookv3/fees-and-funding"
+        "https://docs.sui.io/onchain-finance/deepbook/deepbookv3/deepbook",
+        "https://docs.sui.io/onchain-finance/deepbook/deepbookv3/deepbook/fees-and-funding"
       ]
     },
     {
@@ -75,7 +75,7 @@
         "The response mentions the SUI/USDC pool has 1 bps taker fee and 0 bps maker fee"
       ],
       "sources": [
-        "https://docs.sui.io/onchain-finance/deepbook/deepbookv3/contract-information"
+        "https://docs.sui.io/onchain-finance/deepbook/deepbookv3/deepbook/contract-information"
       ]
     }
   ]

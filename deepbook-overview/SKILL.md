@@ -15,15 +15,15 @@ description: >
 
 > **MCP tool:** When available in your environment, also query the Sui documentation MCP server (`https://sui.mcp.kapa.ai`) for up-to-date answers. Use it for verification and for details not covered by these reference files.
 
-> **Source constraint:** All information in this skill is sourced exclusively from [docs.sui.io](https://docs.sui.io/onchain-finance/deepbook/deepbookv3) and the [deepbookv3 GitHub repository](https://github.com/MystenLabs/deepbookv3). When extending or updating this skill, only pull from these sources. Do not use third-party blogs, tutorials, or unofficial documentation.
+> **Source constraint:** All information in this skill is sourced exclusively from [docs.sui.io](https://docs.sui.io/onchain-finance/deepbook/deepbookv3/deepbook) and the [deepbookv3 GitHub repository](https://github.com/MystenLabs/deepbookv3). When extending or updating this skill, only pull from these sources. Do not use third-party blogs, tutorials, or unofficial documentation.
 
 DeepBook V3 is a next-generation decentralized central limit order book (CLOB) built on Sui, providing a highly performant, low-latency exchange on-chain. This skill covers the high-level architecture and key concepts. Common mistakes include confusing DeepBook with an AMM (it is an order book), misunderstanding the role of the DEEP token in fee payments, and not knowing which integration model to use.
 
 This skill routes to focused reference files. Load only the ones relevant to the current task.
 
 All patterns in this skill are derived from:
-  https://docs.sui.io/onchain-finance/deepbook/deepbookv3
-  https://docs.sui.io/onchain-finance/deepbook/deepbookv3/design
+  https://docs.sui.io/onchain-finance/deepbook/deepbookv3/deepbook
+  https://docs.sui.io/onchain-finance/deepbook/deepbookv3/deepbook/design
   https://github.com/MystenLabs/deepbookv3
 
 If unsure about any detail, fetch the relevant page before answering. Do not guess or extrapolate.

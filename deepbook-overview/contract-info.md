@@ -2,11 +2,15 @@
 
 All addresses are for Sui Mainnet.
 
+> **Version drift warning:** The package IDs below are sourced from [docs.sui.io](https://docs.sui.io/onchain-finance/deepbook/deepbookv3/contract-information). On-chain versions may be ahead of what the docs list — the protocol upgrades frequently. Always check the on-chain `Published.toml` or query the registry's `allowed_versions` for the current active version before integrating. Calls through a disabled package version abort with `EPackageVersionDisabled`.
+
 ## Package versions
+
+The table below lists versions documented on docs.sui.io. The on-chain active version may be higher.
 
 | Version | Package ID | Date | Notes |
 |---------|-----------|------|-------|
-| v6 (current) | `0x337f4f4f6567fcd778d5454f27c16c70e2f274cc6377ea6249ddf491482ef497` | Jan 7, 2026 | Final preparation for margin launch |
+| v6 (docs) | `0x337f4f4f6567fcd778d5454f27c16c70e2f274cc6377ea6249ddf491482ef497` | Jan 7, 2026 | Final preparation for margin launch |
 | v5 | `0x2d93777cc8b67c064b495e8606f2f8f5fd578450347bbe7b36e0bc03963c1c40` | Dec 18, 2025 | |
 | v4 | `0x00c1a56ec8c4c623a848b2ed2f03d23a25d17570b670c22106f336eb933785cc` | Dec 9, 2025 | |
 | v3 | `0xb29d83c26cdd2a64959263abbcfc4a6937f0c9fccaf98580ca56faded65be244` | Jun 11, 2025 | |
