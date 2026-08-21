@@ -1,0 +1,86 @@
+{
+  "skill_name": "deepbook-margin",
+  "source_constraint": "All facts in these evals must be verifiable against docs.sui.io/onchain-finance/deepbook/deepbook-margin or github.com/MystenLabs/deepbookv3. No third-party blogs, tutorials, or unofficial documentation.",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "How does the risk ratio work in DeepBook Margin? What happens at each threshold?",
+      "expected_output": "An explanation of risk_ratio = total_assets / total_debt, the four thresholds (min withdraw, min borrow, target liquidation, liquidation), and what each controls.",
+      "expectations": [
+        "The response defines risk ratio as total_assets / total_debt",
+        "The response explains all four thresholds and their ordering: liquidation < target_liquidation <= min_borrow < min_withdraw",
+        "The response explains that min borrow ratio determines maximum leverage",
+        "The response mentions that liquidation is permissionless with no grace period",
+        "The response notes that thresholds are governance-set and should be read on-chain"
+      ],
+      "sources": [
+        "https://docs.sui.io/onchain-finance/deepbook/deepbook-margin/contract-information/risk-ratio",
+        "https://docs.sui.io/onchain-finance/deepbook/deepbook-margin"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "How do interest rates work on DeepBook Margin? What is the kinked model?",
+      "expected_output": "An explanation of the kinked utilization model with the two-tier borrow rate formula, the sharp rate increase above optimal utilization, and per-pool parameters.",
+      "expectations": [
+        "The response explains the kinked model with gradual rates below optimal and steep rates above",
+        "The response provides the two borrow rate formulas (below and above optimal)",
+        "The response mentions 80% as the typical optimal utilization",
+        "The response shows the dramatic rate jump (e.g., 12% at 80% to 62% at 90% for USDC)",
+        "The response explains supply rate = borrowRate × utilization × (1 - protocolSpread)",
+        "The response mentions that interest accrues at event-driven intervals (not continuously), causing debt to grow over time even with stable prices"
+      ],
+      "sources": [
+        "https://docs.sui.io/onchain-finance/deepbook/deepbook-margin/contract-information/interest-rates"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "How do I open a leveraged long position on SUI/USDC using the DeepBook Margin SDK?",
+      "expected_output": "A step-by-step workflow: create/find MarginManager, read risk params, check liquidity, deposit collateral, borrow, place margin order.",
+      "expectations": [
+        "The response includes finding or creating a MarginManager bound to the specific pool",
+        "The response emphasizes reusing existing managers instead of creating new ones",
+        "The response includes reading risk parameters on-chain via readRiskParams",
+        "The response includes checking borrow liquidity via readBorrowLiquidity",
+        "The response shows depositing collateral and then borrowing",
+        "The response shows placing a margin order via the pool proxy, not spot order entry",
+        "The response warns that clientOrderId must be a numeric string"
+      ],
+      "sources": [
+        "https://docs.sui.io/onchain-finance/deepbook/deepbook-margin/leveraged-workflow"
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "What are the key differences between spot and margin trading on DeepBook?",
+      "expected_output": "A comparison covering object model changes, isolated pools, order routing, oracle dependency, and liquidation.",
+      "expectations": [
+        "The response explains that margin wraps BalanceManager inside MarginManager",
+        "The response explains isolated margin (one manager per pool vs one manager for all pools)",
+        "The response explains that margin orders route through a pool proxy, not direct pool entry",
+        "The response notes the oracle dependency for all margin operations (spot has none)",
+        "The response mentions that margin has interest costs on top of trading fees",
+        "The response mentions that margin adds permissionless liquidation risk"
+      ],
+      "sources": [
+        "https://docs.sui.io/onchain-finance/deepbook/deepbook-margin/margin-integration"
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "What are the risks of margin trading on DeepBook and how can I mitigate them?",
+      "expected_output": "A comprehensive risk overview covering liquidation, interest rates, leverage amplification, and oracle risks, plus mitigation strategies.",
+      "expectations": [
+        "The response covers liquidation risk with the warning zone concept",
+        "The response explains leverage amplification (5x leverage + 10% move = 50% equity loss)",
+        "The response explains interest rate risk and continuous accrual",
+        "The response covers oracle risk including staleness and confidence intervals",
+        "The response provides mitigation strategies: lower leverage, monitoring, stop-loss, reserves"
+      ],
+      "sources": [
+        "https://docs.sui.io/onchain-finance/deepbook/deepbook-margin/margin-risks"
+      ]
+    }
+  ]
+}
