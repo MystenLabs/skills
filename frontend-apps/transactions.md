@@ -119,7 +119,7 @@ For type-filtered queries after a package upgrade, use `ORIGINAL_PACKAGE_IDS`:
 const originalId = ORIGINAL_PACKAGE_IDS[network];
 const objects = await client.core.listOwnedObjects({
   owner: account.address,
-  filter: { StructType: `${originalId}::nft::NFT` },
+  type: `${originalId}::nft::NFT`,
 });
 ```
 

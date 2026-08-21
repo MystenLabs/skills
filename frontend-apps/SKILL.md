@@ -23,7 +23,7 @@ Browser Sui apps fail for a consistent set of reasons:
 3. **Old provider stack.** Code often tries the v1 pattern: `QueryClientProvider` → `SuiClientProvider` → `WalletProvider`. That's gone. New pattern: `createDAppKit` factory + `DAppKitProvider` (or a non-React equivalent).
 4. **Dead hooks.** `useSuiClientQuery`, `useSuiClientInfiniteQuery`, `useSignAndExecuteTransaction` (mutation hook), `useConnectWallet`, `useDisconnectWallet`, `useSuiClient`, `useSuiClientContext` — **removed**. Replaced by `useCurrentClient` / `useCurrentNetwork` / `useDAppKit()` (imperative methods) + your own TanStack Query wrappers.
 5. **Skipping `waitForTransaction` between execute and refetch.** Fullnodes index transactions asynchronously — invalidating TanStack caches immediately after `signAndExecuteTransaction` refetches stale data.
-6. **Building PTBs in app code with `tx.build()` before handing to the wallet.** Defeats the wallet's gas selection. Always pass the `Transaction` instance (or `tx.serialize()`) to the wallet.
+6. **Building PTBs in app code with `tx.build()` before handing to the wallet.** Defeats the wallet's gas selection. Always pass the `Transaction` instance to the wallet.
 
 All patterns in this skill are derived from:
 - https://sdk.mystenlabs.com/dapp-kit (landing)
@@ -98,7 +98,7 @@ If unsure about any API, fetch from the relevant page — do not extrapolate fro
 5. **Do not use the removed hooks.** `useSuiClientQuery` / `useSuiClientInfiniteQuery` / `useSuiClientContext` / `useSuiClient` / `useSignAndExecuteTransaction` (mutation hook) / `useConnectWallet` / `useDisconnectWallet` — gone. Use `useCurrentClient` + `useQuery`/`useInfiniteQuery` + `useDAppKit()` imperative methods.
 6. **Null-check the current account.** `useCurrentAccount()` returns `null` before connection. Always `if (!account) return` / gate with `enabled: !!account` in queries.
 7. **`waitForTransaction` before cache invalidation.** `await client.waitForTransaction({ digest: result.Transaction.digest })` then `queryClient.invalidateQueries(...)`. Reversing this fetches stale data.
-8. **Pass the `Transaction` instance (or `tx.serialize()`) to the wallet, not `await tx.build(...)` bytes.** The wallet needs to own gas selection. Exception: sponsored flows that use `tx.build({ client, onlyTransactionKind: true })` — see `ptbs` skill.
+8. **Pass the `Transaction` instance to the wallet, not `await tx.build(...)` bytes.** The wallet needs to own gas selection. Exception: sponsored flows that use `tx.build({ client, onlyTransactionKind: true })` — see `ptbs` skill.
 9. **Check `result.$kind === 'FailedTransaction'` (or `result.FailedTransaction`).** Don't assume success. Don't use v1's `result.effects?.status?.status`.
 10. **Wallet-gated UI must client-render.** SSR without a client-side guard renders wallet buttons before wallets are detectable. Use `'use client'` / dynamic imports / effect-based hydration.
 11. **Vue: `useStore` returns a Vue ref — use `.value` in script code.** `const connection = useStore(dAppKit.stores.$connection)` returns a ref. Access state as `connection.value.account` in `<script setup>`. Vue auto-unwraps refs in templates, but always show the `.value` pattern in script examples.
@@ -128,7 +128,7 @@ When the user asks you to review a code snippet, do not stop at the first 2–3 
 
 **Transaction construction**
 - `tx.pure(value)` (untyped) — replace with the typed helper matching the Move type: `tx.pure.u64(n)`, `tx.pure.address(addr)`, `tx.pure.string(s)`, etc.
-- `tx.build()` before handing to the wallet — defeats wallet gas selection. Pass the `Transaction` instance (or `tx.serialize()`).
+- `tx.build()` before handing to the wallet — defeats wallet gas selection. Pass the `Transaction` instance directly.
 
 **Execute / wait / status**
 - `signAndExecuteTransactionBlock(...)` (v1 method) — replace with `signAndExecuteTransaction(...)`.
