@@ -18,7 +18,7 @@ description: >
 
 Sui is a scalable, performant layer 1 blockchain built around an object-centric data model. Unlike account-based blockchains (Ethereum) or UTXO-based chains (Bitcoin), Sui treats every piece of onchain state as a typed object with a unique ID. Transactions consume objects as inputs and produce modified versions as outputs.
 
-This skill covers the conceptual foundation of Sui and the broader Sui Stack. For implementation details, see the `sui-move`, `frontend-apps`, and `sui-cli` skills.
+This skill covers the conceptual foundation of Sui and the broader Sui Stack. For implementation details, see the `sui-move`, `frontend-apps`, and `sui-networks-gas` skills.
 
 ---
 

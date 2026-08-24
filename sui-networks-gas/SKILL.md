@@ -1,5 +1,5 @@
 ---
-name: sui-cli
+name: sui-networks-gas
 description: >
   Sui networks, gas costs, and epochs. Use when the user asks about Sui network
   environments (Mainnet, Testnet, Devnet, Localnet), gas cost calculations, gas
