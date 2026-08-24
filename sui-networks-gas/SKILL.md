@@ -1,9 +1,10 @@
 ---
 name: sui-networks-gas
 description: >
-  Sui networks, gas costs, and epochs. Use when the user asks about Sui network
-  environments (Mainnet, Testnet, Devnet, Localnet), gas cost calculations, gas
-  budgets, epochs, or how the Sui network operates at a high level.
+  Sui network environments and gas economics. Use when the user asks about
+  Mainnet, Testnet, Devnet, or Localnet differences, gas cost calculations
+  (computation + storage - rebate), gas budgets, epochs, or how the Sui network
+  operates at a high level. This skill covers network concepts, not CLI commands.
 
   For CLI client setup, address management, faucets, and explorers, see the
   `sui-client` skill. For installing the Sui CLI, see the `sui-install` skill.
