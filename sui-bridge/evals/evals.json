@@ -20,10 +20,10 @@
     {
       "id": 2,
       "prompt": "How does Sui Bridge governance work and what are the finality requirements for a bridge transfer?",
-      "expected_output": "An explanation that Sui validators operate and govern the bridge, requiring a 2/3 voting power threshold for actions. Ethereum-to-Sui transfers require configurable Ethereum block confirmations before minting, and Sui-to-Ethereum transfers require Sui transaction finality before releasing tokens.",
+      "expected_output": "An explanation that Sui validators operate and govern the bridge, requiring a threshold of voting power for actions. Ethereum-to-Sui transfers require configurable Ethereum block confirmations before minting, and Sui-to-Ethereum transfers require Sui transaction finality before releasing tokens.",
       "expectations": [
         "The response explains that Sui validators operate and govern the bridge",
-        "The response mentions the 2/3 validator voting power threshold",
+        "The response mentions the validator voting power threshold requirement",
         "The response states Ethereum-to-Sui requires configurable Ethereum block confirmations before minting",
         "The response states Sui-to-Ethereum requires Sui transaction finality before releasing tokens",
         "The response notes that users should not be credited until the transfer is fully confirmed on the destination chain"

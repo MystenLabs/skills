@@ -56,10 +56,10 @@
     {
       "id": 4,
       "prompt": "Which OpenID providers does zkLogin support? I want to integrate it into my app -- what are the main steps and how do I verify signatures offchain?",
-      "expected_output": "A list of supported providers by network (all networks: Facebook, Google, Twitch, Apple, AWS Tenant, Karrier One, Credenza3; devnet only: Slack, Kakao, Microsoft; under review: RedBull, Amazon, WeChat, Auth0, Okta), a summary of integration steps, and the four offchain verification methods.",
+      "expected_output": "A list of supported providers by network (all networks: Facebook, Google, Twitch, Apple, AWS Tenant, Karrier One, Credenza3; Devnet and Testnet only: Slack, Kakao, Microsoft; under review: RedBull, Amazon, WeChat, Auth0, Okta), a summary of integration steps, and the four offchain verification methods.",
       "expectations": [
         "The response lists the providers available on all networks: Facebook, Google, Twitch, Apple, AWS (Tenant), Karrier One, Credenza3",
-        "The response lists devnet-only providers: Slack, Kakao, Microsoft",
+        "The response lists Devnet-and-Testnet-only providers (not Mainnet): Slack, Kakao, Microsoft",
         "The response lists providers under review: RedBull, Amazon, WeChat, Auth0, Okta",
         "The response covers the key integration steps: generate ephemeral key pair, construct nonce, initiate OAuth login, retrieve salt, generate ZK proof, compute address, sign and submit",
         "The response lists all four offchain verification methods: Sui TypeScript SDK, GraphQL endpoint, Sui Keytool CLI, self-hosted verifier",

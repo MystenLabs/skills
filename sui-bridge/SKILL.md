@@ -56,7 +56,7 @@ If unsure about any detail, fetch the relevant page before answering. Do not gue
 
 - **Native bridge.** Sui Bridge is the native bridge for the Sui network, integrated into core architecture. It is not a third-party bridge. Bridge tokens at bridge.sui.io.
 
-- **Validator-operated.** Sui validators (the same entities securing the network) operate and govern Sui Bridge. Bridge transfers and other actions require validator signatures with a 2/3 voting power threshold.
+- **Validator-operated.** Sui validators (the same entities securing the network) operate and govern Sui Bridge. Bridge transfers and other actions require validator signatures with a threshold of voting power.
 
 - **Governance.** Governance occurs through validator voting. Actions require a threshold of validator voting power.
 

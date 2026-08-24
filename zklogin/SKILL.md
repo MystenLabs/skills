@@ -85,4 +85,4 @@ Do not guess or extrapolate from other authentication systems.
 - **Assuming a leaked JWT means stolen funds.** The JWT alone is not enough. An attacker also needs the ephemeral private key and salt to create valid transactions.
 - **Forgetting that proofs are session-scoped.** A ZK proof is valid only until the ephemeral key expires (max_epoch). Proofs cannot be reused across sessions, but can be cached and reused within a session.
 - **Ignoring the salt's role in privacy.** Without the salt, there is no link between the OAuth subject and the Sui address. If the salt leaks, the link becomes visible, though funds remain safe.
-- **Assuming all providers work on all networks.** Some providers (Slack, Kakao, Microsoft) are devnet-only. Others (RedBull, Amazon, WeChat, Auth0, Okta) are under review.
+- **Assuming all providers work on all networks.** Some providers (Slack, Kakao, Microsoft) are available on Devnet and Testnet only — not Mainnet. Others (RedBull, Amazon, WeChat, Auth0, Okta) are under review.

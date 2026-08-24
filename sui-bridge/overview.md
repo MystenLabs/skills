@@ -16,7 +16,7 @@ Sui validators operate and govern Sui Bridge. Bridge transfers and other actions
 
 ### Security Architecture
 
-Sui validators (the same entities securing the network) operate the bridge. Actions require a 2/3 validator voting power threshold.
+Sui validators (the same entities securing the network) operate the bridge. Actions require a threshold of validator voting power.
 
 ### Security Audits
 

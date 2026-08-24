@@ -13,7 +13,7 @@
 - Karrier One
 - Credenza3
 
-### Devnet Only
+### Devnet and Testnet Only (Not Mainnet)
 - Slack
 - Kakao
 - Microsoft
