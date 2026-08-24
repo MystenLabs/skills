@@ -9,28 +9,92 @@ Reusable agent skills for building on Sui. Install them into Claude Code, Cursor
 npx skills add mystenlabs/skills --list
 
 # Install a specific skill
-npx skills add mystenlabs/skills --skill move
+npx skills add mystenlabs/skills --skill sui-move
+
+# Install a starter set (recommended for new devs)
+npx skills add mystenlabs/skills --skill sui-overview --skill sui-move --skill sui-move-project
 
 # Install all skills
 npx skills add mystenlabs/skills --all
 ```
 
+> **New to Sui?** Start with the three-skill starter set above (`sui-overview`, `sui-move`, `sui-move-project`). Installing all 26 skills adds real context overhead and can cause trigger collisions. Add more as you need them.
+
 ## Skills
 
-No skills published yet. Check back soon or watch this repo for updates.
+### Get started
+
+| Skill | Description |
+|-------|-------------|
+| [sui-overview](sui-overview/) | High-level overview of Sui, the object model, and the Sui Stack |
+| [sui-move](sui-move/) | Sui Move smart contract development — abilities, TxContext, OTW, events, coins |
+| [sui-move-project](sui-move-project/) | Move project setup, Move.toml configuration, and dependency management |
+
+### Move development
+
+| Skill | Description |
+|-------|-------------|
+| [composable-move-functions](composable-move-functions/) | Function visibility, parameter ordering, and return patterns |
+| [modern-move-syntax](modern-move-syntax/) | Move 2024 edition syntax — method calls, string literals, loops |
+| [naming-conventions](naming-conventions/) | Naming rules for structs, constants, events, capabilities, and keys |
+| [move-unit-testing](move-unit-testing/) | Writing unit tests for Move smart contracts |
+| [object-model](object-model/) | Ownership types, dynamic fields, collections, transfer patterns |
+| [sui-build-test](sui-build-test/) | Building Move code with `sui move build` |
+
+### Tooling and deployment
+
+| Skill | Description |
+|-------|-------------|
+| [sui-install](sui-install/) | Installing and managing Sui CLI versions with suiup |
+| [sui-cli](sui-cli/) | Sui networks, gas costs, epochs, and network operations |
+| [sui-client](sui-client/) | CLI client configuration, address management, and faucet tokens |
+| [sui-publish](sui-publish/) | Publishing, upgrading, and deploying Move packages |
+
+### SDKs and frontend
+
+| Skill | Description |
+|-------|-------------|
+| [sui-sdks](sui-sdks/) | SDK landscape — TypeScript, Rust, Python, Go, and more |
+| [ptbs](ptbs/) | Programmable Transaction Blocks — composing atomic transactions |
+| [frontend-apps](frontend-apps/) | dApp development with @mysten/dapp-kit (React, Vue, vanilla JS) |
+| [accessing-data](accessing-data/) | Reading on-chain state — gRPC, GraphQL, indexers, Walrus blobs |
+
+### DeepBook
+
+| Skill | Description |
+|-------|-------------|
+| [deepbook-overview](deepbook-overview/) | DeepBook V3 architecture, contract addresses, and key concepts |
+| [deepbook-sdk](deepbook-sdk/) | DeepBook V3 TypeScript SDK — trading, orders, swaps |
+| [deepbook-move](deepbook-move/) | DeepBook V3 Move integration — on-chain orders, flash loans |
+| [deepbook-margin](deepbook-margin/) | DeepBook margin/leveraged trading |
+| [deepbook-predict](deepbook-predict/) | DeepBook Predict — prediction markets (Testnet only) |
+
+### Walrus
+
+| Skill | Description |
+|-------|-------------|
+| [walrus-sites](walrus-sites/) | Decentralized website hosting on Walrus Sites |
+
+### Other
+
+| Skill | Description |
+|-------|-------------|
+| [generate-sui-agent-config](generate-sui-agent-config/) | Generate CLAUDE.md or AGENT.md for Sui projects |
 
 ## Repo Structure
 
-Each skill is a directory containing a `SKILL.md` and any supporting reference files:
+Each skill is a directory at the repo root containing a `SKILL.md` and supporting reference files:
 
 ```
-skills/
-├── move/
+├── sui-move/
 │   ├── SKILL.md
-│   ├── syntax-ref.md
-│   └── examples.md
-├── sui-sdk/
+│   ├── abilities-context.md
+│   ├── events-coins.md
+│   └── evals/
+│       └── evals.json
+├── sui-sdks/
 │   ├── SKILL.md
+│   ├── typescript.md
 │   └── ...
 └── ...
 ```
