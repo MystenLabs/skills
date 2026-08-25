@@ -44,13 +44,13 @@ This skill helps Ethereum/EVM/Solidity developers understand how Sui Move differ
 ## Core conceptual shifts
 
 ### Programming language
-Sui uses Move; the EVM uses Solidity. Move enforces resource safety at compile time. Objects cannot be duplicated or silently dropped. Solidity relies on the EVM and gas-based pricing for runtime safety.
+Sui uses Move; the EVM uses Solidity. Move enforces resource safety at both compile time and through bytecode verification. Objects cannot be duplicated or silently dropped. Solidity relies on the EVM for runtime safety.
 
 ### Account-centric vs object-centric
-Ethereum uses an account-centric model. Solidity implements custom ownership logic within contracts using mappings. Only Ethereum coins are first-class citizens with global APIs. Sui uses an object-centric model. Object ownership is inherent to the protocol. Objects are first-class citizens encompassing everything owned on Sui.
+Ethereum uses an account-centric model. Solidity implements custom ownership logic within contracts using mappings. Only Ethereum's native currency (ETH) is a first-class citizen with global APIs. Sui uses an object-centric model. Object ownership is inherent to the protocol. Objects are first-class citizens encompassing everything owned on Sui. Any currency on Sui has the same properties as SUI.
 
 ### Data storage
-In Solidity, data is stored in the smart contract. In Move, data is stored in Move objects. Logic is defined in the contract, but the data lives in objects separate from the contract itself.
+In Solidity, data is stored in the smart contract. In Move, data is stored in Move objects. Logic is defined in the contract (package), but the data lives in objects separate from the contract itself. Object behavior (creation, modification, ownership, and deletion) is defined by a package.
 
 ### Object model fundamentals
 Objects store data in Move and everything in Move is an object. This includes smart contracts (Move packages), onchain addresses, coins, and NFTs.
@@ -76,7 +76,7 @@ PTBs give builders the ability to chain contract calls together with atomicity g
 
 ## Common mistakes
 
-- **Assuming Solidity inheritance patterns work in Move.** Move has no interfaces, no polymorphism, and no dynamic dispatch. It uses generics (`Type<T>`) instead.
+- **Assuming Solidity inheritance patterns work in Move.** Move has no interfaces, no polymorphism, and no dynamic dispatch. It uses composition through module imports and generics (`Type<T>`) instead.
 - **Using role-based access control patterns from Ethereum.** Sui uses capability-based access control through owned objects (e.g., `AdminCap`), not `Ownable` or `AccessControl` contracts.
 - **Thinking data is stored in the contract like Solidity.** In Sui, logic lives in the contract (package) but data lives in Move objects.
 - **Expecting proxy-based contract upgrades.** Sui does not use proxy contracts. New contracts must be layout-compatible with the old one.

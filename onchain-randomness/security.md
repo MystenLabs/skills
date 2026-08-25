@@ -27,11 +27,11 @@ public fun attack(guess: u8, r: &Random, ctx: &mut TxContext): Ticket {
 }
 ```
 
-The attacker only pays gas for failed attempts and keeps every winning ticket.
+The attacker only pays gas for failed attempts and keeps every winning ticket. Note: this attack works when `play_dice` always returns a ticket and never aborts on its own. If the function can abort independently, the attacker's wrapper cannot distinguish between an unfavorable outcome and an internal abort.
 
 ### Compiler protection
 
-The Move compiler rejects `public` functions with `Random` as a parameter. Define randomness-consuming functions as private `entry` functions instead.
+The Move compiler lints against `public` functions with `Random` as a parameter. Define randomness-consuming functions as private `entry` functions instead.
 
 ## PTB attacks
 
@@ -43,11 +43,11 @@ Sui rejects PTBs containing commands other than `TransferObjects` or `MergeCoins
 
 ## RandomGenerator state leakage
 
-If `RandomGenerator` is passed as a function argument, callers can predict outputs by serializing the generator's internal state with `bcs::to_bytes(&generator)`.
+If `RandomGenerator` is passed as a `public` function argument, callers can predict outputs by serializing the generator's internal state with `bcs::to_bytes(&generator)`. Passing `RandomGenerator` to `public(package)` or private functions is acceptable for testing and in-package logic.
 
 ### Compiler protection
 
-The compiler rejects `public` functions that accept `RandomGenerator` as a parameter. Always create the generator internally within the function body using `new_generator`.
+The compiler lints against `public` functions that accept `RandomGenerator` as a parameter. Always create the generator within the function that uses it via `r.new_generator(ctx)`, and pass it only to `public(package)` or private helper functions within the same package.
 
 ## Secure implementation patterns
 
@@ -58,8 +58,8 @@ Define all randomness-dependent functions as private `entry` functions to preven
 ```move
 // SECURE: private entry function
 entry fun roll_dice(r: &Random, ctx: &mut TxContext): Dice {
-    let mut generator = new_generator(r, ctx);
-    Dice { value: random::generate_u8_in_range(&mut generator, 1, 6) }
+    let mut generator = r.new_generator(ctx);
+    Dice { value: generator.generate_u8_in_range(1, 6) }
 }
 ```
 
@@ -78,7 +78,7 @@ entry fun reveal_alternative2_step1(
     ctx: &mut TxContext
 ) {
     destroy_airdrop_nft(nft);
-    let mut generator = new_generator(r, ctx);
+    let mut generator = r.new_generator(ctx);
     let v = generator.generate_u8_in_range(1, 100);
     transfer::public_transfer(
         RandomnessNFT { id: object::new(ctx), value: v },
@@ -95,7 +95,7 @@ public fun reveal_alternative2_step2(
     ctx: &mut TxContext
 ): MetalNFT {
     let RandomnessNFT { id, value } = nft;
-    delete(id);
+    id.delete();
     let metal = if (value <= 10) GOLD
         else if (10 < value && value <= 40) SILVER
         else BRONZE;
@@ -107,6 +107,8 @@ The first step is a private `entry` function (consumes `Random`), while the seco
 
 ### Balanced gas usage
 
-Ensure winning and losing execution paths consume approximately equal gas. If branches differ significantly in gas consumption, attackers can infer outcomes from gas usage without seeing the result.
+Ensure winning and losing execution paths consume approximately equal total gas (both compute and storage). If branches differ significantly in gas consumption, attackers can infer outcomes from gas usage without seeing the result. The success path should cost equal or more gas than the failure path.
 
-For example, if a winning path creates three objects and a losing path creates one, the gas difference reveals the outcome. Design both paths to perform similar amounts of work.
+To achieve balanced gas, either perform a simple standard update (e.g., set a bool flag) in the randomness function and claim the result object in a follow-up function, or create an equally sized object (e.g., a dynamic field) in the failure path.
+
+For example, if a winning path creates three objects and a losing path creates one, the gas difference reveals the outcome. Gas values must be measured carefully and tested in each published environment before going live.

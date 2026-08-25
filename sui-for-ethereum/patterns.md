@@ -9,41 +9,41 @@ Detailed mappings between Ethereum/Solidity patterns and their Sui Move equivale
 | Programming language | Solidity | Move |
 | Data model | Account-centric | Object-centric |
 | Data storage | Data stored in the smart contract | Data stored in Move objects |
-| Inheritance | Supports multiple inheritance, polymorphism, dynamic dispatch | No interfaces, no polymorphism, no dynamic dispatch. Has generics (`Type<T>`) |
-| Asset accessibility | Bound to smart contract | Anyone can access shared objects. Owned objects only accessible by owner |
-| Access control | Identity/role-based (Ownable, AccessControl contracts) | Capability-based through owned objects |
+| Inheritance | Supports multiple inheritance, polymorphism, dynamic dispatch | No interfaces, no polymorphism, no dynamic dispatch. Composition through module imports and generics (`Type<T>`) |
+| Asset accessibility | Assets defined by smart contract behavior; no universal asset type | Assets have distinct types with uniform composition properties. Anyone can access shared objects. Owned objects only accessible by owner |
+| Access control | Identity/role-based (Ownable, AccessControl contracts) | Any access control model is possible; capability-based access through owned objects is the idiomatic pattern |
 | Contract upgrades | Proxy contract forwards user transactions | New contracts must be layout-compatible with the old one |
 | State mutation | Sending transactions through compile-time ABI interface | Sending transactions through runtime PTB construction |
 
 ## Account-centric vs object-centric model
 
-**Solidity (account-centric):** Custom ownership logic is written within contracts using mappings. Only Ethereum coins are first-class citizens with global APIs.
+**Solidity (account-centric):** Custom ownership logic is written within contracts using mappings. Only Ethereum's native currency (ETH) is a first-class citizen with global APIs.
 
-**Move (object-centric):** Object ownership is inherent to Sui. Objects are first-class citizens encompassing everything owned on Sui. Objects store data in Move, and everything in Move is an object -- this includes smart contracts (Move packages), onchain addresses, coins, and NFTs.
+**Move (object-centric):** Object ownership is inherent to Sui. Objects are first-class citizens encompassing everything owned on Sui. Objects store data in Move, and everything in Move is an object -- this includes smart contracts (Move packages), onchain addresses, coins, and NFTs. Any currency on Sui has the same properties as SUI (the native token), thanks to the generic `Coin<T>` type.
 
 ## Data storage
 
 **Solidity:** Data is stored in the smart contract itself.
 
-**Move:** Data is stored in Move objects. Logic is defined in the contract (package), but the data lives in separate objects. The owner invokes contract functions via PTB, and the protocol checks ownership at the protocol level.
+**Move:** Data is stored in Move objects. Logic is defined in the contract (package), but the data lives in separate objects. Object behavior (creation, modification, ownership, and deletion) is defined by a package. The owner invokes contract functions via PTB, and the protocol checks ownership at the protocol level.
 
 ## Inheritance and polymorphism
 
 **Solidity:** Supports multiple inheritance, polymorphism, and dynamic dispatch. Contracts can extend other contracts, override functions, and use interface-based dispatch.
 
-**Move:** No interfaces, no polymorphism, no dynamic dispatch. Move uses generics (`Type<T>`) for type parameterization instead. Code reuse is achieved through module imports and generic functions, not inheritance hierarchies.
+**Move:** No interfaces, no polymorphism, no dynamic dispatch. Move uses composition through module imports and generics (`Type<T>`) for type parameterization instead. Code reuse is achieved through module imports, generic functions, and composition, not inheritance hierarchies.
 
 ## Asset and token accessibility
 
-**Solidity:** Assets are bound to a smart contract. To interact with a token, you must go through the contract that defines it.
+**Solidity:** There is no universal definition of "asset" in Solidity. An asset is defined by the behaviors of a smart contract (e.g., an ERC-20 contract defines a token through its transfer/balance logic). To interact with a token, you must go through the contract that defines it.
 
-**Move:** Anyone can access shared objects. Owned objects are only accessible by their owner. Objects are not bound to a specific contract for access.
+**Move:** Assets have distinct types with well-defined abilities, and their general composition properties remain the same regardless of the specific asset. Anyone can access shared objects. Owned objects are only accessible by their owner. The generic `Coin<T>` / `Balance<T>` types mean any currency has the same standard interface as SUI itself.
 
 ## Access control patterns
 
 **Solidity:** Uses identity/role-based access control through `Ownable` and `AccessControl` contracts. Permissions are checked against `msg.sender`.
 
-**Move:** Uses capability-based access control through owned objects. A capability object grants the holder permission to perform an action.
+**Move:** Any access control model is implementable (including identity/role-based), but the idiomatic pattern is capability-based access control through owned objects. Ownable capabilities cheaply "objectify" ownership transfer rules. A capability object grants the holder permission to perform an action.
 
 ```move
 /// Grants the owner the right to create new users in the system.
@@ -76,7 +76,7 @@ Instead of checking `msg.sender` against a role mapping, Move functions require 
 
 ## Mutating objects
 
-Logic is defined in the contract. Data is stored in Move objects. The owner invokes contract functions via PTB. The protocol checks ownership at the protocol level.
+Logic is defined in the contract (package). Data is stored in Move objects. Object behavior (creation, modification, ownership, and deletion) is defined by a package. The owner invokes contract functions via PTB, and the protocol checks ownership at the protocol level.
 
 ## Programmable transaction blocks (PTBs)
 
@@ -90,12 +90,14 @@ On Ethereum, each call is its own transaction and is not atomic across calls. On
 |---------|----------|-----|
 | Token standards | ERC-20, ERC-721, ERC-1155 | Currency Standard, Closed-Loop Token |
 
+Since assets in Move are not identified by their behavior (as in Solidity), standards are not a necessity for defining asset types. For example, `Balance` / `Coin` is a standard generic implementation, not a "standard" in the Ethereum sense where it defines what makes something a token.
+
 ## Development environment
 
 | Ecosystem | Tools |
 |-----------|-------|
 | Ethereum | Hardhat, Foundry |
-| Sui | Move VSCode extension |
+| Sui | Sui CLI, Move VSCode extension |
 
 ## Technical comparisons
 
@@ -108,4 +110,4 @@ On Ethereum, each call is its own transaction and is not atomic across calls. On
 | Parallel execution | Transactions can be parallel | Every transaction sequentially run |
 | Contract mutability | Native mutable and immutable support using upgrade capabilities | Not native, requires auditing Solidity code |
 | Composability | Call any number of functions within single transaction using PTBs, atomic | Each call is its own transaction, not atomic |
-| Token royalties | Enforced by the chain | Only enforceable by marketplaces |
+| Token royalties | Only enforceable by marketplaces | Enforced by a standard implementation of NFT containers (Kiosk) with creator control over royalties and transfer permissions |
