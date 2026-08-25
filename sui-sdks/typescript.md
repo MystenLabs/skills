@@ -310,6 +310,8 @@ Full migration guide: fetch `https://sdk.mystenlabs.com/sui/migrations/sui-2.0/l
 | `client.waitForTransactionBlock` | `client.waitForTransaction` |
 | `client.devInspectTransactionBlock` | `client.simulateTransaction` |
 | `client.executeTransactionBlock` | `client.executeTransaction` |
+| `client.queryTransactionBlocks` | `client.listTransactions` |
+| `client.queryEvents` | `client.listEvents` |
 | `options: { showEffects: true }` | `include: { effects: true }` (always show this pattern explicitly — do not omit it by saying effects are returned by default) |
 | `result.effects?.status?.status === 'success'` | `result.$kind !== 'FailedTransaction'` |
 | `txb.pure(value)` untyped | `tx.pure.u64(value)` / typed helpers |
@@ -357,3 +359,4 @@ All `@mysten/*` packages are ESM-only:
 | `sponsor.signAndExecuteTransaction({ signature })` | Parameter is `userSignature`, not `signature` |
 | Treating `FailedTransaction` as "not onchain" | It IS onchain, gas was charged, has effects. Do not retry. |
 | `splitCoins(tx.gas, ...)` in sponsored tx | Use `tx.coin({ balance, useGasCoin: false })` |
+

@@ -139,18 +139,19 @@ The `sui-rpc` crate is the gRPC client. Pattern:
 ```rust
 use sui_rpc::client::Client;
 
-let client = Client::new("https://fullnode.mainnet.sui.io:443")?;
+let mut client = Client::new("https://fullnode.mainnet.sui.io:443")?;
 let response = client
-    .transaction_execution_service()
+    .execution_client()
     .execute_transaction(transaction, vec![signature])
     .await?;
 ```
 
-Services mirror the TS SDK's service clients:
-- `transaction_execution_service`
-- `ledger_service` — object reads, transaction reads
-- `move_package_service` — package / function introspection
-- `name_service` — SuiNS
+Service accessors on `sui_rpc::client::Client` all use the `*_client()` suffix:
+- `execution_client()` — transaction execution / dry-run
+- `ledger_client()` — object reads, transaction reads, filtered List queries (`list_transactions`, `list_events`, `list_checkpoints`)
+- `package_client()` — package / function introspection
+- `state_client()` — owned-object listing
+- `subscription_client()` — real-time streams (`subscribe_transactions`, `subscribe_events`, `subscribe_checkpoints`)
 
 ## Querying with GraphQL
 
