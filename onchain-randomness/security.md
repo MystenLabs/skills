@@ -1,6 +1,6 @@
 # Security and Attack Vectors
 
-> Source: [docs.sui.io](https://docs.sui.io)
+> Source: [docs.sui.io/sui-stack/on-chain-primitives/randomness-onchain](https://docs.sui.io/sui-stack/on-chain-primitives/randomness-onchain)
 
 ---
 

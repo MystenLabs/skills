@@ -15,7 +15,7 @@
         "The response mentions passing Random by reference (&Random)"
       ],
       "sources": [
-        "https://docs.sui.io"
+        "https://docs.sui.io/sui-stack/on-chain-primitives/randomness-onchain"
       ]
     },
     {
@@ -31,7 +31,7 @@
         "The response mentions that the compiler also rejects public functions accepting RandomGenerator parameters"
       ],
       "sources": [
-        "https://docs.sui.io"
+        "https://docs.sui.io/sui-stack/on-chain-primitives/randomness-onchain"
       ]
     },
     {
@@ -47,7 +47,7 @@
         "The response mentions balanced gas usage so attackers cannot infer outcomes from gas consumption"
       ],
       "sources": [
-        "https://docs.sui.io"
+        "https://docs.sui.io/sui-stack/on-chain-primitives/randomness-onchain"
       ]
     },
     {
@@ -63,7 +63,7 @@
         "The response mentions balanced gas usage to prevent gas-based inference attacks"
       ],
       "sources": [
-        "https://docs.sui.io"
+        "https://docs.sui.io/sui-stack/on-chain-primitives/randomness-onchain"
       ]
     }
   ]
