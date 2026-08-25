@@ -12,14 +12,14 @@ description: >
 
 > **MCP tool:** When available in your environment, also query the Sui documentation MCP server (`https://sui.mcp.kapa.ai`) for up-to-date answers. Use it for verification and for details not covered by these reference files.
 
-> **Source constraint:** All information in this skill is sourced exclusively from [docs.sui.io](https://docs.sui.io). When extending or updating this skill, only pull from this source. Do not use third-party blogs, tutorials, or unofficial documentation.
+> **Source constraint:** All information in this skill is sourced exclusively from [docs.sui.io/concepts/tokenomics/sui-bridging](https://docs.sui.io/concepts/tokenomics/sui-bridging). When extending or updating this skill, only pull from this source. Do not use third-party blogs, tutorials, or unofficial documentation.
 
 Sui Bridge is the native bridge for the Sui network, integrated into its core architecture. It enables asset movement between Sui and other blockchains. Sui validators operate and govern Sui Bridge. Bridge transfers and other actions require validator signatures with a threshold of voting power. Common mistakes include assuming any token can be bridged (only specific supported assets are available), misunderstanding the global limiter constraints, and not accounting for finality requirements on both chains.
 
 This skill routes to focused reference files. Load only the ones relevant to the current task.
 
 All patterns in this skill are derived from:
-  https://docs.sui.io
+  https://docs.sui.io/concepts/tokenomics/sui-bridging
 
 If unsure about any detail, fetch the relevant page before answering. Do not guess or extrapolate.
 
@@ -75,6 +75,6 @@ If unsure about any detail, fetch the relevant page before answering. Do not gue
 ### Common mistakes
 
 - **Assuming any ERC-20 token can be bridged.** Only the specifically supported assets (WBTC, LBTC, ETH, WETH, USDT) are available on Sui Bridge.
-- **Ignoring the global limiter.** Large transfers may be constrained by the 24-hour rolling limit. The limiter tracks hourly and refreshes hourly.
+- **Ignoring the global limiter.** Large transfers may be constrained by the 24-hour rolling limit.
 - **Not accounting for finality delays.** Transfers are not instant. Ethereum-to-Sui requires Ethereum block confirmations; Sui-to-Ethereum requires Sui transaction finality.
 - **Confusing transfer precision.** ETH/WETH transfers use 8-decimal precision on the bridge.

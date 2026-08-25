@@ -1,6 +1,6 @@
 # Sui Bridge -- Architecture and Usage
 
-> Source: [docs.sui.io](https://docs.sui.io)
+> Source: [docs.sui.io/concepts/tokenomics/sui-bridging](https://docs.sui.io/concepts/tokenomics/sui-bridging)
 
 ## Overview
 
@@ -33,7 +33,7 @@ Open source: Move, Solidity, Bridged ETH, bridge node, and bridge indexer implem
 | Asset | Symbol |
 |-------|--------|
 | Wrapped Bitcoin | WBTC |
-| Lightning Bitcoin | LBTC |
+| Lombard Staked Bitcoin | LBTC |
 | Ethereum | ETH |
 | Wrapped Ethereum | WETH |
 | Tether | USDT |
@@ -54,7 +54,7 @@ Open source: Move, Solidity, Bridged ETH, bridge node, and bridge indexer implem
 
 ## Global Limiter
 
-The global limiter constrains total asset value leaving the bridge within 24 hours. Tracking is hourly, refreshing hourly.
+The global limiter constrains total asset value leaving the bridge within 24 hours.
 
 | Direction | Daily Limit |
 |-----------|------------|
