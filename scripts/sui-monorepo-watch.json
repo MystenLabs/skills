@@ -40,7 +40,7 @@
     "crates/sui-move",
     "crates/sui/src/sui_commands.rs"
   ],
-  "sui-cli": [
+  "sui-networks-gas": [
     "crates/sui/src"
   ],
   "sui-client": [

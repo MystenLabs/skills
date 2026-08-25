@@ -13,6 +13,8 @@ Dynamic fields attach key-value data to an object at runtime, beyond the fields 
 
 **When to use dynamic field:** When the stored value is a plain type (like `u64`, `String`, or a non-object struct), or when you do not need the child to be independently addressable.
 
+**Constraint:** Shared objects cannot be stored as dynamic fields — attempting to do so aborts with `ESharedObjectOperationNotSupported`.
+
 ## Field naming
 
 Dynamic field names accept any value with `copy`, `drop`, and `store` abilities. This includes primitives (`u64`, `address`, `String`) and custom structs with those abilities. This is more flexible than regular struct fields, which require Move identifiers.

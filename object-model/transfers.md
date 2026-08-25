@@ -24,6 +24,10 @@ These can be called from any module, but the object must have the `store` abilit
 | `transfer::public_share_object(obj)` | Make the object shared |
 | `transfer::public_freeze_object(obj)` | Make the object immutable |
 
+## Sharing constraints
+
+`share_object` and `public_share_object` can only be called on objects created within the same transaction. An existing address-owned object cannot be converted to shared — there is no owned-to-shared conversion. Once shared, an object cannot be converted back to address-owned.
+
 ## Custom transfer rules
 
 Objects without `store` can only be transferred by their defining module. This lets you enforce preconditions:
