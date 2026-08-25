@@ -61,10 +61,10 @@ This skill covers security best practices for Move smart contracts on Sui, inclu
 
 ## Rules
 
-- Sui packages are immutable once published. Verify package IDs directly onchain rather than relying on names or frontend constants.
+- Sui packages are immutable once published. During a package upgrade, a new package with a new address is published. Verify package IDs directly onchain rather than relying on names or frontend constants.
 - Treat `UpgradeCap` with the same rigor as admin capabilities since holders can modify package behavior.
-- Mark randomness-consuming functions as private `entry` only. The Move compiler rejects `public` functions that take `Random` or `RandomGenerator`.
-- Never accept `RandomGenerator` as a function parameter. Always create the generator internally.
+- Mark randomness-consuming functions as private `entry` only. The Move compiler lints against `public` functions that take `Random` or `RandomGenerator`.
+- Never accept `RandomGenerator` as a `public` function parameter. Passing it to `public(package)` or private functions is acceptable for testing and in-package logic.
 - Emit events for all privileged actions: admin changes, allowlist updates, mint/burn operations, denylist actions, configuration changes, oracle updates, emergency pauses.
 - Require relevant capabilities as parameters for all privileged functions. Do not rely on `tx_context::sender()` alone for authorization.
 - Anyone can submit a transaction referencing a shared object. Never assume shared object access is restricted.
@@ -72,9 +72,9 @@ This skill covers security best practices for Move smart contracts on Sui, inclu
 
 ## Common mistakes
 
-- **Trusting package names instead of IDs.** Package names are not unique identifiers. Always verify the exact onchain package ID.
+- **Trusting package names instead of onchain IDs.** Move package names (the `name` field in `Move.toml`) are arbitrary strings chosen by the developer and are not unique. Always verify the exact onchain package ID (the object address).
 - **Using `tx_context::sender()` as the sole authorization check.** This ties functions to single signers and breaks composability. Other contracts cannot call the function on behalf of users.
 - **Forgetting that shared objects are accessible to anyone.** Every privileged function touching shared state must validate authorization internally.
-- **Accepting `RandomGenerator` as a function parameter.** This allows callers to manipulate the generator. Always create it internally from `Random`.
+- **Accepting `RandomGenerator` as a `public` function parameter.** This allows callers to manipulate the generator. Create it within the entry function via `r.new_generator(ctx)` and pass only to `public(package)` or private helpers.
 - **Not planning capability revocation before publishing.** Once published, the package is immutable. A leaked capability without a revocation mechanism remains valid forever.
 - **Holding admin capabilities in single hot wallets.** Use multisig addresses, hardware wallets, or dedicated custody for privileged keys.

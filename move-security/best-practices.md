@@ -6,7 +6,7 @@
 
 ## Package auditing and immutability
 
-- Sui packages are immutable once published. Verify package IDs directly onchain rather than relying on names or frontend constants.
+- Sui packages are immutable once published. During a package upgrade, a new package with a new address is published. Verify package IDs directly onchain rather than relying on names or frontend constants.
 - Audit both current packages and their upgrade policies before trusting them.
 - The `UpgradeCap` controls all future versions and should be treated as security-critical.
 
@@ -14,7 +14,19 @@
 
 - Protect `UpgradeCap` with the same rigor as admin capabilities since holders can modify package behavior.
 - Apply custom upgrade policies, multisig, or timelocks to prevent unilateral upgrades.
-- Call `make_immutable` on `UpgradeCap` when upgrades are no longer needed. This is an irreversible action.
+- Call `make_immutable` on `UpgradeCap` to prevent package upgrades permanently. This is an irreversible action.
+
+## Package versioning
+
+- Version every published package and assert on the current version in every `public` function. This is essential for safe upgrades.
+- Store the version in a shared configuration object and check it at the start of each entry point.
+- When upgrading, increment the version and migrate state in the same transaction to prevent calls against stale logic.
+
+## Emergency pause mechanism
+
+- Implement a pause or "stop" capability as a red button for quick response to security incidents.
+- Gate the pause behind a dedicated capability (e.g., `PauseCap`) held in multisig custody.
+- When paused, all public functions should abort early. Emit an event on pause and unpause for auditability.
 
 ## Dependency verification
 
@@ -60,13 +72,13 @@ Emit events for all privileged actions to enable offchain monitoring of unexpect
 ### Function declaration requirements
 
 - Mark randomness-consuming functions as private `entry` only.
-- The Move compiler enforces this by rejecting `public` functions that take `Random` or `RandomGenerator`.
+- The Move compiler lints against `public` functions that take `Random` or `RandomGenerator`.
 - Private entry prevents other modules from composing randomness calls into larger attacks.
 
 ### RandomGenerator parameter restriction
 
-- Never accept `RandomGenerator` as a function parameter.
-- Always create the generator internally to prevent manipulation.
+- Never accept `RandomGenerator` as a `public` function parameter. Passing it to `public(package)` or private functions is acceptable for testing and in-package logic.
+- Always create the generator within the entry function via `r.new_generator(ctx)` and pass it only to internal helpers.
 
 ### Gas path balance
 

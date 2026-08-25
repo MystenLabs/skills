@@ -61,7 +61,7 @@ Instead of checking `msg.sender` against a role mapping, Move functions require 
 
 **Solidity:** Uses proxy contracts that forward user transactions to an implementation contract. The proxy address stays the same while the implementation can be swapped.
 
-**Move:** New contracts must be layout-compatible with the old one. Sui does not use proxy contracts. Upgrades are controlled through an `UpgradeCap`.
+**Move:** Sui can have proxy-like patterns, but they must operate on the same object types across upgrades. New contracts must be layout-compatible with the old one. Upgrades are controlled through an `UpgradeCap`.
 
 ## State mutation
 

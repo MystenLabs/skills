@@ -77,8 +77,8 @@ PTBs give builders the ability to chain contract calls together with atomicity g
 ## Common mistakes
 
 - **Assuming Solidity inheritance patterns work in Move.** Move has no interfaces, no polymorphism, and no dynamic dispatch. It uses composition through module imports and generics (`Type<T>`) instead.
-- **Using role-based access control patterns from Ethereum.** Sui uses capability-based access control through owned objects (e.g., `AdminCap`), not `Ownable` or `AccessControl` contracts.
+- **Assuming only role-based access control works.** Sui can implement role-based access control, but the idiomatic pattern is capability-based access through owned objects (e.g., `AdminCap`). Capabilities cheaply objectify ownership transfer rules.
 - **Thinking data is stored in the contract like Solidity.** In Sui, logic lives in the contract (package) but data lives in Move objects.
-- **Expecting proxy-based contract upgrades.** Sui does not use proxy contracts. New contracts must be layout-compatible with the old one.
+- **Expecting proxy-based contract upgrades.** Sui can have proxy-like patterns, but they must operate on the same object types across upgrades. Layout compatibility is required — new contracts must be layout-compatible with the old one. Upgrades are controlled through `UpgradeCap`.
 - **Treating each Move function call as a separate transaction.** Use PTBs to chain up to 1,024 contract calls into a single atomic transaction.
 - **Assuming tokens are bound to a smart contract like in Solidity.** On Sui, anyone can access shared objects, and owned objects are directly accessible by their owner without going through a contract.

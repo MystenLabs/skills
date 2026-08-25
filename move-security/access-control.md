@@ -21,14 +21,14 @@ When address allowlists are necessary:
 ## Avoid `tx_context::sender()` alone
 
 - Using only `tx_context::sender()` as an authorization check ties functions to single signers and breaks composability.
-- Other contracts cannot call the function on behalf of users with this approach.
+- On Sui, other contracts cannot call functions on behalf of another address — each transaction has a single sender. This means `tx_context::sender()` checks prevent any contract-to-contract delegation.
 - Reserve `tx_context::sender()` for cases where the signer is genuinely the only valid actor.
 
 ## Explicit capability requirements
 
 - Require relevant capabilities as parameters for all privileged functions (`AdminCap`, `TreasuryCap`, `DenyCapV2`).
 - Place the capability as the second parameter to maintain method associativity.
-- Move's type system enforces capability requirements at transaction construction time.
+- Move's type system enforces capability requirements at compile time — a function requiring `AdminCap` cannot be called without one, and the transaction will fail if the caller does not own or have access to the required capability object.
 
 ## Admin capability protection
 
