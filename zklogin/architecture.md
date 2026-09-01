@@ -73,7 +73,7 @@ The zkLogin system involves three distinct components:
 
 ### Phase 1: Setup (Steps 0-3)
 
-**Step 0:** Groth16 zkSNARK ceremony generates the Common Reference String (CRS).
+**Step 0:** A one-time decentralized Groth16 zkSNARK ceremony was performed before zkLogin was enabled on Sui. This ceremony generated the Common Reference String (CRS) and the verifying key is pinned in the Sui protocol. This is not a user action.
 
 **Step 1:** Application creates an ephemeral key pair `(eph_sk, eph_pk)`.
 
@@ -126,6 +126,8 @@ The zkLogin address is computed deterministically from the following inputs:
 addr_seed = Poseidon_BN254(kc_name_F, kc_value_F, aud_F, Poseidon_BN254(user_salt))
 zk_login_address = Blake2b_256(zk_login_flag, iss_L, iss, addr_seed)
 ```
+
+> **TODO:** The `Poseidon_BN254` hash function used in address derivation will change as part of the zkLogin v2 migration. Update this section once the migration is complete.
 
 ### Address Properties
 
