@@ -53,13 +53,13 @@ const address = signer.getPublicKey().toSuiAddress();
 ### Sign and execute
 
 ```typescript
-const result = await signer.signAndExecuteTransaction({
+const result = await client.signAndExecuteTransaction({
   transaction: tx,
-  client,
+  signer,
 });
 ```
 
-Works exactly like a keypair — same `Signer` interface.
+The signer is passed to the client method. All signers work interchangeably with this pattern.
 
 ---
 
@@ -95,9 +95,9 @@ const address = signer.getPublicKey().toSuiAddress();
 ### Sign and execute
 
 ```typescript
-const result = await signer.signAndExecuteTransaction({
+const result = await client.signAndExecuteTransaction({
   transaction: tx,
-  client,
+  signer,
 });
 ```
 

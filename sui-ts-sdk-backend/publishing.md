@@ -21,7 +21,7 @@ The TypeScript SDK does not include a Move compiler. The `sui move build` step m
 
 ### Step 1: Load compiled modules and dependencies
 
-After `sui move build`, the compiled modules are in `build/<package_name>/bytecode_modules/` and dependencies in `build/<package_name>/source_maps/`.
+After `sui move build`, the compiled modules are in `build/<package_name>/bytecode_modules/`. Dependencies are package ID strings (e.g., `'0x1'`, `'0x2'`), not filesystem paths.
 
 ```typescript
 import { readFileSync, readdirSync } from 'fs';
@@ -138,13 +138,14 @@ const result = await keypair.signAndExecuteTransaction({
 Use `simulateTransaction` to simulate a transaction without executing it:
 
 ```typescript
+tx.setSender(keypair.toSuiAddress());
 const dryRunResult = await client.simulateTransaction({
   transaction: tx,
-  sender: keypair.toSuiAddress(),
+  include: { effects: true },
 });
 
-if (dryRunResult.effects.status.status === 'failure') {
-  console.error('Dry run failed:', dryRunResult.effects.status.error);
+if (dryRunResult.$kind === 'FailedTransaction') {
+  console.error('Dry run failed:', dryRunResult.FailedTransaction.status.error?.message);
 }
 ```
 

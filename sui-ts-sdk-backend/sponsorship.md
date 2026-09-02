@@ -2,14 +2,14 @@
 
 > Source: [sdk.mystenlabs.com/sponsor](https://sdk.mystenlabs.com/sponsor/basic-usage)
 
-Sponsored transactions let a backend pay gas on behalf of users. The `@mysten/sponsor` package provides the recommended flow.
+Sponsored transactions let a backend pay gas on behalf of users. The `@mysten-incubation/sponsor` package provides the recommended flow.
 
 ---
 
 ## Install
 
 ```bash
-npm install @mysten/sponsor
+npm install @mysten-incubation/sponsor @mysten/sui
 ```
 
 ---

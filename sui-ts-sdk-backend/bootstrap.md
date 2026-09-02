@@ -98,7 +98,7 @@ import { requestSuiFromFaucetV2, getFaucetHost } from '@mysten/sui/faucet';
 
 await requestSuiFromFaucetV2({
   host: getFaucetHost('testnet'),
-  address: keypair.toSuiAddress(),
+  recipient: keypair.toSuiAddress(),
 });
 ```
 
@@ -111,7 +111,7 @@ There is no faucet for Mainnet. For Mainnet, acquire SUI through an exchange or 
 ```typescript
 await requestSuiFromFaucetV2({
   host: getFaucetHost('localnet'), // http://127.0.0.1:5003/v2/gas
-  address: keypair.toSuiAddress(),
+  recipient: keypair.toSuiAddress(),
 });
 ```
 
@@ -196,7 +196,7 @@ console.log('Address:', address);
 // 2. Fund from faucet
 await requestSuiFromFaucetV2({
   host: getFaucetHost('testnet'),
-  address,
+  recipient: address,
 });
 
 // 3. Connect

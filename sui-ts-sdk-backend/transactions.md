@@ -47,7 +47,7 @@ tx.moveCall({
 
 | Parameter | Type | Default | Description |
 |-----------|------|---------|-------------|
-| `balance` | `bigint` | required | Amount in base units |
+| `balance` | `bigint \| number` | required | Amount in base units |
 | `type` | `string` | `'0x2::sui::SUI'` | Coin type |
 | `useGasCoin` | `boolean` | `true` | Set `false` for sponsored transactions |
 
@@ -65,7 +65,7 @@ Sui has two ways of holding fungible tokens:
 
 | | Coin Objects | Address Balances |
 |--|-------------|-----------------|
-| Structure | Individual on-chain objects with unique ID, version, digest | Accumulator per address per coin type |
+| Structure | Individual on-chain objects with unique ID, version, and balance | Accumulator per address per coin type |
 | Concurrency | Each coin is a versioned object — using it requires the exact version | No versions — concurrent transactions from the same address work |
 | Management | Must manually split/merge | Deposits automatically merge |
 
@@ -82,9 +82,8 @@ const total = BigInt(balance.balance);
 ### List individual coin objects
 
 ```typescript
-const coins = await client.listCoins({
+const { objects } = await client.listCoins({
   owner: address,
-  coinType: '0x2::sui::SUI',
 });
 ```
 
@@ -111,7 +110,7 @@ tx.mergeCoins('0xCoin1', ['0xCoin2', '0xCoin3']);
 ```typescript
 tx.moveCall({
   target: '0x2::coin::send_funds',
-  arguments: [coin, recipientAddress],
+  arguments: [tx.object('0xMyCoinObjectId'), tx.pure.address('0xRecipientAddress')],
   typeArguments: ['0x2::sui::SUI'],
 });
 ```
@@ -169,7 +168,7 @@ const { signature } = await keypair.signTransaction(bytes);
 // Execute later
 const result = await client.executeTransaction({
   transaction: bytes,
-  signature,
+  signatures: [signature],
 });
 ```
 
@@ -189,7 +188,7 @@ if (result.$kind === 'FailedTransaction') {
 }
 ```
 
-A result that is not `Rejected` is not necessarily a success. Always check for `FailedTransaction`.
+Always check for `FailedTransaction` — a successful execution does not mean the Move call succeeded.
 
 ---
 
@@ -214,7 +213,7 @@ Qualified stablecoin transfers can execute with zero gas using `0x2::balance::se
 const tx = new Transaction();
 tx.moveCall({
   target: '0x2::balance::send_funds',
-  arguments: [tx.balance({ balance: 1_000_000n, type: USDC_TYPE }), recipient],
+  arguments: [tx.balance({ balance: 1_000_000n, type: USDC_TYPE }), tx.pure.address(recipient)],
   typeArguments: [USDC_TYPE],
 });
 

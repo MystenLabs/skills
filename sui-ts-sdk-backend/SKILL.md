@@ -50,8 +50,8 @@ If unsure about any API, fetch the relevant page before answering. Do not guess 
 
 ### sponsorship — Sponsored Transactions
 **Path:** `sponsorship.md`
-**Load when:** sponsoring transactions for users, building a gas station backend, using the `@mysten/sponsor` SDK, or implementing address-balance or coin-based sponsorship flows.
-**Covers:** `@mysten/sponsor` package, client-builds flow (recommended), backend validation and co-signing, config endpoint pattern, coin-based vs address-balance sponsorship, `useGasCoin: false` for token transfers, result handling (Rejected vs FailedTransaction vs success).
+**Load when:** sponsoring transactions for users, building a gas station backend, using the `@mysten-incubation/sponsor` SDK, or implementing address-balance or coin-based sponsorship flows.
+**Covers:** `@mysten-incubation/sponsor` package, client-builds flow (recommended), backend validation and co-signing, config endpoint pattern, coin-based vs address-balance sponsorship, `useGasCoin: false` for token transfers, result handling (Rejected vs FailedTransaction vs success).
 
 ### executors — Running Transactions at Scale
 **Path:** `executors.md`
