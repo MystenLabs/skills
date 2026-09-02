@@ -135,12 +135,12 @@ const result = await keypair.signAndExecuteTransaction({
 
 ## Dry-run before publishing
 
-Use `devInspectTransactionBlock` to simulate a transaction without executing it:
+Use `simulateTransaction` to simulate a transaction without executing it:
 
 ```typescript
-const dryRunResult = await client.devInspectTransactionBlock({
+const dryRunResult = await client.simulateTransaction({
+  transaction: tx,
   sender: keypair.toSuiAddress(),
-  transactionBlock: tx,
 });
 
 if (dryRunResult.effects.status.status === 'failure') {

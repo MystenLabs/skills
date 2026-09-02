@@ -20,7 +20,7 @@ For sequential execution from a single address (wallets, backend services with o
 ### Setup
 
 ```typescript
-import { SerialTransactionExecutor } from '@mysten/sui/executors';
+import { SerialTransactionExecutor } from '@mysten/sui/transactions';
 import { SuiGrpcClient } from '@mysten/sui/grpc';
 import { Ed25519Keypair } from '@mysten/sui/keypairs/ed25519';
 
@@ -80,7 +80,7 @@ For concurrent execution from a single address (high-throughput pipelines, batch
 ### Setup
 
 ```typescript
-import { ParallelTransactionExecutor } from '@mysten/sui/executors';
+import { ParallelTransactionExecutor } from '@mysten/sui/transactions';
 
 const executor = new ParallelTransactionExecutor({
   client,

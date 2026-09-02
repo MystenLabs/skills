@@ -75,8 +75,8 @@ An address's total balance = sum of coin object balances + address balance.
 
 ```typescript
 const { balance } = await client.getBalance({ owner: address });
-// balance contains: totalBalance, coinObjectBalance, addressBalance (as strings)
-const total = BigInt(balance.totalBalance);
+// balance contains: balance (total), coinBalance, addressBalance (as strings)
+const total = BigInt(balance.balance);
 ```
 
 ### List individual coin objects
@@ -121,7 +121,7 @@ tx.moveCall({
 Use `tx.withdrawal()` to create a withdrawal input, then redeem via Move:
 
 ```typescript
-const withdrawal = tx.withdrawal({ balance: 1_000_000_000n });
+const withdrawal = tx.withdrawal({ amount: 1_000_000_000n });
 tx.moveCall({
   target: '0x2::coin::redeem_funds',
   arguments: [withdrawal],

@@ -76,7 +76,7 @@ const { signature: sponsorSignature } = await sponsorKeypair.signTransaction(byt
 // Execute with both signatures
 const result = await client.executeTransaction({
   transaction: bytes,
-  signature: [userSignature, sponsorSignature],
+  signatures: [userSignature, sponsorSignature],
 });
 ```
 

@@ -32,6 +32,7 @@ npm install @mysten/aws-kms-signer
 
 ### Supported key types
 
+- Ed25519
 - Secp256k1 (`ECC_SECG_P256K1`)
 - Secp256r1 (`ECC_NIST_P256`)
 
@@ -40,15 +41,13 @@ npm install @mysten/aws-kms-signer
 ```typescript
 import { AwsKmsSigner } from '@mysten/aws-kms-signer';
 
-const signer = await AwsKmsSigner.fromKeyId(
-  'arn:aws:kms:us-east-1:123456789:key/your-key-id',
-  {
-    region: 'us-east-1',
-    // AWS credentials are loaded from environment (AWS_ACCESS_KEY_ID, etc.)
-  },
-);
+const signer = await AwsKmsSigner.fromKeyId(AWS_KMS_KEY_ID, {
+  region: AWS_REGION,
+  accessKeyId: AWS_ACCESS_KEY_ID,
+  secretAccessKey: AWS_SECRET_ACCESS_KEY,
+});
 
-const address = signer.toSuiAddress();
+const address = signer.getPublicKey().toSuiAddress();
 ```
 
 ### Sign and execute
@@ -83,14 +82,14 @@ npm install @mysten/gcp-kms-signer
 import { GcpKmsSigner } from '@mysten/gcp-kms-signer';
 
 const signer = await GcpKmsSigner.fromOptions({
-  projectId: 'your-project',
-  locationId: 'us-east1',
-  keyRingId: 'your-keyring',
-  cryptoKeyId: 'your-key',
-  cryptoKeyVersionId: '1',
+  projectId: 'your-google-project-id',
+  location: 'your-google-location',
+  keyRing: 'your-google-keyring',
+  cryptoKey: 'your-google-key-name',
+  cryptoKeyVersion: 'your-google-key-version',
 });
 
-const address = signer.toSuiAddress();
+const address = signer.getPublicKey().toSuiAddress();
 ```
 
 ### Sign and execute
@@ -175,7 +174,7 @@ const combinedSignature = multiSigPublicKey.combinePartialSignatures([
 // Execute
 const result = await client.executeTransaction({
   transaction: txBytes,
-  signature: combinedSignature,
+  signatures: combinedSignature,
 });
 ```
 
@@ -184,9 +183,13 @@ const result = await client.executeTransaction({
 Wraps a subset of keypairs into a single signer that handles combination automatically:
 
 ```typescript
-// Create a signer with enough keypairs to meet threshold
-const signer = multiSigPublicKey.getSigner(kp1, kp2);
+// Create a signer from one keypair (if its weight alone meets threshold)
+const signer = multiSigPublicKey.getSigner(kp3); // weight 2 meets threshold 2
 
+// Or create a signer and provide multiple keypairs for collective signing
+// You can provide a subset of signers so long as their combined weight
+// meets or exceeds the threshold
+const signer2 = multiSigPublicKey.getSigner(kp1);
 // Use like any other signer
 const result = await signer.signAndExecuteTransaction({
   transaction: tx,
