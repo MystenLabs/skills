@@ -139,7 +139,7 @@ tx.transferObjects([coinWithBalance({ balance: 1_000_000 })], recipient);
 ### Manual commands (low-level)
 
 ```ts
-const [coin] = tx.splitCoins(tx.gas, [1000]);  // preferred for SUI transfers
+const [coin] = tx.splitCoins(tx.gas, [1000]);  // low-level; prefer tx.coin() above
 tx.mergeCoins(tx.object('0xDest'), [tx.object('0xSrc')]);
 tx.transferObjects([coin], '0x...');
 tx.moveCall({

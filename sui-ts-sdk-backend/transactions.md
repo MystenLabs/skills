@@ -4,90 +4,52 @@
 
 ---
 
-## The gas coin (`tx.gas`)
+## Coin access: `tx.coin()` and `tx.balance()`
 
-Every transaction has a gas coin, referenced via `tx.gas`. This is the primary way to access SUI funds in a transaction.
+These are the **recommended** way to access funds in a transaction. They automatically resolve from both address balances and coin objects, preferring address balances to avoid versioned object dependencies.
 
-### Synthetic gas coin with address-balance gas
+### `tx.coin()` — produces a `Coin<T>`
 
-When you call `tx.setGasPayment([])`, the protocol materializes a **synthetic GasCoin** from the sender's (or sponsor's) address balance. `tx.gas` still works — it refers to this synthetic coin. No coin objects are needed as transaction inputs, which means:
-
-- No versioned object references required
-- Concurrent transactions from the same address work without conflicts
-- Transactions can be built fully offline (no network lookups for gas)
-
-### Using `tx.gas`
-
-The gas coin can be:
-- **Borrowed by reference** — pass as `&Coin<SUI>` or `&mut Coin<SUI>` to Move calls
-- **Split** — use `tx.splitCoins(tx.gas, [...])` to create new coins from it
-- **Consumed by value** — only through permitted commands: `TransferObjects` or `coin::send_funds`
+Use for transfers, Move functions that accept `Coin<T>`, and standard coin operations.
 
 ```typescript
 import { Transaction } from '@mysten/sui/transactions';
 
 const tx = new Transaction();
 
-// Preferred: send SUI via balance transfer (deposits into recipient's address balance)
+// SUI transfer — deposits into recipient's address balance
 tx.moveCall({
   target: '0x2::balance::send_funds',
   typeArguments: ['0x2::sui::SUI'],
   arguments: [tx.balance({ balance: 1_000_000_000n }), tx.pure.address('0xRecipient')],
 });
-```
 
-Balance transfers via `send_funds` are preferred over `transferObjects` because they deposit directly into the recipient's address balance, avoiding versioned coin objects on the receiving side. This enables the recipient to spend concurrently without coin management.
-
-When you need the coin for Move call arguments before transferring, split from gas:
-
-```typescript
-// Split from gas, use in Move calls, then transfer
-const [coin] = tx.splitCoins(tx.gas, [1_000_000_000n]);
-tx.moveCall({ target: '0x...::module::use_coin', arguments: [coin] });
-// transferObjects is fine when the coin was used in prior commands
-tx.transferObjects([coin], '0xRecipient');
-```
-
-### When to use `tx.gas` vs `tx.coin()`
-
-| | `tx.splitCoins(tx.gas, ...)` | `tx.coin({ balance })` |
-|--|----------------------------|----------------------|
-| Coin type | SUI only | Any coin type |
-| Network access | Not required (works offline) | Required at build time (resolves balances) |
-| Gas mode | Works with both coin-object and address-balance gas | Also works with both, but adds resolution overhead |
-| Use case | SUI transfers, Move calls needing SUI | Non-SUI tokens (USDC, custom coins) |
-
-**For SUI transfers**, prefer `balance::send_funds` — it deposits into the recipient's address balance and avoids versioned objects. **For SUI in Move calls**, prefer `tx.splitCoins(tx.gas, ...)` — it works offline with no network resolution.
-
----
-
-## `tx.coin()` and `tx.balance()` — for non-SUI tokens
-
-Use these when you need tokens other than SUI. They automatically resolve from both address balances and coin objects, but require network access at build time.
-
-### `tx.coin()` — produces a `Coin<T>`
-
-```typescript
-// Preferred: send non-SUI tokens via balance transfer
+// Non-SUI transfer
 tx.moveCall({
   target: '0x2::balance::send_funds',
   typeArguments: ['0x...::usdc::USDC'],
   arguments: [
     tx.balance({ balance: 1_000_000n, type: '0x...::usdc::USDC' }),
-    tx.pure.address('0xRecipientAddress'),
+    tx.pure.address('0xRecipient'),
   ],
 });
 
-// Alternative: get a Coin<T> for use in Move calls before transferring
+// Get a Coin<T> for Move call arguments
+const coin = tx.coin({ balance: 1_000_000_000n });
+tx.moveCall({ target: '0x...::module::use_coin', arguments: [coin] });
+
+// Non-SUI coin for Move call arguments
 const usdcCoin = tx.coin({
   balance: 1_000_000n,
   type: '0x...::usdc::USDC',
 });
 ```
 
+For transfers, prefer `balance::send_funds` over `transferObjects` — it deposits directly into the recipient's address balance, avoiding versioned coin objects on the receiving side.
+
 ### `tx.balance()` — produces a `Balance<T>`
 
-Use for Move functions that accept `Balance<T>` directly. Always specify the `type` for non-SUI tokens — omitting it defaults to `Balance<SUI>`, which causes a type mismatch.
+Use for Move functions that accept `Balance<T>` directly. Specify `type` for non-SUI tokens — omitting it defaults to `Balance<SUI>`.
 
 ```typescript
 const bal = tx.balance({
@@ -115,7 +77,11 @@ tx.moveCall({
 2. Otherwise, it fetches coin objects and address balance in parallel, then merges and splits as needed.
 3. A zero-balance request resolves to `balance::zero` with no network lookups.
 
-Note: because resolution requires network access, `tx.coin()` / `tx.balance()` prevent fully offline transaction builds. For SUI, prefer `tx.splitCoins(tx.gas, ...)` instead.
+### The gas coin (`tx.gas`) — low-level
+
+Every transaction has a gas coin referenced via `tx.gas`. With address-balance gas (`setGasPayment([])`), the protocol materializes a synthetic GasCoin from the sender's or sponsor's address balance. `tx.gas` can be borrowed by reference and consumed by value only through permitted commands (`TransferObjects`, `coin::send_funds`).
+
+In most cases, prefer `tx.coin()` / `tx.balance()` over `tx.splitCoins(tx.gas, ...)`. The higher-level methods handle balance resolution automatically and work correctly across all gas modes.
 
 ---
 
