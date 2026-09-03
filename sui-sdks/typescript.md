@@ -350,10 +350,10 @@ All `@mysten/*` packages are ESM-only:
 | Wrong | Right |
 |---|---|
 | `client.core.getBalance(...)` in user code | `client.getBalance(...)` — `.core` is for SDK internals only |
-| `tx.coin()` without `type` for SUI | `tx.splitCoins(tx.gas, [amount])` for SUI; `tx.coin({ balance, type })` for non-SUI |
+| `tx.splitCoins(tx.gas, [amount])` + `tx.transferObjects` | `tx.coin({ balance: amount })` or `tx.balance({ balance: amount })` |
 | `new Ed25519Keypair()` then signing transactions | `Ed25519Keypair.fromSecretKey(process.env.KEY!)` — random keys are unfunded |
 | Error handling before `waitForTransaction` | Call `waitForTransaction(result)` first, then check `$kind` |
 | `TransactionDataBuilder.fromBytes(bytes)` | `Transaction.from(bytes)` — `TransactionDataBuilder` is internal |
 | `sponsor.signAndExecuteTransaction({ signature })` | Parameter is `userSignature`, not `signature` |
 | Treating `FailedTransaction` as "not onchain" | It IS onchain, gas was charged, has effects. Do not retry. |
-| `splitCoins(tx.gas, ...)` when sender ≠ gas owner | Use `tx.coin({ balance, useGasCoin: false })` to source from sender's funds |
+| `splitCoins(tx.gas, ...)` in sponsored tx | Use `tx.coin({ balance, useGasCoin: false })` |
