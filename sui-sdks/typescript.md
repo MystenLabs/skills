@@ -100,13 +100,14 @@ tx.object.option({ type: '0xpkg::m::T', value: '0x...' });
 
 ### Coins and balances (recommended)
 
-`tx.coin()` and `tx.balance()` are the **recommended** methods. They automatically draw from both coin objects and address balances, preferring address balances to avoid versioned object dependencies.
+For **SUI transfers**, prefer `tx.splitCoins(tx.gas, [...])` — it works offline with no network resolution and supports both coin-object and address-balance gas. For **non-SUI tokens**, use `tx.coin()` / `tx.balance()` with an explicit `type`.
 
 ```ts
-// Get a Coin<T> for transfers
-tx.transferObjects([tx.coin({ balance: 1_000_000_000n })], recipient);
+// SUI transfer (preferred — works offline)
+const [coin] = tx.splitCoins(tx.gas, [1_000_000_000n]);
+tx.transferObjects([coin], recipient);
 
-// Non-SUI coin type
+// Non-SUI coin type (requires network resolution at build time)
 tx.transferObjects(
   [tx.coin({ balance: 1_000_000n, type: '0xPkg::module::USDC' })],
   recipient,
@@ -139,7 +140,7 @@ tx.transferObjects([coinWithBalance({ balance: 1_000_000 })], recipient);
 ### Manual commands (low-level)
 
 ```ts
-const [coin] = tx.splitCoins(tx.gas, [1000]);  // prefer tx.coin() above
+const [coin] = tx.splitCoins(tx.gas, [1000]);  // preferred for SUI transfers
 tx.mergeCoins(tx.object('0xDest'), [tx.object('0xSrc')]);
 tx.transferObjects([coin], '0x...');
 tx.moveCall({
@@ -350,10 +351,10 @@ All `@mysten/*` packages are ESM-only:
 | Wrong | Right |
 |---|---|
 | `client.core.getBalance(...)` in user code | `client.getBalance(...)` — `.core` is for SDK internals only |
-| `tx.splitCoins(tx.gas, [amount])` + `tx.transferObjects` | `tx.coin({ balance: amount })` or `tx.balance({ balance: amount })` |
+| `tx.coin()` without `type` for SUI | `tx.splitCoins(tx.gas, [amount])` for SUI; `tx.coin({ balance, type })` for non-SUI |
 | `new Ed25519Keypair()` then signing transactions | `Ed25519Keypair.fromSecretKey(process.env.KEY!)` — random keys are unfunded |
 | Error handling before `waitForTransaction` | Call `waitForTransaction(result)` first, then check `$kind` |
 | `TransactionDataBuilder.fromBytes(bytes)` | `Transaction.from(bytes)` — `TransactionDataBuilder` is internal |
 | `sponsor.signAndExecuteTransaction({ signature })` | Parameter is `userSignature`, not `signature` |
 | Treating `FailedTransaction` as "not onchain" | It IS onchain, gas was charged, has effects. Do not retry. |
-| `splitCoins(tx.gas, ...)` in sponsored tx | Use `tx.coin({ balance, useGasCoin: false })` |
+| `splitCoins(tx.gas, ...)` when sender ≠ gas owner | Use `tx.coin({ balance, useGasCoin: false })` to source from sender's funds |

@@ -64,13 +64,17 @@ tx.transferObjects([usdcCoin], '0xRecipientAddress');
 
 ### `tx.balance()` — produces a `Balance<T>`
 
-Use for Move functions that accept `Balance<T>` directly.
+Use for Move functions that accept `Balance<T>` directly. Always specify the `type` for non-SUI tokens — omitting it defaults to `Balance<SUI>`, which causes a type mismatch.
 
 ```typescript
-const bal = tx.balance({ balance: 500_000_000n });
+const bal = tx.balance({
+  balance: 500_000_000n,
+  type: '0x...::usdc::USDC',
+});
 tx.moveCall({
   target: '0x...::my_module::deposit',
   arguments: [someObject, bal],
+  typeArguments: ['0x...::usdc::USDC'],
 });
 ```
 

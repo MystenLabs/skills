@@ -71,7 +71,12 @@ const sponsorKeypair = Ed25519Keypair.fromSecretKey(process.env.SPONSOR_KEY!);
 const sponsor = createSponsor({
   signer: sponsorKeypair,
   client,
-  validate: [defaults(), gasBudget({ max: 50_000_000n })],
+  validate: [
+    defaults(),
+    gasBudget({ max: 50_000_000n }),
+    allowedFunctions(['0xYourPkg::module::allowed_fn']),
+    // Add application-specific validators as needed
+  ],
 });
 
 // Validate, co-sign, and execute in one call
@@ -80,6 +85,42 @@ const result = await sponsor.signAndExecuteTransaction({
   userSignature,
 });
 ```
+
+---
+
+## Sponsor security: validation is not optional
+
+`defaults()` and `gasBudget()` alone still permit arbitrary Move calls — an attacker could drain sponsor funds through gas. **Always layer application-specific validators:**
+
+- **Authentication:** Verify the user's identity before co-signing (JWT, session token, API key).
+- **Rate limits / quotas:** Cap transactions per user per time window.
+- **Function allowlists:** Use `allowedFunctions([...])` to restrict which Move functions the sponsor will co-sign. Only allow your application's entry points.
+- **Recipient allowlists:** Restrict `TransferObjects` targets to known addresses.
+- **Amount caps:** Limit the value that can be transferred per transaction.
+
+```typescript
+import { createSponsor, defaults, gasBudget, allowedFunctions } from '@mysten-incubation/sponsor';
+
+const sponsor = createSponsor({
+  signer: sponsorKeypair,
+  client,
+  validate: [
+    defaults(),
+    gasBudget({ max: 50_000_000n }),
+    allowedFunctions([
+      '0xYourPkg::game::play',
+      '0xYourPkg::game::claim_reward',
+    ]),
+    // Custom validator for authentication + rate limiting
+    async (tx) => {
+      // Verify user identity and enforce quotas here
+      // Return { ok: false, issues: [...] } to reject
+    },
+  ],
+});
+```
+
+Without application-specific validation, your sponsor is an open gas faucet.
 
 ---
 
@@ -138,17 +179,33 @@ tx.transferObjects([coin], recipient);
 
 ### When the sponsor is paying for everything
 
-If the sponsor is both paying gas and funding the transfer (e.g., an airdrop), `tx.splitCoins(tx.gas, ...)` works because `tx.gas` belongs to the sponsor:
+If the sponsor is both paying gas and funding the transfer (e.g., an airdrop), `tx.splitCoins(tx.gas, ...)` works at the protocol level because `tx.gas` belongs to the sponsor. However, the `defaults()` validator includes `gasCoinNotUsed()`, which **rejects** transactions that consume the gas coin. To allow this pattern, use a custom policy without `gasCoinNotUsed()`:
 
 ```typescript
+import { createSponsor, gasBudget, allowedFunctions } from '@mysten-incubation/sponsor';
+
+// Custom policy that permits gas coin usage (for sponsor-funded airdrops)
+const sponsor = createSponsor({
+  signer: sponsorKeypair,
+  client,
+  validate: [
+    gasBudget({ max: 50_000_000n }),
+    allowedFunctions(['0xYourPkg::airdrop::claim']),
+    // Omit defaults() — it includes gasCoinNotUsed() which would reject this
+  ],
+});
+```
+
+```typescript
+// Transaction that splits from sponsor's gas coin
 const [coin] = tx.splitCoins(tx.gas, [1_000_000_000n]);
 tx.transferObjects([coin], recipient);
 ```
 
 ### Rule of thumb
 
-- `tx.gas` / `tx.splitCoins(tx.gas, ...)` — uses the gas owner's funds (the sponsor)
-- `tx.coin({ useGasCoin: false })` — uses the sender's funds
+- `tx.gas` / `tx.splitCoins(tx.gas, ...)` — uses the gas owner's funds (the sponsor). Rejected by `defaults()` unless you build a custom policy.
+- `tx.coin({ useGasCoin: false })` — uses the sender's funds. Works with `defaults()`.
 
 ---
 
