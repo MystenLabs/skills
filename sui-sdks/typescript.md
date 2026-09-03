@@ -100,14 +100,13 @@ tx.object.option({ type: '0xpkg::m::T', value: '0x...' });
 
 ### Coins and balances (recommended)
 
-For **SUI transfers**, prefer `tx.splitCoins(tx.gas, [...])` — it works offline with no network resolution and supports both coin-object and address-balance gas. For **non-SUI tokens**, use `tx.coin()` / `tx.balance()` with an explicit `type`.
+`tx.coin()` and `tx.balance()` are the **recommended** methods. They automatically draw from both coin objects and address balances, preferring address balances to avoid versioned object dependencies.
 
 ```ts
-// SUI transfer (preferred — works offline)
-const [coin] = tx.splitCoins(tx.gas, [1_000_000_000n]);
-tx.transferObjects([coin], recipient);
+// Get a Coin<T> for transfers
+tx.transferObjects([tx.coin({ balance: 1_000_000_000n })], recipient);
 
-// Non-SUI coin type (requires network resolution at build time)
+// Non-SUI coin type
 tx.transferObjects(
   [tx.coin({ balance: 1_000_000n, type: '0xPkg::module::USDC' })],
   recipient,
