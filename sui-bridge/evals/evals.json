@@ -1,0 +1,50 @@
+{
+  "skill_name": "sui-bridge",
+  "source_constraint": "All facts in these evals must be verifiable against docs.sui.io. No third-party blogs, tutorials, or unofficial documentation.",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "What assets can I bridge using Sui Bridge, and what are the daily transfer limits?",
+      "expected_output": "A list of the five supported assets (WBTC, LBTC, ETH, WETH, USDT) and an explanation that the global limiter constrains total asset value leaving the bridge within 24 hours, with different limits per direction.",
+      "expectations": [
+        "The response lists all five supported assets: WBTC, LBTC, ETH, WETH, and USDT",
+        "The response states the documented daily limits per direction (Ethereum-to-Sui and Sui-to-Ethereum)",
+        "The response explains the global limiter constrains total asset value within 24 hours"
+      ],
+      "sources": [
+        "https://docs.sui.io/concepts/tokenomics/sui-bridging"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "How does Sui Bridge governance work and what are the finality requirements for a bridge transfer?",
+      "expected_output": "An explanation that Sui validators operate and govern the bridge, requiring a threshold of voting power for actions. Ethereum-to-Sui transfers require configurable Ethereum block confirmations before minting, and Sui-to-Ethereum transfers require Sui transaction finality before releasing tokens.",
+      "expectations": [
+        "The response explains that Sui validators operate and govern the bridge",
+        "The response mentions the validator voting power threshold requirement",
+        "The response states Ethereum-to-Sui requires configurable Ethereum block confirmations before minting",
+        "The response states Sui-to-Ethereum requires Sui transaction finality before releasing tokens",
+        "The response notes that users should not be credited until the transfer is fully confirmed on the destination chain"
+      ],
+      "sources": [
+        "https://docs.sui.io/concepts/tokenomics/sui-bridging"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "What are the Sui Bridge package ID, bridge object ID, and Ethereum contract address? What is the minimum ETH transfer amount?",
+      "expected_output": "The Sui Bridge package is at 0xb, the bridge object is at 0x9, and the Ethereum contract is at 0xda3bD1fE1973470312db04551B65f401Bc8a92fD. There is no minimum transfer requirement, but the minimal value is 0.00000001 ETH/WETH with 8-decimal precision.",
+      "expectations": [
+        "The response provides the Sui Bridge package ID: 0xb",
+        "The response provides the Sui Bridge object ID: 0x9",
+        "The response provides the Ethereum contract address: 0xda3bD1fE1973470312db04551B65f401Bc8a92fD",
+        "The response states there is no minimum transfer requirement",
+        "The response states the minimal value is 0.00000001 ETH/WETH",
+        "The response mentions 8-decimal precision for ETH/WETH"
+      ],
+      "sources": [
+        "https://docs.sui.io/concepts/tokenomics/sui-bridging"
+      ]
+    }
+  ]
+}

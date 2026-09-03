@@ -1,5 +1,5 @@
 ---
-name: sui-cli
+name: sui-networks-gas
 description: >
   Sui network environments and gas economics. Use when the user asks about
   Mainnet, Testnet, Devnet, or Localnet differences, gas cost calculations
