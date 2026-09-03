@@ -67,7 +67,7 @@
         "The response covers at least 3 different use cases that the stack enables (DeFi, gaming, NFTs, identity, social, supply chain)"
       ],
       "sources": [
-        "https://docs.sui.io",
+        "https://docs.sui.io/sui-stack",
         "https://docs.wal.app"
       ]
     },
@@ -84,7 +84,7 @@
         "The response does not suggest storing the full image on-chain (256 KB object limit)"
       ],
       "sources": [
-        "https://docs.sui.io",
+        "https://docs.sui.io/sui-stack",
         "https://docs.wal.app"
       ]
     }
