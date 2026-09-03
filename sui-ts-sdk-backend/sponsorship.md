@@ -170,11 +170,17 @@ When `setGasPayment([])` is used, the protocol materializes a synthetic GasCoin 
 
 ### When the sender needs to transfer their own tokens
 
-Use `tx.coin()` with `useGasCoin: false` to source from the sender's balance instead of the sponsor's gas coin:
+Use `balance::send_funds` with `useGasCoin: false` to source from the sender's balance and deposit into the recipient's address balance:
 
 ```typescript
-const coin = tx.coin({ balance: 1_000_000_000n, useGasCoin: false });
-tx.transferObjects([coin], recipient);
+tx.moveCall({
+  target: '0x2::balance::send_funds',
+  typeArguments: ['0x2::sui::SUI'],
+  arguments: [
+    tx.balance({ balance: 1_000_000_000n, useGasCoin: false }),
+    tx.pure.address(recipient),
+  ],
+});
 ```
 
 ### When the sponsor is paying for everything
@@ -197,15 +203,19 @@ const sponsor = createSponsor({
 ```
 
 ```typescript
-// Transaction that splits from sponsor's gas coin
-const [coin] = tx.splitCoins(tx.gas, [1_000_000_000n]);
-tx.transferObjects([coin], recipient);
+// Transaction that sends from sponsor's gas coin via balance transfer
+tx.moveCall({
+  target: '0x2::balance::send_funds',
+  typeArguments: ['0x2::sui::SUI'],
+  arguments: [tx.balance({ balance: 1_000_000_000n }), tx.pure.address(recipient)],
+});
 ```
 
 ### Rule of thumb
 
-- `tx.gas` / `tx.splitCoins(tx.gas, ...)` — uses the gas owner's funds (the sponsor). Rejected by `defaults()` unless you build a custom policy.
-- `tx.coin({ useGasCoin: false })` — uses the sender's funds. Works with `defaults()`.
+- `tx.balance()` / `tx.coin()` (default `useGasCoin: true`) — sources from the gas owner's (sponsor's) funds. Rejected by `defaults()` unless you build a custom policy that omits `gasCoinNotUsed()`.
+- `tx.balance({ useGasCoin: false })` / `tx.coin({ useGasCoin: false })` — sources from the sender's funds. Works with `defaults()`.
+- For transfers, prefer `balance::send_funds` over `transferObjects` — it deposits into the recipient's address balance.
 
 ---
 

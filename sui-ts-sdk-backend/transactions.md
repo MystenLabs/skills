@@ -28,12 +28,25 @@ import { Transaction } from '@mysten/sui/transactions';
 
 const tx = new Transaction();
 
-// Split SUI from gas coin — works offline, no network resolution needed
-const [coin] = tx.splitCoins(tx.gas, [1_000_000_000n]);
-tx.transferObjects([coin], '0xRecipientAddress');
+// Preferred: send SUI via balance transfer (deposits into recipient's address balance)
+tx.moveCall({
+  target: '0x2::balance::send_funds',
+  typeArguments: ['0x2::sui::SUI'],
+  arguments: [tx.balance({ balance: 1_000_000_000n }), tx.pure.address('0xRecipient')],
+});
 ```
 
-This is the simplest pattern for SUI transfers. It works with both traditional coin-object gas and address-balance gas (`setGasPayment([])`).
+Balance transfers via `send_funds` are preferred over `transferObjects` because they deposit directly into the recipient's address balance, avoiding versioned coin objects on the receiving side. This enables the recipient to spend concurrently without coin management.
+
+When you need the coin for Move call arguments before transferring, split from gas:
+
+```typescript
+// Split from gas, use in Move calls, then transfer
+const [coin] = tx.splitCoins(tx.gas, [1_000_000_000n]);
+tx.moveCall({ target: '0x...::module::use_coin', arguments: [coin] });
+// transferObjects is fine when the coin was used in prior commands
+tx.transferObjects([coin], '0xRecipient');
+```
 
 ### When to use `tx.gas` vs `tx.coin()`
 
@@ -44,7 +57,7 @@ This is the simplest pattern for SUI transfers. It works with both traditional c
 | Gas mode | Works with both coin-object and address-balance gas | Also works with both, but adds resolution overhead |
 | Use case | SUI transfers, Move calls needing SUI | Non-SUI tokens (USDC, custom coins) |
 
-**Prefer `tx.splitCoins(tx.gas, ...)` for SUI** — it's simpler, works offline, and avoids client-side balance resolution.
+**For SUI transfers**, prefer `balance::send_funds` — it deposits into the recipient's address balance and avoids versioned objects. **For SUI in Move calls**, prefer `tx.splitCoins(tx.gas, ...)` — it works offline with no network resolution.
 
 ---
 
@@ -55,11 +68,21 @@ Use these when you need tokens other than SUI. They automatically resolve from b
 ### `tx.coin()` — produces a `Coin<T>`
 
 ```typescript
+// Preferred: send non-SUI tokens via balance transfer
+tx.moveCall({
+  target: '0x2::balance::send_funds',
+  typeArguments: ['0x...::usdc::USDC'],
+  arguments: [
+    tx.balance({ balance: 1_000_000n, type: '0x...::usdc::USDC' }),
+    tx.pure.address('0xRecipientAddress'),
+  ],
+});
+
+// Alternative: get a Coin<T> for use in Move calls before transferring
 const usdcCoin = tx.coin({
   balance: 1_000_000n,
   type: '0x...::usdc::USDC',
 });
-tx.transferObjects([usdcCoin], '0xRecipientAddress');
 ```
 
 ### `tx.balance()` — produces a `Balance<T>`
@@ -180,8 +203,11 @@ const keypair = Ed25519Keypair.fromSecretKey('suiprivkey1...');
 const client = new SuiGrpcClient({ network: 'testnet' });
 
 const tx = new Transaction();
-const [coin] = tx.splitCoins(tx.gas, [1_000_000_000n]);
-tx.transferObjects([coin], '0xRecipient');
+tx.moveCall({
+  target: '0x2::balance::send_funds',
+  typeArguments: ['0x2::sui::SUI'],
+  arguments: [tx.balance({ balance: 1_000_000_000n }), tx.pure.address('0xRecipient')],
+});
 
 const result = await keypair.signAndExecuteTransaction({
   transaction: tx,
