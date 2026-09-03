@@ -64,19 +64,20 @@ const { signature: userSignature } = await userKeypair.signTransaction(bytes);
 
 ```typescript
 import { Ed25519Keypair } from '@mysten/sui/keypairs/ed25519';
+import { createSponsor, defaults, gasBudget } from '@mysten-incubation/sponsor';
 
 const sponsorKeypair = Ed25519Keypair.fromSecretKey(process.env.SPONSOR_KEY!);
 
-// Validate the transaction (check target, amounts, etc.)
-// ...
+const sponsor = createSponsor({
+  signer: sponsorKeypair,
+  client,
+  validate: [defaults(), gasBudget({ max: 50_000_000n })],
+});
 
-// Co-sign
-const { signature: sponsorSignature } = await sponsorKeypair.signTransaction(bytes);
-
-// Execute with both signatures
-const result = await client.executeTransaction({
+// Validate, co-sign, and execute in one call
+const result = await sponsor.signAndExecuteTransaction({
   transaction: bytes,
-  signatures: [userSignature, sponsorSignature],
+  userSignature,
 });
 ```
 
@@ -158,15 +159,18 @@ Backend receives one of three outcomes:
 | `FailedTransaction` | Executed on-chain but Move call aborted; sponsor still pays gas | Log failure, return error |
 | `Transaction` | Successful execution | Return digest to user |
 
-Always check:
+Always check using `$kind`:
 
 ```typescript
-if (result.$kind === 'Rejected') {
-  // Never executed
-} else if (result.$kind === 'FailedTransaction') {
-  // Executed but failed — gas was consumed
-} else {
-  // Success
-  console.log('Digest:', result.Transaction.digest);
+switch (result.$kind) {
+  case 'Rejected':
+    // Never executed on-chain
+    throw new Error(result.issues.map((i) => i.message).join('; '));
+  case 'FailedTransaction':
+    // Executed but aborted — sponsor still paid gas
+    throw new Error(`Aborted: ${result.FailedTransaction.digest}`);
+  case 'Transaction':
+    // Success
+    console.log('Digest:', result.Transaction.digest);
 }
 ```

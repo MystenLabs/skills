@@ -37,7 +37,7 @@
     {
       "id": 3,
       "prompt": "I need to sponsor transactions for my users so they don't need SUI for gas. What's the recommended flow and what SDK should I use?",
-      "expected_output": "An explanation of the @mysten/sponsor package, the client-builds flow where the client builds transaction bytes and the backend validates and co-signs, and the three possible result types (Rejected, FailedTransaction, Transaction).",
+      "expected_output": "An explanation of the @mysten-incubation/sponsor package and createSponsor, the client-builds flow where the client builds transaction bytes and the backend validates and co-signs, and the three possible result types (Rejected, FailedTransaction, Transaction).",
       "expectations": [
         "The response recommends the client-builds approach where the client builds full transaction bytes",
         "The response mentions setting empty gas payment and gas owner for address-balance sponsorship",
