@@ -61,11 +61,12 @@ if (result.$kind === 'FailedTransaction') {
   throw new Error(result.FailedTransaction.status.error?.message);
 }
 
-// In v2, effects use changedObjects with outputState
-const publishedPackage = result.Transaction.effects.changedObjects.find(
-  (obj) => obj.outputState === 'PackageWrite'
+// The package ID is in the created objects
+const createdObjects = result.Transaction.effects.created;
+const publishedPackage = createdObjects?.find(
+  obj => obj.owner?.$kind === 'Immutable'
 );
-const packageId = publishedPackage?.objectId;
+const packageId = publishedPackage?.reference.objectId;
 console.log('Published package:', packageId);
 ```
 
