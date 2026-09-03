@@ -96,9 +96,10 @@ If unsure about any API, fetch the relevant page before answering. Do not guess 
 - Always use `SuiGrpcClient` as the default client. Use `SuiGraphQLClient` only when you need flexible relational queries.
 - Always check `result.$kind` after transaction execution. A result that is not `Rejected` can still be `FailedTransaction` (executed on-chain but aborted — gas is still consumed).
 - Always call `await client.waitForTransaction({ result })` before reading state that depends on a transaction's effects.
-- Never hardcode gas coin object IDs. Use `tx.coin()` / `tx.balance()` or let the SDK resolve gas automatically.
-- Use `tx.coin({ balance, type })` and `tx.balance({ balance, type })` instead of manual `splitCoins` / `mergeCoins` when possible. They handle address balance + coin object resolution automatically.
-- For sponsored transactions, set `useGasCoin: false` when the sender is transferring tokens, to prevent the SDK from splitting the sponsor's gas coin.
+- For SUI transfers, prefer `tx.splitCoins(tx.gas, [...])` over `tx.coin()`. The gas coin (`tx.gas`) works with both coin-object gas and address-balance gas (`setGasPayment([])`), requires no network access, and enables fully offline transaction builds.
+- Use `tx.coin({ balance, type })` and `tx.balance({ balance, type })` for non-SUI tokens. These require network access at build time for balance resolution.
+- With address-balance gas (`setGasPayment([])`), the protocol materializes a synthetic GasCoin from the sender's or sponsor's address balance. `tx.gas` references this synthetic coin and can be borrowed by reference or consumed by value through `TransferObjects` or `coin::send_funds`.
+- For sponsored transactions where the sender needs to transfer tokens, set `useGasCoin: false` on `tx.coin()` / `tx.balance()` calls to prevent the SDK from sourcing from the sponsor's gas coin. Alternatively, use `tx.splitCoins(tx.gas, ...)` only when the sender is the gas owner.
 - For scale, use `SerialTransactionExecutor` or `ParallelTransactionExecutor` instead of manual gas management loops.
 - For production backends, use AWS KMS or GCP KMS signers instead of storing raw private keys.
 
@@ -107,6 +108,6 @@ If unsure about any API, fetch the relevant page before answering. Do not guess 
 - **Storing raw private keys in environment variables for production.** Use AWS KMS or GCP KMS signers. Raw keys are acceptable for development/testing only.
 - **Not waiting for indexing after a transaction.** Read APIs may not immediately reflect transaction effects. Always `waitForTransaction` before dependent reads.
 - **Assuming `result` means success.** Check `result.$kind !== 'FailedTransaction'`. A `FailedTransaction` was executed on-chain (gas consumed) but the Move call aborted.
-- **Using `splitCoins(tx.gas, ...)` for sponsored transactions.** The gas coin belongs to the sponsor, not the sender. Use `tx.coin()` with `useGasCoin: false` instead.
+- **Using `splitCoins(tx.gas, ...)` when the sender is not the gas owner.** In sponsored transactions, `tx.gas` belongs to the sponsor. If the sender needs to transfer their own tokens, use `tx.coin()` with `useGasCoin: false` to source from the sender's balance instead.
 - **Running multiple `ParallelTransactionExecutor` instances on the same address.** This causes gas coin conflicts. Use a single executor per address.
 - **Building transactions with fully-specified object refs when using executors.** Use unresolved object IDs (`tx.object('0x...')`) so the executor can leverage its object cache.

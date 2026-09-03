@@ -4,30 +4,62 @@
 
 ---
 
-## Coin access: `tx.coin()` and `tx.balance()`
+## The gas coin (`tx.gas`)
 
-These are the recommended way to access funds in a transaction. They automatically resolve from both address balances and coin objects.
+Every transaction has a gas coin, referenced via `tx.gas`. This is the primary way to access SUI funds in a transaction.
 
-### `tx.coin()` — produces a `Coin<T>`
+### Synthetic gas coin with address-balance gas
 
-Use for transfers, Move functions that accept `Coin<T>`, and standard coin operations.
+When you call `tx.setGasPayment([])`, the protocol materializes a **synthetic GasCoin** from the sender's (or sponsor's) address balance. `tx.gas` still works — it refers to this synthetic coin. No coin objects are needed as transaction inputs, which means:
+
+- No versioned object references required
+- Concurrent transactions from the same address work without conflicts
+- Transactions can be built fully offline (no network lookups for gas)
+
+### Using `tx.gas`
+
+The gas coin can be:
+- **Borrowed by reference** — pass as `&Coin<SUI>` or `&mut Coin<SUI>` to Move calls
+- **Split** — use `tx.splitCoins(tx.gas, [...])` to create new coins from it
+- **Consumed by value** — only through permitted commands: `TransferObjects` or `coin::send_funds`
 
 ```typescript
 import { Transaction } from '@mysten/sui/transactions';
 
 const tx = new Transaction();
 
-// Get 1 SUI (in MIST — 1 SUI = 1_000_000_000 MIST)
-const coin = tx.coin({ balance: 1_000_000_000n });
+// Split SUI from gas coin — works offline, no network resolution needed
+const [coin] = tx.splitCoins(tx.gas, [1_000_000_000n]);
+tx.transferObjects([coin], '0xRecipientAddress');
+```
 
-// Get a specific coin type
+This is the simplest pattern for SUI transfers. It works with both traditional coin-object gas and address-balance gas (`setGasPayment([])`).
+
+### When to use `tx.gas` vs `tx.coin()`
+
+| | `tx.splitCoins(tx.gas, ...)` | `tx.coin({ balance })` |
+|--|----------------------------|----------------------|
+| Coin type | SUI only | Any coin type |
+| Network access | Not required (works offline) | Required at build time (resolves balances) |
+| Gas mode | Works with both coin-object and address-balance gas | Also works with both, but adds resolution overhead |
+| Use case | SUI transfers, Move calls needing SUI | Non-SUI tokens (USDC, custom coins) |
+
+**Prefer `tx.splitCoins(tx.gas, ...)` for SUI** — it's simpler, works offline, and avoids client-side balance resolution.
+
+---
+
+## `tx.coin()` and `tx.balance()` — for non-SUI tokens
+
+Use these when you need tokens other than SUI. They automatically resolve from both address balances and coin objects, but require network access at build time.
+
+### `tx.coin()` — produces a `Coin<T>`
+
+```typescript
 const usdcCoin = tx.coin({
   balance: 1_000_000n,
   type: '0x...::usdc::USDC',
 });
-
-// Transfer it
-tx.transferObjects([coin], '0xRecipientAddress');
+tx.transferObjects([usdcCoin], '0xRecipientAddress');
 ```
 
 ### `tx.balance()` — produces a `Balance<T>`
@@ -36,7 +68,6 @@ Use for Move functions that accept `Balance<T>` directly.
 
 ```typescript
 const bal = tx.balance({ balance: 500_000_000n });
-// Pass to a Move function expecting Balance<SUI>
 tx.moveCall({
   target: '0x...::my_module::deposit',
   arguments: [someObject, bal],
@@ -49,13 +80,15 @@ tx.moveCall({
 |-----------|------|---------|-------------|
 | `balance` | `bigint \| number` | required | Amount in base units |
 | `type` | `string` | `'0x2::sui::SUI'` | Coin type |
-| `useGasCoin` | `boolean` | `true` | Set `false` for sponsored transactions |
+| `useGasCoin` | `boolean` | `true` | Whether to include the gas coin as a source. Set `false` in sponsored transactions where the gas coin belongs to the sponsor. |
 
 ### How resolution works at build time
 
 1. If the address balance alone is sufficient, the SDK uses a direct withdrawal (no versioned object inputs needed).
 2. Otherwise, it fetches coin objects and address balance in parallel, then merges and splits as needed.
 3. A zero-balance request resolves to `balance::zero` with no network lookups.
+
+Note: because resolution requires network access, `tx.coin()` / `tx.balance()` prevent fully offline transaction builds. For SUI, prefer `tx.splitCoins(tx.gas, ...)` instead.
 
 ---
 
@@ -143,10 +176,8 @@ const keypair = Ed25519Keypair.fromSecretKey('suiprivkey1...');
 const client = new SuiGrpcClient({ network: 'testnet' });
 
 const tx = new Transaction();
-tx.transferObjects(
-  [tx.coin({ balance: 1_000_000_000n })],
-  '0xRecipient',
-);
+const [coin] = tx.splitCoins(tx.gas, [1_000_000_000n]);
+tx.transferObjects([coin], '0xRecipient');
 
 const result = await keypair.signAndExecuteTransaction({
   transaction: tx,

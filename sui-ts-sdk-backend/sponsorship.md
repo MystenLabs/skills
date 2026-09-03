@@ -123,16 +123,32 @@ const { signature: sponsorSig } = await sponsorKeypair.signTransaction(fullBytes
 
 ---
 
-## Important: `useGasCoin: false`
+## Gas coin ownership in sponsored transactions
 
-When the sender is transferring tokens in a sponsored transaction, set `useGasCoin: false` on coin access calls:
+When `setGasPayment([])` is used, the protocol materializes a synthetic GasCoin from the **gas owner's** (sponsor's) address balance. `tx.gas` references this synthetic coin — it belongs to the sponsor, not the sender.
+
+### When the sender needs to transfer their own tokens
+
+Use `tx.coin()` with `useGasCoin: false` to source from the sender's balance instead of the sponsor's gas coin:
 
 ```typescript
 const coin = tx.coin({ balance: 1_000_000_000n, useGasCoin: false });
 tx.transferObjects([coin], recipient);
 ```
 
-This prevents the SDK from attempting to split the sponsor's gas coin for the sender's transfer.
+### When the sponsor is paying for everything
+
+If the sponsor is both paying gas and funding the transfer (e.g., an airdrop), `tx.splitCoins(tx.gas, ...)` works because `tx.gas` belongs to the sponsor:
+
+```typescript
+const [coin] = tx.splitCoins(tx.gas, [1_000_000_000n]);
+tx.transferObjects([coin], recipient);
+```
+
+### Rule of thumb
+
+- `tx.gas` / `tx.splitCoins(tx.gas, ...)` — uses the gas owner's funds (the sponsor)
+- `tx.coin({ useGasCoin: false })` — uses the sender's funds
 
 ---
 
