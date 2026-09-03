@@ -21,7 +21,7 @@
     {
       "id": 2,
       "prompt": "How do I build a transaction that sends 1 SUI to another address, sign it with a keypair, and execute it from a backend? Show me the proper way to access coins and check the result.",
-      "expected_output": "A transaction using tx.splitCoins(tx.gas, [...]) for SUI access (or tx.coin() for non-SUI tokens), keypair.signAndExecuteTransaction() for signing, result.$kind check for error handling, and waitForTransaction before dependent reads.",
+      "expected_output": "A transaction using tx.coin() for coin access, keypair.signAndExecuteTransaction() for signing, result.$kind check for error handling, and waitForTransaction before dependent reads.",
       "expectations": [
         "The response uses tx.splitCoins(tx.gas, [...]) for SUI transfers, or tx.coin() with explicit type for non-SUI tokens",
         "The response uses keypair.signAndExecuteTransaction({ transaction, client })",
