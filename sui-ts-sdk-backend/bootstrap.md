@@ -110,7 +110,7 @@ There is no faucet for Mainnet. For Mainnet, acquire SUI through an exchange or 
 
 ```typescript
 await requestSuiFromFaucetV2({
-  host: getFaucetHost('localnet'), // http://127.0.0.1:5003/v2/gas
+  host: getFaucetHost('localnet'), // http://127.0.0.1:9123/v2/gas
   recipient: keypair.toSuiAddress(),
 });
 ```

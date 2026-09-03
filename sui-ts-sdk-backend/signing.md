@@ -174,7 +174,7 @@ const combinedSignature = multiSigPublicKey.combinePartialSignatures([
 // Execute
 const result = await client.executeTransaction({
   transaction: txBytes,
-  signatures: combinedSignature,
+  signatures: [combinedSignature],
 });
 ```
 
@@ -186,10 +186,9 @@ Wraps a subset of keypairs into a single signer that handles combination automat
 // Create a signer from one keypair (if its weight alone meets threshold)
 const signer = multiSigPublicKey.getSigner(kp3); // weight 2 meets threshold 2
 
-// Or create a signer and provide multiple keypairs for collective signing
-// You can provide a subset of signers so long as their combined weight
-// meets or exceeds the threshold
-const signer2 = multiSigPublicKey.getSigner(kp1);
+// Or provide multiple keypairs whose combined weight meets threshold
+// getSigner takes rest params (...signers)
+const signer2 = multiSigPublicKey.getSigner(kp1, kp2); // weight 1+1=2 meets threshold
 // Use like any other signer
 const result = await signer.signAndExecuteTransaction({
   transaction: tx,
@@ -204,8 +203,7 @@ You can provide any subset of signers, as long as their combined weight meets th
 Combine traditional keypairs with zkLogin public identifiers for recovery:
 
 ```typescript
-import { toZkLoginPublicIdentifier, genAddressSeed } from '@mysten/sui/zklogin';
-import { decodeJwt } from 'jose';
+import { toZkLoginPublicIdentifier, genAddressSeed, decodeJwt } from '@mysten/sui/zklogin';
 
 const kp1 = new Ed25519Keypair();
 const decodedJwt = decodeJwt(jwtToken);

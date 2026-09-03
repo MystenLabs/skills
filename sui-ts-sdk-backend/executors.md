@@ -110,6 +110,7 @@ The executor handles gas coin selection, conflict detection, and scheduling auto
 | `initialCoinBalance` | `200_000_000n` | Balance for each new gas coin |
 | `minimumCoinBalance` | `50_000_000n` | When a coin drops below this, it's refilled |
 | `maxPoolSize` | `50` | Maximum number of gas coins maintained |
+| `gasMode` | `'coins'` | `'coins'` or `'addressBalance'`. Use `'addressBalance'` to pay gas from the address balance instead of coin objects — pairs well with address-balance sponsorship. |
 
 ### Limitations
 

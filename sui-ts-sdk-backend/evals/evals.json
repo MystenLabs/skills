@@ -23,11 +23,11 @@
       "prompt": "How do I build a transaction that sends 1 SUI to another address, sign it with a keypair, and execute it from a backend? Show me the proper way to access coins and check the result.",
       "expected_output": "A transaction using tx.coin() for coin access, keypair.signAndExecuteTransaction() for signing, result.$kind check for error handling, and waitForTransaction before dependent reads.",
       "expectations": [
-        "The response uses tx.coin({ balance: 1_000_000_000n }) or equivalent for coin access",
+        "The response uses tx.coin() or tx.balance() for coin access",
         "The response uses keypair.signAndExecuteTransaction({ transaction, client })",
         "The response checks result.$kind for FailedTransaction",
         "The response calls client.waitForTransaction({ result }) before reading updated state",
-        "The response does NOT manually split gas coins when tx.coin() suffices"
+        "The response prefers balance::send_funds for transfers over transferObjects"
       ],
       "sources": [
         "https://sdk.mystenlabs.com/sui/transactions/coins-and-balances",
@@ -37,13 +37,14 @@
     {
       "id": 3,
       "prompt": "I need to sponsor transactions for my users so they don't need SUI for gas. What's the recommended flow and what SDK should I use?",
-      "expected_output": "An explanation of the @mysten/sponsor package, the client-builds flow where the client builds transaction bytes and the backend validates and co-signs, and the three possible result types (Rejected, FailedTransaction, Transaction).",
+      "expected_output": "An explanation of the @mysten-incubation/sponsor package and createSponsor, the client-builds flow where the client builds transaction bytes and the backend validates and co-signs, and the three possible result types (Rejected, FailedTransaction, Transaction).",
       "expectations": [
+        "The response recommends @mysten-incubation/sponsor and createSponsor for the backend",
         "The response recommends the client-builds approach where the client builds full transaction bytes",
         "The response mentions setting empty gas payment and gas owner for address-balance sponsorship",
-        "The response shows both user and sponsor signing the transaction",
         "The response explains the three result types: Rejected, FailedTransaction, and Transaction",
-        "The response mentions useGasCoin: false when the sender is transferring tokens"
+        "The response mentions application-specific validation (authentication, allowlists, rate limits) beyond defaults()",
+        "The response mentions useGasCoin: false when the sender is transferring their own tokens"
       ],
       "sources": [
         "https://sdk.mystenlabs.com/sponsor/basic-usage",

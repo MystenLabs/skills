@@ -6,7 +6,7 @@
 
 ## Coin access: `tx.coin()` and `tx.balance()`
 
-These are the recommended way to access funds in a transaction. They automatically resolve from both address balances and coin objects.
+These are the **recommended** way to access funds in a transaction. They automatically resolve from both address balances and coin objects, preferring address balances to avoid versioned object dependencies.
 
 ### `tx.coin()` — produces a `Coin<T>`
 
@@ -17,29 +17,49 @@ import { Transaction } from '@mysten/sui/transactions';
 
 const tx = new Transaction();
 
-// Get 1 SUI (in MIST — 1 SUI = 1_000_000_000 MIST)
-const coin = tx.coin({ balance: 1_000_000_000n });
+// SUI transfer — deposits into recipient's address balance
+tx.moveCall({
+  target: '0x2::balance::send_funds',
+  typeArguments: ['0x2::sui::SUI'],
+  arguments: [tx.balance({ balance: 1_000_000_000n }), tx.pure.address('0xRecipient')],
+});
 
-// Get a specific coin type
+// Non-SUI transfer
+tx.moveCall({
+  target: '0x2::balance::send_funds',
+  typeArguments: ['0x...::usdc::USDC'],
+  arguments: [
+    tx.balance({ balance: 1_000_000n, type: '0x...::usdc::USDC' }),
+    tx.pure.address('0xRecipient'),
+  ],
+});
+
+// Get a Coin<T> for Move call arguments
+const coin = tx.coin({ balance: 1_000_000_000n });
+tx.moveCall({ target: '0x...::module::use_coin', arguments: [coin] });
+
+// Non-SUI coin for Move call arguments
 const usdcCoin = tx.coin({
   balance: 1_000_000n,
   type: '0x...::usdc::USDC',
 });
-
-// Transfer it
-tx.transferObjects([coin], '0xRecipientAddress');
 ```
+
+For transfers, prefer `balance::send_funds` over `transferObjects` — it deposits directly into the recipient's address balance, avoiding versioned coin objects on the receiving side.
 
 ### `tx.balance()` — produces a `Balance<T>`
 
-Use for Move functions that accept `Balance<T>` directly.
+Use for Move functions that accept `Balance<T>` directly. Specify `type` for non-SUI tokens — omitting it defaults to `Balance<SUI>`.
 
 ```typescript
-const bal = tx.balance({ balance: 500_000_000n });
-// Pass to a Move function expecting Balance<SUI>
+const bal = tx.balance({
+  balance: 500_000_000n,
+  type: '0x...::usdc::USDC',
+});
 tx.moveCall({
   target: '0x...::my_module::deposit',
   arguments: [someObject, bal],
+  typeArguments: ['0x...::usdc::USDC'],
 });
 ```
 
@@ -49,13 +69,19 @@ tx.moveCall({
 |-----------|------|---------|-------------|
 | `balance` | `bigint \| number` | required | Amount in base units |
 | `type` | `string` | `'0x2::sui::SUI'` | Coin type |
-| `useGasCoin` | `boolean` | `true` | Set `false` for sponsored transactions |
+| `useGasCoin` | `boolean` | `true` | Whether to include the gas coin as a source. Set `false` in sponsored transactions where the gas coin belongs to the sponsor. |
 
 ### How resolution works at build time
 
 1. If the address balance alone is sufficient, the SDK uses a direct withdrawal (no versioned object inputs needed).
 2. Otherwise, it fetches coin objects and address balance in parallel, then merges and splits as needed.
 3. A zero-balance request resolves to `balance::zero` with no network lookups.
+
+### The gas coin (`tx.gas`) — low-level
+
+Every transaction has a gas coin referenced via `tx.gas`. With address-balance gas (`setGasPayment([])`), the protocol materializes a synthetic GasCoin from the sender's or sponsor's address balance. `tx.gas` can be borrowed by reference and consumed by value only through permitted commands (`TransferObjects`, `coin::send_funds`).
+
+In most cases, prefer `tx.coin()` / `tx.balance()` over `tx.splitCoins(tx.gas, ...)`. The higher-level methods handle balance resolution automatically and work correctly across all gas modes.
 
 ---
 
@@ -143,10 +169,11 @@ const keypair = Ed25519Keypair.fromSecretKey('suiprivkey1...');
 const client = new SuiGrpcClient({ network: 'testnet' });
 
 const tx = new Transaction();
-tx.transferObjects(
-  [tx.coin({ balance: 1_000_000_000n })],
-  '0xRecipient',
-);
+tx.moveCall({
+  target: '0x2::balance::send_funds',
+  typeArguments: ['0x2::sui::SUI'],
+  arguments: [tx.balance({ balance: 1_000_000_000n }), tx.pure.address('0xRecipient')],
+});
 
 const result = await keypair.signAndExecuteTransaction({
   transaction: tx,
