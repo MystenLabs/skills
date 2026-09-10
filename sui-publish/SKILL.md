@@ -329,12 +329,30 @@ Sui packages are immutable once published, so monitoring is critical — you can
 Use gRPC streaming subscriptions for real-time monitoring:
 
 ```ts
-for await (const event of client.subscriptionService.subscribeEvents({
-  filter: { MoveEventModule: { package: PACKAGE_ID, module: 'my_module' } },
-})) {
-  // Forward to your monitoring stack (Grafana, Datadog, PagerDuty, etc.)
+// Filtered real-time event stream. Filter is a DNF (disjunctive normal form)
+// of signed literals: `terms` are OR'd, `literals` within a term are AND'd,
+// and each literal can be negated. SubscribeTransactions / SubscribeCheckpoints
+// take the same shape with their corresponding filter message.
+const stream = client.subscriptionService.subscribeEvents({
+  filter: {
+    terms: [
+      {
+        literals: [
+          { negated: false, predicate: { oneofKind: 'emitModule', emitModule: { module: `${PACKAGE_ID}::my_module` } } },
+        ],
+      },
+    ],
+  },
+  readMask: { paths: ['package_id', 'module', 'event_type', 'contents', 'json'] },
+});
+for await (const frame of stream.responses) {
+  if (frame.event) {
+    // Forward to your monitoring stack (Grafana, Datadog, PagerDuty, etc.)
+  }
 }
 ```
+
+For transaction-level monitoring (failed transactions, gas spend, contention), prefer `client.subscriptionService.subscribeTransactions` with a `sender`/`moveCall` predicate — or filter historical data with `client.core.listTransactions({ filter: { function: `${PACKAGE_ID}::module::fn` } })` when you need to query back in time.
 
 For historical analysis, run a custom indexer (`sui-indexer-alt`) that writes relevant events and transaction effects to your own database. See the `accessing-data` skill's `indexers.md`.
 
