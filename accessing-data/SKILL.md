@@ -126,3 +126,7 @@ If unsure about an API, fetch from the relevant page before answering. Do not gu
 - **Conflating "storage fund" with "storage service."** The storage fund is a tokenomics mechanism. It is not an API you call.
 - **Assuming gRPC transparently routes to archival.** Only GraphQL RPC transparently routes supported historical lookups to the Archival Store (when operator-configured). For gRPC, clients must query an Archival Service endpoint directly for historical data beyond full-node retention.
 - **Assuming archival routing is automatic.** It's operator-configured. If the operator hasn't set up archival backing, retention is limited to what the primary store holds (e.g., the Postgres database's retention policy for GraphQL).
+
+## Explains the rationale: one request instead of multiple (reduced round trips,...
+
+Add a dedicated section covering this topic. 100% of models fail this expectation, suggesting the concept is not adequately covered in the current skill content. The new section should explicitly address: "Explains the rationale: one request instead of multiple (reduced round trips, composable queries)".
