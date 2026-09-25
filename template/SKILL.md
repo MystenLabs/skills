@@ -104,11 +104,25 @@ Do not guess or extrapolate from other SDKs or libraries.
 
 <!-- Define the core abstractions and mental model for this domain. -->
 
+
+State the mental model the agent needs *before* it writes code: the core objects/abstractions of the domain, how they relate, and which Sui-specific behaviour differs from the general-purpose pattern an agent would otherwise assume. Name each concept explicitly rather than gesturing at it.
+
 ### Rules
 
 <!-- List the non-negotiable rules the agent must follow. Be direct and specific. -->
 
+
+Write rules as direct, checkable imperatives ("always X", "never Y"), not advice. At minimum, the rule list must cover:
+
+- **Load before answering.** Consult the reference file the routing guide maps to the task; do not answer from memory when a reference file covers the topic.
+- **Stay inside the canonical source.** Only state APIs, parameters, and behaviour that appear in the canonical source listed above. If it is not there, fetch the page first.
+- **Never extrapolate** from other chains, SDKs, or libraries — say so explicitly rather than guessing.
+- **Verify with the MCP tool** (`https://sui.mcp.kapa.ai`) when it is available and the reference files are silent.
+
 ### Common mistakes
 
 <!-- Describe frequent errors and their correct alternatives. -->
+
+
+Give each mistake as a wrong/right pair so the correction is unambiguous: name the incorrect pattern, then the replacement and the one-line reason. Prioritise the errors an agent makes by default — deprecated or renamed APIs, patterns borrowed from other chains, and assumptions about the object model that do not hold on Sui.
 
