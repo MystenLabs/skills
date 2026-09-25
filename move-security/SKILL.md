@@ -65,8 +65,19 @@ This skill covers security best practices for Move smart contracts on Sui, inclu
 - Treat `UpgradeCap` with the same rigor as admin capabilities since holders can modify package behavior.
 - Mark randomness-consuming functions as private `entry` only. The Move compiler lints against `public` functions that take `Random` or `RandomGenerator`.
 - Never accept `RandomGenerator` as a `public` function parameter. Passing it to `public(package)` or private functions is acceptable for testing and in-package logic.
+
+- `public entry` is **not** sufficient for randomness: a `public entry` function is still callable from other modules. Functions that take `&Random` (or `RandomGenerator`) should never be public in any form -- always use a private `entry` function so functions from other modules cannot call it and compose randomness calls into a larger attack.
+- For high-stakes applications, consider a two-transaction commit-reveal pattern to further reduce the influence a caller has over a random outcome.
 - Emit events for all privileged actions: admin changes, allowlist updates, mint/burn operations, denylist actions, configuration changes, oracle updates, emergency pauses.
 - Require relevant capabilities as parameters for all privileged functions. Do not rely on `tx_context::sender()` alone for authorization.
+
+- **Capability objects are the default.** Use capability objects such as `AdminCap` or `MintCap` as your default access control mechanism, in preference to address allowlists. This approach composes well, because another protocol can hold the capability on behalf of a user, and you avoid maintaining an onchain list of addresses.
+- **Place the capability as the second parameter** in admin-gated functions. This keeps the capability visible in method signatures and maintains method associativity.
+
+```move
+// capability is the second parameter, after the object being acted on
+public fun withdraw(vault: &mut Vault, _: &AdminCap, amount: u64, ctx: &mut TxContext) { /* ... */ }
+```
 - Anyone can submit a transaction referencing a shared object. Never assume shared object access is restricted.
 - Design capability revocation before publishing the package. Without it, a leaked capability remains valid for the life of the package.
 
@@ -74,6 +85,10 @@ This skill covers security best practices for Move smart contracts on Sui, inclu
 
 - **Trusting package names instead of onchain IDs.** Move package names (the `name` field in `Move.toml`) are arbitrary strings chosen by the developer and are not unique. Always verify the exact onchain package ID (the object address).
 - **Using `tx_context::sender()` as the sole authorization check.** This ties functions to single signers and breaks composability. Other contracts cannot call the function on behalf of users.
+
+  Prefer capability objects or explicit object ownership checks when composability matters.
+- **Privileged functions that emit no events.** Actions such as `withdraw` or `change_admin` on a shared object should emit events so offchain monitoring can detect and alert on them; silent privileged operations leave no audit trail.
+- **Shipping a capability with no revocation path.** If a reviewed contract has an `AdminCap` (or similar) and no registry, version field, or destruction path, flag it: design a way to revoke a compromised or outdated capability before you publish the package.
 - **Forgetting that shared objects are accessible to anyone.** Every privileged function touching shared state must validate authorization internally.
 - **Accepting `RandomGenerator` as a `public` function parameter.** This allows callers to manipulate the generator. Create it within the entry function via `r.new_generator(ctx)` and pass only to `public(package)` or private helpers.
 - **Not planning capability revocation before publishing.** Once published, the package is immutable. A leaked capability without a revocation mechanism remains valid forever.
