@@ -17,6 +17,17 @@ All patterns sourced from https://move-book.com/guides/code-quality-checklist
 
 Use method-call syntax (dot notation) instead of module function calls.
 
+
+Common conversions to apply everywhere, not just in the snippets below:
+
+- `vector::push_back(&mut v, x)` → `v.push_back(x)`; `vector::length(&v)` → `v.length()`; `vector::borrow(&v, i)` → `&v[i]`
+- `tx_context::sender(ctx)` → `ctx.sender()`
+- `coin::value(&c)` → `c.value()`; `balance::join(&mut b, v)` → `b.join(v)`
+- `object::delete(id)` → `id.delete()`; `object::id(&obj)` → `obj.id()`
+- `table::add(&mut t, k, v)` → `t.add(k, v)`; `option::is_some(&o)` → `o.is_some()`
+
+Calls nest: `v.push_back(c.value())` instead of `vector::push_back(&mut v, coin::value(&c))`.
+
 ### Coin and Balance
 
 ```move
