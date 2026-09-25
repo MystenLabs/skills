@@ -41,6 +41,9 @@ fun swap_aborts_on_zero_input() { /* ... */ }
 
 `assert_eq!` displays both values on failure, making debugging much easier. Never use `assert!(x == y)` or `assert!(x == y, 0)` for equality checks.
 
+
+**Key point:** this applies to *every* equality check in *every* test — balances, reserves, LP amounts, addresses, vector lengths. `assert_eq!` comes from `std::unit_test`, so add `use std::unit_test::assert_eq;` (or `use std::unit_test::{assert_eq, destroy};`) at the top of the test module.
+
 ```move
 // WRONG — no diagnostic info on failure
 assert!(result == 100);
