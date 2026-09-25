@@ -105,6 +105,8 @@ If unsure about any specific API in any SDK, fetch from the relevant doc page �
 - **Recommending `@mysten/sui.js`.** Deprecated package name. Always `@mysten/sui`.
 - **Confusing the two Rust SDKs.** The new `sui-rust-sdk` crates (on `crates.io` as separate crates like `sui-sdk-types` / `sui-transaction-builder` / `sui-rpc`) are distinct from the legacy `sui-sdk` crate in the sui monorepo. New code should use the former.
 - **Fetching TS docs from the web when they're installed locally.** If the project has `@mysten/sui` installed, read `node_modules/@mysten/sui/docs/llms-index.md` instead — it matches the installed version.
+
+- **Skipping the index and guessing a docs filename.** Always read `node_modules/@mysten/<pkg>/docs/llms-index.md` first to discover which topic pages exist, then open the specific page it names.
 - **Hardcoding a specific SDK version.** SDK APIs evolve. Prefer "install the latest `@mysten/sui`" and then consult the bundled docs, rather than pinning advice to a version.
 - **Recommending `@mysten/dapp-kit` for backend code.** dApp Kit is a React-oriented frontend framework. Backend or CLI code should use `@mysten/sui` directly.
 - **Providing React hook details instead of routing to the `frontend-apps` skill.** When a user asks about React hooks, wallet connection patterns, or dApp Kit query patterns, do not answer with hook-level code from this skill. Instead, explicitly tell the user: "For React hook details, see the `frontend-apps` skill." This skill covers SDK selection and `Transaction` construction only — the `frontend-apps` skill has the hook-level guidance.
