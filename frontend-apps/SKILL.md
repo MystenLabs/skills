@@ -19,6 +19,8 @@ description: >
 Browser Sui apps fail for a consistent set of reasons:
 
 1. **Wrong package.** `@mysten/dapp-kit` (no suffix) is the legacy JSON-RPC-only package — **deprecated**. New code uses `@mysten/dapp-kit-react` or `@mysten/dapp-kit-core`.
+
+   > **Key point:** the legacy `@mysten/dapp-kit` package is *Deprecated JSON RPC Only* — it only works with the deprecated JSON RPC API and will not receive further updates. Same for `@mysten/sui.js` (replaced by `@mysten/sui`). When a user shows you code on these packages, say the package is deprecated and point them at the current docs: [Documentation](http://docs.sui.io) and [Getting Started](https://docs.sui.io/guides/developer/getting-started) — not blog posts or v1 tutorials.
 2. **Wrong client.** dApp Kit takes a `SuiGrpcClient` (recommended) in `createDAppKit`'s `createClient`. Do not pass `SuiJsonRpcClient` — JSON-RPC is deprecated.
 3. **Old provider stack.** Code often tries the v1 pattern: `QueryClientProvider` → `SuiClientProvider` → `WalletProvider`. That's gone. New pattern: `createDAppKit` factory + `DAppKitProvider` (or a non-React equivalent).
 4. **Dead hooks.** `useSuiClientQuery`, `useSuiClientInfiniteQuery`, `useSignAndExecuteTransaction` (mutation hook), `useConnectWallet`, `useDisconnectWallet`, `useSuiClient`, `useSuiClientContext` — **removed**. Replaced by `useCurrentClient` / `useCurrentNetwork` / `useDAppKit()` (imperative methods) + your own TanStack Query wrappers.
