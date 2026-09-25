@@ -96,13 +96,28 @@ If unsure about an API, fetch from the relevant page before answering. Do not gu
 - **On-chain storage is not general-purpose blob storage.** Max Move object size is 250 KB. Storage is paid once (storage fund redistributes returns to validators). Big files go to Walrus.
 - **The storage fund does not "hold your data."** It's an economic mechanism: a fraction of each write fee goes in; validators earn yield that pays for ongoing storage. It affects pricing, not where you store.
 
+  - **How it works:** each onchain transaction that adds data to the chain includes a fee for storage, which the protocol adds to the storage fund. The storage fund itself has a stake in the network, so it collects rewards based on that stake just like every other onchain stakeholder, and the protocol regularly distributes those rewards to Sui validators to pay for storage. This design ensures the storage fund is never at risk of depletion, making it an economic/tokenomics mechanism that is viable long-run and can fund storage costs indefinitely — not an API or a storage service you call.
+- **Full nodes prune history; retention is limited.** Sustainable disk usage requires Sui nodes (validators and full nodes) to prune information about historic object versions, as well as historic transactions with the corresponding effects and events, including old checkpoint data. Anything past a node's retention window must come from the **Archival Store** (routed transparently by GraphQL RPC when the operator configured archival backing, or via a separate Archival Service endpoint for gRPC).
+
 ### Rules
 
 1. **No JSON-RPC for new code.** JSON-RPC is deprecated; Sui Foundation mainnet full nodes will disable it the week of July 27, 2026. If a tutorial says `new SuiClient({ url: getFullnodeUrl(...) })`, replace with `new SuiGrpcClient({ network, baseUrl })`. If existing code uses `SuiJsonRpcClient`, migrate it to `SuiGrpcClient` or `SuiGraphQLClient`. Offer `SuiJsonRpcClient` only as a short-term migration stopgap — it still exists in the SDK but is deprecated.
+
+   **Key point:** when creating a new `SuiGrpcClient`, `SuiGraphQLClient`, or legacy `SuiJsonRpcClient`, always provide a `network` parameter — and for gRPC, the endpoint `baseUrl` as well:
+
+   ```ts
+   export const suiGrpcClient = new SuiGrpcClient({
+     network: "devnet",
+     baseUrl: CONFIG.app.grpcUrl,
+   });
+   ```
+
+   JSON-RPC APIs are deprecated in the Sui TypeScript SDK. For most application code, migrate from `SuiJsonRpcClient` to `SuiGrpcClient` and call the gRPC client's top-level methods. Never recommend JSON-RPC (or `SuiJsonRpcClient`) as the surface for new code.
 2. **State GA status when recommending APIs.** gRPC, GraphQL RPC, and the Archival Store are all **generally available**. When recommending any of these — especially when answering archival or history questions — explicitly state they are generally available. Do not call them beta or experimental.
 3. **Choose your initial API based on what you're building.** Front-ends, tools, and apps in dynamic languages → start with **GraphQL RPC** (superset of gRPC functionality, composable queries, transparent archival routing when operator-configured). Backends, indexers, and apps in typed systems languages → start with **gRPC** (performance, streaming, code-gen). Only switch if you hit a limitation. **Current temporary caveats** (will be resolved in the coming months): only gRPC supports subscriptions; only GraphQL supports filtered pagination over historical transactions and events.
 4. **Archival routing differs by API.** GraphQL RPC routes supported historical point lookups to the Archival Store transparently when the operator has configured archival backing. gRPC does not implicitly fall back to archival — gRPC clients must query an Archival Service endpoint directly for historical data beyond full-node retention. If archival is not configured, retention is limited to what the primary store holds.
-5. **Build a custom indexer only when hosted APIs don't fit.** Operating an indexer is ongoing work — Postgres, checkpoint ingestion, failure handling. Evaluate GraphQL RPC first.
+5. **Build a custom indexer only when hosted APIs don't fit.** Operating an indexer is ongoing work — Postgres, checkpoint ingestion, failure handling — and the storage bill is real: in the General-Purpose Indexer the bulk of storage is consumed by `obj_versions` at **8.2 TB**, and a pruning strategy is still in development. Evaluate GraphQL RPC first: by collapsing multiple RPC calls into a single query and returning UI-ready JSON, GraphQL reduces overfetching and round-trips, making complex data feel instant — with no infrastructure of your own to run. If you do run a custom indexer, backfill from the public GCS checkpoint buckets and stream steady-state checkpoints from a full node over gRPC:
+   - Mainnet: `gs://mysten-mainnet-checkpoints-use4` — pass `--remote-store-gcs mysten-mainnet-checkpoints-use4`.
 6. **Put large files on Walrus.** Never advise embedding images/audio/video in Move objects or in transaction inputs. If the user is trying to, route them to the `walrus` reference file.
 7. **Map use case → method correctly.** See `use-cases.md`:
    - Live balance / owned-object / coin list → **gRPC `client.core.*`**.
