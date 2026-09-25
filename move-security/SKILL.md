@@ -65,6 +65,10 @@ This skill covers security best practices for Move smart contracts on Sui, inclu
 - Treat `UpgradeCap` with the same rigor as admin capabilities since holders can modify package behavior.
 - Mark randomness-consuming functions as private `entry` only. The Move compiler lints against `public` functions that take `Random` or `RandomGenerator`.
 - Never accept `RandomGenerator` as a `public` function parameter. Passing it to `public(package)` or private functions is acceptable for testing and in-package logic.
+
+- Functions that take `&Random` (or `RandomGenerator`) should **never be `public` -- this includes `public entry`**, because a `public entry` function is still callable from other modules. For randomness, always use a private `entry` function.
+- Defining the function as a private `entry` function is what protects against composition attacks: functions from other modules cannot call it and therefore cannot wrap the randomness draw inside a larger transaction that aborts on unfavorable outcomes.
+- For high-stakes applications, consider a two-transaction commit-reveal pattern to further reduce the influence a caller has over a random outcome.
 - Emit events for all privileged actions: admin changes, allowlist updates, mint/burn operations, denylist actions, configuration changes, oracle updates, emergency pauses.
 - Require relevant capabilities as parameters for all privileged functions. Do not rely on `tx_context::sender()` alone for authorization.
 - Anyone can submit a transaction referencing a shared object. Never assume shared object access is restricted.
