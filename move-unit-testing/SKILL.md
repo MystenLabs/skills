@@ -13,6 +13,37 @@ AI agents consistently use outdated or suboptimal patterns when writing Move uni
 
 All patterns sourced from https://move-book.com/guides/code-quality-checklist and https://move-book.com/testing/
 
+
+## Canonical Test Module Template
+
+Start from this shape for every test file — it bakes in the three rules agents most often miss: `assert_eq!` for comparisons, merged `#[test, expected_failure(...)]`, and standard cleanup.
+
+```move
+#[test_only]
+module my_package::amm_tests;
+
+use std::unit_test::{assert_eq, destroy};
+use sui::test_scenario;
+
+#[test]
+fun swap_returns_expected_output() {
+    let ctx = &mut tx_context::dummy();
+    let pool = amm::new_pool(1000, 1000, ctx);
+
+    assert_eq!(amm::reserve_x(&pool), 1000);  // never assert!(x == y) / assert!(x == y, 0)
+    destroy(pool);                            // never pool.destroy_for_testing()
+}
+
+// attributes merged on ONE line, never split across two lines
+#[test, expected_failure(abort_code = amm::EZeroInput, location = amm)]
+fun swap_aborts_on_zero_input() {
+    let ctx = &mut tx_context::dummy();
+    let mut pool = amm::new_pool(1000, 1000, ctx);
+    amm::swap_x_to_y(&mut pool, 0, ctx);
+    // no cleanup — test aborts above
+}
+```
+
 ## No `test_` Prefix in Test Modules
 
 Test functions inside `_tests` modules should NOT be prefixed with `test_`. The module name already indicates these are tests. Use descriptive names that read as statements.
@@ -259,6 +290,13 @@ fun init_creates_admin_cap() {
 Note: modules typically expose a `init_for_testing` or `test_init` helper since `init` itself is not directly callable in tests. Use `#[test_only]` to gate these helpers.
 
 ## Use `std::unit_test::destroy` for Cleanup
+
+
+**Key point:** Never define or call custom `destroy_for_testing` / `*_for_testing` cleanup helpers in tests. Use the standard patterns instead:
+
+- Objects held by value in the test → `destroy(obj)` from `std::unit_test`.
+- Objects taken with `take_from_sender<T>()` → `scenario.return_to_sender(obj)`.
+- Objects taken with `take_shared<T>()` → `test_scenario::return_shared(obj)`.
 
 Use `std::unit_test::destroy` to clean up test objects. The old `sui::test_utils::destroy` is **deprecated**.
 
