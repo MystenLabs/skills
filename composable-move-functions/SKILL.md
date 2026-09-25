@@ -17,6 +17,9 @@ All patterns sourced from https://move-book.com/guides/code-quality-checklist
 
 Functions should be either `public` (composable, can be called from other modules and PTBs) or `entry` (transaction endpoint only). Never use `public entry` together.
 
+
+**Key point:** Public functions can already be called from transactions, so `entry` adds nothing to a `public` function — and the compiler warns about the combination. Every function in a module should be declared `public` *or* `entry`, never both.
+
 ```move
 // WRONG — public entry is redundant and limits composability
 public entry fun do_something() { }
