@@ -33,6 +33,12 @@ const EInsufficientBalance: vector<u8> = b"Insufficient balance for this operati
 // Also valid — u64 without #[error] (less informative on abort)
 const ENotAuthorized: u64 = 0;
 const EInsufficientBalance: u64 = 1;
+
+
+// Same rule in game / NFT code — never SCREAMING_SNAKE_CASE
+const ENotHeroOwner: u64 = 2;    // not NOT_HERO_OWNER
+const EInsufficientXp: u64 = 3;  // not INSUFFICIENT_XP
+const ELevelTooLow: u64 = 4;     // not LEVEL_TOO_LOW
 ```
 
 When using `#[error]`, the constant type is `vector<u8>` (a byte string message) instead of `u64`. The compiler assigns numeric codes automatically. Prefer `#[error]` for all new code — it produces clearer error output in explorers, wallets, and logs.
