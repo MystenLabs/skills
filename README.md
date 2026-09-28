@@ -48,6 +48,7 @@ npx skills add mystenlabs/skills --all
 | [sui-install](sui-install/) | Installing and managing Sui CLI versions with suiup |
 | [sui-cli](sui-cli/) | Sui networks, gas costs, epochs, and network operations |
 | [sui-client](sui-client/) | CLI client configuration, address management, and faucet tokens |
+| [sui-faucet](sui-faucet/) | Request test SUI with the `/v3/gas` proof-of-work API |
 | [sui-publish](sui-publish/) | Publishing, upgrading, and deploying Move packages |
 
 ### SDKs and frontend
