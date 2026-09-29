@@ -285,3 +285,35 @@ Enums can have variants with positional fields, named fields, or no fields. Use 
 | `opt.is_some() + destroy_some` | `opt.do!(\|v\| ...)` |
 | `while (i < n) { ... i++ }` | `n.do!(\|_\| ...)` |
 | `let S { a, b: _ } = x` | `let S { a, .. } = x` |
+
+## Putting It Together
+
+A complete module in Move 2024 style: module label declaration, method-style calls, and direct field access.
+
+```move
+module my_package::counter;
+
+const ENotOwner: u64 = 0;
+
+public struct Counter has key {
+    id: UID,
+    owner: address,
+    value: u64,
+}
+
+public fun new(ctx: &mut TxContext): Counter {
+    Counter { id: object::new(ctx), owner: ctx.sender(), value: 0 }
+}
+
+public fun bump(c: &mut Counter, ctx: &TxContext) {
+    assert!(c.owner == ctx.sender(), ENotOwner);  // direct field access
+    c.value = c.value + 1;
+}
+
+public fun burn(c: Counter) {
+    let Counter { id, .. } = c;
+    id.delete();
+}
+```
+
+Note what is absent: no `module { ... }` block braces, no `tx_context::sender(ctx)`, no `object::delete(id)`, and no getter call where a field read works.
