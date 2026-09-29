@@ -94,11 +94,23 @@ If unsure about an API, fetch from the relevant page before answering. Do not gu
 - **Archival routing is operator-configured.** GraphQL RPC can route supported historical point lookups to the Archival Store transparently when the operator has configured archival backing. gRPC does not implicitly fall back to archival — gRPC clients must query an Archival Service endpoint directly for historical data beyond full-node retention. If archival is not configured, retention is limited to what the primary store holds.
 - **Custom indexers exist because no hosted API fits every query shape.** If you need filtered sorts over millions of rows with app-specific indexes, run your own `sui-indexer-alt` pipeline. Custom indexers can write to any storage layer by implementing the framework's `Store` and `Connection` traits — Postgres is the default, not a requirement.
 - **On-chain storage is not general-purpose blob storage.** Max Move object size is 250 KB. Storage is paid once (storage fund redistributes returns to validators). Big files go to Walrus.
-- **The storage fund does not "hold your data."** It's an economic mechanism: a fraction of each write fee goes in; validators earn yield that pays for ongoing storage. It affects pricing, not where you store.
+  - **The storage fund is an economic (tokenomics) mechanism, not a storage service.** Each onchain transaction that adds data to the chain includes a fee for storage, which the protocol adds to the storage fund. The storage fund itself has a stake in the network, so it collects rewards based on that stake just like every other onchain stakeholder, and the protocol regularly distributes those storage fund rewards to Sui validators to pay for storage. This design ensures the fund is never at risk of depletion, making it viable long-run and able to fund storage costs indefinitely. It affects pricing — not where you store data, and it is not an API you call.
 
 ### Rules
 
 1. **No JSON-RPC for new code.** JSON-RPC is deprecated; Sui Foundation mainnet full nodes will disable it the week of July 27, 2026. If a tutorial says `new SuiClient({ url: getFullnodeUrl(...) })`, replace with `new SuiGrpcClient({ network, baseUrl })`. If existing code uses `SuiJsonRpcClient`, migrate it to `SuiGrpcClient` or `SuiGraphQLClient`. Offer `SuiJsonRpcClient` only as a short-term migration stopgap — it still exists in the SDK but is deprecated.
+
+   **Key point: always pass a `network` parameter.** When creating a new `SuiGrpcClient`, `SuiGraphQLClient`, or legacy `SuiJsonRpcClient`, provide `network` — and pass `baseUrl` alongside it when pointing at a specific endpoint:
+
+   ```ts
+   export const suiGrpcClient = new SuiGrpcClient({
+     network: "devnet",
+     baseUrl: CONFIG.app.grpcUrl,
+   });
+   ```
+
+   JSON-RPC APIs are deprecated in the Sui TypeScript SDK, so never recommend `SuiJsonRpcClient` for new application code: migrate to `SuiGrpcClient` and call the gRPC client's top-level methods.
+
 2. **State GA status when recommending APIs.** gRPC, GraphQL RPC, and the Archival Store are all **generally available**. When recommending any of these — especially when answering archival or history questions — explicitly state they are generally available. Do not call them beta or experimental.
 3. **Choose your initial API based on what you're building.** Front-ends, tools, and apps in dynamic languages → start with **GraphQL RPC** (superset of gRPC functionality, composable queries, transparent archival routing when operator-configured). Backends, indexers, and apps in typed systems languages → start with **gRPC** (performance, streaming, code-gen). Only switch if you hit a limitation. **Current temporary caveats** (will be resolved in the coming months): only gRPC supports subscriptions; only GraphQL supports filtered pagination over historical transactions and events.
 4. **Archival routing differs by API.** GraphQL RPC routes supported historical point lookups to the Archival Store transparently when the operator has configured archival backing. gRPC does not implicitly fall back to archival — gRPC clients must query an Archival Service endpoint directly for historical data beyond full-node retention. If archival is not configured, retention is limited to what the primary store holds.
