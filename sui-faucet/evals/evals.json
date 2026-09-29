@@ -1,84 +1,18 @@
 [
   {
     "id": "sui-faucet-v3-flow",
-    "prompt": "I need Testnet SUI for an agent in CI, without opening a browser. How do I use /v3/gas? Show the requests and explain how to get the proof fields. Can I send FixedAmountRequest or use /v2/gas instead?",
+    "prompt": "I need Testnet or Devnet SUI for an agent in CI, without opening a browser. How do I use /v3/gas? Show the requests and explain how to get the proof fields. Can I send FixedAmountRequest or use /v2/gas instead?",
     "sources": [
       "https://faucet.sui.io/how-to-use"
     ],
     "expected_output": "A challenge, local proof computation, and submission workflow with the correct flat JSON request and no legacy bypass.",
     "expectations": [
-      "Uses https://faucet.testnet.sui.io and GET /v3/challenge with the recipient query parameter.",
+      "Uses https://faucet.{devnet|testnet}.sui.io and GET /v3/challenge with the recipient query parameter.",
       "Checks that challenge network and recipient match the request.",
       "Explains that an Argon2d proof must be computed locally before POST /v3/gas.",
       "Submits a flat JSON object with recipient, checkpointSeq, nonce, and hashHex using Content-Type: application/json.",
       "Uses decimal strings for checkpointSeq and nonce, and all 32 hash bytes as 64 lowercase hex characters without 0x.",
       "Does not require a wallet signature or private key and does not treat /v2/gas or FixedAmountRequest as a public v3 fallback."
-    ]
-  },
-  {
-    "id": "sui-faucet-proof-encoding",
-    "prompt": "Implement the core proof computation for a version 1 Sui faucet challenge in JavaScript. Specify the exact preimage, hashing parameters, threshold check, and wire output. Include what happens when randomBytes is empty and when a server advertises different hash parameters.",
-    "sources": [
-      "https://faucet.sui.io/pow-spec/",
-      "https://faucet.sui.io/pow-spec/pow-vectors.json"
-    ],
-    "expected_output": "Version-checked Argon2d computation using exact encoding and BigInt arithmetic.",
-    "expectations": [
-      "Joins domain, chainId, checkpointSeq, checkpointDigest, randomBytes, faucetAddress, recipient, and nonce in that order with newlines and no trailing newline.",
-      "Preserves the empty randomness field as an empty fifth line rather than removing it.",
-      "Uses Argon2d version 19, salt sui-faucet-pow-1, memory 8192 KiB, one iteration, parallelism one, and 32 output bytes.",
-      "Rejects unsupported proof versions or changed fixed hash parameters before hashing.",
-      "Interprets the first eight hash bytes as big-endian and compares strictly less than the threshold using integer arithmetic.",
-      "Uses BigInt rather than Number for nonce and threshold, and serializes the nonce as a decimal string.",
-      "Returns the complete hash as 64 lowercase hexadecimal characters without a 0x prefix."
-    ]
-  },
-  {
-    "id": "sui-faucet-uncertain-payout",
-    "prompt": "My POST /v3/gas timed out. I retried and got already_used with a digest and a fresh challenge. Should I solve the new challenge? What if already_used has no digest, or I get payout_status_unknown? Is replay recovery permanent?",
-    "sources": [
-      "https://faucet.sui.io/pow-spec/",
-      "https://faucet.sui.io/how-to-use"
-    ],
-    "expected_output": "Recovery preserves the original request and resolves its transaction before another payout.",
-    "expectations": [
-      "Does not automatically solve the new challenge after an uncertain payout or already_used.",
-      "Requires looking up the supplied digest on the same network before requesting another payout.",
-      "Explains that already_used without a digest can mean the original request is still processing.",
-      "Requires resolving payout_status_unknown to a known transaction outcome before another payout.",
-      "Retains the original endpoint and exact same four request fields for recovery while the checkpoint is usable.",
-      "States that recovery is limited by checkpoint freshness and server restarts, not permanent idempotency."
-    ]
-  },
-  {
-    "id": "sui-faucet-invalid-proof",
-    "prompt": "My Sui faucet hash passes my local threshold test but /v3/gas returns invalid_proof with preimageSha256. Should I keep changing the nonce? I used Argon2id, decoded checkpointDigest into bytes, and removed the empty randomBytes line.",
-    "sources": [
-      "https://faucet.sui.io/pow-spec/"
-    ],
-    "expected_output": "Diagnoses the three protocol violations and uses preimageSha256 and conformance vectors rather than blind retries.",
-    "expectations": [
-      "Replaces Argon2id with Argon2d and retains the checkpoint digest as its verbatim base58 string.",
-      "Preserves an empty fifth preimage line when randomBytes is empty.",
-      "Compares the SHA-256 of the exact client preimage with preimageSha256; a mismatch indicates input or encoding differences and a match points to the Argon2 output.",
-      "Explains that a locally passing threshold does not prove the submitted full hash matches the server computation.",
-      "Recommends conformance vectors and investigation instead of automatically retrying new nonces."
-    ]
-  },
-  {
-    "id": "sui-faucet-freshness-and-payout",
-    "prompt": "I downloaded a faucet challenge with windowSeconds 60 and amountMist \"250000000\". Does that guarantee 60 seconds from download and a 1 SUI coin object? What should I do about stale_checkpoint, funds_unavailable, or payout_failed with and without a digest? Assume no earlier uncertain request.",
-    "sources": [
-      "https://faucet.sui.io/pow-spec/",
-      "https://faucet.sui.io/how-to-use"
-    ],
-    "expected_output": "Explains checkpoint-based freshness, configured address-balance payouts, and digest-sensitive error handling.",
-    "expectations": [
-      "Measures freshness from checkpoint timestamps rather than challenge download time.",
-      "Reads amountMist as 0.25 SUI, does not assume 1 SUI, and explains that v3 credits address balance rather than creating a coin object.",
-      "Uses a validated fresh challenge and recomputes the proof after stale_checkpoint when no prior outcome is uncertain.",
-      "Backs off for funds_unavailable and allows the same proof to be retried after refill while fresh.",
-      "Distinguishes payout_failed without a digest, where the same fresh proof can be retried, from payout_failed with a digest, where the spent proof requires transaction inspection and a new challenge for another payout."
     ]
   }
 ]
