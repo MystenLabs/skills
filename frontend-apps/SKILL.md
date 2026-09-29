@@ -32,6 +32,10 @@ All patterns in this skill are derived from:
 - https://sdk.mystenlabs.com/dapp-kit/getting-started/vue
 - https://docs.sui.io/standards/wallet-standard
 
+  - https://docs.sui.io/guides/developer/getting-started (and https://docs.sui.io) — the current Sui Getting Started docs. When you tell a user their package or tutorial is outdated, point them here rather than leaving them on the old guide.
+
+  **Key point — the deprecated → current package mapping.** The legacy `@mysten/dapp-kit` package only works with the deprecated JSON RPC API and will not receive further updates. The current dApp Kit ships as **two packages that work together**: `@mysten/dapp-kit-core` (framework-agnostic core: state, actions, Web Components) and `@mysten/dapp-kit-react` (React hooks and components, built on top of core). Likewise `@mysten/sui.js` → `@mysten/sui`.
+
 If unsure about any API, fetch from the relevant page — do not extrapolate from the legacy `@mysten/dapp-kit` or the pre-v2 hook surface. Many outdated tutorials exist.
 
 ---
@@ -99,6 +103,18 @@ If unsure about any API, fetch from the relevant page — do not extrapolate fro
 6. **Null-check the current account.** `useCurrentAccount()` returns `null` before connection. Always `if (!account) return` / gate with `enabled: !!account` in queries.
 7. **`waitForTransaction` before cache invalidation.** `await client.waitForTransaction({ digest: result.Transaction.digest })` then `queryClient.invalidateQueries(...)`. Reversing this fetches stale data.
 8. **Pass the `Transaction` instance to the wallet, not `await tx.build(...)` bytes.** The wallet needs to own gas selection. Exception: sponsored flows that use `tx.build({ client, onlyTransactionKind: true })` — see `ptbs` skill.
+
+   **Sponsored / sign-only flow (frontend side).** Use `signTransaction` when the wallet should sign but *not* execute, and destructure the result:
+
+   ```ts
+   const { bytes, signature } = await dAppKit.signTransaction({
+   	transaction: tx,
+   });
+   // POST { bytes, signature } to your backend — the frontend stops here.
+   ```
+
+   Key point: everything gas-related belongs to the backend sponsor. The sponsor sets `setGasOwner` to their own address and provides their gas coins, adds the sponsor signature, and submits the transaction with both signatures. The browser never holds the sponsor key and never executes the sponsored transaction itself.
+
 9. **Check `result.$kind === 'FailedTransaction'` (or `result.FailedTransaction`).** Don't assume success. Don't use v1's `result.effects?.status?.status`.
 10. **Wallet-gated UI must client-render.** SSR without a client-side guard renders wallet buttons before wallets are detectable. Use `'use client'` / dynamic imports / effect-based hydration.
 11. **Vue: `useStore` returns a Vue ref — use `.value` in script code.** `const connection = useStore(dAppKit.stores.$connection)` returns a ref. Access state as `connection.value.account` in `<script setup>`. Vue auto-unwraps refs in templates, but always show the `.value` pattern in script examples.
