@@ -106,9 +106,25 @@ Do not guess or extrapolate from other SDKs or libraries.
 
 ### Rules
 
+- Load every reference file that the routing guide maps to the current task **before** writing code; never answer this domain from memory.
+- Verify each API, parameter, and path against the canonical source above (and the Sui documentation MCP server when available) before using it.
+- Never extrapolate from other SDKs, libraries, or chains — if the canonical source does not show it, do not write it.
+- Prefer the current, non-deprecated API whenever the source documents both an old and a new form.
+
 <!-- List the non-negotiable rules the agent must follow. Be direct and specific. -->
 
 ### Common mistakes
 
 <!-- Describe frequent errors and their correct alternatives. -->
+
+### Output requirements
+
+Every response produced while this skill is active must:
+
+1. State which reference files were loaded (or that none applied) so the routing decision is auditable.
+2. Cite the canonical source page for any API, parameter, or path it introduces.
+3. Explicitly flag anything that could not be verified against the canonical source or the MCP server, instead of presenting a guess as fact.
+4. Use runnable, Sui-specific code — no pseudo-code placeholders and no patterns borrowed from other chains.
+
+**Key point:** an answer that compiles but cannot be traced back to the canonical source is a failure, not a partial success.
 
