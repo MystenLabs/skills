@@ -85,6 +85,15 @@ If unsure about any specific API in any SDK, fetch from the relevant doc page �
 - **Every `@mysten/*` package ships LLM-ready docs.** Look for `node_modules/@mysten/sui/docs/llms-index.md` and follow its pointers before asking the user to clarify APIs. Matches the installed version exactly.
 - **Frameworks on top of SDKs.** `@mysten/dapp-kit-react` (React wallet integration; `@mysten/dapp-kit-core` for Vue/vanilla/Svelte/Web Components), `@mysten/kiosk`, `@mysten/suins`, `@mysten/deepbook-v3`, `@mysten/walrus`, `@mysten/seal`, `@mysten/zksend`, `@mysten/enoki` — all are thin layers over `@mysten/sui`. The Mysten extensions integrate via the v2 `client.$extend(...)` pattern; dApp Kit does not (it's a React framework, not a client extension — see `frontend-apps` skill). The bare `@mysten/dapp-kit` package name is the deprecated JSON-RPC-only predecessor.
 
+
+#### Bundled LLM docs (`docs/llms-index.md`)
+
+Every `@mysten/*` package ships a `docs/` directory of flat markdown files optimized for AI agent consumption. For example, installing `@mysten/sui` gives you docs at `node_modules/@mysten/sui/docs/llms-index.md`; other packages follow the same convention at `node_modules/@mysten/<pkg>/docs/llms-index.md`.
+
+- `docs/llms-index.md` is a **routing index listing all doc pages with descriptions**. Read the index first to find the page you need, then read that page for details.
+- Because the docs ship inside the installed package, they match the installed version exactly — prefer them over the web docs, which track the latest release.
+- Wire this in as a standing instruction so agents check it every time. Paste it wherever your runtime keeps standing instructions: `~/.claude/CLAUDE.md` for Claude Code, `AGENTS.md` for Codex, a rule file under `.cursor/rules` (or `.cursorrules`) for Cursor, the system prompt string for SDK agents. For example: "Before writing code that uses a `@mysten/*` package, read `node_modules/@mysten/<pkg>/docs/llms-index.md`, then read the specific page it points to."
+
 ### Rules
 
 1. **Default to TypeScript or Rust, but respect language constraints.** For any new Sui project, recommend TypeScript (`@mysten/sui`) or Rust (`sui-rust-sdk` crates) — unless the user has named a language (Go, Python, Dart, Kotlin, Swift, Vue) or said "my team uses X". Then `community.md` is the load: name the canonical community SDK (`block-vision/sui-go-sdk` for Go, `pysui` for Python, etc.), flag the staleness risk, and offer FFI-to-Rust as a fallback. **Do not recommend TypeScript or Rust as a replacement language** when the user has stated their team's language. For example, if the user says "my team uses Go", do not suggest rewriting in TypeScript — recommend the Go community SDK and/or Rust via FFI.
