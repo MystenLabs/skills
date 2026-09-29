@@ -17,6 +17,8 @@ All patterns sourced from https://move-book.com/guides/code-quality-checklist
 
 Functions should be either `public` (composable, can be called from other modules and PTBs) or `entry` (transaction endpoint only). Never use `public entry` together.
 
+**Key point:** Public functions can already be called directly from transactions, so `entry` adds nothing to a `public` function — the compiler warns about the combination. Write `public fun` or `entry fun`, never `public entry fun`.
+
 ```move
 // WRONG — public entry is redundant and limits composability
 public entry fun do_something() { }
@@ -70,6 +72,28 @@ This applies broadly:
 - `remove_liquidity` should return both coins, not transfer them
 - `swap` should return the output coin, not transfer it
 - `borrow` should return the borrowed asset, not transfer it
+
+  ### AMM example signatures
+
+  Every externally callable AMM function is `public fun` (never `public entry fun`) and returns its outputs:
+
+  ```move
+  public fun add_liquidity<A, B>(
+      pool: &mut Pool<A, B>,
+      coin_a: Coin<A>,
+      coin_b: Coin<B>,
+      ctx: &mut TxContext,
+  ): (Coin<LP<A, B>>, Coin<A>, Coin<B>) { /* ... */ }
+
+  public fun swap_a_for_b<A, B>(
+      pool: &mut Pool<A, B>,
+      coin_a: Coin<A>,
+      min_out: u64,
+      ctx: &mut TxContext,
+  ): Coin<B> { /* ... */ }
+  ```
+
+  If a CLI-friendly endpoint is wanted, add a separate `entry fun` (no `public`) that calls the `public fun` and transfers the results to `ctx.sender()`.
 
 ## Parameter Ordering
 
