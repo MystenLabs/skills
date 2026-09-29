@@ -7,12 +7,45 @@
     ],
     "expected_output": "A challenge, local proof computation, and submission workflow with the correct flat JSON request and no legacy bypass.",
     "expectations": [
-      "Uses https://faucet.{devnet|testnet}.sui.io and GET /v3/challenge with the recipient query parameter.",
-      "Checks that challenge network and recipient match the request.",
-      "Explains that an Argon2d proof must be computed locally before POST /v3/gas.",
-      "Submits a flat JSON object with recipient, checkpointSeq, nonce, and hashHex using Content-Type: application/json.",
-      "Uses decimal strings for checkpointSeq and nonce, and all 32 hash bytes as 64 lowercase hex characters without 0x.",
-      "Does not require a wallet signature or private key and does not treat /v2/gas or FixedAmountRequest as a public v3 fallback."
+      "Names a concrete faucet API host, https://faucet.devnet.sui.io or https://faucet.testnet.sui.io, rather than a placeholder, and uses the same host for both calls.",
+      "Calls GET /v3/challenge with the recipient address as a query parameter.",
+      "Explains that an Argon2d proof must be computed locally before POST /v3/gas, and does not claim an SDK helper performs the v3 flow.",
+      "Submits a flat JSON object with recipient, checkpointSeq, nonce, and hashHex using Content-Type: application/json, with no wrapper object.",
+      "States that checkpointSeq and nonce are decimal strings.",
+      "States that hashHex is the full 32-byte output as exactly 64 lowercase hex characters with no 0x prefix.",
+      "Does not require a wallet signature or private key, and does not treat /v2/gas or FixedAmountRequest as a public v3 fallback.",
+      "Answers in a headless-CI-ready way: emits concrete requests rather than declining to commit to endpoints or field shapes because the live guide was not fetched."
+    ]
+  },
+  {
+    "id": "sui-faucet-challenge-validation",
+    "prompt": "My CI job burns minutes of CPU solving faucet proofs and then gets invalid_proof back. What should I check on the challenge response before I start hashing, and how do I know which proof version to implement?",
+    "sources": [
+      "https://faucet.sui.io/pow-spec/",
+      "https://faucet.sui.io/how-to-use"
+    ],
+    "expected_output": "Validation of the challenge response before hashing, reading the proof version from the challenge rather than the URL path, and a correct preimage and threshold comparison.",
+    "expectations": [
+      "Says to verify, before hashing, that the challenge's chain ID matches the network called and its recipient matches the address requested, and to re-request the challenge on a mismatch.",
+      "Says to read the proof version from the challenge's version field and states that HTTP API v3 does not imply proof version 3.",
+      "Describes the preimage as the challenge fields joined by newlines with no trailing newline, beginning with the sui-faucet-pow/1 domain line and ending with the nonce.",
+      "States the acceptance test as the first 8 bytes of the 32-byte hash read as a big-endian unsigned 64-bit integer compared against the threshold.",
+      "Says to use integer arithmetic for nonce, threshold, and difficulty rather than floating point."
+    ]
+  },
+  {
+    "id": "sui-faucet-error-recovery",
+    "prompt": "My faucet POST timed out and I never saw a response. Should I solve a new proof and submit again? I also see stale_checkpoint and already_used on some runs. And how much SUI should I expect per request?",
+    "sources": [
+      "https://faucet.sui.io/how-to-use"
+    ],
+    "expected_output": "Resubmit the saved proof on an uncertain outcome, re-solve only on stale_checkpoint, and read the payout from the response.",
+    "expectations": [
+      "Says to resubmit the same saved fields after an uncertain or unknown outcome instead of solving a new proof.",
+      "Explains that already_used returns the digest of the original payout rather than paying twice.",
+      "Explains that stale_checkpoint requires a fresh challenge and a new proof.",
+      "Says to read amountMist from the response rather than assuming a fixed payout amount.",
+      "States that funds land in the recipient's address balance rather than as a new coin object."
     ]
   }
 ]
