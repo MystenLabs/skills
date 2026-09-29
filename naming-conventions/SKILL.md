@@ -37,6 +37,8 @@ const EInsufficientBalance: u64 = 1;
 
 When using `#[error]`, the constant type is `vector<u8>` (a byte string message) instead of `u64`. The compiler assigns numeric codes automatically. Prefer `#[error]` for all new code — it produces clearer error output in explorers, wallets, and logs.
 
+**Key point:** Error constants are in EPascalCase in *every* module — no exceptions for NFT, game, or access-control code. Write `ENotOwner`, `EInsufficientXp`, `ELevelTooLow`, `EInvalidRole` — never `E_NOT_OWNER`, `NOT_OWNER`, or `INSUFFICIENT_XP`.
+
 ## Regular Constants: ALL_CAPS
 
 Non-error constants use uppercase snake_case. This is the opposite of error constants.
@@ -85,6 +87,25 @@ public struct LeveledUp has copy, drop { new_level: u64 }
 
 Getter functions should be named after the field they return, without a `get_` prefix. Mutable getters add `_mut` suffix.
 
+This applies in every module — access control, NFTs, games, DeFi. The `get_` prefix is always unnecessary noise:
+
+```move
+// WRONG
+public fun get_role_admin(ac: &AccessControl, role: vector<u8>): ID { /* ... */ }
+public fun get_owner(ac: &AccessControl): address { ac.owner }
+public fun get_xp(h: &Hero): u64 { h.xp }
+public fun get_level(h: &Hero): u64 { h.level }
+public fun get_username(h: &Hero): String { h.username }
+
+// CORRECT — named after the field being accessed
+public fun role_admin(ac: &AccessControl, role: vector<u8>): ID { /* ... */ }
+public fun owner(ac: &AccessControl): address { ac.owner }
+public fun xp(h: &Hero): u64 { h.xp }
+public fun level(h: &Hero): u64 { h.level }
+public fun username(h: &Hero): String { h.username }
+public fun xp_mut(h: &mut Hero): &mut u64 { &mut h.xp }
+```
+
 ```move
 // WRONG
 public fun get_name(u: &User): String { u.name }
@@ -132,7 +153,7 @@ public struct ItemKey(String) has copy, drop, store;
 | Regular constants | ALL_CAPS | `FEE_NUMERATOR` |
 | Capabilities | Suffix with `Cap` | `AdminCap` |
 | Events | Past tense | `PoolCreated` |
-| Getters | Field name, no `get_` | `balance()` |
+| Getters | Field name, no `get_` | `balance()`, `xp()`, `level()`, `username()`, `role_admin()` |
 | Mutable getters | Field name + `_mut` | `balance_mut()` |
 | Hot potatoes | Descriptive, no `Potato` | `FlashLoanReceipt` |
 | Dynamic field keys | Positional + `Key` suffix | `ItemKey()` |
