@@ -85,7 +85,6 @@ If unsure about any specific API in any SDK, fetch from the relevant doc page �
 - **Every `@mysten/*` package ships LLM-ready docs.** Look for `node_modules/@mysten/sui/docs/llms-index.md` and follow its pointers before asking the user to clarify APIs. Matches the installed version exactly.
 - **Frameworks on top of SDKs.** `@mysten/dapp-kit-react` (React wallet integration; `@mysten/dapp-kit-core` for Vue/vanilla/Svelte/Web Components), `@mysten/kiosk`, `@mysten/suins`, `@mysten/deepbook-v3`, `@mysten/walrus`, `@mysten/seal`, `@mysten/zksend`, `@mysten/enoki` — all are thin layers over `@mysten/sui`. The Mysten extensions integrate via the v2 `client.$extend(...)` pattern; dApp Kit does not (it's a React framework, not a client extension — see `frontend-apps` skill). The bare `@mysten/dapp-kit` package name is the deprecated JSON-RPC-only predecessor.
 
-
 #### Bundled LLM docs (`docs/llms-index.md`)
 
 Every `@mysten/*` package ships a `docs/` directory of flat markdown files optimized for AI agent consumption. For example, installing `@mysten/sui` gives you docs at `node_modules/@mysten/sui/docs/llms-index.md`; other packages follow the same convention at `node_modules/@mysten/<pkg>/docs/llms-index.md`.
