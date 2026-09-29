@@ -13,6 +13,33 @@ AI agents consistently use outdated or suboptimal patterns when writing Move uni
 
 All patterns sourced from https://move-book.com/guides/code-quality-checklist and https://move-book.com/testing/
 
+## Test Module Template
+
+Start every test module from this shape — it bakes in the three rules models most often miss: `assert_eq!` for comparisons, merged test attributes, and standard cleanup.
+
+```move
+#[test_only]
+module my_package::amm_tests;
+
+use std::unit_test::{assert_eq, destroy};
+use sui::test_scenario;
+
+#[test]
+fun swap_returns_expected_output() {
+    let ctx = &mut tx_context::dummy();
+    let pool = amm::new_pool(1000, 1000, ctx);
+    assert_eq!(amm::reserve_a(&pool), 1000); // not assert!(... == 1000, 0)
+    destroy(pool);                           // not pool.destroy_for_testing()
+}
+
+#[test, expected_failure(abort_code = amm::EZeroInput, location = amm)]
+fun swap_aborts_on_zero_input() {
+    let ctx = &mut tx_context::dummy();
+    amm::swap_a_to_b(&mut amm::new_pool(1000, 1000, ctx), 0);
+    // no cleanup — test aborts above
+}
+```
+
 ## No `test_` Prefix in Test Modules
 
 Test functions inside `_tests` modules should NOT be prefixed with `test_`. The module name already indicates these are tests. Use descriptive names that read as statements.
@@ -40,6 +67,8 @@ fun swap_aborts_on_zero_input() { /* ... */ }
 ## Use `assert_eq!` Instead of `assert!` for Comparisons
 
 `assert_eq!` displays both values on failure, making debugging much easier. Never use `assert!(x == y)` or `assert!(x == y, 0)` for equality checks.
+
+**Key point:** this applies to *every* equality check in a test file — balances, reserves, supply, lengths, addresses, IDs, strings, and struct fields alike. If the assertion compares two values, it is `assert_eq!(actual, expected)`, never `assert!(actual == expected)` and never `assert!(actual == expected, 0)`. Import it once per test module with `use std::unit_test::assert_eq;`.
 
 ```move
 // WRONG — no diagnostic info on failure
