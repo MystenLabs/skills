@@ -42,8 +42,8 @@ jobs:
       # re-grades the same answers instead of new ones, and a skill edit
       # regenerates exactly the evals it touches.
       # No API key needed, and it guards the rule the gate below depends on.
-      - name: Test the gate logic
-        run: node scripts/lib/gate.test.js
+      - name: Test the gate and grader logic
+        run: npm test
 
       - name: Restore cached eval responses
         uses: actions/cache@v4
