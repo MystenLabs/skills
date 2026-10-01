@@ -7,7 +7,13 @@
       "add_liquidity and remove_liquidity return values to caller (not transfer to sender internally)",
       "swap functions return the output coin to caller (not transfer internally)",
       "Function parameters follow correct order: objects first, capabilities second, primitives third, ctx last"
-    ]
+    ],
+    "graders": {
+      "Does not use `public entry` — functions are either `public` or `entry` but not both": {
+        "type": "absent",
+        "pattern": "public\\s+entry\\s+fun"
+      }
+    }
   },
   {
     "id": "composable-nft-game",
@@ -17,7 +23,13 @@
       "create_profile / mint_profile returns the PlayerProfile to caller (not transfer internally)",
       "Capability parameters (AdminCap) come AFTER primary objects (PlayerProfile) in function signatures",
       "Function parameters follow correct order: objects first, capabilities second, primitives third, ctx last"
-    ]
+    ],
+    "graders": {
+      "Does not use `public entry` — functions are either `public` or `entry` but not both": {
+        "type": "absent",
+        "pattern": "public\\s+entry\\s+fun"
+      }
+    }
   },
   {
     "id": "composable-coin",
@@ -26,6 +38,12 @@
       "Does not use `public entry` — functions are either `public` or `entry` but not both",
       "mint function returns coins to caller OR has separate public (returns) and entry (transfers) versions",
       "Function parameters follow correct order: objects first, primitives third, ctx last"
-    ]
+    ],
+    "graders": {
+      "Does not use `public entry` — functions are either `public` or `entry` but not both": {
+        "type": "absent",
+        "pattern": "public\\s+entry\\s+fun"
+      }
+    }
   }
 ]

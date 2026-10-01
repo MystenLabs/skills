@@ -38,17 +38,52 @@ jobs:
         run: npm ci
         working-directory: .
 
+      # The responses are cached by model + skill text + prompt, so a re-run
+      # re-grades the same answers instead of new ones, and a skill edit
+      # regenerates exactly the evals it touches.
+      # No API key needed, and it guards the rule the gate below depends on.
+      - name: Test the gate and grader logic
+        run: npm test
+
+      - name: Restore cached eval responses
+        uses: actions/cache@v4
+        with:
+          path: scripts/.eval-cache
+          key: eval-cache-${{ runner.os }}-${{ github.sha }}
+          restore-keys: |
+            eval-cache-${{ runner.os }}-
+
+      # The baseline the pull request is measured against. Recorded by the
+      # scheduled run on the eval-results branch.
+      - name: Fetch the recorded baseline
+        if: github.event_name == 'pull_request'
+        continue-on-error: true
+        run: |
+          git fetch origin eval-results:eval-results --depth=1 || exit 0
+          git show eval-results:scripts/eval-results.json > /tmp/baseline.json || true
+          if [ -s /tmp/baseline.json ]; then
+            echo "baseline: $(wc -c < /tmp/baseline.json) bytes"
+          else
+            echo "no baseline on the eval-results branch yet"
+          fi
+
       - name: Run evals (PR — changed skills only)
         if: github.event_name == 'pull_request'
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-        run: node scripts/run-evals.js --changed-only
+        # Three samples an expectation, gated on regressions against the baseline
+        # rather than on every expectation being met. A strict judge at one sample
+        # failed three consecutive runs of the same commit on three different sets.
+        run: |
+          ARGS=(--changed-only --repeat 3)
+          if [ -s /tmp/baseline.json ]; then ARGS+=(--baseline /tmp/baseline.json); fi
+          node scripts/run-evals.js "${ARGS[@]}"
 
       - name: Run evals (scheduled — all skills)
         if: github.event_name == 'schedule'
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-        run: node scripts/run-evals.js
+        run: node scripts/run-evals.js --repeat 3 --strict
 
       - name: Run evals (manual)
         if: github.event_name == 'workflow_dispatch'

@@ -6,7 +6,13 @@
       "Error constants use EPascalCase (e.g. EInsufficientLiquidity, not INSUFFICIENT_LIQUIDITY)",
       "Regular constants use ALL_CAPS (e.g. FEE_NUMERATOR, not feeNumerator)",
       "Events are named in past tense (e.g. PoolCreated, LiquidityAdded, Swapped — not CreatePool, AddLiquidity, Swap)"
-    ]
+    ],
+    "graders": {
+      "Error constants use EPascalCase (e.g. EInsufficientLiquidity, not INSUFFICIENT_LIQUIDITY)": {
+        "type": "regex",
+        "pattern": "const\\s+E[A-Z][A-Za-z0-9]*\\s*:"
+      }
+    }
   },
   {
     "id": "naming-nft-game",
@@ -17,7 +23,17 @@
       "Events are named in past tense (e.g. XpEarned, LeveledUp — not EarnXp, LevelUp)",
       "Getter functions named after field (e.g. xp(), level(), username() — not get_xp(), get_level())",
       "Dynamic field key uses positional struct with Key suffix (e.g. `public struct InventoryKey(String) has copy, drop, store;`)"
-    ]
+    ],
+    "graders": {
+      "Error constants use EPascalCase": {
+        "type": "regex",
+        "pattern": "const\\s+E[A-Z][A-Za-z0-9]*\\s*:"
+      },
+      "Getter functions named after field (e.g. xp(), level(), username() — not get_xp(), get_level())": {
+        "type": "absent",
+        "pattern": "fun\\s+get_"
+      }
+    }
   },
   {
     "id": "naming-access-control",
@@ -27,6 +43,16 @@
       "If capabilities are used, structs are suffixed with Cap (e.g. AdminCap); or role objects use PascalCase nouns (e.g. RoleRegistry, AccessControl)",
       "Events are named in past tense (e.g. RoleGranted, RoleRevoked — not GrantRole, RevokeRole)",
       "Getter functions named after field (e.g. role_admin() not get_role_admin())"
-    ]
+    ],
+    "graders": {
+      "Error constants use EPascalCase (e.g. ENotAuthorized, not NOT_AUTHORIZED)": {
+        "type": "regex",
+        "pattern": "const\\s+E[A-Z][A-Za-z0-9]*\\s*:"
+      },
+      "Getter functions named after field (e.g. role_admin() not get_role_admin())": {
+        "type": "absent",
+        "pattern": "fun\\s+get_"
+      }
+    }
   }
 ]
