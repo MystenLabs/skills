@@ -97,11 +97,23 @@ const details = await client.deepbook.deepBook.getAccountOrderDetails({
   poolKey: "DEEP_SUI",
   balanceManagerKey: "MANAGER_1",
 });
-// Returns: order_id, client_order_id, quantity, filled_quantity, status, fee_is_deep
 ```
 
-`filled_quantity` against `quantity` is the fill progress, and `fee_is_deep` says
+It returns `order_id`, `client_order_id`, `quantity`, `filled_quantity`, `status`
+and `fee_is_deep`. `client_order_id` is the id you supplied when placing the
+order, which is how you match a result back to your own records;
+`filled_quantity` against `quantity` is the fill progress; and `fee_is_deep` says
 whether the fee was taken in DEEP or in the input asset — do not assume DEEP.
+
+### Orders must align to the pool's tick and lot size
+
+Every pool sets a minimum size, a tick size (minimum price increment) and a lot
+size (minimum quantity increment). An order that does not align to them is
+**rejected**, not rounded. DEEP/SUI, for example, is tick 0.00001, lot 1, minimum
+10 DEEP — so a price of 0.000013 or a quantity of 10.5 fails.
+
+Read the pool's constraints before building an order, and round price and quantity
+to them yourself.
 
 ### Common mistakes
 
