@@ -88,6 +88,21 @@ Do not guess or extrapolate from other SDKs or libraries.
 4. **Size deposits to wallet balance.** The SDK validates at build time — depositing more than the wallet holds causes an `Insufficient balance` error before the transaction is even submitted.
 5. **Handle the market maker rebalance window** on localnet/sandbox. The sandbox market maker has a ~15-second rebalance cycle where liquidity temporarily disappears. Use retry helpers.
 
+### Reading back an order
+
+`getAccountOrderDetails` is how you inspect live orders for a manager:
+
+```typescript
+const details = await client.deepbook.deepBook.getAccountOrderDetails({
+  poolKey: "DEEP_SUI",
+  balanceManagerKey: "MANAGER_1",
+});
+// Returns: order_id, client_order_id, quantity, filled_quantity, status, fee_is_deep
+```
+
+`filled_quantity` against `quantity` is the fill progress, and `fee_is_deep` says
+whether the fee was taken in DEEP or in the input asset — do not assume DEEP.
+
 ### Common mistakes
 
 - **Creating a new BalanceManager every run.** This creates orphaned shared objects. Check for existing managers via the indexer or persist the ID.
