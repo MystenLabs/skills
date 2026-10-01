@@ -16,7 +16,7 @@
         "The response mentions that validators verify both the proof and the ephemeral signature"
       ],
       "sources": [
-        "https://docs.sui.io/concepts/cryptography/zklogin"
+        "https://docs.sui.io/sui-stack/zklogin-integration/zklogin"
       ]
     },
     {
@@ -33,7 +33,7 @@
         "The response states that zkLogin addresses cannot be converted to or from traditional wallet addresses"
       ],
       "sources": [
-        "https://docs.sui.io/concepts/cryptography/zklogin"
+        "https://docs.sui.io/sui-stack/zklogin-integration/zklogin"
       ]
     },
     {
@@ -50,7 +50,7 @@
         "The response mentions that the JWT is not published onchain, but iss, aud, and kid are revealed onchain"
       ],
       "sources": [
-        "https://docs.sui.io/concepts/cryptography/zklogin"
+        "https://docs.sui.io/sui-stack/zklogin-integration/zklogin"
       ]
     },
     {
@@ -66,7 +66,8 @@
         "The response includes the keytool CLI command example with zk-login-sig-verify"
       ],
       "sources": [
-        "https://docs.sui.io/concepts/cryptography/zklogin"
+        "https://docs.sui.io/sui-stack/zklogin-integration/integration-guide",
+        "https://docs.sui.io/sui-stack/zklogin-integration/zklogin"
       ]
     }
   ]

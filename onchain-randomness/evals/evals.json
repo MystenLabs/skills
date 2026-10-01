@@ -15,7 +15,7 @@
         "The response mentions passing Random by reference (&Random)"
       ],
       "sources": [
-        "https://docs.sui.io/sui-stack/on-chain-primitives/randomness-onchain"
+        "https://docs.sui.io/sui-stack/on-chain-primitives/randomness-onchain#instantiating-randomgenerator"
       ]
     },
     {
@@ -31,7 +31,7 @@
         "The response mentions that the compiler also rejects public functions accepting RandomGenerator parameters"
       ],
       "sources": [
-        "https://docs.sui.io/sui-stack/on-chain-primitives/randomness-onchain"
+        "https://docs.sui.io/sui-stack/on-chain-primitives/randomness-onchain#use-non-public-entry-functions"
       ]
     },
     {
@@ -47,7 +47,8 @@
         "The response mentions balanced gas usage so attackers cannot infer outcomes from gas consumption"
       ],
       "sources": [
-        "https://docs.sui.io/sui-stack/on-chain-primitives/randomness-onchain"
+        "https://docs.sui.io/sui-stack/on-chain-primitives/randomness-onchain#divide-logic",
+        "https://docs.sui.io/sui-stack/on-chain-primitives/randomness-onchain#best-practices"
       ]
     },
     {
@@ -63,7 +64,8 @@
         "The response mentions balanced gas usage to prevent gas-based inference attacks"
       ],
       "sources": [
-        "https://docs.sui.io/sui-stack/on-chain-primitives/randomness-onchain"
+        "https://docs.sui.io/sui-stack/on-chain-primitives/randomness-onchain#limited-resources-and-random-dependent-flows",
+        "https://docs.sui.io/sui-stack/on-chain-primitives/randomness-onchain#programmable-transaction-block-ptb-restrictions"
       ]
     }
   ]

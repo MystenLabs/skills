@@ -15,7 +15,8 @@
         "The response explains that the buyer must satisfy all TransferPolicy terms to complete the transaction"
       ],
       "sources": [
-        "https://docs.sui.io/standards/kiosk"
+        "https://docs.sui.io/onchain-finance/kiosk/kiosk-example",
+        "https://docs.sui.io/onchain-finance/kiosk"
       ]
     },
     {
@@ -31,7 +32,7 @@
         "The response explains that kiosk::lock requires an associated TransferPolicy"
       ],
       "sources": [
-        "https://docs.sui.io/standards/kiosk"
+        "https://docs.sui.io/onchain-finance/kiosk"
       ]
     },
     {
@@ -46,7 +47,8 @@
         "The response mentions that each app receives isolated bag-type storage accessible via a witness token"
       ],
       "sources": [
-        "https://docs.sui.io/standards/kiosk"
+        "https://docs.sui.io/onchain-finance/kiosk/kiosk-apps",
+        "https://docs.sui.io/onchain-finance/kiosk"
       ]
     },
     {
@@ -61,7 +63,7 @@
         "The response mentions that immutable borrows are always available for PLACED, LOCKED, and LISTED items"
       ],
       "sources": [
-        "https://docs.sui.io/standards/kiosk"
+        "https://docs.sui.io/onchain-finance/kiosk"
       ]
     }
   ]

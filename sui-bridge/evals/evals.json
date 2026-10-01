@@ -12,7 +12,9 @@
         "The response explains the global limiter constrains total asset value within 24 hours"
       ],
       "sources": [
-        "https://docs.sui.io/concepts/tokenomics/sui-bridging"
+        "https://docs.sui.io/onchain-finance/fungible-tokens/sui-bridging#supported-assets",
+        "https://docs.sui.io/onchain-finance/fungible-tokens/sui-bridging#minimum-and-maximum-transfers",
+        "https://docs.sui.io/onchain-finance/fungible-tokens/sui-bridging#global-limiter"
       ]
     },
     {
@@ -27,7 +29,8 @@
         "The response notes that users should not be credited until the transfer is fully confirmed on the destination chain"
       ],
       "sources": [
-        "https://docs.sui.io/concepts/tokenomics/sui-bridging"
+        "https://docs.sui.io/onchain-finance/fungible-tokens/sui-bridging#operation-and-governance",
+        "https://docs.sui.io/onchain-finance/fungible-tokens/sui-bridging#finality-and-confirmation-depth"
       ]
     },
     {
@@ -43,7 +46,7 @@
         "The response mentions 8-decimal precision for ETH/WETH"
       ],
       "sources": [
-        "https://docs.sui.io/concepts/tokenomics/sui-bridging"
+        "https://docs.sui.io/onchain-finance/fungible-tokens/sui-bridging#package-ids-and-contract-addresses"
       ]
     }
   ]

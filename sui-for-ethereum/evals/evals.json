@@ -14,7 +14,7 @@
         "The response explains that possession of the capability object grants permission, rather than checking an address against a role mapping"
       ],
       "sources": [
-        "https://docs.sui.io/getting-started/sui-for-ethereum"
+        "https://docs.sui.io/getting-started/sui-for-ethereum#access-control"
       ]
     },
     {
@@ -28,7 +28,7 @@
         "The response does not invent additional Sui token standards beyond Currency Standard and Closed-Loop Token"
       ],
       "sources": [
-        "https://docs.sui.io/getting-started/sui-for-ethereum"
+        "https://docs.sui.io/getting-started/sui-for-ethereum#more-comparison"
       ]
     },
     {
@@ -57,7 +57,7 @@
         "The response does not conflate PTBs with Ethereum's internal contract calls or multicall patterns"
       ],
       "sources": [
-        "https://docs.sui.io/getting-started/sui-for-ethereum"
+        "https://docs.sui.io/getting-started/sui-for-ethereum#programmable-transaction-blocks"
       ]
     }
   ]
