@@ -4,3 +4,4 @@
 skills-lock.json
 node_modules/
 .env
+scripts/.eval-cache/
