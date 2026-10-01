@@ -69,6 +69,7 @@ This skill covers security best practices for Move smart contracts on Sui, inclu
 - Require relevant capabilities as parameters for all privileged functions. Do not rely on `tx_context::sender()` alone for authorization.
 - Anyone can submit a transaction referencing a shared object. Never assume shared object access is restricted.
 - Design capability revocation before publishing the package. Without it, a leaked capability remains valid for the life of the package.
+- Say plainly, in any review that touches a capability, that **each transfer hands over the full privilege**. A capability is a bearer token: there is no partial delegation, no scoping and no audit trail beyond the transfer itself, so transferring one is never a routine operation. Calling a capability a "single point of failure" is not the same warning and does not replace it.
 
 ## Choosing an authorization mechanism
 
