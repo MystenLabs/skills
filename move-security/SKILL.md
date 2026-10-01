@@ -130,8 +130,10 @@ that takes `Random`, which closes the same attack at the PTB level.
 
 For high-stakes flows, use a **commit-reveal** pattern — commit and pay in one
 transaction, reveal the outcome in a later one — so no one can inspect and
-revert the outcome atomically. Balance gas across winning and losing paths too,
-or the gas cost itself leaks the result before the transaction commits.
+revert the outcome atomically. Balance gas across the outcomes too: a
+favorable result must consume **equal or more** gas than an unfavorable one. If
+winning is the cheaper path, the gas cost alone tells an attacker the result,
+and a losing draw can be abandoned before it commits.
 
 ## Common mistakes
 

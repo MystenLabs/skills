@@ -83,14 +83,14 @@ If unsure about any API, method signature, or error message, fetch the relevant 
 ### Rules
 
 1. **`tx.gas` must be used by reference, except in `transferObjects`.** To get an owned `Coin<SUI>` from the gas coin, use `SplitCoins(tx.gas, [amount])` first.
-3. **Leave gas config to the wallet when possible.** Do not hardcode `setGasBudget` / `setGasPrice` / `setGasPayment` in app code that will be signed by a user wallet — the wallet dry-runs and selects coins correctly. Only set them for backend-signed flows.
-4. **In app code that hands a PTB to a wallet, use `await tx.toJSON()` (not `tx.build()`).** The wallet must perform gas logic and coin selection itself; building bytes in app code preempts that.
-5. **Use `Transaction.fromKind(kindBytes)` for sponsored flows.** Build in app with `tx.build({ client, onlyTransactionKind: true })`, send the kind-only bytes to the sponsor service, rehydrate there with `fromKind`, then `setSender`, `setGasOwner`, `setGasPayment`. The user (or either party) should submit the fully-signed transaction directly to a full node — not back through the sponsor service — to avoid censorship.
-6. **Every non-`drop` value must be consumed.** If `moveCall` returns a value you don't need, pass it to `transferObjects` (if it has `key + store`), to `public_transfer`, or to a destructor. `UnusedValueWithoutDrop` is the PTB-level error.
-7. **Shared objects cannot be transferred, frozen, or consumed by value if passed as read-only** (`mutable: false`). If you need mutable access, mark them mutable when building the input.
-8. **Types coming from Move calls cannot be references.** `MoveCall` results are values; if a Move function returns `&T`, it cannot be called from a PTB.
-9. **For multi-return Move calls, use destructuring or array indexing.** `const [a, b] = tx.moveCall(...)` or `const r = tx.moveCall(...); r[0]; r[1];`. Do not assume single-return shape.
-10. **Cite the docs when unsure.** Canonical sources above. Legacy `/develop/transactions/ptbs/*` URLs still render but prefer `/concepts/transactions/prog-txn-blocks` and `/guides/developer/sui-101/building-ptb`.
+2. **Leave gas config to the wallet when possible.** Do not hardcode `setGasBudget` / `setGasPrice` / `setGasPayment` in app code that will be signed by a user wallet — the wallet dry-runs and selects coins correctly. Only set them for backend-signed flows.
+3. **In app code that hands a PTB to a wallet, use `await tx.toJSON()` (not `tx.build()`).** The wallet must perform gas logic and coin selection itself; building bytes in app code preempts that.
+4. **Use `Transaction.fromKind(kindBytes)` for sponsored flows.** Build in app with `tx.build({ client, onlyTransactionKind: true })`, send the kind-only bytes to the sponsor service, rehydrate there with `fromKind`, then `setSender`, `setGasOwner`, `setGasPayment`. The user (or either party) should submit the fully-signed transaction directly to a full node — not back through the sponsor service — to avoid censorship. Both signatures cover the full `TransactionData`, `GasData` included, so the sponsor cannot alter the commands after the user signs and the user cannot redirect the sponsor's gas coins — which is why the sponsor must set gas before the user signs, not after.
+5. **Every non-`drop` value must be consumed.** If `moveCall` returns a value you don't need, pass it to `transferObjects` (if it has `key + store`), to `public_transfer`, or to a destructor. `UnusedValueWithoutDrop` is the PTB-level error. Its `result_idx` is a **command** index, zero-based: `result_idx: 1` is the second command in the PTB, not the second argument of a command. Count commands in build order to find the one whose return value went unused.
+6. **Shared objects cannot be transferred, frozen, or consumed by value if passed as read-only** (`mutable: false`). If you need mutable access, mark them mutable when building the input.
+7. **Types coming from Move calls cannot be references.** `MoveCall` results are values; if a Move function returns `&T`, it cannot be called from a PTB.
+8. **For multi-return Move calls, use destructuring or array indexing.** `const [a, b] = tx.moveCall(...)` or `const r = tx.moveCall(...); r[0]; r[1];`. Do not assume single-return shape.
+9. **Cite the docs when unsure.** Canonical sources above. Legacy `/develop/transactions/ptbs/*` URLs still render but prefer `/concepts/transactions/prog-txn-blocks` and `/guides/developer/sui-101/building-ptb`.
 
 ### Common mistakes
 

@@ -179,8 +179,35 @@ sponsor will have to rebuild anyway.
 
 ### Paginated queries render `data.pages`
 
-`useSuiClientInfiniteQuery` returns pages, not a flat list. Rendering
-`data.items` silently shows nothing:
+`useSuiClientInfiniteQuery` is one of the removed hooks. Page through with
+TanStack's `useInfiniteQuery` over `useCurrentClient()`, and drive it with the
+cursor the API returns: `initialPageParam` starts it, `getNextPageParam` reads
+`hasNextPage` and `nextCursor` off the page you just got. Pass `type` to
+`listOwnedObjects` so the node filters by struct type rather than fetching
+everything and discarding most of it client-side.
+
+```tsx
+const client = useCurrentClient();
+const account = useCurrentAccount();
+
+const { data, hasNextPage, isFetchingNextPage, fetchNextPage } = useInfiniteQuery({
+  queryKey: ["ownedNfts", account?.address],
+  enabled: !!account,
+  initialPageParam: null as string | null,
+  queryFn: ({ pageParam }) =>
+    client.core.listOwnedObjects({
+      owner: account!.address,
+      type: `${PACKAGE_ID}::hero::Hero`,
+      cursor: pageParam,
+      limit: 50,
+    }),
+  getNextPageParam: (lastPage) =>
+    lastPage.hasNextPage ? lastPage.nextCursor : undefined,
+});
+```
+
+The result holds pages, not a flat list, so rendering `data.items` silently
+shows nothing. Flatten them:
 
 ```tsx
 {data?.pages.flatMap((page) => page.objects).map((obj) => (
