@@ -181,10 +181,13 @@ sponsor will have to rebuild anyway.
 
 `useSuiClientInfiniteQuery` is one of the removed hooks. Page through with
 TanStack's `useInfiniteQuery` over `useCurrentClient()`, and drive it with the
-cursor the API returns: `initialPageParam` starts it, `getNextPageParam` reads
-`hasNextPage` and `nextCursor` off the page you just got. Pass `type` to
-`listOwnedObjects` so the node filters by struct type rather than fetching
-everything and discarding most of it client-side.
+cursor the API returns. The v2 Core API gives you a **single nullable `cursor`**,
+not the v1 pair of `nextCursor` and `hasNextPage`: `initialPageParam` starts it and
+`getNextPageParam` returns `lastPage.cursor` while it is non-null, `undefined` at
+the end. Results sit under a method-specific key — `objects` for
+`listOwnedObjects`, `coins` for `listCoins`. Pass `type` so the node filters by
+struct type rather than fetching everything and discarding most of it
+client-side.
 
 ```tsx
 const client = useCurrentClient();
@@ -201,8 +204,7 @@ const { data, hasNextPage, isFetchingNextPage, fetchNextPage } = useInfiniteQuer
       cursor: pageParam,
       limit: 50,
     }),
-  getNextPageParam: (lastPage) =>
-    lastPage.hasNextPage ? lastPage.nextCursor : undefined,
+  getNextPageParam: (lastPage) => lastPage.cursor ?? undefined,
 });
 ```
 
@@ -215,8 +217,10 @@ shows nothing. Flatten them:
 ))}
 ```
 
-Pair the "Load more" button with `hasNextPage` and `isFetchingNextPage` so it
-disables itself at the end of the list.
+Pair the "Load more" button with TanStack's own `hasNextPage` and
+`isFetchingNextPage` — which it derives from `getNextPageParam` returning
+`undefined`, not from a field on the response — so it disables itself at the end
+of the list.
 
 ### Common mistakes
 
