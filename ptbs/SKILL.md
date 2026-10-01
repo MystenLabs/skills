@@ -92,6 +92,26 @@ If unsure about any API, method signature, or error message, fetch the relevant 
 8. **For multi-return Move calls, use destructuring or array indexing.** `const [a, b] = tx.moveCall(...)` or `const r = tx.moveCall(...); r[0]; r[1];`. Do not assume single-return shape.
 9. **Cite the docs when unsure.** Canonical sources above. Legacy `/develop/transactions/ptbs/*` URLs still render but prefer `/concepts/transactions/prog-txn-blocks` and `/guides/developer/sui-101/building-ptb`.
 
+### The shape of a PTB in TypeScript
+
+Everything comes from `@mysten/sui/transactions`. One transaction, several
+commands, results threaded from one into the next:
+
+```ts
+import { Transaction } from '@mysten/sui/transactions';
+
+const tx = new Transaction();
+const [coin] = tx.splitCoins(tx.gas, [tx.pure.u64(1_000_000n)]);
+const hero = tx.moveCall({
+  target: `${PACKAGE_ID}::hero::new_hero`,
+  arguments: [coin, tx.pure.u64(10)],
+});
+tx.transferObjects([hero], tx.pure.address(recipient));
+```
+
+Hand it to a wallet with `await tx.toJSON()`. Typed `tx.pure.*` helpers matter:
+a bare number is not a `u64` and a bare string is not an address.
+
 ### Common mistakes
 
 - **Calling `tx.pure(value)` without a type.** Untyped pure values fail at input resolution. Use typed helpers: `tx.pure.u64(n)`, `tx.pure.address(addr)`, `tx.pure.string(s)`, or the generic `tx.pure('u64', n)`.

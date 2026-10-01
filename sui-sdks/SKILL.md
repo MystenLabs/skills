@@ -166,8 +166,8 @@ pip install pysui
 
 Community-maintained (`github.com/FrankC01/pysui`, not Mysten), and that is the
 risk to state plainly: it is not covered by Mysten's release process and can lag
-protocol changes. It does support building and executing programmable
-transaction blocks. Check the repo's recent activity against the Sui version you
+protocol changes. It does support building and executing PTBs
+(programmable transaction blocks), including signing and submission. Check the repo's recent activity against the Sui version you
 target before committing to it.
 
 ### Common mistakes
