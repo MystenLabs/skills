@@ -70,6 +70,69 @@ This skill covers security best practices for Move smart contracts on Sui, inclu
 - Anyone can submit a transaction referencing a shared object. Never assume shared object access is restricted.
 - Design capability revocation before publishing the package. Without it, a leaked capability remains valid for the life of the package.
 
+## Choosing an authorization mechanism
+
+When the choice is between a capability object and an address allowlist stored
+in the module, **prefer the capability object.** The reasons are concrete:
+
+- **It composes.** A capability is an object, so another protocol, a multisig or
+  a DAO can hold it on behalf of a user. An address check inside your module can
+  only ever name an address, so no other contract can be granted the right
+  without you redeploying.
+- **It is transferable without a code change.** Handing over administration is a
+  transfer, not an upgrade.
+- **The type system checks it.** A function that takes `&AdminCap` cannot be
+  called without one; an address check is a runtime `assert!` you can forget.
+
+Put the capability **second in the signature**, after the object being acted on:
+
+```move
+public fun mint(treasury: &mut Treasury, _: &AdminCap, ctx: &mut TxContext) { }
+```
+
+That ordering keeps method-call syntax working — `treasury.mint(&cap, ctx)` —
+because the receiver has to come first.
+
+## Holding and revoking a capability
+
+A capability is a bearer token. Whoever holds it has the rights, with no further
+check.
+
+- **Every transfer grants the full privilege.** There is no partial delegation
+  and no audit trail beyond the transfer itself, so moving one is not a routine
+  operation.
+- **Without a revocation path, a leaked capability is valid for the life of the
+  package.** There is no built-in revoke. If the object is copied out of a
+  compromised wallet, the only remedy you have left is an upgrade.
+- **Plan rotation before publishing.** The usual shape is a version or epoch
+  field in the shared object that the capability is checked against, so a new
+  capability can be issued and the old one made inert. Retrofitting that after a
+  leak requires an upgrade you will be doing under pressure.
+- **Split rights rather than minting one god-capability.** A separate
+  `MintCap` and `TreasuryCap` limits what a single leak costs.
+
+## Randomness must not be callable by another module
+
+A function that takes `&Random` must be a **private `entry` function**, never
+`public`. The Move compiler enforces this: it rejects `public` functions with
+`Random` as an argument.
+
+```move
+entry fun draw_winner(lottery: &mut Lottery, r: &Random, ctx: &mut TxContext) { }
+```
+
+The reason is composition. If the function were public, an attacker could call
+it from their own module, inspect the outcome and abort the transaction when
+they did not like it — repeating until they won, paying only gas. Private
+`entry` means no other module can wrap the call. Sui additionally rejects PTBs
+with commands other than `TransferObjects` or `MergeCoins` after a `MoveCall`
+that takes `Random`, which closes the same attack at the PTB level.
+
+For high-stakes flows, use a **commit-reveal** pattern — commit and pay in one
+transaction, reveal the outcome in a later one — so no one can inspect and
+revert the outcome atomically. Balance gas across winning and losing paths too,
+or the gas cost itself leaks the result before the transaction commits.
+
 ## Common mistakes
 
 - **Trusting package names instead of onchain IDs.** Move package names (the `name` field in `Move.toml`) are arbitrary strings chosen by the developer and are not unique. Always verify the exact onchain package ID (the object address).
