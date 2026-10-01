@@ -2,7 +2,12 @@
   {
     "id": "amm-unit-tests",
     "prompt": "I have an AMM smart contract (see provided files). Write comprehensive unit tests for it. Cover pool creation, adding/removing liquidity, swaps, edge cases, and error conditions.",
-    "files": ["sui-smart-contracts/evals/fixtures/amm/"],
+    "sources": [
+      "https://docs.sui.io/develop/testing-debugging/testing"
+    ],
+    "files": [
+      "sui-smart-contracts/evals/fixtures/amm/"
+    ],
     "expected_output": "A test module with comprehensive tests following Sui Move testing best practices.",
     "expectations": [
       "Test functions do NOT use test_ prefix (e.g. create_pool_succeeds, not test_create_pool)",

@@ -3,7 +3,7 @@
   "source_constraint": "All facts in these evals must be verifiable against docs.sui.io/onchain-finance/deepbook/deepbook-predict or github.com/MystenLabs/deepbookv3 (predict-testnet-4-16 branch). No third-party blogs, tutorials, or unofficial documentation.",
   "evals": [
     {
-      "id": 1,
+      "id": "deepbook-predict-position-types",
       "prompt": "What is DeepBook Predict and what position types does it support?",
       "expected_output": "An explanation of Predict as an expiry-based prediction market on Sui, covering binary positions (up/down) and vertical range positions with their key structures and payoffs.",
       "expectations": [
@@ -20,7 +20,7 @@
       ]
     },
     {
-      "id": 2,
+      "id": "deepbook-predict-mint-binary-position",
       "prompt": "How do I mint a binary position on DeepBook Predict using TypeScript?",
       "expected_output": "Code showing PredictManager creation (separate transaction), DUSDC deposit, and mint transaction with market key construction.",
       "expectations": [
@@ -37,7 +37,7 @@
       ]
     },
     {
-      "id": 3,
+      "id": "deepbook-predict-oracle-states-and-settlement",
       "prompt": "What are the oracle states in DeepBook Predict and how does settlement work?",
       "expected_output": "An explanation of the four oracle states (inactive, active, pending settlement, settled) and the settlement process.",
       "expectations": [
@@ -53,7 +53,7 @@
       ]
     },
     {
-      "id": 4,
+      "id": "deepbook-predict-vault-and-plp",
       "prompt": "How does the vault and PLP liquidity model work in DeepBook Predict?",
       "expected_output": "An explanation of the vault taking the opposite side of trades, PLP tokens for liquidity providers, NAV calculation, and withdrawal constraints.",
       "expectations": [
@@ -69,7 +69,7 @@
       ]
     },
     {
-      "id": 5,
+      "id": "deepbook-predict-integration-mistakes",
       "prompt": "What are the common mistakes when integrating DeepBook Predict?",
       "expected_output": "A list of pitfalls including same-transaction manager creation and deposit, hardcoding testnet IDs, wrong strike ordering, and not checking oracle state.",
       "expectations": [
