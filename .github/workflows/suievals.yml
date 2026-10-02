@@ -1,0 +1,49 @@
+name: Sui Evals
+
+# Two things are checked, and they fail for different reasons.
+#
+# The suite test guards the manifest. It is a contract with every card already
+# submitted and with the dashboard that publishes the board, both of which compute
+# it independently; if it moves without anyone meaning to move it, every published
+# card silently becomes "an older eval set".
+#
+# Card validation guards submissions. A card arrives by pull request from someone
+# running the suite on their own model, and the failures that matter are not JSON
+# shape -- an unqualified id, a grade array of the wrong length -- which produce a
+# plausible number over a denominator nobody else has.
+
+on:
+  pull_request:
+    paths:
+      - "suievals/**"
+      - "*/evals/evals.json"
+  push:
+    branches: [main]
+    paths:
+      - "suievals/**"
+      - "*/evals/evals.json"
+  workflow_dispatch:
+
+jobs:
+  suievals:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: The suite is what it says it is
+        run: node suievals/tests/suite.test.js
+
+      - name: Submitted cards are valid
+        run: node suievals/validate.js
+
+      - name: Suite summary
+        run: |
+          {
+            echo "### Sui Evals suite"
+            echo '```'
+            node suievals/list.js | head -3
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"

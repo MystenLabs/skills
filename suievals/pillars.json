@@ -1,0 +1,71 @@
+{
+  "_comment": [
+    "The four pillars of Sui knowledge, and which skill belongs to each.",
+    "A skill with evals but no entry here is reported as unmapped by suievals/list.js rather than",
+    "silently dropped, so adding a skill cannot quietly shrink the suite.",
+    "ETHEVALS authored 25 evals per pillar, so its cards read x/25 four times. This corpus is the",
+    "other way round: the evals were written per skill and the pillars mapped onto them afterwards,",
+    "which makes them uneven. Scoring averages the four pillars rather than pooling them, so an",
+    "uneven count does not let the largest pillar decide the number."
+  ],
+  "pillars": [
+    {
+      "id": "objects",
+      "name": "Objects",
+      "desc": "The model everything else rests on. Ownership, abilities, dynamic fields, versioning, and why an account-shaped mental model produces wrong code.",
+      "skills": [
+        "object-model",
+        "sui-overview",
+        "sui-for-ethereum",
+        "sui-networks-gas"
+      ]
+    },
+    {
+      "id": "transactions",
+      "name": "Transactions",
+      "desc": "Composing and reading the chain. Programmable transaction blocks, gas and sponsorship, the data-access APIs, and the CLI that drives them.",
+      "skills": [
+        "ptbs",
+        "accessing-data",
+        "sui-client",
+        "sui-install",
+        "sui-build-test",
+        "sui-bridge"
+      ]
+    },
+    {
+      "id": "building",
+      "name": "Building",
+      "desc": "Shipping something real. Move packages and their upgrades, the TypeScript SDKs, wallet-connected frontends, and integrating a live protocol.",
+      "skills": [
+        "sui-move",
+        "sui-move-project",
+        "sui-publish",
+        "modern-move-syntax",
+        "composable-move-functions",
+        "naming-conventions",
+        "move-unit-testing",
+        "frontend-apps",
+        "sui-sdks",
+        "sui-ts-sdk-backend",
+        "template",
+        "deepbook-overview",
+        "deepbook-sdk",
+        "deepbook-move",
+        "deepbook-margin",
+        "deepbook-predict"
+      ]
+    },
+    {
+      "id": "security",
+      "name": "Security",
+      "desc": "What goes wrong. Capability handling and revocation, randomness that survives composition, shared-object authorization, and custody of assets.",
+      "skills": [
+        "move-security",
+        "onchain-randomness",
+        "zklogin",
+        "kiosk"
+      ]
+    }
+  ]
+}
