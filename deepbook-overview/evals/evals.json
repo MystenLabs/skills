@@ -3,7 +3,7 @@
   "source_constraint": "All facts in these evals must be verifiable against docs.sui.io/onchain-finance/deepbook/deepbookv3/deepbook or github.com/MystenLabs/deepbookv3. No third-party blogs, tutorials, or unofficial documentation.",
   "evals": [
     {
-      "id": 1,
+      "id": "deepbook-overview-vs-amm",
       "prompt": "What is DeepBook V3 and how does it differ from an AMM like Uniswap?",
       "expected_output": "An explanation that DeepBook is a CLOB (central limit order book) on Sui, not an AMM. It supports limit and market orders with price-time priority matching, discrete tick/lot sizes, and a full order book of bids and asks.",
       "expectations": [
@@ -19,7 +19,7 @@
       ]
     },
     {
-      "id": 2,
+      "id": "deepbook-overview-pool-architecture",
       "prompt": "Explain the internal architecture of a DeepBook V3 Pool. What are the three main components?",
       "expected_output": "A description of the Pool's three components: Book (order storage and matching via BigVector), State (governance, history, accounts), and Vault (asset settlement and DEEP price conversion).",
       "expectations": [
@@ -30,11 +30,11 @@
         "The response mentions that BigVector uses a B+ tree for efficient order storage"
       ],
       "sources": [
-        "https://docs.sui.io/onchain-finance/deepbook/deepbookv3/deepbook/design"
+        "https://docs.sui.io/onchain-finance/deepbook/deepbookv3/design"
       ]
     },
     {
-      "id": 3,
+      "id": "deepbook-overview-integration-models",
       "prompt": "What are the three integration models for DeepBook V3 and when should I use each one?",
       "expected_output": "A comparison of the three integration approaches: Move package for on-chain protocol integration, SDK & PTBs for apps/bots/wallets, and read-only data queries for price/orderbook access.",
       "expectations": [
@@ -50,7 +50,7 @@
       ]
     },
     {
-      "id": 4,
+      "id": "deepbook-overview-deep-token-role",
       "prompt": "What is the role of the DEEP token in DeepBook V3?",
       "expected_output": "An explanation that DEEP is used for fee payment (default method), staking for fee discounts, and governance (proposing and voting on pool parameters).",
       "expectations": [
@@ -62,11 +62,11 @@
       ],
       "sources": [
         "https://docs.sui.io/onchain-finance/deepbook/deepbookv3/deepbook",
-        "https://docs.sui.io/onchain-finance/deepbook/deepbookv3/deepbook/fees-and-funding"
+        "https://docs.sui.io/onchain-finance/deepbook/deepbookv3/fees-and-funding"
       ]
     },
     {
-      "id": 5,
+      "id": "deepbook-overview-mainnet-ids",
       "prompt": "What is the current DeepBook V3 mainnet package ID and what is the SUI/USDC pool ID?",
       "expected_output": "The v6 package ID and the SUI/USDC pool object ID from the contract information page.",
       "expectations": [
@@ -75,7 +75,7 @@
         "The response mentions the SUI/USDC pool has 1 bps taker fee and 0 bps maker fee"
       ],
       "sources": [
-        "https://docs.sui.io/onchain-finance/deepbook/deepbookv3/deepbook/contract-information"
+        "https://docs.sui.io/onchain-finance/deepbook/deepbookv3/contract-information"
       ]
     }
   ]
