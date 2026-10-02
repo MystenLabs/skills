@@ -12,7 +12,8 @@
  *   node suievals/list.js --json          machine-readable, for a harness
  *   node suievals/list.js --skill ptbs    one skill
  *   node suievals/list.js --pillar security
- *   node suievals/list.js --template      an empty grades file to fill in
+ *   node suievals/list.js --answers       an empty answers file to fill in
+ *   node suievals/list.js --template      an empty grades file, if you must self-grade
  */
 
 import { discover, loadPillars, manifest } from "./lib/suite.js";
@@ -38,8 +39,25 @@ if (!shown.length) {
   process.exit(1);
 }
 
+// An empty answers file. This is the preferred shape: it carries what the model
+// said, not what the model thought of what it said, so the grading can be done by
+// the same judge that grades every run on the board -- which is the only way a
+// submitted card ends up comparable with the rest of them.
+if (flag("answers")) {
+  const answers = {};
+  for (const e of shown) answers[e.id] = "";
+  console.log(JSON.stringify({
+    model: "REPLACE-ME — the model that answered, e.g. claude-opus-5",
+    skills: "sui-skills",
+    submitted_by: "your-github-handle",
+    answers,
+  }, null, 2));
+  process.exit(0);
+}
+
 // An empty grades file, so the shape is never guessed at. One boolean per
-// expectation, in the order the expectations are listed.
+// expectation, in the order the expectations are listed. Only needed if you are
+// grading the answers yourself; see RUN.md on what that costs you.
 if (flag("template")) {
   const grades = {};
   for (const e of shown) grades[e.id] = e.expectations.map(() => false);

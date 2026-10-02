@@ -18,6 +18,53 @@
 
 export const SKILL_MODES = ["sui-skills", "none"];
 
+/**
+ * An answers file: what the model said, before anyone has graded it.
+ *
+ * This is the shape worth submitting. A self-graded card is published and then
+ * held out of the ranking, because a model marking its own paper is the easier of
+ * two measurements -- so the work of running 158 questions buys a row that cannot
+ * be read against anything. Answers can be graded by the same judge that grades
+ * every other run, and that card ranks.
+ */
+export function validateAnswers(sub, { evals }) {
+  const problems = [];
+  const byId = new Map(evals.map((e) => [e.id, e]));
+
+  if (!sub.model || typeof sub.model !== "string") problems.push('"model" is required: the model that answered.');
+  if (!SKILL_MODES.includes(sub.skills)) {
+    problems.push(`"skills" must be ${SKILL_MODES.map((m) => `"${m}"`).join(" or ")}.`);
+  }
+  const answers = sub.answers;
+  if (!answers || typeof answers !== "object") {
+    problems.push('"answers" must be an object of {eval id: the model\'s answer}.');
+    return problems;
+  }
+
+  let short = 0;
+  for (const [id, text] of Object.entries(answers)) {
+    if (!byId.has(id)) { problems.push(`"${id}" is not an eval in this suite. Ids are qualified: "object-model/1".`); continue; }
+    if (typeof text !== "string") { problems.push(`"${id}" is not a string.`); continue; }
+    if (text.trim().length < 40) short += 1;
+  }
+
+  const required = evals.filter((e) => e.pillar !== "unmapped");
+  const missing = required.filter((e) => !(e.id in answers));
+  if (missing.length) {
+    problems.push(
+      `${missing.length} of ${required.length} evals are unanswered. `
+      + `Missing: ${missing.slice(0, 5).map((e) => e.id).join(", ")}${missing.length > 5 ? ` and ${missing.length - 5} more` : ""}.`,
+    );
+  }
+  // A run where the model answered nothing is not a run that scored badly, and it
+  // costs a judge call per eval to discover that after the fact.
+  if (short > required.length / 2) {
+    problems.push(`${short} of ${Object.keys(answers).length} answers are under 40 characters, so this reads as a run that did not execute rather than one that scored badly.`);
+  }
+
+  return problems;
+}
+
 /** Every way a card can be wrong, as a list of sentences. Empty means valid. */
 export function validateCard(card, { evals, manifest: suite, pillarIds }) {
   const problems = [];

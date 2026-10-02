@@ -10,6 +10,10 @@ with nothing in context and what you answer with the Sui skills loaded — that 
 the only number here that says anything about whether Sui is documented well.
 **So run it twice.**
 
+Two ways to finish: **submit your answers** and let the same judge that grades every
+other run grade yours, or grade them yourself. The first is a row on the board. The
+second is a row beside it, labelled self-graded, that nothing can be compared with.
+
 ---
 
 ## 1. See the suite
@@ -40,50 +44,63 @@ and what the skill in your context taught you, not what you can retrieve.
 answer. `ptbs/4` is answered with `ptbs/` loaded, not with all thirty skills loaded —
 the suite asks whether *that* skill teaches *that* answer.
 
-## 3. Grade the answers
+## 3. Submit the answers, not a grade
 
-One boolean per expectation, in the order they are written.
+**This is the path that gets you on the board.** Put what your model said into an
+answers file and let the same judge that grades every other run grade yours.
 
 ```sh
-node suievals/list.js --template > my-grades.json
+node suievals/list.js --answers > my-answers.json
+```
+
+Fill in one answer per eval id, set `model` (`claude-opus-5`), `skills` (`none` for
+run 1, `sui-skills` for run 2) and `submitted_by`, then:
+
+```sh
+node suievals/validate.js my-answers.json
+cp my-answers.json suievals/results/claude-opus-5-with-skills.answers.json
+```
+
+Open a pull request with both answers files. A maintainer runs the judge over them
+and commits the resulting cards. The grading costs money per eval, so it is a manual
+step rather than something a pull request triggers — but the card it produces is in
+**the same grading regime as every run already on the board**, which is what makes
+it rank rather than sit beside the ranking.
+
+`validate.js` checks the answers before any of that: an id that is not in the suite,
+an eval left unanswered, or a file where most answers are empty. A run where the
+model said nothing is not a run that scored badly, and it is worth finding that out
+before 158 judge calls rather than after.
+
+## 4. Or grade it yourself
+
+You can, and the result is published, and it will not be ranked.
+
+```sh
+node suievals/list.js --template > my-grades.json     # one boolean per expectation
+node suievals/score.js --grades my-grades.json
 ```
 
 Fill in each array. An expectation is satisfied or it is not; there is no partial
 credit inside one. Grade strictly: "mentions X" means the answer says X, not that it
 says something adjacent to X. If an eval carries a `graders` entry, those
 expectations have a written pattern and are settled by matching it, with no opinion
-involved.
+involved. Set `graded_by` to `self`, `human`, or `judge:<model>`.
 
-Set the three fields at the top of the file:
+**A model marking its own paper is the easier of two measurements**, so the board
+keeps self-graded cards out of the judge-graded ranking and labels them. That is not
+a punishment, it is the only honest thing to do with two different rulers — but it
+does mean a self-graded card is a row nobody can read against anything. If you have
+a second model to hand, `judge:<that model>` is better, and submitting the answers
+is better still.
 
-| field | value |
-|---|---|
-| `model` | the model that answered, e.g. `claude-opus-5` |
-| `skills` | `none` for run 1, `sui-skills` for run 2 |
-| `graded_by` | `self`, `human`, or `judge:<model>` |
-
-**Grading yourself is allowed and it is labelled.** A self-graded card is published
-as self-graded and is not ranked against judge-graded runs, because a model marking
-its own paper is a different measurement and the easier of the two. If you can hand
-the answers to a second model, say so in `graded_by` and the card carries more
-weight.
-
-## 4. Score it
-
-```sh
-node suievals/score.js --grades my-grades.json
-```
-
-This prints the per-pillar report and the list of evals you missed, worst first. It
-refuses to score a grades file whose arrays are the wrong length or whose ids are
-not in the suite, because both of those produce a plausible number over a
-denominator nobody else has.
+`score.js` prints the per-pillar report and the evals you missed, worst first. It
+refuses a grades file whose arrays are the wrong length or whose ids are not in the
+suite, because both produce a plausible number over a denominator nobody else has.
 
 The score is **the mean of the four pillar scores**, not the pooled pass rate.
 Building holds 82 of the 158 evals and Security 16, so pooling lets one pillar
 decide the number and a weak security showing disappears into it.
-
-## 5. Submit the card
 
 ```sh
 node suievals/score.js --grades my-grades.json \
@@ -92,10 +109,9 @@ node suievals/score.js --grades my-grades.json \
 node suievals/validate.js
 ```
 
-Then open a pull request with the two cards — baseline and with-skills. CI runs
-`validate.js` on them. The card records the suite's fingerprint, so a run made
-before the evals changed is marked as against an older set rather than silently
-compared with a current one.
+The card records the suite's fingerprint either way, so a run made before the evals
+changed is marked as against an older set rather than silently compared with a
+current one.
 
 ---
 
@@ -135,5 +151,10 @@ they do not.
   the note in `suievals/lib/suite.js`; folding them in changes the suite fingerprint
   and invalidates every card already submitted, so it is a deliberate decision rather
   than a tidy-up.
-- **Nothing here calls a model.** These scripts read files and do arithmetic. You are
-  the model under test.
+- **Nothing in this directory calls a model.** These scripts read files and do
+  arithmetic. You are the model under test. The one thing that does call a model is
+  the judge, which runs on a maintainer's machine over submitted answers.
+- **Ids are ugly today.** 111 of the 158 evals are identified by their position in
+  their skill's file — `object-model/7` — because they were written without names.
+  They are qualified by skill, so nothing collides, but the number means nothing and
+  will change if an eval is inserted before it. Naming every eval is in flight.

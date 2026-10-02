@@ -11,7 +11,7 @@
 
 import assert from "node:assert/strict";
 import { discover, loadPillars, manifest, score, tally } from "../lib/suite.js";
-import { validateCard } from "../lib/card.js";
+import { validateCard, validateAnswers } from "../lib/card.js";
 
 const { evals, skills, nested } = discover();
 const { ids, pillarOf } = loadPillars();
@@ -107,5 +107,42 @@ breaks((c) => { c.evals.push(c.evals[0]); }, "appears twice");
   assert.deepEqual(problems, [], `a card marked partial is valid: ${JSON.stringify(problems)}`);
 }
 
+// ── An answers file is the shape worth submitting ──────────────────────────
+// Self-grading is published and then held out of the ranking, so the work of
+// running 158 questions buys a row that cannot be read against anything. These
+// pin the checks that stop a submission being sent to a judge, one paid call per
+// eval, before anyone notices it is unusable.
+{
+  const full = {
+    model: "test-model", skills: "none",
+    answers: Object.fromEntries(evals.map((e) => [e.id, "a".repeat(80)])),
+  };
+  assert.deepEqual(validateAnswers(full, { evals }), [], "a complete answers file is valid");
+
+  const bad = (mutate, needle) => {
+    const sub = structuredClone(full);
+    mutate(sub);
+    const problems = validateAnswers(sub, { evals });
+    assert.ok(problems.some((p) => p.includes(needle)),
+      `expected a complaint about ${needle}, got: ${JSON.stringify(problems)}`);
+  };
+
+  bad((x) => { x.answers["1"] = "a".repeat(80); }, "not an eval in this suite");
+  bad((x) => { delete x.answers[evals[0].id]; }, "unanswered");
+  bad((x) => { x.skills = "maybe"; }, '"skills" must be');
+  bad((x) => { x.model = null; }, '"model" is required');
+  // The failure that costs money to discover late: a run where the model said
+  // nothing still produces 158 judge calls before anyone sees it is empty.
+  bad((x) => { for (const k of Object.keys(x.answers)) x.answers[k] = "n/a"; },
+      "run that did not execute");
+
+  // A few short answers are a model being terse, not a run that never happened.
+  const terse = structuredClone(full);
+  const ids = Object.keys(terse.answers).slice(0, 10);
+  for (const id of ids) terse.answers[id] = "no";
+  assert.deepEqual(validateAnswers(terse, { evals }), [], "a handful of short answers is not a failed run");
+}
+
+console.log("suite: an answers file is checked before anything is sent to a judge");
 console.log(`suite: ${evals.length} evals from ${skills.length} skills, manifest ${suite}`);
 console.log("suite: identity is stable, scoring averages the pillars, a card is checked not trusted");

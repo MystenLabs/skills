@@ -11,7 +11,7 @@
 import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 import { REPO, discover, loadPillars, manifest, score } from "./lib/suite.js";
-import { validateCard } from "./lib/card.js";
+import { validateCard, validateAnswers } from "./lib/card.js";
 
 const { evals } = discover();
 const { ids } = loadPillars();
@@ -35,6 +35,20 @@ for (const file of files) {
   let card;
   try { card = JSON.parse(readFileSync(file, "utf8")); }
   catch (err) { console.error(`✗ ${file}\n    not valid JSON: ${err.message}`); bad += 1; continue; }
+
+  // An answers file is checked against a different contract: it holds what the
+  // model said and has not been graded yet, so it has no scores to agree with.
+  if (file.endsWith(".answers.json")) {
+    const problems = validateAnswers(card, { evals });
+    if (problems.length) {
+      console.error(`✗ ${file}`);
+      for (const p of problems) console.error(`    ${p}`);
+      bad += 1;
+      continue;
+    }
+    console.log(`✓ ${file}  ${card.model} · ${card.skills} · ${Object.keys(card.answers).length} answers, awaiting grading`);
+    continue;
+  }
 
   const problems = validateCard(card, { evals, manifest: suite, pillarIds: ids });
   if (problems.length) {
