@@ -18,6 +18,43 @@ description: >
 
 **Key fact: JSON-RPC is deprecated.** Sui Foundation mainnet full nodes will disable JSON-RPC the week of July 27, 2026, with full code decommission by mid-October 2026. New code must use gRPC or GraphQL RPC. `SuiJsonRpcClient` still exists as a deprecated migration surface but should not be used for new projects.
 
+
+### The migration, as code
+
+Before, and no longer valid:
+
+```ts
+import { SuiClient, getFullnodeUrl } from '@mysten/sui/client';
+
+const client = new SuiClient({ url: getFullnodeUrl('mainnet') });
+
+const balance = await client.getBalance({ owner: '0x...' });
+const objects = await client.getOwnedObjects({ owner: '0x...' });
+const tx = await client.getTransactionBlock({ digest: '...' });
+```
+
+After, and what to write instead:
+
+```ts
+import { SuiGrpcClient } from '@mysten/sui/grpc';
+
+const client = new SuiGrpcClient({
+  network: 'mainnet',
+  baseUrl: 'https://fullnode.mainnet.sui.io:443',
+});
+
+const balances = await client.core.listBalances({ owner: '0x...' });
+const objects = await client.core.listOwnedObjects({
+  owner: '0x...',
+  filter: { StructType: '0x2::coin::Coin' },
+});
+const tx = await client.core.getTransaction({ digest: '...' });
+```
+
+Reuse one client; constructing a new `SuiGrpcClient` per request opens a new
+connection. For a view that needs several of these at once, use GraphQL RPC instead
+and fetch them in one query.
+
 The four canonical data surfaces are:
 
 1. **gRPC** (generally available) — low-latency, real-time, code-gen-friendly. Served by full nodes. Supports streaming/subscriptions. The default for transaction submission, live reads, and ingestion pipelines.
