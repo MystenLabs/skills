@@ -6,7 +6,7 @@ This file is the whole protocol. If you are an agent with a shell, you can follo
 start to finish without asking anyone anything.
 
 The point of the exercise is not your rank. It is the gap between what you answer
-with nothing in context and what you answer with the Sui skills loaded — that gap is
+with nothing in context and what you answer with the Sui skills loaded. That gap is
 the only number here that says anything about whether Sui is documented well.
 **So run it twice.**
 
@@ -24,7 +24,7 @@ node suievals/list.js --skill ptbs     # one skill
 node suievals/list.js --json           # machine-readable
 ```
 
-Each eval has a qualified id — `object-model/1`, `ptbs/ptbs-gas-coin-misuse` — a
+Each eval has a qualified id (`object-model/1`, `ptbs/ptbs-gas-coin-misuse`), a
 prompt, and a numbered list of expectations. **Ids are qualified because twenty
 skills number their evals 1, 2, 3.** Scoring anything by a bare id silently merges
 different questions.
@@ -33,15 +33,21 @@ different questions.
 
 Answer each `Q:` as you would answer a developer who asked it. Prose and code, the
 length a real reply takes. Do not look at the expectations until you have written
-the answer, and do not fetch the cited source pages — this measures what you know
+the answer, and do not fetch the cited source pages. This measures what you know
 and what the skill in your context taught you, not what you can retrieve.
 
-**Run 1 — baseline.** Nothing about Sui in your context. No skill files, no
+**Run 1, baseline.** Nothing about Sui in your context. No skill files, no
 `CLAUDE.md` that mentions Sui, no earlier turns in this conversation about Sui.
 
-**Run 2 — with the skills.** Before answering a skill's evals, read that skill's
+**Answer each question more than once if you can.** One answer is a sample, not a
+census: the same model gives different answers to the same question, and a gap
+between two runs smaller than that variation is not a gap. The board reports how far
+a score moves across identical attempts, and a submission that did the same carries
+more weight than one that did not. Three attempts is useful; ten is enough to quote.
+
+**Run 2, with the skills.** Before answering a skill's evals, read that skill's
 `SKILL.md` and every other `.md` beside it, and keep them in context while you
-answer. `ptbs/4` is answered with `ptbs/` loaded, not with all thirty skills loaded —
+answer. `ptbs/4` is answered with `ptbs/` loaded, not with all thirty skills loaded:
 the suite asks whether *that* skill teaches *that* answer.
 
 ## 3. Submit the answers, not a grade
@@ -63,7 +69,7 @@ cp my-answers.json suievals/results/claude-opus-5-with-skills.answers.json
 
 Open a pull request with both answers files. A maintainer runs the judge over them
 and commits the resulting cards. The grading costs money per eval, so it is a manual
-step rather than something a pull request triggers — but the card it produces is in
+step rather than something a pull request triggers, but the card it produces is in
 **the same grading regime as every run already on the board**, which is what makes
 it rank rather than sit beside the ranking.
 
@@ -89,7 +95,7 @@ involved. Set `graded_by` to `self`, `human`, or `judge:<model>`.
 
 **A model marking its own paper is the easier of two measurements**, so the board
 keeps self-graded cards out of the judge-graded ranking and labels them. That is not
-a punishment, it is the only honest thing to do with two different rulers — but it
+a punishment, it is the only honest thing to do with two different rulers, but it
 does mean a self-graded card is a row nobody can read against anything. If you have
 a second model to hand, `judge:<that model>` is better, and submitting the answers
 is better still.
@@ -140,14 +146,14 @@ they do not.
 ## Things worth knowing before you argue with a result
 
 - **An eval you fail may be a bad eval.** Every expectation is supposed to be
-  sourced — written from a documentation page, with that page linked on the eval. If
+  sourced: written from a documentation page, with that page linked on the eval. If
   an expectation is not supported by the page it cites, that is a bug in the suite.
   Open an issue or a pull request against the eval. Several have been rewritten this
   way.
 - **The pillars are uneven** because the evals were written per skill and grouped
   afterwards. Scoring averages the four, so the unevenness does not reach the score.
 - **`walrus-sites/portal` and `walrus-sites/publishing` are not in the suite.** They
-  nest their evals a level deeper than discovery reaches — 11 evals between them. See
+  nest their evals a level deeper than discovery reaches, 11 evals between them. See
   the note in `suievals/lib/suite.js`; folding them in changes the suite fingerprint
   and invalidates every card already submitted, so it is a deliberate decision rather
   than a tidy-up.
@@ -155,6 +161,6 @@ they do not.
   arithmetic. You are the model under test. The one thing that does call a model is
   the judge, which runs on a maintainer's machine over submitted answers.
 - **Ids are ugly today.** 111 of the 158 evals are identified by their position in
-  their skill's file — `object-model/7` — because they were written without names.
+  their skill's file (`object-model/7`) because they were written without names.
   They are qualified by skill, so nothing collides, but the number means nothing and
   will change if an eval is inserted before it. Naming every eval is in flight.

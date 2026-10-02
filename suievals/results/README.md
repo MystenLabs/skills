@@ -11,7 +11,7 @@ node suievals/validate.js            # check every card here
 ```
 
 CI runs that on any pull request touching this directory. A card that does not
-validate is not a lower score — it is a measurement nobody can reproduce, which is
+validate is not a lower score. It is a measurement nobody can reproduce, which is
 why it is rejected rather than published with a caveat.
 
 Cards are submitted by anyone, including by models grading their own answers. Each
