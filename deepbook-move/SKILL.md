@@ -102,6 +102,54 @@ Do not guess or extrapolate from other protocols.
 5. **Cap limit: 1,000 total capabilities per BalanceManager** (across TradeCap, DepositCap, and WithdrawCap combined). At scale, this limit constrains how many delegated traders a single BalanceManager can support — plan for multiple BalanceManagers if you need more than 1,000 delegated accounts.
 6. **Use `_v2` variants for functions that have them.** The unsuffixed originals (e.g., `new_with_custom_owner_caps`) are deprecated stubs that abort. Always use the `_v2` suffix (e.g., `new_with_custom_owner_caps_v2`).
 
+### The calls these rules are about
+
+Import the pool module before anything else:
+
+```move
+use deepbook::pool::Pool;
+```
+
+**Flash loans.** Borrow and return are paired, and the pair must close inside one
+PTB:
+
+```move
+public fun borrow_flashloan_base<BaseAsset, QuoteAsset>(
+    /* pool, amount, ctx */
+): (Coin<BaseAsset>, FlashLoan)
+
+public fun borrow_flashloan_quote<BaseAsset, QuoteAsset>(
+    /* pool, amount, ctx */
+): (Coin<QuoteAsset>, FlashLoan)
+
+public fun return_flashloan_base<BaseAsset, QuoteAsset>(
+    /* pool, coin, */ flash_loan: FlashLoan,
+)
+
+public fun return_flashloan_quote<BaseAsset, QuoteAsset>(
+    /* pool, coin, */ flash_loan: FlashLoan,
+)
+```
+
+The maximum borrowable amount equals the pool's current holdings of that asset.
+Pools hold all deposited and settled funds, so a liquid pool can supply a large
+loan — but nothing beyond what it currently holds.
+
+**Simulating a swap before executing it:**
+
+```move
+public fun get_quantity_out<BaseAsset, QuoteAsset>(
+    pool: &Pool<BaseAsset, QuoteAsset>,
+    base_quantity: u64,
+    quote_quantity: u64,
+    clock: &Clock,
+): (u64, u64, u64)
+```
+
+Returns `(base_out, quote_out, deep_required)`. Use it to find the exact DEEP
+needed before a swap. Exactly one of `base_quantity` or `quote_quantity` must be
+non-zero.
+
 ### Common mistakes
 
 - **Wrong type parameter order.** Passing `<USDC, SUI>` when the pool is `<SUI, USDC>` causes a type mismatch error.

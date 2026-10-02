@@ -101,6 +101,33 @@ Do not guess or extrapolate from other leverage protocols.
 5. **Size borrows from risk parameters, not trial and error.** The min borrow risk ratio defines your maximum leverage per unit of collateral.
 6. **`clientOrderId` must be a numeric string** (encoded as u64), same as spot.
 
+### The four risk ratios, in order
+
+All four thresholds live per-pool in the `MarginRegistry` and are set by
+governance. The ordering always holds:
+
+```
+liquidation < target_liquidation <= min_borrow < min_withdraw
+```
+
+A position below `liquidation` can be liquidated; partial liquidation restores it
+toward `target_liquidation`. `min_borrow` is the floor for taking on new debt and
+`min_withdraw` the stricter floor for taking equity out, which is why a position
+can be healthy enough to hold and still refuse a withdrawal.
+
+**Borrow APR is not linear in utilization.** The kink above the optimal point is
+steep — for the USDC pool, 12% at 80% utilization against 62% at the 90% maximum:
+
+| Utilization | Borrow APR |
+|-------------|-----------|
+| 50% | 7.5% |
+| 80% (optimal) | 12% |
+| 85% | 37% |
+| 90% (max) | 62% |
+
+Quote a borrow cost from the pool's current utilization, never from the optimal
+rate.
+
 ### Common mistakes
 
 - **Ignoring interest accrual.** Debt grows at event-driven intervals (whenever pool state changes — borrows, repays, liquidations). A position can drift toward liquidation purely from accumulated interest, even with stable prices.

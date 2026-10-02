@@ -103,6 +103,22 @@ Do not guess or extrapolate from other prediction market protocols.
 5. **Redemption works against both live and settled oracles.** Before settlement, payouts reflect current bid values. After settlement, binary positions yield fixed fair value; ranges pay full notional if in-band, zero otherwise.
 6. **LP withdrawals are constrained.** Withdrawals require sufficient available liquidity after covering maximum payout obligations, and a rate limiter may throttle large withdrawals.
 
+### Settlement: `try_settle`
+
+Settlement is **permissionless and idempotent** — anyone may call `try_settle`,
+and calling it on an already-settled market returns `true` without doing anything.
+
+It settles from the exact Pyth spot recorded *at the market's expiry timestamp*,
+not the price at the moment of the call. That distinction is the whole point: the
+result does not depend on when someone gets round to settling.
+
+If that observation is unavailable, the call returns `false` and leaves the market
+unsettled rather than settling at a wrong price. After a compiled grace period it
+falls back to the exact Block Scholes minute-boundary spot for the same expiry. A
+market before its expiry also returns `false`.
+
+So a settlement flow retries rather than treating one `false` as failure.
+
 ### Common mistakes
 
 - **Minting and depositing in the same transaction as manager creation.** The PredictManager must be shared first (transaction 1), then deposits and mints happen in subsequent transactions.
