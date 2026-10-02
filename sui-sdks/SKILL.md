@@ -98,6 +98,78 @@ If unsure about any specific API in any SDK, fetch from the relevant doc page â€
 9. **Route frontend questions to the `frontend-apps` skill.** When the user asks about React hooks, wallet connection, or dApp Kit query patterns, explicitly direct them to the `frontend-apps` skill for hook-level details. This skill covers SDK selection and `Transaction` construction only.
 9. **Cite the docs when unsure.** Official TS SDK docs live at `sdk.mystenlabs.com`. The inventory list lives at `docs.sui.io/references/sui-sdks`. Rust SDK docs live on `docs.rs` (per-crate) and `mystenlabs.github.io/sui-rust-sdk/<crate_name>/` (e.g., `/sui_transaction_builder/`).
 
+### Answering "how do I get docs that match my installed version?"
+
+Every `@mysten/*` package ships a `docs/` directory of flat markdown written for
+agents. It is installed with the package, so it matches the version in
+`node_modules` exactly â€” unlike the web docs, which track the latest release.
+
+1. **Read the index first.** `node_modules/@mysten/sui/docs/llms-index.md` lists
+   every page with a one-line description. The same convention holds for every
+   package: `node_modules/@mysten/<pkg>/docs/llms-index.md`.
+2. **Then read the one page you need**, e.g. `docs/clients/grpc.md`. Do not read
+   the whole directory.
+3. **Wire it into the project so it happens every time.** Add to `AGENTS.md`,
+   `CLAUDE.md`, `.cursorrules` or the equivalent:
+
+   ```markdown
+   ## Sui SDK reference
+
+   Every @mysten/* package ships LLM documentation in its `docs/` directory.
+   Find the relevant docs by looking for `docs/llms-index.md` files inside
+   `node_modules/@mysten/*/`. Read the index first to find the page you need,
+   then read that page for details.
+   ```
+
+There is no CLI command and no separate docs package to install. The files are
+already on disk once the SDK is.
+
+### Rust: a minimal PTB, end to end
+
+The published crates, not the monorepo `sui-sdk`. Method names are snake_case;
+`tx.pure.u64(...)` is TypeScript and does not exist here.
+
+```rust
+use sui_sdk_types::Address;
+use sui_sdk_types::Digest;
+use sui_transaction_builder::ObjectInput;
+use sui_transaction_builder::TransactionBuilder;
+
+let mut tx = TransactionBuilder::new();
+
+// Split an amount off the gas coin.
+let amount = tx.pure(&1_000_000_000u64);
+let gas = tx.gas();
+let coins = tx.split_coins(gas, vec![amount]);
+
+// The recipient is a pure input, like any other value.
+let recipient = tx.pure(&Address::ZERO);
+tx.transfer_objects(coins, recipient);
+
+// Metadata the builder will not infer for you.
+tx.set_sender(Address::ZERO);
+tx.set_gas_budget(500_000_000);
+tx.set_gas_price(1000);
+tx.add_gas_objects([ObjectInput::owned(Address::ZERO, 1, Digest::ZERO)]);
+
+let transaction = tx.try_build().expect("build should succeed");
+```
+
+`try_build()` finalizes offline. The async `build()` exists only with the
+`intents` feature and resolves gas and intents over RPC.
+
+### Python: pysui
+
+```bash
+pip install pysui
+```
+
+Community-maintained (`github.com/FrankC01/pysui`, not Mysten), and that is the
+risk to state plainly: it is not covered by Mysten's release process and can lag
+protocol changes. It does support building and executing PTBs
+(programmable transaction blocks), including signing and submission. Check the repo's recent activity against the Sui version you
+target before committing to it.
+
 ### Common mistakes
 
 - **Calling a community SDK "the Python SDK" or "the Go SDK" as if official.** There is no official Python or Go SDK. Name the specific package (`pysui`, `block-vision/sui-go-sdk`) and flag it as community.

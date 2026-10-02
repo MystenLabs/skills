@@ -142,6 +142,86 @@ When the user asks you to review a code snippet, do not stop at the first 2–3 
 
 After walking the list, count the distinct issues you found. If it's fewer than 5 on a typical multi-line snippet pulled from an outdated tutorial, re-read the snippet — you almost certainly missed something.
 
+### Reading a transaction result
+
+The v2 result is a discriminated union. Check `$kind`, not effects:
+
+```ts
+const result = await signAndExecuteTransaction({ transaction: tx });
+
+if (result.$kind === 'FailedTransaction') {
+  throw new Error(result.FailedTransaction.status.error.message);
+}
+```
+
+`result.effects?.status?.status === 'failure'` is the v1 shape. It does not
+throw on v2 — it reads `undefined`, compares false, and the failure passes
+silently as a success. That is the single most common v1 leftover in frontend
+code.
+
+### Signing without executing, for a sponsored transaction
+
+The wallet signs; the backend pays and submits.
+
+```ts
+const { bytes, signature } = await signTransaction({ transaction: tx });
+await fetch('/api/sponsor', {
+  method: 'POST',
+  body: JSON.stringify({ bytes, signature }),
+});
+```
+
+Destructure `{ bytes, signature }` — those are what the backend needs. The
+frontend sets **none** of the gas fields: gas owner, gas payment, the sponsor's
+signature and the submission are all the backend's responsibility. A frontend
+that calls `setGasOwner` or `setGasPayment` is building a transaction the
+sponsor will have to rebuild anyway.
+
+### Paginated queries render `data.pages`
+
+`useSuiClientInfiniteQuery` is one of the removed hooks. Page through with
+TanStack's `useInfiniteQuery` over `useCurrentClient()`, and drive it with the
+cursor the API returns. The v2 Core API gives you a **single nullable `cursor`**,
+not the v1 pair of `nextCursor` and `hasNextPage`: `initialPageParam` starts it and
+`getNextPageParam` returns `lastPage.cursor` while it is non-null, `undefined` at
+the end. Results sit under a method-specific key — `objects` for
+`listOwnedObjects`, `coins` for `listCoins`. Pass `type` so the node filters by
+struct type rather than fetching everything and discarding most of it
+client-side.
+
+```tsx
+const client = useCurrentClient();
+const account = useCurrentAccount();
+
+const { data, hasNextPage, isFetchingNextPage, fetchNextPage } = useInfiniteQuery({
+  queryKey: ["ownedNfts", account?.address],
+  enabled: !!account,
+  initialPageParam: null as string | null,
+  queryFn: ({ pageParam }) =>
+    client.core.listOwnedObjects({
+      owner: account!.address,
+      type: `${PACKAGE_ID}::hero::Hero`,
+      cursor: pageParam,
+      limit: 50,
+    }),
+  getNextPageParam: (lastPage) => lastPage.cursor ?? undefined,
+});
+```
+
+The result holds pages, not a flat list, so rendering `data.items` silently
+shows nothing. Flatten them:
+
+```tsx
+{data?.pages.flatMap((page) => page.objects).map((obj) => (
+  <NftCard key={obj.objectId} obj={obj} />
+))}
+```
+
+Pair the "Load more" button with TanStack's own `hasNextPage` and
+`isFetchingNextPage` — which it derives from `getNextPageParam` returning
+`undefined`, not from a field on the response — so it disables itself at the end
+of the list.
+
 ### Common mistakes
 
 - **Using `@tanstack/react-query`'s `useQuery` without `enabled: !!account`** for queries that require a connected wallet. The query fires with undefined owner and errors.
