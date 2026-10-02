@@ -11,10 +11,10 @@
       "Recommends gRPC / SuiGrpcClient, NOT JSON-RPC / SuiClient / SuiJsonRpcClient",
       "Imports SuiGrpcClient from '@mysten/sui/grpc'",
       "Passes both network and baseUrl to the constructor",
-      "Uses client.core.listBalances (v2 Core API) for balance read",
-      "Uses client.core.listOwnedObjects for owned objects",
+      "Uses client.getBalance for the SUI balance (top-level method; listBalances is for every coin type, and client.core is the library-facing surface)",
+      "Uses client.listOwnedObjects for owned objects (top-level method, not client.core)",
       "Does NOT recommend JSON-RPC / SuiJsonRpcClient for new code",
-      "Does NOT use client.getBalance / client.getOwnedObjects (v1 method names)"
+      "Does NOT use getOwnedObjects, the JSON-RPC name replaced by listOwnedObjects"
     ]
   },
   {
@@ -24,7 +24,7 @@
       "https://docs.sui.io/concepts/data-access/data-serving",
       "https://docs.sui.io/concepts/data-access/graphql-rpc"
     ],
-    "expected_output": "For a dashboard that combines multiple entity types in one view, GraphQL RPC is the best fit — it can return balances + transactions + owned objects in a single query, reducing round trips. For individual per-entity reads (just a balance, just a tx), gRPC is still fine. Shows a sketch of a combined GraphQL query.",
+    "expected_output": "For a dashboard that combines multiple entity types in one view, GraphQL RPC is the best fit \u2014 it can return balances + transactions + owned objects in a single query, reducing round trips. For individual per-entity reads (just a balance, just a tx), gRPC is still fine. Shows a sketch of a combined GraphQL query.",
     "expectations": [
       "Recommends GraphQL RPC for the multi-entity dashboard case",
       "Explains the rationale: one request instead of multiple (reduced round trips, composable queries)",
@@ -41,7 +41,7 @@
       "https://docs.sui.io/guides/operator/indexer-stack-setup",
       "https://docs.sui.io/concepts/data-access/graphql-rpc"
     ],
-    "expected_output": "Recommends a custom indexer via sui-indexer-alt. Rationale: this is an app-specific aggregation (SUM by user) across a time range — not something gRPC point-lookups or general GraphQL answer efficiently. Describes the pipeline approach: subscribe to marketplace events via gRPC, write to a Postgres aggregation table, serve from your own query layer. Notes this is ongoing operational work — ensure the query isn't solvable with GraphQL RPC first.",
+    "expected_output": "Recommends a custom indexer via sui-indexer-alt. Rationale: this is an app-specific aggregation (SUM by user) across a time range \u2014 not something gRPC point-lookups or general GraphQL answer efficiently. Describes the pipeline approach: subscribe to marketplace events via gRPC, write to a Postgres aggregation table, serve from your own query layer. Notes this is ongoing operational work \u2014 ensure the query isn't solvable with GraphQL RPC first.",
     "expectations": [
       "Recommends a custom indexer (sui-indexer-alt) for the leaderboard use case",
       "Explains why: app-specific aggregation / SUM-by-user / time-range filtering is beyond gRPC's point-lookup surface and beyond the General-Purpose Indexer's schema",
@@ -77,7 +77,7 @@
       "https://docs.sui.io/concepts/data-access/data-serving",
       "https://sdk.mystenlabs.com/sui"
     ],
-    "expected_output": "Identifies this as legacy v1 SDK code using the deprecated JSON-RPC surface. Notes JSON-RPC is deprecated with mainnet shutdown the week of July 27, 2026. Migrates to SuiGrpcClient from '@mysten/sui/grpc' with network + baseUrl. Renames methods: getBalance → client.core.listBalances (or similar v2 Core API), getOwnedObjects → client.core.listOwnedObjects, getTransactionBlock → client.core.getTransaction. Replaces options: { show*: true } with include: { ... }. Does the full migration.",
+    "expected_output": "Identifies this as legacy v1 SDK code using the deprecated JSON-RPC surface. Notes JSON-RPC is deprecated with mainnet shutdown the week of July 27, 2026. Migrates to SuiGrpcClient from '@mysten/sui/grpc' with network + baseUrl. Renames methods: getBalance \u2192 client.core.listBalances (or similar v2 Core API), getOwnedObjects \u2192 client.core.listOwnedObjects, getTransactionBlock \u2192 client.core.getTransaction. Replaces options: { show*: true } with include: { ... }. Does the full migration.",
     "expectations": [
       "Identifies the code as using the deprecated JSON-RPC / v1 SDK surface",
       "States JSON-RPC is deprecated with a mainnet shutdown date (or equivalent language)",
@@ -94,7 +94,7 @@
   },
   {
     "id": "accessing-data-archival-historical",
-    "prompt": "I need to read the state of an object as it was 6 months ago. The object has been updated many times since. My gRPC call returns the current version — how do I get the historical version?",
+    "prompt": "I need to read the state of an object as it was 6 months ago. The object has been updated many times since. My gRPC call returns the current version \u2014 how do I get the historical version?",
     "sources": [
       "https://docs.sui.io/concepts/data-access/archival-store",
       "https://docs.sui.io/concepts/data-access/graphql-rpc"
@@ -106,7 +106,7 @@
       "States that GraphQL RPC routes to the Archival Store transparently (when operator-configured); gRPC clients need a separate Archival Service endpoint",
       "Shows a GraphQL query that requests a specific past object version (e.g., object(address: ..., version: ...))",
       "Identifies Archival Store as GA (not beta)",
-      "For gRPC archival, recommends an Archival Service endpoint running the standard LedgerService API — does NOT invent a separate non-standard archival API"
+      "For gRPC archival, recommends an Archival Service endpoint running the standard LedgerService API \u2014 does NOT invent a separate non-standard archival API"
     ]
   },
   {
