@@ -8,7 +8,11 @@
     "code-eval": "node scripts/run-code-evals.js",
     "code-eval:changed": "node scripts/run-code-evals.js --changed-only",
     "staleness": "node scripts/check-sources.js",
-    "staleness:update": "node scripts/check-sources.js --update"
+    "staleness:update": "node scripts/check-sources.js --update",
+    "test:gate": "node scripts/lib/gate.test.js",
+    "eval:gate": "node scripts/run-evals.js --changed-only --repeat 3 --baseline /tmp/baseline.json",
+    "test:graders": "node scripts/lib/graders.test.js",
+    "test": "node scripts/lib/gate.test.js && node scripts/lib/graders.test.js"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.52.0",

@@ -11,7 +11,17 @@
       "Uses method syntax for Balance operations (e.g. reserve.join(), reserve.split()) not legacy balance::join(&mut reserve, ...)",
       "Uses ctx.sender() not tx_context::sender(ctx) — or doesn't need sender at all",
       "Does not import tx_context::TxContext explicitly (auto-imported in 2024 edition)"
-    ]
+    ],
+    "graders": {
+      "Uses ctx.sender() not tx_context::sender(ctx) — or doesn't need sender at all": {
+        "type": "absent",
+        "pattern": "tx_context::sender\\("
+      },
+      "Does not import tx_context::TxContext explicitly (auto-imported in 2024 edition)": {
+        "type": "absent",
+        "pattern": "use\\s+sui::tx_context::(TxContext|\\{)"
+      }
+    }
   },
   {
     "id": "syntax-nft-game",
@@ -24,7 +34,26 @@
       "Uses ctx.sender() not tx_context::sender(ctx)",
       "If string literals are created, uses b\"...\".to_string() not std::string::utf8()",
       "Uses method syntax where applicable (e.g. object method calls, vector operations, ctx.sender())"
-    ]
+    ],
+    "graders": {
+      "Uses ctx.sender() not tx_context::sender(ctx)": {
+        "type": "all_of",
+        "options": [
+          {
+            "type": "regex",
+            "pattern": "ctx\\.sender\\(\\)"
+          },
+          {
+            "type": "absent",
+            "pattern": "tx_context::sender\\("
+          }
+        ]
+      },
+      "If string literals are created, uses b\"...\".to_string() not std::string::utf8()": {
+        "type": "absent",
+        "pattern": "std::string::utf8\\("
+      }
+    }
   },
   {
     "id": "syntax-access-control",
@@ -37,6 +66,21 @@
       "Uses ctx.sender() not tx_context::sender(ctx)",
       "Uses method syntax for at least some collection or object operations (e.g. table.contains(), vec.push_back(), ctx.sender())",
       "Uses method syntax more often than legacy module function-call syntax"
-    ]
+    ],
+    "graders": {
+      "Uses ctx.sender() not tx_context::sender(ctx)": {
+        "type": "all_of",
+        "options": [
+          {
+            "type": "regex",
+            "pattern": "ctx\\.sender\\(\\)"
+          },
+          {
+            "type": "absent",
+            "pattern": "tx_context::sender\\("
+          }
+        ]
+      }
+    }
   }
 ]
