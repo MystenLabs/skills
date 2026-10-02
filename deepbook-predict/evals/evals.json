@@ -5,83 +5,77 @@
     {
       "id": "deepbook-predict-position-types",
       "prompt": "What is DeepBook Predict and what position types does it support?",
-      "expected_output": "An explanation of Predict as an expiry-based prediction market on Sui, covering binary positions (up/down) and vertical range positions with their key structures and payoffs.",
+      "expected_output": "An explanation of Predict as an expiry-based prediction market where every position is a range contract paying a fixed amount when settlement lands inside the chosen strikes, including the directional case and who takes the other side.",
       "expectations": [
-        "The response describes Predict as an expiry-based prediction market protocol, not a perpetual market",
-        "The response explains binary positions with key (oracle_id, expiry, strike, is_up)",
-        "The response explains that 'up' pays when settlement > strike, 'down' pays when settlement <= strike",
-        "The response explains vertical range positions with key (oracle_id, expiry, lower_strike, higher_strike)",
-        "The response explains that range positions pay when settlement falls within the band",
-        "The response mentions that all positions settle against oracle prices at expiry"
+        "Describes Predict as an expiry-based prediction market protocol on Sui, with each market covering one underlying and one expiry timestamp",
+        "Explains that every position is a range contract: it pays a fixed amount when the settlement price lands inside a chosen strike range, and nothing otherwise",
+        "Explains that a directional position is a one-sided range, where side 'up' pays when settlement lands above the strike and 'down' pays when it lands at or below it",
+        "States that quantity is the maximum payout in USDC and must be a whole lot of 0.01 USDC",
+        "Mentions that liquidity providers supply USDC to a shared pool, receive PLP shares, and take the other side of every trade"
       ],
       "sources": [
-        "https://docs.sui.io/onchain-finance/deepbook/deepbook-predict",
+        "https://docs.sui.io/onchain-finance/deepbook/deepbook-predict/deepbook-predict",
         "https://docs.sui.io/onchain-finance/deepbook/deepbook-predict/design"
       ]
     },
     {
       "id": "deepbook-predict-mint-binary-position",
       "prompt": "How do I mint a binary position on DeepBook Predict using TypeScript?",
-      "expected_output": "Code showing PredictManager creation (separate transaction), DUSDC deposit, and mint transaction with market key construction.",
+      "expected_output": "A TypeScript mint flow using the predict namespace of the DeepBookV3 SDK, which reads the order ID back off the transaction result and keeps it with its market ID.",
       "expectations": [
-        "The response mentions that @mysten/deepbook-predict is available as a dedicated SDK, or demonstrates using @mysten/sui for raw Move calls",
-        "The response creates the PredictManager in a separate transaction from the mint",
-        "The response explains why: the manager must be shared before deposits/mints",
-        "The response shows building a market key via market_key::up(oracle_id, expiry, strike) or market_key::down(oracle_id, expiry, strike)",
-        "The response shows the predict::mint move call with the correct arguments",
-        "The response mentions fetching oracle data from the public server, not hardcoding"
+        "Imports from @mysten/deepbook-v3/predict rather than a separate Predict package",
+        "Reads the order ID from the transaction result with client.predict.decode.mint(result).orderId and persists it",
+        "Explains that redeeming or claiming a position needs the market ID and order ID together, because an order ID is unique only inside one market",
+        "Notes that closing part of a position replaces the order ID with a new one"
       ],
       "sources": [
-        "https://docs.sui.io/onchain-finance/deepbook/deepbook-predict",
-        "https://docs.sui.io/onchain-finance/deepbook/deepbook-predict/tutorial"
+        "https://docs.sui.io/onchain-finance/deepbook/deepbook-predict/deepbook-predict",
+        "https://docs.sui.io/onchain-finance/deepbook/deepbook-predict-sdk/deepbook-predict-sdk"
       ]
     },
     {
       "id": "deepbook-predict-oracle-states-and-settlement",
       "prompt": "What are the oracle states in DeepBook Predict and how does settlement work?",
-      "expected_output": "An explanation of the four oracle states (inactive, active, pending settlement, settled) and the settlement process.",
+      "expected_output": "An explanation that a market's settlement state is read rather than inferred from the clock, that settlement happens when someone calls try_settle, and that an expired unsettled market still reads as active.",
       "expectations": [
-        "The response lists all four states: inactive, active, pending settlement, settled",
-        "The response explains that only active oracles support minting",
-        "The response explains that after expiry, the oracle enters pending settlement",
-        "The response explains that try_settle records the exact spot price at the expiry timestamp",
-        "The response explains that winning positions pay full notional and losing positions pay zero",
-        "The response mentions that post-settlement redemptions can be executed permissionlessly"
+        "Explains that active means live and not yet settled, so an expired market nobody has settled is still returned by read.markets() and quoting against it aborts",
+        "Says to read the lifecycle state rather than infer it from time, checking is_settled or try_settlement_price on the market",
+        "Explains that a market settles when someone calls try_settle successfully, and that the gap after expiry has no fixed duration",
+        "Does NOT derive settlement from the expiry timestamp alone"
       ],
       "sources": [
-        "https://docs.sui.io/onchain-finance/deepbook/deepbook-predict/design"
+        "https://docs.sui.io/onchain-finance/deepbook/deepbook-predict/deepbook-predict",
+        "https://docs.sui.io/onchain-finance/deepbook/deepbook-predict/contract-information"
       ]
     },
     {
       "id": "deepbook-predict-vault-and-plp",
       "prompt": "How does the vault and PLP liquidity model work in DeepBook Predict?",
-      "expected_output": "An explanation of the vault taking the opposite side of trades, PLP tokens for liquidity providers, NAV calculation, and withdrawal constraints.",
+      "expected_output": "An explanation of PoolVault as the counterparty to every trade, what PLP represents, and how to read the collateral coin type rather than assuming a symbol.",
       "expectations": [
-        "The response explains that the vault takes the opposite side of every trade",
-        "The response explains PLP tokens: initial 1:1 with DUSDC, then proportional to NAV",
-        "The response explains vault NAV as idle_balance + sum of current_nav per expiry",
-        "The response mentions exposure limits on minting relative to vault value",
-        "The response mentions withdrawal constraints: liability coverage and rate limiter"
+        "Explains that the Predict pool, PoolVault, is the counterparty to every trade",
+        "Explains that liquidity providers deposit USDC and receive PLP shares, a 6-decimal coin matching USDC's decimals",
+        "Explains that PLP is a proportional claim on pool value, so its value tracks pool profit and loss rather than a fixed yield",
+        "Says to read the exact collateral coin type from getConfig(network).quoteCoinType rather than assuming a symbol"
       ],
       "sources": [
-        "https://docs.sui.io/onchain-finance/deepbook/deepbook-predict/design",
+        "https://docs.sui.io/onchain-finance/deepbook/deepbook-predict/contract-information/vault",
         "https://docs.sui.io/onchain-finance/deepbook/deepbook-predict/tutorial"
       ]
     },
     {
       "id": "deepbook-predict-integration-mistakes",
       "prompt": "What are the common mistakes when integrating DeepBook Predict?",
-      "expected_output": "A list of pitfalls including same-transaction manager creation and deposit, hardcoding testnet IDs, wrong strike ordering, and not checking oracle state.",
+      "expected_output": "The mistakes the documentation calls out: assuming a coin symbol, inferring settlement from the clock, trusting that an active market is quotable, and hardcoding per-deployment IDs.",
       "expectations": [
-        "The response warns about depositing/minting in the same transaction as PredictManager creation",
-        "The response warns about hardcoding testnet addresses that will change at Mainnet",
-        "The response warns about wrong strike ordering for range positions (lower must be < higher)",
-        "The response warns about not validating oracle state before minting",
-        "The response mentions that @mysten/deepbook-predict (v0.2.1) is available as a dedicated SDK, or that @mysten/sui can be used for raw Move calls"
+        "Warns against assuming a coin symbol and says to read quoteCoinType from the network config",
+        "Warns against inferring settlement from the expiry timestamp instead of reading is_settled or try_settlement_price",
+        "Warns that an expired unsettled market still appears in the active list and that quoting against it aborts",
+        "Says to treat package IDs and object IDs as pinned to a deployment and read them for the network being targeted"
       ],
       "sources": [
-        "https://docs.sui.io/onchain-finance/deepbook/deepbook-predict",
-        "https://docs.sui.io/onchain-finance/deepbook/deepbook-predict/tutorial"
+        "https://docs.sui.io/onchain-finance/deepbook/deepbook-predict/contract-information",
+        "https://docs.sui.io/onchain-finance/deepbook/deepbook-predict/deepbook-predict"
       ]
     }
   ]
