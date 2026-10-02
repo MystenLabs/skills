@@ -14,13 +14,46 @@ description: >
 
 > **MCP tool:** When available in your environment, also query the Sui documentation MCP server (`https://sui.mcp.kapa.ai`) for up-to-date answers. Use it for verification and for details not covered by these reference files.
 
-"How do I read data from Sui?" is the most frequently mis-answered question in agent-written Sui code. The defaults have changed. This skill fixes it.
+## Stop before you write a client
 
-**Key fact: JSON-RPC is deprecated.** Sui Foundation mainnet full nodes will disable JSON-RPC the week of July 27, 2026, with full code decommission by mid-October 2026. New code must use gRPC or GraphQL RPC. `SuiJsonRpcClient` still exists as a deprecated migration surface but should not be used for new projects.
+If you are about to write any of these, you are writing the deprecated v1 API. Replace it:
+
+| Do not write | Write instead |
+|---|---|
+| `import { SuiClient } from '@mysten/sui/client'` | `import { SuiGrpcClient } from '@mysten/sui/grpc'` |
+| `new SuiClient({ url })` | `new SuiGrpcClient({ network, baseUrl })` |
+| `client.getBalance(...)` | `client.core.listBalances({ owner })` |
+| `client.getOwnedObjects(...)` | `client.core.listOwnedObjects({ owner, filter })` |
+| `client.getObject(...)` | `client.core.getObject(...)` |
+| `client.getTransactionBlock(...)` | `client.core.getTransaction(...)` |
+
+`SuiClient` and the `getX` method names are JSON-RPC. Sui Foundation mainnet full nodes
+disable JSON-RPC the week of July 27, 2026, and decommission the code by mid-October 2026.
+`SuiJsonRpcClient` exists only as a migration surface. **Do not use it in new code, and do
+not recommend it**, however familiar it looks: it is the single most common error in
+agent-written Sui code, because it dominates older training data.
+
+## Then pick the surface for the job
+
+Match the use case, not a default. There is no default.
+
+| What you are building | Use |
+|---|---|
+| One balance, one object, one owner's NFTs | gRPC `client.core.*` |
+| A dashboard or wallet view combining several of those | **GraphQL RPC**, one query instead of several round trips |
+| Transaction history over a time range | GraphQL RPC |
+| A marketplace listings page, filter and sort across types | GraphQL RPC |
+| A live feed of new events | gRPC streaming |
+| A leaderboard or custom analytics | custom indexer |
+| Blobs: images, audio, models, large JSON | Walrus, not on-chain |
+
+Full mapping in `use-cases.md`. Client setup and method signatures in `grpc.md` and `graphql.md`.
+
+---
 
 The four canonical data surfaces are:
 
-1. **gRPC** (generally available) — low-latency, real-time, code-gen-friendly. Served by full nodes. Supports streaming/subscriptions. The default for transaction submission, live reads, and ingestion pipelines.
+1. **gRPC** (generally available) — low-latency, real-time, code-gen-friendly. Served by full nodes. Supports streaming/subscriptions. Use for single-entity reads, transaction submission, streaming, and ingestion pipelines.
 2. **GraphQL RPC** (generally available) — flexible relational queries over the General-Purpose Indexer's Postgres + full node + Archival Store. Supports reads, transaction submission, and dry-run. Best for frontends, dashboards, wallets, and any client that benefits from composable queries.
 3. **Archival Store** (generally available) — long-term historical storage of transactions, checkpoints, and object states beyond full-node pruning. GraphQL RPC can route supported historical lookups to the Archival Store transparently when the operator has configured archival backing. For gRPC, clients must query an Archival Service endpoint directly for historical data beyond full-node retention. Archival routing is operator-configured: if the operator hasn't set up archival backing, retention is limited to what the primary store holds.
 4. **Custom indexer (`sui-indexer-alt`)** — build your own data pipeline keyed on exactly the on-chain data your app needs. Writes to any storage layer (Postgres by default, but any backend works). Ingests checkpoints from GCS (backfill) + full node gRPC (steady state).
