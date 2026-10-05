@@ -488,11 +488,10 @@ function renderBoard(cat, res) {
   const models = [...byModel.entries()].sort((a, b) => best(b[1]) - best(a[1]));
 
   const stale = res.manifest !== cat.manifest;
-  const paired = models.filter(([, l]) => l['baseline'] && (l['with-skills'] || l['with-skills-mcp'])).length;
-  note.textContent = `${models.length} model${models.length === 1 ? '' : 's'}, ${all.length} runs. `
-    + (paired
-      ? `${paired} ${paired === 1 ? 'has' : 'have'} been run with and without the skills, so the gap is on the card.`
-      : 'Run a model both ways to see what the skills are worth to it.');
+  // No summary line. It counted models, runs and pairs, which are facts about
+  // the page rather than about the models, and every card below already says
+  // what that model scored in each configuration.
+  note.textContent = '';
 
   host.hidden = false;
   host.innerHTML = '';
