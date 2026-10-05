@@ -548,10 +548,27 @@ function renderBoard(cat, res) {
     const s = sampledRun?.sampling;
     const sameRun = sampledRun === run;
     detail.innerHTML = `<div class="mc-rows">${bars}</div>`
-      + (s && typeof s.passPowK === 'number'
-          ? `<p class="mc-gain">${sameRun ? `Asked ${s.k} times` : `The ${esc(LAYER_LABEL[sampledRun.layer] ?? 'other')} run was asked ${s.k} times`}: `
-            + `right every time on <b>${Math.round(100 * s.passPowK)}%</b> of questions, right at `
-            + `least once on ${Math.round(100 * s.passAtK)}%.</p>`
+      // One idea, not two rates side by side.
+      //
+      // This read "right every time on 12% of questions, right at least once on
+      // 22%", which asks a reader to hold two numbers and work out that the
+      // difference between them is the interesting part. The difference is the
+      // whole point: those are the questions the model sometimes gets right and
+      // sometimes does not, so asking it once tells you nothing about them.
+      + (s && typeof s.passPowK === 'number' && typeof s.passAtK === 'number'
+          ? (() => {
+              const always = Math.round(100 * s.passPowK);
+              const ever = Math.round(100 * s.passAtK);
+              const sometimes = Math.max(0, ever - always);
+              const whose = sameRun ? '' : ` in the ${esc(LAYER_LABEL[sampledRun.layer] ?? 'other')} run`;
+              return `<p class="mc-gain">Asked ${s.k} times${whose}, it got <b>${always}%</b> of the `
+                + `questions right on every attempt`
+                + (sometimes
+                    ? `, and another ${sometimes}% right only some of the time. Ask those once and it `
+                      + `is a coin toss.`
+                    : `, and never only some of the time.`)
+                + `</p>`;
+            })()
           : '')
       + (run.record
           ? `<p class="mc-gain"><a href="${BASE}/${esc(run.record)}">Every question and the grader's verdict</a></p>`
