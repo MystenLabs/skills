@@ -1,0 +1,381 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>gpt-5.5 +sui-skills &middot; Sui Evals</title>
+<style>
+  :root { --bg:#05080f; --card:#0b1220; --line:#18243a; --ink:#e8eef8; --ink-2:#9fb0c9; --ink-3:#6b7f9c; --sui:#4da2ff; }
+  @media (prefers-color-scheme: light) { :root { --bg:#fff; --card:#f7f9fc; --line:#e3e9f2; --ink:#0b1220; --ink-2:#44536a; --ink-3:#6b7f9c; } }
+  body { margin:0; background:var(--bg); color:var(--ink); font:15px/1.6 ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif; }
+  .wrap { max-width:900px; margin:0 auto; padding:40px 20px 72px; }
+  a { color:var(--sui); }
+  h1 { font-size:26px; margin:0 0 6px; letter-spacing:-0.02em; }
+  .note { color:var(--ink-3); font-size:13px; margin:0 0 26px; }
+  ul.p { list-style:none; display:flex; flex-wrap:wrap; gap:10px; padding:0; margin:0 0 30px; }
+  ul.p li { background:var(--card); border:1px solid var(--line); border-radius:10px; padding:10px 14px; font-size:13px; color:var(--ink-2); }
+  ul.p b { color:var(--ink); font-size:17px; margin-right:6px; }
+  ul.p span { color:var(--ink-3); }
+  h2 { font-size:13px; text-transform:uppercase; letter-spacing:.12em; color:var(--ink-3); margin:0 0 10px; }
+  table { width:100%; border-collapse:collapse; }
+  td { border-top:1px solid var(--line); padding:12px 0; vertical-align:top; }
+  td.q { padding-right:20px; }
+  td.s { text-align:right; white-space:nowrap; color:var(--ink-2); font-variant-numeric:tabular-nums; }
+  .meta { display:block; color:var(--ink-3); font-size:12px; margin-top:3px; }
+  td.q a { font-size:12px; margin-right:10px; }
+</style></head><body><div class="wrap">
+  <h1>gpt-5.5 +sui-skills</h1>
+  <p class="note">
+    759 of 896 expectations met, recorded 2026-10-05.
+    Graded by unknown, each question asked once.
+    Eval set 143c0d0525d3. <a href="../index.html">Back to the board</a> &middot;
+    <a href="gpt-5-5-sui-skills.json">the same thing as JSON</a>
+  </p>
+  <ul class="p"><li><b>83%</b> objects <span>144 of 174</span></li><li><b>92%</b> transactions <span>150 of 163</span></li><li><b>85%</b> building <span>392 of 463</span></li><li><b>76%</b> security <span>73 of 96</span></li></ul>
+  <h2>69 questions it did not answer in full</h2>
+  <table><tbody>
+    <tr>
+      <td class="q">I need to show a leaderboard of the top 100 users by total trade volume on my marketplace over the last 30 days. What's the right approach?<span class="meta">accessing-data &middot; design</span>
+        <a href="https://docs.sui.io/guides/operator/indexer-stack-setup">docs.sui.io/guides/operator/indexer-stack-setup</a> <a href="https://docs.sui.io/concepts/data-access/graphql-rpc">docs.sui.io/concepts/data-access/graphql-rpc</a></td>
+      <td class="s">5 of 7</td>
+    </tr>
+    <tr>
+      <td class="q">I'm minting NFTs where each NFT has a 2 MB image. Where should I store the image?<span class="meta">accessing-data &middot; design</span>
+        <a href="https://docs.wal.app">docs.wal.app</a> <a href="https://docs.sui.io/concepts/data-access/data-serving">docs.sui.io/concepts/data-access/data-serving</a></td>
+      <td class="s">5 of 7</td>
+    </tr>
+    <tr>
+      <td class="q">Here's some of my code. What's wrong and how do I update it? ```ts import { SuiClient, getFullnodeUrl } from '@mysten/sui/client'; const client = new SuiClient({ url: getFullnodeUrl('mainnet') }); const balance = await client.getBalance({ o<span class="meta">accessing-data &middot; review</span>
+        <a href="https://docs.sui.io/concepts/data-access/data-serving">docs.sui.io/concepts/data-access/data-serving</a> <a href="https://sdk.mystenlabs.com/sui">sdk.mystenlabs.com/sui</a></td>
+      <td class="s">6 of 11</td>
+    </tr>
+    <tr>
+      <td class="q">I need to read the state of an object as it was 6 months ago. The object has been updated many times since. My gRPC call returns the current version — how do I get the historical version?<span class="meta">accessing-data &middot; design</span>
+        <a href="https://docs.sui.io/concepts/data-access/archival-store">docs.sui.io/concepts/data-access/archival-store</a> <a href="https://docs.sui.io/concepts/data-access/graphql-rpc">docs.sui.io/concepts/data-access/graphql-rpc</a></td>
+      <td class="s">5 of 6</td>
+    </tr>
+    <tr>
+      <td class="q">How does the risk ratio work in DeepBook Margin? What happens at each threshold?<span class="meta">deepbook-margin &middot; explain</span>
+        <a href="https://docs.sui.io/onchain-finance/deepbook/deepbook-margin/contract-information/risk-ratio">docs.sui.io/onchain-finance/deepbook/deepbook-margin/contract-information/risk-ratio</a> <a href="https://docs.sui.io/onchain-finance/deepbook/deepbook-margin">docs.sui.io/onchain-finance/deepbook/deepbook-margin</a></td>
+      <td class="s">4 of 5</td>
+    </tr>
+    <tr>
+      <td class="q">What are the risks of margin trading on DeepBook and how can I mitigate them?<span class="meta">deepbook-margin &middot; explain</span>
+        <a href="https://docs.sui.io/onchain-finance/deepbook/deepbook-margin/margin-risks">docs.sui.io/onchain-finance/deepbook/deepbook-margin/margin-risks</a></td>
+      <td class="s">4 of 5</td>
+    </tr>
+    <tr>
+      <td class="q">How do flash loans work in DeepBook V3? Can I borrow and trade in the same pool?<span class="meta">deepbook-move &middot; explain</span>
+        <a href="https://docs.sui.io/onchain-finance/deepbook/deepbookv3/contract-information/flash-loans">docs.sui.io/onchain-finance/deepbook/deepbookv3/contract-information/flash-loans</a></td>
+      <td class="s">5 of 6</td>
+    </tr>
+    <tr>
+      <td class="q">Explain the internal architecture of a DeepBook V3 Pool. What are the three main components?<span class="meta">deepbook-overview &middot; explain</span>
+        <a href="https://docs.sui.io/onchain-finance/deepbook/deepbookv3/deepbook/design">docs.sui.io/onchain-finance/deepbook/deepbookv3/deepbook/design</a></td>
+      <td class="s">4 of 5</td>
+    </tr>
+    <tr>
+      <td class="q">What is the current DeepBook V3 mainnet package ID and what is the SUI/USDC pool ID?<span class="meta">deepbook-overview &middot; explain</span>
+        <a href="https://docs.sui.io/onchain-finance/deepbook/deepbookv3/deepbook/contract-information">docs.sui.io/onchain-finance/deepbook/deepbookv3/deepbook/contract-information</a></td>
+      <td class="s">2 of 3</td>
+    </tr>
+    <tr>
+      <td class="q">How do I mint a binary position on DeepBook Predict using TypeScript?<span class="meta">deepbook-predict &middot; explain</span>
+        <a href="https://docs.sui.io/onchain-finance/deepbook/deepbook-predict">docs.sui.io/onchain-finance/deepbook/deepbook-predict</a> <a href="https://docs.sui.io/onchain-finance/deepbook/deepbook-predict/tutorial">docs.sui.io/onchain-finance/deepbook/deepbook-predict/tutorial</a></td>
+      <td class="s">5 of 6</td>
+    </tr>
+    <tr>
+      <td class="q">What are the oracle states in DeepBook Predict and how does settlement work?<span class="meta">deepbook-predict &middot; explain</span>
+        <a href="https://docs.sui.io/onchain-finance/deepbook/deepbook-predict/design">docs.sui.io/onchain-finance/deepbook/deepbook-predict/design</a></td>
+      <td class="s">5 of 6</td>
+    </tr>
+    <tr>
+      <td class="q">How does the vault and PLP liquidity model work in DeepBook Predict?<span class="meta">deepbook-predict &middot; explain</span>
+        <a href="https://docs.sui.io/onchain-finance/deepbook/deepbook-predict/design">docs.sui.io/onchain-finance/deepbook/deepbook-predict/design</a> <a href="https://docs.sui.io/onchain-finance/deepbook/deepbook-predict/tutorial">docs.sui.io/onchain-finance/deepbook/deepbook-predict/tutorial</a></td>
+      <td class="s">4 of 5</td>
+    </tr>
+    <tr>
+      <td class="q">What are the common mistakes when integrating DeepBook Predict?<span class="meta">deepbook-predict &middot; explain</span>
+        <a href="https://docs.sui.io/onchain-finance/deepbook/deepbook-predict">docs.sui.io/onchain-finance/deepbook/deepbook-predict</a> <a href="https://docs.sui.io/onchain-finance/deepbook/deepbook-predict/tutorial">docs.sui.io/onchain-finance/deepbook/deepbook-predict/tutorial</a></td>
+      <td class="s">4 of 5</td>
+    </tr>
+    <tr>
+      <td class="q">Help me set up a new Vite + React app to integrate with Sui. I want users to connect a wallet and see their SUI balance. Give me the complete setup code: package installs, dapp-kit.ts instance, provider wrapping, and a simple Balance compon<span class="meta">frontend-apps &middot; build</span>
+        <a href="https://sdk.mystenlabs.com/dapp-kit/getting-started/react">sdk.mystenlabs.com/dapp-kit/getting-started/react</a> <a href="https://sdk.mystenlabs.com/sui/clients">sdk.mystenlabs.com/sui/clients</a></td>
+      <td class="s">2 of 12</td>
+    </tr>
+    <tr>
+      <td class="q">Write a React button that transfers 0.5 SUI to a hardcoded recipient when the user clicks it. Show the full transaction flow including error handling, waiting for indexing, and refreshing the balance query afterward.<span class="meta">frontend-apps &middot; build</span>
+        <a href="https://sdk.mystenlabs.com/dapp-kit/getting-started/react">sdk.mystenlabs.com/dapp-kit/getting-started/react</a> <a href="https://sdk.mystenlabs.com/sui">sdk.mystenlabs.com/sui</a></td>
+      <td class="s">4 of 11</td>
+    </tr>
+    <tr>
+      <td class="q">I found a tutorial that says to `npm install @mysten/dapp-kit` and shows SuiClientProvider, WalletProvider, QueryClientProvider nested together plus a useSuiClientQuery hook. Is this current?<span class="meta">frontend-apps &middot; explain</span>
+        <a href="https://sdk.mystenlabs.com/dapp-kit">sdk.mystenlabs.com/dapp-kit</a></td>
+      <td class="s">6 of 7</td>
+    </tr>
+    <tr>
+      <td class="q">I want the wallet to sign a transaction but have my backend sponsor the gas and submit it. Show the frontend React code that signs without executing, then POSTs the signed bytes and signature to /api/sponsor.<span class="meta">frontend-apps &middot; design</span>
+        <a href="https://sdk.mystenlabs.com/dapp-kit/getting-started/react">sdk.mystenlabs.com/dapp-kit/getting-started/react</a></td>
+      <td class="s">5 of 7</td>
+    </tr>
+    <tr>
+      <td class="q">Review this code for problems: ```tsx import { SuiClient, getFullnodeUrl } from '@mysten/sui/client'; import { useSuiClientQuery, useSignAndExecuteTransaction } from '@mysten/dapp-kit'; import { TransactionBlock } from '@mysten/sui.js/trans<span class="meta">frontend-apps &middot; review</span>
+        <a href="https://sdk.mystenlabs.com/dapp-kit">sdk.mystenlabs.com/dapp-kit</a> <a href="https://sdk.mystenlabs.com/sui">sdk.mystenlabs.com/sui</a></td>
+      <td class="s">10 of 11</td>
+    </tr>
+    <tr>
+      <td class="q">How do I build a permissioned Kiosk extension using the kiosk_extension module? What permissions are available?<span class="meta">kiosk &middot; build</span>
+        <a href="https://docs.sui.io/standards/kiosk">docs.sui.io/standards/kiosk</a></td>
+      <td class="s">4 of 5</td>
+    </tr>
+    <tr>
+      <td class="q">I want to borrow an NFT from my Kiosk to read its fields in a PTB. Which borrowing pattern should I use and what are the constraints?<span class="meta">kiosk &middot; design</span>
+        <a href="https://docs.sui.io/standards/kiosk">docs.sui.io/standards/kiosk</a></td>
+      <td class="s">4 of 5</td>
+    </tr>
+    <tr>
+      <td class="q">Help me set up a standard AMM style smart contract with move. It should support: creating a liquidity pool for two coin types, adding and removing liquidity (minting/burning LP tokens), swapping between the two coins using the constant prod<span class="meta">modern-move-syntax &middot; build</span>
+        </td>
+      <td class="s">3 of 4</td>
+    </tr>
+    <tr>
+      <td class="q">I want to build a reusable access control package on Sui that other developers can import into their projects. It should support role-based access control — like defining roles (admin, moderator, minter, etc), granting and revoking roles to<span class="meta">modern-move-syntax &middot; build</span>
+        </td>
+      <td class="s">2 of 3</td>
+    </tr>
+    <tr>
+      <td class="q">Review this Move module for security issues: ```move module example::vault { use sui::coin::{Self, Coin}; use sui::sui::SUI; use sui::balance::{Self, Balance}; public struct Vault has key { id: UID, balance: Balance&lt;SUI&gt;, admin: address, } <span class="meta">move-security &middot; review</span>
+        </td>
+      <td class="s">3 of 5</td>
+    </tr>
+    <tr>
+      <td class="q">I'm building a Move module on Sui where certain users should be authorized to perform minting operations. I'm considering two approaches: (1) storing a list of authorized addresses in a shared object and checking tx_context::sender() agains<span class="meta">move-security &middot; design</span>
+        </td>
+      <td class="s">2 of 6</td>
+    </tr>
+    <tr>
+      <td class="q">I have an AdminCap in my Move module that controls treasury operations. Right now it's held by a single address. What security improvements should I make? Also, what happens if the AdminCap is leaked or stolen?<span class="meta">move-security &middot; explain</span>
+        </td>
+      <td class="s">5 of 6</td>
+    </tr>
+    <tr>
+      <td class="q">I'm writing a lottery contract on Sui that uses onchain randomness. Here's my function signature: ```move public fun draw_winner(lottery: &amp;mut Lottery, rng: &amp;mut RandomGenerator, ctx: &amp;mut TxContext) { ... } ``` Is this safe?<span class="meta">move-security &middot; design</span>
+        </td>
+      <td class="s">1 of 6</td>
+    </tr>
+    <tr>
+      <td class="q">I have an AMM smart contract (see provided files). Write comprehensive unit tests for it. Cover pool creation, adding/removing liquidity, swaps, edge cases, and error conditions.<span class="meta">move-unit-testing &middot; build</span>
+        </td>
+      <td class="s">4 of 6</td>
+    </tr>
+    <tr>
+      <td class="q">I'm building a video game on Sui. I need a smart contract for player profiles as NFTs. Each player has a username, an XP counter, and a level. Players also need an inventory — use dynamic object fields so it can hold any arbitrary Sui objec<span class="meta">naming-conventions &middot; build</span>
+        </td>
+      <td class="s">4 of 5</td>
+    </tr>
+    <tr>
+      <td class="q">What are the different types of object ownership on Sui? When should I use a shared object vs an owned object?<span class="meta">object-model &middot; choose</span>
+        <a href="https://docs.sui.io/develop/objects/object-ownership/">docs.sui.io/develop/objects/object-ownership/</a> <a href="https://docs.sui.io/develop/sui-architecture/consensus">docs.sui.io/develop/sui-architecture/consensus</a></td>
+      <td class="s">6 of 7</td>
+    </tr>
+    <tr>
+      <td class="q">What is the difference between dynamic fields and dynamic object fields? When should I use each?<span class="meta">object-model &middot; choose</span>
+        <a href="https://docs.sui.io/develop/objects/dynamic-fields">docs.sui.io/develop/objects/dynamic-fields</a> <a href="https://move-book.com/programmability/dynamic-fields.html">move-book.com/programmability/dynamic-fields.html</a> <a href="https://move-book.com/programmability/dynamic-object-fields.html">move-book.com/programmability/dynamic-object-fields.html</a></td>
+      <td class="s">4 of 6</td>
+    </tr>
+    <tr>
+      <td class="q">My player NFT needs an inventory that can hold any arbitrary Sui object — Swords, Shields, Potions, anything. How should I model this?<span class="meta">object-model &middot; design</span>
+        <a href="https://docs.sui.io/develop/objects/dynamic-fields">docs.sui.io/develop/objects/dynamic-fields</a> <a href="https://move-book.com/programmability/collections.html">move-book.com/programmability/collections.html</a></td>
+      <td class="s">5 of 6</td>
+    </tr>
+    <tr>
+      <td class="q">How do I destroy an object in Sui Move? What if it doesn't have the drop ability?<span class="meta">object-model &middot; explain</span>
+        <a href="https://move-book.com/storage/uid-and-id.html">move-book.com/storage/uid-and-id.html</a> <a href="https://move-book.com/move-basics/struct.html">move-book.com/move-basics/struct.html</a></td>
+      <td class="s">5 of 6</td>
+    </tr>
+    <tr>
+      <td class="q">How does transfer work on Sui? What is the difference between transfer::transfer and transfer::public_transfer?<span class="meta">object-model &middot; choose</span>
+        <a href="https://docs.sui.io/develop/objects/transfers/custom-rules">docs.sui.io/develop/objects/transfers/custom-rules</a> <a href="https://move-book.com/storage/storage-functions">move-book.com/storage/storage-functions</a></td>
+      <td class="s">3 of 5</td>
+    </tr>
+    <tr>
+      <td class="q">I want to make an NFT that cannot be transferred by the holder. How do I make a soulbound object on Sui?<span class="meta">object-model &middot; design</span>
+        <a href="https://docs.sui.io/develop/objects/transfers/custom-rules">docs.sui.io/develop/objects/transfers/custom-rules</a> <a href="https://docs.sui.io/develop/objects/transfers/transfer-to-object">docs.sui.io/develop/objects/transfers/transfer-to-object</a></td>
+      <td class="s">4 of 5</td>
+    </tr>
+    <tr>
+      <td class="q">How does object versioning work on Sui? What happens to the version when I modify a shared object?<span class="meta">object-model &middot; explain</span>
+        <a href="https://docs.sui.io/develop/objects/versioning">docs.sui.io/develop/objects/versioning</a></td>
+      <td class="s">2 of 5</td>
+    </tr>
+    <tr>
+      <td class="q">What are wrapped objects on Sui? If I wrap an object that has a UID, can I still access it directly by its ID?<span class="meta">object-model &middot; explain</span>
+        <a href="https://docs.sui.io/develop/objects/object-ownership/">docs.sui.io/develop/objects/object-ownership/</a> <a href="https://docs.sui.io/develop/objects/versioning">docs.sui.io/develop/objects/versioning</a></td>
+      <td class="s">3 of 6</td>
+    </tr>
+    <tr>
+      <td class="q">How does parallel execution work on Sui? Why do owned objects skip consensus but shared objects don't?<span class="meta">object-model &middot; explain</span>
+        <a href="https://docs.sui.io/develop/sui-architecture/consensus">docs.sui.io/develop/sui-architecture/consensus</a> <a href="https://docs.sui.io/develop/objects/versioning">docs.sui.io/develop/objects/versioning</a></td>
+      <td class="s">2 of 5</td>
+    </tr>
+    <tr>
+      <td class="q">I wrote a public Move function that takes Random as a parameter for my lottery game. Why won't it compile, and how do I fix it?<span class="meta">onchain-randomness &middot; explain</span>
+        <a href="https://docs.sui.io/sui-stack/on-chain-primitives/randomness-onchain">docs.sui.io/sui-stack/on-chain-primitives/randomness-onchain</a></td>
+      <td class="s">4 of 6</td>
+    </tr>
+    <tr>
+      <td class="q">I need to implement a secure NFT airdrop where users receive a random rarity tier (gold, silver, or bronze). How should I structure this to prevent manipulation?<span class="meta">onchain-randomness &middot; build</span>
+        <a href="https://docs.sui.io/sui-stack/on-chain-primitives/randomness-onchain">docs.sui.io/sui-stack/on-chain-primitives/randomness-onchain</a></td>
+      <td class="s">4 of 6</td>
+    </tr>
+    <tr>
+      <td class="q">Using the Sui TypeScript SDK, write a function that transfers 100 MIST to the address 0xabc... from the connected wallet in a single transaction. Show me the code.<span class="meta">ptbs &middot; build</span>
+        <a href="https://docs.sui.io/develop/transactions/ptbs/building-ptb">docs.sui.io/develop/transactions/ptbs/building-ptb</a> <a href="https://sdk.mystenlabs.com/sui/transactions/basics">sdk.mystenlabs.com/sui/transactions/basics</a></td>
+      <td class="s">5 of 6</td>
+    </tr>
+    <tr>
+      <td class="q">How do Ethereum token standards (ERC-20, ERC-721, ERC-1155) map to Sui? What are the equivalents?<span class="meta">sui-for-ethereum &middot; explain</span>
+        <a href="https://docs.sui.io/getting-started/sui-for-ethereum">docs.sui.io/getting-started/sui-for-ethereum</a></td>
+      <td class="s">2 of 4</td>
+    </tr>
+    <tr>
+      <td class="q">How does transaction composability on Sui compare to Ethereum? On Ethereum I need multiple transactions for a multi-step workflow. What does Sui offer?<span class="meta">sui-for-ethereum &middot; choose</span>
+        <a href="https://docs.sui.io/getting-started/sui-for-ethereum">docs.sui.io/getting-started/sui-for-ethereum</a></td>
+      <td class="s">3 of 5</td>
+    </tr>
+    <tr>
+      <td class="q">How can I install Sui?<span class="meta">sui-install &middot; explain</span>
+        <a href="https://docs.sui.io/getting-started/onboarding/sui-install">docs.sui.io/getting-started/onboarding/sui-install</a></td>
+      <td class="s">7 of 8</td>
+    </tr>
+    <tr>
+      <td class="q">I get a 'client/server api version mismatch' warning when running sui client commands. Client is 1.62.0 and server is 1.70.2. How do I fix this?<span class="meta">sui-install &middot; explain</span>
+        <a href="https://docs.sui.io/getting-started/onboarding/sui-install">docs.sui.io/getting-started/onboarding/sui-install</a></td>
+      <td class="s">3 of 4</td>
+    </tr>
+    <tr>
+      <td class="q">Can you explain what the key, store, copy, and drop abilities do in Sui Move? When should I use each one?<span class="meta">sui-move &middot; choose</span>
+        <a href="https://move-book.com/move-basics/abilities-introduction.html">move-book.com/move-basics/abilities-introduction.html</a> <a href="https://docs.sui.io/concepts/sui-move-concepts">docs.sui.io/concepts/sui-move-concepts</a></td>
+      <td class="s">5 of 8</td>
+    </tr>
+    <tr>
+      <td class="q">How to get the current epoch in Sui Move using TxContext? What does ctx.epoch() return? What's the difference between ctx.epoch_timestamp_ms() and the Clock object?<span class="meta">sui-move &middot; choose</span>
+        <a href="https://docs.sui.io/sui-stack/on-chain-primitives/access-time">docs.sui.io/sui-stack/on-chain-primitives/access-time</a> <a href="https://move-book.com/programmability/epoch-and-time.html">move-book.com/programmability/epoch-and-time.html</a></td>
+      <td class="s">4 of 6</td>
+    </tr>
+    <tr>
+      <td class="q">What are Sui Move events and how do I emit events in smart contracts? How do I subscribe to them offchain?<span class="meta">sui-move &middot; explain</span>
+        <a href="https://docs.sui.io/develop/accessing-data/using-events">docs.sui.io/develop/accessing-data/using-events</a> <a href="https://move-book.com/programmability/events.html">move-book.com/programmability/events.html</a></td>
+      <td class="s">5 of 6</td>
+    </tr>
+    <tr>
+      <td class="q">How do I destroy an object in Sui Move that doesn't have the drop ability?<span class="meta">sui-move &middot; explain</span>
+        <a href="https://move-book.com/storage/uid-and-id.html">move-book.com/storage/uid-and-id.html</a> <a href="https://move-book.com/move-basics/struct.html">move-book.com/move-basics/struct.html</a> <a href="https://move-book.com/storage/storage-functions.html">move-book.com/storage/storage-functions.html</a></td>
+      <td class="s">4 of 6</td>
+    </tr>
+    <tr>
+      <td class="q">I get 'error[E13001]: feature is not supported in specified edition' when I use 'public struct'. How do I fix this?<span class="meta">sui-move-project &middot; explain</span>
+        <a href="https://move-book.com/guides/2024-migration-guide.html">move-book.com/guides/2024-migration-guide.html</a></td>
+      <td class="s">3 of 4</td>
+    </tr>
+    <tr>
+      <td class="q">What's the correct Move.toml format? I'm confused about [addresses] vs [environments] and Sui dependencies. I keep getting build errors.<span class="meta">sui-move-project &middot; choose</span>
+        <a href="https://docs.sui.io/develop/publish-upgrade-packages/">docs.sui.io/develop/publish-upgrade-packages/</a></td>
+      <td class="s">5 of 6</td>
+    </tr>
+    <tr>
+      <td class="q">I get 'Dependency Sui is a legacy system name and cannot be used' when I run sui move build. My Move.toml has Sui = { git = &quot;https://github.com/MystenLabs/sui.git&quot;, subdir = &quot;crates/sui-framework/packages/sui-framework&quot;, rev = &quot;framework/te<span class="meta">sui-move-project &middot; build</span>
+        <a href="https://docs.sui.io/guides/developer/sui-101/move-package-management">docs.sui.io/guides/developer/sui-101/move-package-management</a></td>
+      <td class="s">4 of 5</td>
+    </tr>
+    <tr>
+      <td class="q">How is gas cost calculated on Sui? What is the storage rebate?<span class="meta">sui-networks-gas &middot; explain</span>
+        <a href="https://docs.sui.io/concepts/tokenomics/gas-in-sui">docs.sui.io/concepts/tokenomics/gas-in-sui</a></td>
+      <td class="s">3 of 7</td>
+    </tr>
+    <tr>
+      <td class="q">What is the Sui Object Model and how do objects work on Sui?<span class="meta">sui-overview &middot; explain</span>
+        <a href="https://docs.sui.io/concepts/object-model">docs.sui.io/concepts/object-model</a> <a href="https://docs.sui.io/develop/objects/object-ownership">docs.sui.io/develop/objects/object-ownership</a></td>
+      <td class="s">5 of 7</td>
+    </tr>
+    <tr>
+      <td class="q">I'm coming from Ethereum. Explain how Sui's object model is different from Ethereum's account model. What do I need to unlearn?<span class="meta">sui-overview &middot; design</span>
+        <a href="https://docs.sui.io/concepts/object-model">docs.sui.io/concepts/object-model</a> <a href="https://docs.sui.io/concepts/sui-move-concepts">docs.sui.io/concepts/sui-move-concepts</a></td>
+      <td class="s">4 of 6</td>
+    </tr>
+    <tr>
+      <td class="q">I want to build an NFT collection where the artwork is hidden until purchase. Buyers should only be able to see the art after they own the NFT. Which Sui Stack components do I need?<span class="meta">sui-overview &middot; build</span>
+        <a href="https://docs.sui.io/sui-stack">docs.sui.io/sui-stack</a> <a href="https://docs.wal.app">docs.wal.app</a></td>
+      <td class="s">5 of 6</td>
+    </tr>
+    <tr>
+      <td class="q">How do I upgrade a published Move contract on Sui? What's the process?<span class="meta">sui-publish &middot; explain</span>
+        <a href="https://docs.sui.io/develop/publish-upgrade-packages/upgrade">docs.sui.io/develop/publish-upgrade-packages/upgrade</a></td>
+      <td class="s">4 of 6</td>
+    </tr>
+    <tr>
+      <td class="q">How do I start and use a local Sui network for development?<span class="meta">sui-publish &middot; explain</span>
+        <a href="https://docs.sui.io/getting-started/onboarding/">docs.sui.io/getting-started/onboarding/</a></td>
+      <td class="s">4 of 5</td>
+    </tr>
+    <tr>
+      <td class="q">I published my package and got objects back. How do I find the package ID and the objects created by init functions?<span class="meta">sui-publish &middot; explain</span>
+        <a href="https://docs.sui.io/getting-started/onboarding/hello-world">docs.sui.io/getting-started/onboarding/hello-world</a></td>
+      <td class="s">3 of 4</td>
+    </tr>
+    <tr>
+      <td class="q">I'm building a high-throughput indexer service that reads Sui transactions in near-real-time and writes them into a Postgres database. My team uses Go. What SDK should I use?<span class="meta">sui-sdks &middot; design</span>
+        <a href="https://docs.sui.io/references/sui-sdks">docs.sui.io/references/sui-sdks</a> <a href="https://github.com/MystenLabs/sui-rust-sdk">github.com/MystenLabs/sui-rust-sdk</a> <a href="https://github.com/block-vision/sui-go-sdk">github.com/block-vision/sui-go-sdk</a></td>
+      <td class="s">5 of 6</td>
+    </tr>
+    <tr>
+      <td class="q">I'm starting a new Node.js backend that submits transactions and queries state on Sui mainnet. Which TypeScript client class should I use and how do I instantiate it?<span class="meta">sui-sdks &middot; design</span>
+        <a href="https://sdk.mystenlabs.com/sui/clients">sdk.mystenlabs.com/sui/clients</a> <a href="https://sdk.mystenlabs.com/sui">sdk.mystenlabs.com/sui</a></td>
+      <td class="s">5 of 6</td>
+    </tr>
+    <tr>
+      <td class="q">Migrate this legacy TS code to the current @mysten/sui v2: ```ts import { SuiClient, getFullnodeUrl } from '@mysten/sui.js/client'; import { TransactionBlock } from '@mysten/sui.js/transactions'; const client = new SuiClient({ url: getFulln<span class="meta">sui-sdks &middot; explain</span>
+        <a href="https://sdk.mystenlabs.com/sui/migrations/sui-2.0/llms.txt">sdk.mystenlabs.com/sui/migrations/sui-2.0/llms.txt</a> <a href="https://sdk.mystenlabs.com/sui">sdk.mystenlabs.com/sui</a></td>
+      <td class="s">6 of 12</td>
+    </tr>
+    <tr>
+      <td class="q">I'm building a React frontend that lets users connect their wallet and submit a transaction. Should I use @mysten/sui, @mysten/dapp-kit-react, or both?<span class="meta">sui-sdks &middot; design</span>
+        <a href="https://sdk.mystenlabs.com/dapp-kit">sdk.mystenlabs.com/dapp-kit</a> <a href="https://sdk.mystenlabs.com/sui">sdk.mystenlabs.com/sui</a></td>
+      <td class="s">7 of 8</td>
+    </tr>
+    <tr>
+      <td class="q">I need to sponsor transactions for my users so they don't need SUI for gas. What's the recommended flow and what SDK should I use?<span class="meta">sui-ts-sdk-backend &middot; design</span>
+        <a href="https://sdk.mystenlabs.com/sponsor/basic-usage">sdk.mystenlabs.com/sponsor/basic-usage</a> <a href="https://sdk.mystenlabs.com/sponsor/best-practices">sdk.mystenlabs.com/sponsor/best-practices</a></td>
+      <td class="s">4 of 6</td>
+    </tr>
+    <tr>
+      <td class="q">I need to run hundreds of transactions from one address as fast as possible for an airdrop. How do I avoid gas management issues?<span class="meta">sui-ts-sdk-backend &middot; design</span>
+        <a href="https://sdk.mystenlabs.com/sui/executors">sdk.mystenlabs.com/sui/executors</a></td>
+      <td class="s">0 of 5</td>
+    </tr>
+    <tr>
+      <td class="q">For our production backend, we don't want to store raw private keys. What are our options for signing Sui transactions securely, and how do we set up a 2-of-3 multisig?<span class="meta">sui-ts-sdk-backend &middot; build</span>
+        <a href="https://sdk.mystenlabs.com/sui/cryptography/signers">sdk.mystenlabs.com/sui/cryptography/signers</a> <a href="https://sdk.mystenlabs.com/sui/cryptography/signers/multisig">sdk.mystenlabs.com/sui/cryptography/signers/multisig</a></td>
+      <td class="s">4 of 5</td>
+    </tr>
+    <tr>
+      <td class="q">A realistic prompt a user would give the agent<span class="meta">template &middot; explain</span>
+        <a href="link-to-docs.com (description of what to get from those docs)">link-to-docs.com (description of what to get from those docs)</a> <a href="docs.sui.io/references/framework/* (sui, std, bridge, system framework API reference)">docs.sui.io/references/framework/* (sui, std, bridge, system framework API reference)</a></td>
+      <td class="s">0 of 2</td>
+    </tr>
+    <tr>
+      <td class="q">A prompt that targets a common pitfall or edge case in this domain<span class="meta">template &middot; explain</span>
+        </td>
+      <td class="s">0 of 2</td>
+    </tr>
+    <tr>
+      <td class="q">How is a zkLogin address derived on Sui? Is it permanent, and what happens if I use a different OAuth provider or application?<span class="meta">zklogin &middot; explain</span>
+        <a href="https://docs.sui.io/concepts/cryptography/zklogin">docs.sui.io/concepts/cryptography/zklogin</a></td>
+      <td class="s">4 of 7</td>
+    </tr>
+    <tr>
+      <td class="q">What are the security implications if a user's JWT is leaked? What about if their salt is leaked? Can an attacker steal funds in either case?<span class="meta">zklogin &middot; explain</span>
+        <a href="https://docs.sui.io/concepts/cryptography/zklogin">docs.sui.io/concepts/cryptography/zklogin</a></td>
+      <td class="s">5 of 7</td>
+    </tr>
+  </tbody></table>
+</div></body></html>

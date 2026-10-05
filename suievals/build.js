@@ -413,17 +413,17 @@ function readCards(byId, incomplete, ciJudge) {
     // model again for a configuration that was retired for doing nothing.
     if (card.layer === "mcp-only" || card.layer === "with-skills-mcp") continue;
 
-    const submitted = card.source !== "ci";
-    const label = `${card.model}${card.skills === "none" ? "" : " +sui-skills"}`
-      + (submitted ? " (submitted)" : "");
     // A card has to cover the suite to be scored against it, the same way a run
     // from the reports does. Without this a card answering 8 of 158 questions
-    // ranked on the board at whatever it scored on those eight, and the first
-    // one through was a leftover test file that landed at 89%.
+    // ranked on the board at whatever it scored on those eight.
     const COVERAGE = 0.9;
     const suiteExpectations = [...byId.values()]
       .reduce((n, e) => n + (typeof e.expectations === "number" ? e.expectations : 0), 0);
     const covered = suiteExpectations ? total / suiteExpectations : 0;
+
+    const submitted = card.source !== "ci";
+    const label = `${card.model}${card.skills === "none" ? "" : " +sui-skills"}`
+      + (submitted ? " (submitted)" : "");
     if (!total || card.partial || covered < COVERAGE) {
       incomplete.push({ model: card.model, pass, total, of: card.evals.length,
         reason: card.partial ? "submitted as a partial run"
@@ -535,8 +535,77 @@ writeFileSync(join(OUT_DIR, "results", "index.json"), JSON.stringify(results, nu
 // written next to it and served from the same place.
 mkdirSync(join(OUT_DIR, "runs"), { recursive: true });
 const slug = (r) => r.name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+
+const esc = (v) => String(v ?? "").replace(/[&<>"]/g, (c) =>
+  ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+
+/**
+ * The record as a page, because the link said "every question and the grader's
+ * verdict" and opened a JSON file.
+ *
+ * Somebody following that link wants to read what the model got wrong, and
+ * handing them a serialised object asks them to parse it in their head. The
+ * JSON is still written beside this, for anything reading it by machine.
+ */
+function recordPage(r, missed, manifest, generated) {
+  const pct = (a, b) => (b ? Math.round((100 * a) / b) : 0);
+  const rows = missed.map((m) => `    <tr>
+      <td class="q">${esc(m.prompt ?? m.id)}<span class="meta">${esc(m.skill)}${m.kind ? ` &middot; ${esc(m.kind)}` : ""}</span>
+        ${(m.sources ?? []).map((u) => `<a href="${esc(u)}">${esc(String(u).replace(/^https?:\/\//, ""))}</a>`).join(" ")}</td>
+      <td class="s">${m.passed} of ${m.of}</td>
+    </tr>`).join("\n");
+  const pillars = Object.entries(r.pillars ?? {})
+    .filter(([, v]) => v && v.total)
+    .map(([k, v]) => `<li><b>${pct(v.pass, v.total)}%</b> ${esc(k)} <span>${v.pass} of ${v.total}</span></li>`)
+    .join("");
+  return `<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>${esc(r.name)} &middot; Sui Evals</title>
+<style>
+  :root { --bg:#05080f; --card:#0b1220; --line:#18243a; --ink:#e8eef8; --ink-2:#9fb0c9; --ink-3:#6b7f9c; --sui:#4da2ff; }
+  @media (prefers-color-scheme: light) { :root { --bg:#fff; --card:#f7f9fc; --line:#e3e9f2; --ink:#0b1220; --ink-2:#44536a; --ink-3:#6b7f9c; } }
+  body { margin:0; background:var(--bg); color:var(--ink); font:15px/1.6 ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif; }
+  .wrap { max-width:900px; margin:0 auto; padding:40px 20px 72px; }
+  a { color:var(--sui); }
+  h1 { font-size:26px; margin:0 0 6px; letter-spacing:-0.02em; }
+  .note { color:var(--ink-3); font-size:13px; margin:0 0 26px; }
+  ul.p { list-style:none; display:flex; flex-wrap:wrap; gap:10px; padding:0; margin:0 0 30px; }
+  ul.p li { background:var(--card); border:1px solid var(--line); border-radius:10px; padding:10px 14px; font-size:13px; color:var(--ink-2); }
+  ul.p b { color:var(--ink); font-size:17px; margin-right:6px; }
+  ul.p span { color:var(--ink-3); }
+  h2 { font-size:13px; text-transform:uppercase; letter-spacing:.12em; color:var(--ink-3); margin:0 0 10px; }
+  table { width:100%; border-collapse:collapse; }
+  td { border-top:1px solid var(--line); padding:12px 0; vertical-align:top; }
+  td.q { padding-right:20px; }
+  td.s { text-align:right; white-space:nowrap; color:var(--ink-2); font-variant-numeric:tabular-nums; }
+  .meta { display:block; color:var(--ink-3); font-size:12px; margin-top:3px; }
+  td.q a { font-size:12px; margin-right:10px; }
+</style></head><body><div class="wrap">
+  <h1>${esc(r.name)}</h1>
+  <p class="note">
+    ${esc(r.total.pass)} of ${esc(r.total.total)} expectations met${r.recordedAt ? `, recorded ${esc(String(r.recordedAt).slice(0, 10))}` : ""}.
+    Graded by ${esc(r.scoring ?? "judge")}${r.sampling?.k > 1 ? `, each question asked ${r.sampling.k} times` : ", each question asked once"}.
+    Eval set ${esc(manifest)}. <a href="../index.html">Back to the board</a> &middot;
+    <a href="${esc(slug(r))}.json">the same thing as JSON</a>
+  </p>
+  <ul class="p">${pillars}</ul>
+  <h2>${missed.length} question${missed.length === 1 ? "" : "s"} it did not answer in full</h2>
+  <table><tbody>
+${rows}
+  </tbody></table>
+</div></body></html>
+`;
+}
+
 for (const r of runs) {
-  r.record = `runs/${slug(r)}.json`;
+  r.record = `runs/${slug(r)}.html`;
+  const missedFull = r.missed.map((m) => {
+    const e = byId.get(m.id);
+    return { ...m, kind: e?.kind ?? null, prompt: e?.summary ?? null, sources: e?.sources ?? [] };
+  });
+  writeFileSync(join(OUT_DIR, "runs", `${slug(r)}.html`),
+    recordPage(r, missedFull, manifest, results.generated));
   writeFileSync(
     join(OUT_DIR, "runs", `${slug(r)}.json`),
     JSON.stringify({
@@ -545,10 +614,7 @@ for (const r of runs) {
       run: { ...r, record: undefined },
       // The questions this run did not answer in full, with their text, so the
       // file stands on its own rather than needing the catalogue beside it.
-      missed: r.missed.map((m) => {
-        const e = byId.get(m.id);
-        return { ...m, kind: e?.kind ?? null, prompt: e?.summary ?? null, sources: e?.sources ?? [] };
-      }),
+      missed: missedFull,
     }, null, 1) + "\n",
   );
 }

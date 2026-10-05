@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>claude-fable-5 +sui-skills &middot; Sui Evals</title>
+<style>
+  :root { --bg:#05080f; --card:#0b1220; --line:#18243a; --ink:#e8eef8; --ink-2:#9fb0c9; --ink-3:#6b7f9c; --sui:#4da2ff; }
+  @media (prefers-color-scheme: light) { :root { --bg:#fff; --card:#f7f9fc; --line:#e3e9f2; --ink:#0b1220; --ink-2:#44536a; --ink-3:#6b7f9c; } }
+  body { margin:0; background:var(--bg); color:var(--ink); font:15px/1.6 ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif; }
+  .wrap { max-width:900px; margin:0 auto; padding:40px 20px 72px; }
+  a { color:var(--sui); }
+  h1 { font-size:26px; margin:0 0 6px; letter-spacing:-0.02em; }
+  .note { color:var(--ink-3); font-size:13px; margin:0 0 26px; }
+  ul.p { list-style:none; display:flex; flex-wrap:wrap; gap:10px; padding:0; margin:0 0 30px; }
+  ul.p li { background:var(--card); border:1px solid var(--line); border-radius:10px; padding:10px 14px; font-size:13px; color:var(--ink-2); }
+  ul.p b { color:var(--ink); font-size:17px; margin-right:6px; }
+  ul.p span { color:var(--ink-3); }
+  h2 { font-size:13px; text-transform:uppercase; letter-spacing:.12em; color:var(--ink-3); margin:0 0 10px; }
+  table { width:100%; border-collapse:collapse; }
+  td { border-top:1px solid var(--line); padding:12px 0; vertical-align:top; }
+  td.q { padding-right:20px; }
+  td.s { text-align:right; white-space:nowrap; color:var(--ink-2); font-variant-numeric:tabular-nums; }
+  .meta { display:block; color:var(--ink-3); font-size:12px; margin-top:3px; }
+  td.q a { font-size:12px; margin-right:10px; }
+</style></head><body><div class="wrap">
+  <h1>claude-fable-5 +sui-skills</h1>
+  <p class="note">
+    874 of 896 expectations met, recorded 2026-10-04.
+    Graded by unknown, each question asked once.
+    Eval set 143c0d0525d3. <a href="../index.html">Back to the board</a> &middot;
+    <a href="claude-fable-5-sui-skills.json">the same thing as JSON</a>
+  </p>
+  <ul class="p"><li><b>99%</b> objects <span>172 of 174</span></li><li><b>98%</b> transactions <span>159 of 163</span></li><li><b>97%</b> building <span>450 of 463</span></li><li><b>97%</b> security <span>93 of 96</span></li></ul>
+  <h2>21 questions it did not answer in full</h2>
+  <table><tbody>
+    <tr>
+      <td class="q">I'm building a wallet UI that needs to show: a balance for each coin type, recent transactions (with effects), owned NFTs filtered by type, and a dashboard combining all three. Which API should I use and why?<span class="meta">accessing-data &middot; design</span>
+        <a href="https://docs.sui.io/concepts/data-access/data-serving">docs.sui.io/concepts/data-access/data-serving</a> <a href="https://docs.sui.io/concepts/data-access/graphql-rpc">docs.sui.io/concepts/data-access/graphql-rpc</a></td>
+      <td class="s">5 of 6</td>
+    </tr>
+    <tr>
+      <td class="q">I'm minting NFTs where each NFT has a 2 MB image. Where should I store the image?<span class="meta">accessing-data &middot; design</span>
+        <a href="https://docs.wal.app">docs.wal.app</a> <a href="https://docs.sui.io/concepts/data-access/data-serving">docs.sui.io/concepts/data-access/data-serving</a></td>
+      <td class="s">6 of 7</td>
+    </tr>
+    <tr>
+      <td class="q">I need to read the state of an object as it was 6 months ago. The object has been updated many times since. My gRPC call returns the current version — how do I get the historical version?<span class="meta">accessing-data &middot; design</span>
+        <a href="https://docs.sui.io/concepts/data-access/archival-store">docs.sui.io/concepts/data-access/archival-store</a> <a href="https://docs.sui.io/concepts/data-access/graphql-rpc">docs.sui.io/concepts/data-access/graphql-rpc</a></td>
+      <td class="s">5 of 6</td>
+    </tr>
+    <tr>
+      <td class="q">How does the risk ratio work in DeepBook Margin? What happens at each threshold?<span class="meta">deepbook-margin &middot; explain</span>
+        <a href="https://docs.sui.io/onchain-finance/deepbook/deepbook-margin/contract-information/risk-ratio">docs.sui.io/onchain-finance/deepbook/deepbook-margin/contract-information/risk-ratio</a> <a href="https://docs.sui.io/onchain-finance/deepbook/deepbook-margin">docs.sui.io/onchain-finance/deepbook/deepbook-margin</a></td>
+      <td class="s">4 of 5</td>
+    </tr>
+    <tr>
+      <td class="q">How do I open a leveraged long position on SUI/USDC using the DeepBook Margin SDK?<span class="meta">deepbook-margin &middot; explain</span>
+        <a href="https://docs.sui.io/onchain-finance/deepbook/deepbook-margin/leveraged-workflow">docs.sui.io/onchain-finance/deepbook/deepbook-margin/leveraged-workflow</a></td>
+      <td class="s">6 of 7</td>
+    </tr>
+    <tr>
+      <td class="q">How do I execute a swap in DeepBook V3 from Move code without a BalanceManager?<span class="meta">deepbook-move &middot; explain</span>
+        <a href="https://docs.sui.io/onchain-finance/deepbook/deepbookv3/contract-information/swaps">docs.sui.io/onchain-finance/deepbook/deepbookv3/contract-information/swaps</a> <a href="https://github.com/MystenLabs/deepbookv3/blob/main/packages/deepbook/sources/pool.move">github.com/MystenLabs/deepbookv3/blob/main/packages/deepbook/sources/pool.move</a></td>
+      <td class="s">4 of 5</td>
+    </tr>
+    <tr>
+      <td class="q">What are the oracle states in DeepBook Predict and how does settlement work?<span class="meta">deepbook-predict &middot; explain</span>
+        <a href="https://docs.sui.io/onchain-finance/deepbook/deepbook-predict/design">docs.sui.io/onchain-finance/deepbook/deepbook-predict/design</a></td>
+      <td class="s">5 of 6</td>
+    </tr>
+    <tr>
+      <td class="q">How does the vault and PLP liquidity model work in DeepBook Predict?<span class="meta">deepbook-predict &middot; explain</span>
+        <a href="https://docs.sui.io/onchain-finance/deepbook/deepbook-predict/design">docs.sui.io/onchain-finance/deepbook/deepbook-predict/design</a> <a href="https://docs.sui.io/onchain-finance/deepbook/deepbook-predict/tutorial">docs.sui.io/onchain-finance/deepbook/deepbook-predict/tutorial</a></td>
+      <td class="s">4 of 5</td>
+    </tr>
+    <tr>
+      <td class="q">What are the common mistakes when using the DeepBook SDK? My order keeps failing silently.<span class="meta">deepbook-sdk &middot; explain</span>
+        <a href="https://docs.sui.io/onchain-finance/deepbook/deepbookv3/spot-workflow">docs.sui.io/onchain-finance/deepbook/deepbookv3/spot-workflow</a> <a href="https://github.com/MystenLabs/deepbook-sandbox/blob/main/examples/sandbox/README.md">github.com/MystenLabs/deepbook-sandbox/blob/main/examples/sandbox/README.md</a></td>
+      <td class="s">4 of 5</td>
+    </tr>
+    <tr>
+      <td class="q">How do I build a permissioned Kiosk extension using the kiosk_extension module? What permissions are available?<span class="meta">kiosk &middot; build</span>
+        <a href="https://docs.sui.io/standards/kiosk">docs.sui.io/standards/kiosk</a></td>
+      <td class="s">4 of 5</td>
+    </tr>
+    <tr>
+      <td class="q">I have an AdminCap in my Move module that controls treasury operations. Right now it's held by a single address. What security improvements should I make? Also, what happens if the AdminCap is leaked or stolen?<span class="meta">move-security &middot; explain</span>
+        </td>
+      <td class="s">5 of 6</td>
+    </tr>
+    <tr>
+      <td class="q">What is the Sui Object Model and how do objects work on Sui?<span class="meta">object-model &middot; explain</span>
+        <a href="https://docs.sui.io/develop/sui-architecture/object-model">docs.sui.io/develop/sui-architecture/object-model</a> <a href="https://docs.sui.io/develop/objects/">docs.sui.io/develop/objects/</a></td>
+      <td class="s">5 of 6</td>
+    </tr>
+    <tr>
+      <td class="q">I wrote a public Move function that takes Random as a parameter for my lottery game. Why won't it compile, and how do I fix it?<span class="meta">onchain-randomness &middot; explain</span>
+        <a href="https://docs.sui.io/sui-stack/on-chain-primitives/randomness-onchain">docs.sui.io/sui-stack/on-chain-primitives/randomness-onchain</a></td>
+      <td class="s">5 of 6</td>
+    </tr>
+    <tr>
+      <td class="q">Using the Sui TypeScript SDK, write a function that transfers 100 MIST to the address 0xabc... from the connected wallet in a single transaction. Show me the code.<span class="meta">ptbs &middot; build</span>
+        <a href="https://docs.sui.io/develop/transactions/ptbs/building-ptb">docs.sui.io/develop/transactions/ptbs/building-ptb</a> <a href="https://sdk.mystenlabs.com/sui/transactions/basics">sdk.mystenlabs.com/sui/transactions/basics</a></td>
+      <td class="s">5 of 6</td>
+    </tr>
+    <tr>
+      <td class="q">How do Ethereum token standards (ERC-20, ERC-721, ERC-1155) map to Sui? What are the equivalents?<span class="meta">sui-for-ethereum &middot; explain</span>
+        <a href="https://docs.sui.io/getting-started/sui-for-ethereum">docs.sui.io/getting-started/sui-for-ethereum</a></td>
+      <td class="s">3 of 4</td>
+    </tr>
+    <tr>
+      <td class="q">What are Sui Move events and how do I emit events in smart contracts? How do I subscribe to them offchain?<span class="meta">sui-move &middot; explain</span>
+        <a href="https://docs.sui.io/develop/accessing-data/using-events">docs.sui.io/develop/accessing-data/using-events</a> <a href="https://move-book.com/programmability/events.html">move-book.com/programmability/events.html</a></td>
+      <td class="s">5 of 6</td>
+    </tr>
+    <tr>
+      <td class="q">What's the correct Move.toml format? I'm confused about [addresses] vs [environments] and Sui dependencies. I keep getting build errors.<span class="meta">sui-move-project &middot; choose</span>
+        <a href="https://docs.sui.io/develop/publish-upgrade-packages/">docs.sui.io/develop/publish-upgrade-packages/</a></td>
+      <td class="s">5 of 6</td>
+    </tr>
+    <tr>
+      <td class="q">I get 'Dependency Sui is a legacy system name and cannot be used' when I run sui move build. My Move.toml has Sui = { git = &quot;https://github.com/MystenLabs/sui.git&quot;, subdir = &quot;crates/sui-framework/packages/sui-framework&quot;, rev = &quot;framework/te<span class="meta">sui-move-project &middot; build</span>
+        <a href="https://docs.sui.io/guides/developer/sui-101/move-package-management">docs.sui.io/guides/developer/sui-101/move-package-management</a></td>
+      <td class="s">4 of 5</td>
+    </tr>
+    <tr>
+      <td class="q">Create a simple Move smart contract on Sui that implements a counter. Show me the complete Move.toml and the module file.<span class="meta">sui-move-project &middot; build</span>
+        <a href="https://docs.sui.io/develop/publish-upgrade-packages/">docs.sui.io/develop/publish-upgrade-packages/</a></td>
+      <td class="s">5 of 6</td>
+    </tr>
+    <tr>
+      <td class="q">I'm starting a new Node.js backend that submits transactions and queries state on Sui mainnet. Which TypeScript client class should I use and how do I instantiate it?<span class="meta">sui-sdks &middot; design</span>
+        <a href="https://sdk.mystenlabs.com/sui/clients">sdk.mystenlabs.com/sui/clients</a> <a href="https://sdk.mystenlabs.com/sui">sdk.mystenlabs.com/sui</a></td>
+      <td class="s">5 of 6</td>
+    </tr>
+    <tr>
+      <td class="q">A prompt that targets a common pitfall or edge case in this domain<span class="meta">template &middot; explain</span>
+        </td>
+      <td class="s">0 of 2</td>
+    </tr>
+  </tbody></table>
+</div></body></html>

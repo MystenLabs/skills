@@ -1,5 +1,5 @@
 {
- "generated": "2026-10-05T18:49:34.288Z",
+ "generated": "2026-10-05T19:25:50.459Z",
  "manifest": "143c0d0525d3",
  "runs": [
   {
@@ -990,7 +990,7 @@
      "of": 6
     }
    ],
-   "record": "runs/claude-fable-5.json"
+   "record": "runs/claude-fable-5.html"
   },
   {
    "name": "claude-fable-5 +sui-skills",
@@ -1175,7 +1175,7 @@
      "of": 2
     }
    ],
-   "record": "runs/claude-fable-5-sui-skills.json"
+   "record": "runs/claude-fable-5-sui-skills.html"
   },
   {
    "name": "claude-haiku-4-5-20251001",
@@ -2235,7 +2235,7 @@
      "of": 6
     }
    ],
-   "record": "runs/claude-haiku-4-5-20251001.json"
+   "record": "runs/claude-haiku-4-5-20251001.html"
   },
   {
    "name": "claude-haiku-4-5-20251001 +sui-skills",
@@ -2707,7 +2707,7 @@
      "of": 7
     }
    ],
-   "record": "runs/claude-haiku-4-5-20251001-sui-skills.json"
+   "record": "runs/claude-haiku-4-5-20251001-sui-skills.html"
   },
   {
    "name": "claude-opus-5",
@@ -3578,7 +3578,7 @@
      "of": 6
     }
    ],
-   "record": "runs/claude-opus-5.json"
+   "record": "runs/claude-opus-5.html"
   },
   {
    "name": "claude-opus-5 +sui-skills",
@@ -3721,7 +3721,7 @@
      "of": 2
     }
    ],
-   "record": "runs/claude-opus-5-sui-skills.json"
+   "record": "runs/claude-opus-5-sui-skills.html"
   },
   {
    "name": "claude-sonnet-5",
@@ -4760,7 +4760,7 @@
      "of": 6
     }
    ],
-   "record": "runs/claude-sonnet-5.json"
+   "record": "runs/claude-sonnet-5.html"
   },
   {
    "name": "claude-sonnet-5 +sui-skills",
@@ -4980,7 +4980,7 @@
      "of": 2
     }
    ],
-   "record": "runs/claude-sonnet-5-sui-skills.json"
+   "record": "runs/claude-sonnet-5-sui-skills.html"
   },
   {
    "name": "gpt-4.1 +sui-skills",
@@ -6110,7 +6110,7 @@
      "of": 6
     }
    ],
-   "record": "runs/gpt-4-1-sui-skills.json"
+   "record": "runs/gpt-4-1-sui-skills.html"
   },
   {
    "name": "gpt-4o +sui-skills",
@@ -7226,7 +7226,7 @@
      "of": 6
     }
    ],
-   "record": "runs/gpt-4o-sui-skills.json"
+   "record": "runs/gpt-4o-sui-skills.html"
   },
   {
    "name": "gpt-5.5 +sui-skills",
@@ -7747,7 +7747,7 @@
      "of": 7
     }
    ],
-   "record": "runs/gpt-5-5-sui-skills.json"
+   "record": "runs/gpt-5-5-sui-skills.html"
   },
   {
    "name": "gpt-5.6-luna +sui-skills",
@@ -8100,7 +8100,7 @@
      "of": 7
     }
    ],
-   "record": "runs/gpt-5-6-luna-sui-skills.json"
+   "record": "runs/gpt-5-6-luna-sui-skills.html"
   },
   {
    "name": "gpt-6-astra +sui-skills",
@@ -8670,7 +8670,7 @@
      "of": 7
     }
    ],
-   "record": "runs/gpt-6-astra-sui-skills.json"
+   "record": "runs/gpt-6-astra-sui-skills.html"
   },
   {
    "name": "o3-mini +sui-skills",
@@ -9674,7 +9674,7 @@
      "of": 7
     }
    ],
-   "record": "runs/o3-mini-sui-skills.json"
+   "record": "runs/o3-mini-sui-skills.html"
   },
   {
    "name": "o3 +sui-skills",
@@ -10454,7 +10454,7 @@
      "of": 7
     }
    ],
-   "record": "runs/o3-sui-skills.json"
+   "record": "runs/o3-sui-skills.html"
   },
   {
    "name": "o4-mini +sui-skills",
@@ -11269,7 +11269,7 @@
      "of": 7
     }
    ],
-   "record": "runs/o4-mini-sui-skills.json"
+   "record": "runs/o4-mini-sui-skills.html"
   }
  ],
  "incomplete": [
