@@ -141,9 +141,6 @@
   .mc-row.absent .mc-val, .mc-row.absent .mc-lab { color: var(--ink-3); }
   .mc-gain { font-size: 12px; color: var(--ink-2); border-top: 1px solid var(--line-soft); padding-top: 10px; }
   .mc-gain b { color: var(--sui); font-variant-numeric: tabular-nums; }
-  .mc-more { font-size: 11.5px; color: var(--ink-3); background: none; border: 0; padding: 0;
-    cursor: pointer; text-align: left; }
-  .mc-more:hover { color: var(--sui); }
   .mc-detail[hidden] { display: none; }
   @media (max-width: 420px) { .mc-row { grid-template-columns: 96px 1fr 40px; } }
   .board { width: 100%; border-collapse: collapse; font-size: 14px; }
@@ -480,7 +477,7 @@ function renderBoard(cat, res) {
   // nothing, so they are reported once in the findings rather than carried as
   // two permanent rows on every card.
   const ORDER = [
-    { id: 'with-skills', label: 'Sui skills', pc: 'var(--sui)' },
+    { id: 'with-skills', label: 'Sui Skills in context', pc: 'var(--sui)' },
     { id: 'baseline', label: 'no skills', pc: 'var(--ink-3)' },
   ];
   const LAYER_LABEL = Object.fromEntries(ORDER.map((l) => [l.id, l.label]));
@@ -561,20 +558,9 @@ function renderBoard(cat, res) {
           ? `<p class="mc-gain"><a href="${BASE}/${esc(run.record)}">Every question and the grader's verdict</a></p>`
           : '');
 
-    // Open by default. The per-area scores are the part that answers "is this
-    // model good at the thing I am building", which is a better question than
-    // the single number above it, and hiding them behind a click meant most
-    // readers never saw the one figure worth comparing.
-    const more = document.createElement('button');
-    more.className = 'mc-more';
-    more.type = 'button';
-    more.textContent = 'Hide the detail';
-    more.addEventListener('click', () => {
-      detail.hidden = !detail.hidden;
-      more.textContent = detail.hidden ? 'By area, and how repeatable it is' : 'Hide the detail';
-    });
-
-    card.appendChild(more);
+    // Always shown. The per-area scores answer "is this model good at the thing
+    // I am building", which is the better question, and a control whose only
+    // state is "shown" is a line of interface that does nothing.
     card.appendChild(detail);
     host.appendChild(card);
   });
