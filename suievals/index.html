@@ -480,7 +480,6 @@ function renderBoard(cat, res) {
     { id: 'with-skills', label: 'Sui Skills in context', pc: 'var(--sui)' },
     { id: 'baseline', label: 'no skills', pc: 'var(--ink-3)' },
   ];
-  const LAYER_LABEL = Object.fromEntries(ORDER.map((l) => [l.id, l.label]));
   const best = (layers) => {
     const w = layers['with-skills'] ?? layers['with-skills-mcp'];
     return w ? pctOf(w) : Math.max(...Object.values(layers).map(pctOf));
@@ -516,13 +515,6 @@ function renderBoard(cat, res) {
     const withSkills = layers['with-skills'] ?? layers['with-skills-mcp'];
     const base = layers['baseline'];
     const gain = withSkills && base ? pctOf(withSkills) - pctOf(base) : null;
-    // Reliability belongs to a run, not to a model. Taking "any layer that was
-    // sampled" put the no-skills run's repeatability under a headline showing
-    // the with-skills score: claude-opus-5 read "98%" and "right every time on
-    // 18%", which are two different configurations and look like one.
-    const sampledRun = (withSkills ?? Object.values(layers)[0])?.sampling?.k > 1
-      ? (withSkills ?? Object.values(layers)[0])
-      : Object.values(layers).find((r) => r.sampling && r.sampling.k > 1);
 
     card.innerHTML = `<div class="mc-top">
         <span class="mc-name">${esc(model)}</span>
@@ -545,31 +537,7 @@ function renderBoard(cat, res) {
       return `<div class="mc-row" style="--pc:${PC[p.id]}"><span class="mc-lab">${esc(p.name)}</span>`
         + `<div class="mc-track"><u style="width:${w}%"></u></div><span class="mc-val">${w}%</span></div>`;
     }).join('');
-    const s = sampledRun?.sampling;
-    const sameRun = sampledRun === run;
     detail.innerHTML = `<div class="mc-rows">${bars}</div>`
-      // One idea, not two rates side by side.
-      //
-      // This read "right every time on 12% of questions, right at least once on
-      // 22%", which asks a reader to hold two numbers and work out that the
-      // difference between them is the interesting part. The difference is the
-      // whole point: those are the questions the model sometimes gets right and
-      // sometimes does not, so asking it once tells you nothing about them.
-      + (s && typeof s.passPowK === 'number' && typeof s.passAtK === 'number'
-          ? (() => {
-              const always = Math.round(100 * s.passPowK);
-              const ever = Math.round(100 * s.passAtK);
-              const sometimes = Math.max(0, ever - always);
-              const whose = sameRun ? '' : ` in the ${esc(LAYER_LABEL[sampledRun.layer] ?? 'other')} run`;
-              return `<p class="mc-gain">Asked ${s.k} times${whose}, it got <b>${always}%</b> of the `
-                + `questions right on every attempt`
-                + (sometimes
-                    ? `, and another ${sometimes}% right only some of the time. Ask those once and it `
-                      + `is a coin toss.`
-                    : `, and never only some of the time.`)
-                + `</p>`;
-            })()
-          : '')
       + (run.record
           ? `<p class="mc-gain"><a href="${BASE}/${esc(run.record)}">Every question and the grader's verdict</a></p>`
           : '');
