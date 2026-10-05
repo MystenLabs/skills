@@ -1,0 +1,29 @@
+{
+  "suievals_card": 1,
+  "source": "ci",
+  "model": "gemini-3.8-flash",
+  "skills": "sui-skills",
+  "layer": "with-skills",
+  "grader": "judge",
+  "tools": [
+    "read",
+    "grep",
+    "ls"
+  ],
+  "samples": 1,
+  "empty_answers": 156,
+  "recorded_at": "2026-10-04T07:20:15.451Z",
+  "eval_set": null,
+  "evals": [
+    {
+      "id": "composable-move-functions/composable-amm",
+      "pass": 0,
+      "of": 4
+    },
+    {
+      "id": "deepbook-margin/4",
+      "pass": 6,
+      "of": 6
+    }
+  ]
+}

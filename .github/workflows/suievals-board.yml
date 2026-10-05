@@ -1,0 +1,55 @@
+name: "Sui Evals board"
+
+# The page is rebuilt here, from data in this repository.
+#
+# It used to be built in a private repository from eval reports that only existed
+# there, which made the board something people could read but not reproduce. The
+# suite, the page, the build and the published cards are all here now: a card is
+# the publishable part of a run, and the board is a function of the cards plus
+# the skills they were scored against.
+on:
+  push:
+    branches: [main]
+    paths:
+      - "suievals/**"
+      - "*/evals/evals.json"
+      - ".github/workflows/suievals-board.yml"
+  pull_request:
+    paths:
+      - "suievals/**"
+      - "*/evals/evals.json"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Rebuild the board
+        run: node suievals/build.js --skills . --out suievals
+
+      - name: Check it
+        run: |
+          node suievals/tests/build.test.js
+          node suievals/tests/kind.test.js
+          node suievals/tests/page.test.mjs
+
+      # A pull request proves the build runs and the page renders; it must not
+      # commit, because the branch it would commit to is not this one.
+      - name: Commit the rebuilt board
+        if: github.event_name != 'pull_request'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add suievals/evals/index.json suievals/results/index.json
+          git diff --staged --quiet || {
+            git commit -m "suievals: rebuild the board"
+            git push
+          }

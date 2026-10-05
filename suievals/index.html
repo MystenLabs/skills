@@ -1,0 +1,781 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sui Evals: how much does your AI know about Sui?</title>
+<meta name="description" content="An open scoreboard for how well AI models understand Sui, and how much the Sui skills add. 158 evals across objects, transactions, building and security. Evals live in MystenLabs/skills.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><path d='M16 3C11 10 7 14 7 19a9 9 0 0 0 18 0c0-5-4-9-9-16z' fill='%234da2ff'/></svg>">
+<style>
+  /* Sui identity for the page; the validated categorical steps for the data.
+     Brand blue is chrome (wordmark, links, focus) and never a series colour. */
+  :root {
+    color-scheme: dark;
+    --ocean-900: #04111e;
+    --ocean-850: #071a2b;
+    --ocean-800: #0b2338;
+    --ocean-700: #1a3a56;
+    --line: #17324a;
+    --line-soft: #102639;
+    --ink: #eaf2fb;
+    --ink-2: #9fb4c9;
+    --ink-3: #6b8299;
+    --sui: #4da2ff;
+    --sui-deep: #0d7bd4;
+    /* categorical slots, dark steps, validated: see the commit message */
+    --s1: #3987e5;  /* objects */
+    --s2: #d95926;  /* transactions */
+    --s3: #199e70;  /* building */
+    --s4: #9085e9;  /* security */
+    --good: #199e70;
+  }
+  :root[data-theme="light"] {
+    color-scheme: light;
+    --ocean-900: #f7fbff; --ocean-850: #ffffff; --ocean-800: #eef5fc;
+    --line: #cddeef; --line-soft: #e3eefa;
+    --ink: #08131f; --ink-2: #47607a; --ink-3: #6b8299;
+    --sui: #0d7bd4; --sui-deep: #0a5fa3;
+    --s1: #2a78d6; --s2: #eb6834; --s3: #1baf7a; --s4: #4a3aa7;
+    --good: #1baf7a;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0; background: var(--ocean-900); color: var(--ink);
+    font: 15px/1.65 ui-sans-serif, -apple-system, "Segoe UI", system-ui, sans-serif;
+    /* A single soft light source, top-left, echoing the droplet mark. */
+    background-image: radial-gradient(90rem 40rem at -10% -10%, #0a2f4d55, transparent 60%);
+  }
+  /* Full bleed. The page ran at 1080px with prose capped at 66ch inside it, so on
+     any normal display the content hugged the left third and the right half was
+     empty. Width now comes from the viewport, and the long-form sections below use
+     columns to keep a readable measure without leaving a gutter. */
+  .wrap { max-width: 1680px; margin: 0 auto; padding: 0 clamp(20px, 3.5vw, 56px) 110px; }
+
+  /* ── masthead ── */
+  header { display: flex; align-items: center; gap: 12px; padding: 34px 0 0; }
+  .drop { width: 30px; height: 30px; flex: none; }
+  .word { font-size: 19px; font-weight: 680; letter-spacing: -0.015em; }
+  .word b { color: var(--sui); font-weight: 680; }
+  .spacer { flex: 1; }
+  .theme-btn {
+    background: transparent; border: 1px solid var(--line); color: var(--ink-2);
+    border-radius: 8px; padding: 5px 11px; font-size: 12px; cursor: pointer; font-family: inherit;
+  }
+  .theme-btn:hover { color: var(--ink); border-color: var(--sui); }
+
+  h1 { font-size: clamp(30px, 3.6vw, 50px); line-height: 1.08; letter-spacing: -0.03em; margin: 0 0 16px; max-width: 18ch; }
+  h1 em { font-style: normal; color: var(--sui); }
+  h2 { font-size: 13px; text-transform: uppercase; letter-spacing: .13em; color: var(--ink-3); margin: 58px 0 14px; font-weight: 650; }
+  /* The first section follows the hero, which already has its own bottom
+     padding; 58px on top of that left a band of empty page between the two. */
+  .hero + h2 { margin-top: clamp(26px, 3vw, 38px); }
+  .note { color: var(--ink-3); font-size: 13px; }
+  .prose { color: var(--ink-2); max-width: 74ch; }
+
+  /* The first screen. A reader who has to scroll before seeing a number has been
+     asked to take the premise on trust; the headline figures sit beside the title
+     instead of three sections below it. */
+  /* Two columns again, but with content in both.
+     The figures that used to fill the right side were removed for saying
+     nothing, and one column left the headline down the left of a 1680px page
+     with the other half empty. Prose cannot fill that width without becoming
+     unreadable, so the right side carries the thing a reader can act on: the
+     prompt that runs the suite on their own agent. */
+  .sub { color: var(--ink-2); max-width: 46ch; font-size: 15.5px; line-height: 1.55; margin: 16px 0 0; }
+  .hero { display: grid; grid-template-columns: minmax(0, 0.82fr) minmax(0, 1.18fr);
+          gap: clamp(28px, 4vw, 64px); align-items: start;
+          padding: clamp(32px, 4vw, 52px) 0 clamp(18px, 2.5vw, 30px); }
+  .hero-run { background: var(--ocean-850); border: 1px solid var(--line-soft);
+              border-radius: 12px; padding: 18px 20px 16px; }
+  .hr-head { margin: 0 0 10px; font-size: 12px; text-transform: uppercase;
+             letter-spacing: .1em; color: var(--ink-3); font-weight: 650; }
+  .hero .cmd { margin-top: 0; font-size: 13px; line-height: 1.6; padding: 14px 16px; }
+  @media (max-width: 900px) { .hero { grid-template-columns: 1fr; gap: 26px; } }
+  .run-row { display: flex; align-items: center; gap: 14px; margin-top: 12px; }
+  .run-row .copy { margin-top: 0; flex: none; padding: 7px 16px; }
+  .run-row .note { line-height: 1.55; }
+  .cols .prose { max-width: none; }
+  @media (max-width: 1000px) { .cols { columns: 1; } }
+  .side { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(24px, 3vw, 56px); align-items: start; }
+  @media (max-width: 1000px) { .side { grid-template-columns: 1fr; } }
+  /* ── four configurations per model, grouped ── */
+  .layers { width: 100%; height: auto; display: block; margin-top: 12px; }
+  .layers .mdl { fill: var(--ink); font-size: 12.5px; font-weight: 650; }
+  .layers .lyr { fill: var(--ink-2); font-size: 11.5px; }
+  .layers .val { fill: var(--ink); font-size: 11.5px; font-weight: 620; font-variant-numeric: tabular-nums; }
+  /* A configuration nobody has run says so, rather than drawing a bar of zero. */
+  .layers .gap { fill: var(--ink-3); font-size: 11px; font-style: italic; }
+  .layers g:hover rect:last-of-type { opacity: .85; }
+
+
+  .prose + .prose { margin-top: 12px; }
+  .prose strong { color: var(--ink); font-weight: 620; }
+  a { color: var(--sui); text-decoration-thickness: 1px; text-underline-offset: 2px; }
+  code { background: var(--ocean-800); border-radius: 4px; padding: 1.5px 5px; font-size: 13px; }
+
+  /* ── leaderboard table ── */
+  /* One card per model, its configurations stacked inside it.
+     A single ranked list put a model's four runs wherever their scores fell, so
+     the comparison the board exists for had to be reassembled by the reader. */
+  .rules { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); }
+  .rule { background: var(--ocean-850); border: 1px solid var(--line-soft); border-radius: 12px;
+          padding: 15px 17px 14px; }
+  .rule h3 { margin: 0 0 7px; font-size: 13.5px; font-weight: 650; color: var(--ink); letter-spacing: -0.01em; }
+  .rule p { margin: 0; font-size: 13px; line-height: 1.6; color: var(--ink-2); }
+  .cards { display: grid; gap: 14px; grid-template-columns: repeat(auto-fill, minmax(330px, 1fr)); }
+  .mcard { background: var(--ocean-850); border: 1px solid var(--line-soft); border-radius: 12px;
+    padding: 16px 18px 14px; display: flex; flex-direction: column; gap: 12px; }
+  .mcard.lead { border-color: var(--sui); }
+  .mc-top { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
+  .mc-name { font-size: 15px; font-weight: 650; color: var(--ink); letter-spacing: -0.01em; }
+  .mc-best { font-size: 26px; font-weight: 700; color: var(--ink); font-variant-numeric: tabular-nums;
+    line-height: 1; letter-spacing: -0.03em; }
+  .mc-best i { font-style: normal; font-size: 13px; color: var(--ink-3); margin-left: 3px; }
+  .mc-rows { display: flex; flex-direction: column; gap: 7px; }
+  .mc-row { display: grid; grid-template-columns: 112px 1fr 44px; align-items: center; gap: 10px; }
+  .mc-lab { font-size: 11.5px; color: var(--ink-2); line-height: 1.25; }
+  .mc-track { height: 8px; border-radius: 4px; background: var(--ocean-800); overflow: hidden; }
+  .mc-track u { display: block; height: 100%; border-radius: 4px; background: var(--pc, var(--ink-3)); }
+  .mc-val { font-size: 12.5px; font-variant-numeric: tabular-nums; text-align: right; color: var(--ink); }
+  .mc-row.absent .mc-val, .mc-row.absent .mc-lab { color: var(--ink-3); }
+  .mc-gain { font-size: 12px; color: var(--ink-2); border-top: 1px solid var(--line-soft); padding-top: 10px; }
+  .mc-gain b { color: var(--sui); font-variant-numeric: tabular-nums; }
+  .mc-more { font-size: 11.5px; color: var(--ink-3); background: none; border: 0; padding: 0;
+    cursor: pointer; text-align: left; }
+  .mc-more:hover { color: var(--sui); }
+  .mc-detail[hidden] { display: none; }
+  @media (max-width: 420px) { .mc-row { grid-template-columns: 96px 1fr 40px; } }
+  .board { width: 100%; border-collapse: collapse; font-size: 14px; }
+  .board thead th {
+    text-align: left; font-size: 11px; text-transform: uppercase; letter-spacing: .09em;
+    color: var(--ink-3); font-weight: 600; padding: 0 10px 9px; border-bottom: 1px solid var(--line);
+  }
+  .board thead th.num, .board td.num { text-align: right; font-variant-numeric: tabular-nums; }
+  .board tbody tr { border-bottom: 1px solid var(--line-soft); }
+  .board tbody tr.open { background: var(--ocean-850); }
+  .board td { padding: 11px 10px; vertical-align: middle; }
+  .who { display: flex; align-items: center; gap: 9px; flex-wrap: wrap; }
+  .pill { font-size: 10.5px; border-radius: 100px; padding: 2px 8px; border: 1px solid var(--line); color: var(--ink-3); }
+  .pill.on { background: color-mix(in srgb, var(--sui) 16%, transparent); border-color: color-mix(in srgb, var(--sui) 45%, transparent); color: var(--sui); }
+  .board td.plot { width: 42%; padding-right: 26px; }
+  tr.baseline .track u { background: var(--ink-3); }
+  @media (max-width: 900px) { .board td.plot, .board th.plot { display: none; } }
+  .score { font-size: 17px; font-weight: 700; font-variant-numeric: tabular-nums; letter-spacing: -0.02em; }
+  .of { color: var(--ink-3); font-size: 12px; font-weight: 400; }
+  tr.detail td { padding: 0 10px 16px; }
+  /* The old .bars capped the drawer at 460px and its .bar-row/.bar partners are
+     gone with the markup they styled. The cap is why four area figures rendered
+     two-across in a third of a full-width row. */
+  /* The drawer is the full width of the board, and this used a quarter of it as a
+     flat list. Each area is a figure now and each weak skill is a small card with
+     its own bar, so the numbers a reader opened the row to see are the largest
+     thing in it rather than the smallest. */
+  .d-head { font-size: 11px; text-transform: uppercase; letter-spacing: .1em; color: var(--ink-3);
+            font-weight: 650; margin: 0 0 10px; }
+  .detail-in .d-head + .bars + .d-head { margin-top: 26px; }
+
+  .bars { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 1px;
+          background: var(--line-soft); border: 1px solid var(--line-soft); border-radius: 10px;
+          overflow: hidden; }
+  .missed-list .m-bar { display: block; height: 3px; border-radius: 2px; background: var(--ocean-800);
+                        overflow: hidden; margin-bottom: 9px; }
+  .missed-list .m-bar u { display: block; height: 100%; background: var(--pc); border-radius: 2px; }
+  .missed-list .m-top { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; }
+  .missed-list .m-skill { font-weight: 600; color: var(--ink); white-space: nowrap;
+                          overflow: hidden; text-overflow: ellipsis; }
+  .missed-list .m-pct { font-weight: 700; color: var(--ink); font-variant-numeric: tabular-nums; flex: none; }
+  .missed-list .m-stat { display: flex; align-items: center; flex-wrap: nowrap; gap: 5px;
+                         margin-top: 7px; color: var(--ink-3); white-space: nowrap;
+                         overflow: hidden; }
+  pre.cmd {
+    background: var(--ocean-900); border: 1px solid var(--line-soft); border-radius: 8px;
+    padding: 11px 13px; font-size: 12.5px; margin: 10px 0 0; color: var(--ink);
+    /* Wrapped, not scrolled. This is a prompt someone is meant to read before
+       copying it, and a horizontal scrollbar hid the half that says what it does. */
+    white-space: pre-wrap; overflow-wrap: anywhere;
+  }
+  .copy {
+    margin-top: 9px; background: transparent; border: 1px solid var(--line); color: var(--ink-2);
+    border-radius: 7px; padding: 5px 12px; font-size: 12px; cursor: pointer; font-family: inherit;
+  }
+  .copy:hover { color: var(--sui); border-color: var(--sui); }
+
+  #catalog { columns: 2; column-gap: 20px; }
+  #catalog > details { break-inside: avoid; }
+  details.cat[open] { column-span: all; }
+  @media (max-width: 900px) { #catalog { columns: 1; } }
+  details.cat { background: var(--ocean-850); border: 1px solid var(--line-soft); border-radius: 10px; padding: 13px 16px; margin-bottom: 9px; }
+  details.cat summary { cursor: pointer; font-weight: 620; font-size: 14px; }
+  details.cat summary i { display: inline-block; width: 9px; height: 9px; border-radius: 3px; background: var(--pc); margin-right: 9px; }
+  .ev { padding: 8px 0 8px 18px; border-top: 1px solid var(--line-soft); font-size: 13px; }
+  .ev-s { color: var(--ink-3); font-size: 11px; margin-left: 7px; }
+  .ev-d { display: block; color: var(--ink-2); margin-top: 2px; }
+  /* The ask, not the topic: a skill failed on recall is a different problem from
+     one failed on code. Not ETHEVALS' quiz/goal -- a goal there is a build task
+     with a verified end state, and nothing here is run. */
+  .kind {
+    display: inline-block; font-size: 9.5px; font-weight: 700; letter-spacing: .08em;
+    text-transform: uppercase; color: var(--ink-2); background: var(--ocean-800);
+    border: 1px solid var(--line); border-radius: 4px; padding: 2px 6px; margin-right: 7px;
+    vertical-align: 1px;
+  }
+  .missed-list .kind { margin: 0; }
+
+  table.plain { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 10px; }
+  table.plain th, table.plain td { text-align: left; padding: 6px 10px; border-bottom: 1px solid var(--line-soft); }
+  table.plain th { color: var(--ink-3); font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: .08em; }
+  table.plain td.num { text-align: right; font-variant-numeric: tabular-nums; }
+
+  footer { color: var(--ink-3); font-size: 13px; margin-top: 76px; border-top: 1px solid var(--line-soft); padding-top: 22px; }
+  .err { color: var(--s2); font-size: 13px; }
+  @media (max-width: 720px) {
+    .missed-list { columns: 1; }
+    .board td, .board thead th { padding-left: 6px; padding-right: 6px; }
+  }
+.tk .n { border:1px solid var(--line); border-radius:12px; padding:14px 16px; background:var(--card); }
+.tk .n b { display:block; font-size:30px; line-height:1.1; letter-spacing:-.02em; color:var(--ink); }
+.tk .n span { display:block; margin-top:6px; font-size:12.5px; color:var(--ink-2); line-height:1.45; }
+.ch .lbl { font:500 11px ui-sans-serif,system-ui,sans-serif; fill:var(--ink-2); }
+.ch .val { font:600 11.5px ui-sans-serif,system-ui,sans-serif; fill:var(--ink); }
+.ch rect.sv { rx:3; }
+.ch rect.sv:hover { opacity:.82; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <svg class="drop" viewBox="0 0 32 32" aria-hidden="true">
+    <defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#7cc0ff"/><stop offset="1" stop-color="#0d7bd4"/>
+    </linearGradient></defs>
+    <path d="M16 2.5C10.8 9.9 6.6 14.2 6.6 19.3a9.4 9.4 0 0 0 18.8 0c0-5.1-4.2-9.4-9.4-16.8z" fill="url(#g)"/>
+    <path d="M16 8.4c-3 4.3-5.2 6.8-5.2 9.8a5.2 5.2 0 0 0 10.4 0c0-3-2.2-5.5-5.2-9.8z" fill="#04111e" opacity=".32"/>
+  </svg>
+  <span class="word">Sui <b>Evals</b></span>
+  <span class="spacer"></span>
+  <button class="theme-btn" id="theme" type="button">Light</button>
+</header>
+
+<div class="hero">
+  <div>
+    <h1>How much does your AI actually know about <em>Sui</em>?</h1>
+    <p class="sub">
+      Sui Evals test AI models on 158 real Sui developer questions across objects, transactions,
+      building, and security, with and without Sui skills loaded.
+    </p>
+    <p class="note" id="manifest" style="margin-top:18px"></p>
+  </div>
+  <div class="hero-run">
+    <p class="hr-head">Get the skills</p>
+    <pre class="cmd" id="install"></pre>
+    <div class="run-row">
+      <button class="copy" data-for="install" type="button">Copy</button>
+      <span class="note" id="install-note"></span>
+    </div>
+
+    <p class="hr-head" style="margin-top:22px">Run it on your own agent</p>
+    <pre class="cmd" id="p1">Clone https://github.com/MystenLabs/skills, then read
+suievals/RUN.md in that repo and run the full suite on yourself.
+Report a score per pillar and list the evals you missed.</pre>
+    <div class="run-row">
+      <button class="copy" data-for="p1" type="button">Copy</button>
+      <span class="note">
+        Run it twice, bare and with the skills loaded, then submit both to
+        <a href="https://github.com/MystenLabs/skills">MystenLabs/skills</a>.
+      </span>
+    </div>
+  </div>
+</div>
+
+
+<h2>How each model scores</h2>
+<p class="note" id="board-note">Loading&hellip;</p>
+<div class="cards" id="board" hidden></div>
+<p class="note" id="excluded" style="margin-top:12px"></p>
+
+<h2>How this is scored</h2>
+<p class="prose">
+  Two things surprise people most: expectations are counted one by one rather than per question,
+  and a score is the mean of four areas rather than a pooled total.
+</p>
+<div class="rules">
+  <div class="rule">
+    <h3>The questions are real</h3>
+    <p>
+      Every prompt is one a developer would type. &ldquo;How do flash loans work in DeepBook V3?
+      Can I borrow and trade in the same pool?&rdquo; rather than a puzzle with a one-token answer.
+      Answers come back as prose and code, the length and shape of a real reply.
+    </p>
+  </div>
+  <div class="rule">
+    <h3>Graded on specifics</h3>
+    <p>
+      Each question carries written expectations: the import to use, the call to make, the mistake
+      to avoid. One naming something exact, like a function or a documented limit, is matched
+      literally and never reaches a judge. The rest are prose, so a separate model reads them.
+    </p>
+  </div>
+  <div class="rule">
+    <h3>Expectations count, not questions</h3>
+    <p>
+      Requiring all six of a question&rsquo;s expectations put four models at 0 of 158 and said
+      nothing about which came closer. Counting them separately spreads the same models from
+      13% to 62%.
+    </p>
+  </div>
+  <div class="rule">
+    <h3>Four areas, equally weighted</h3>
+    <p>
+      Objects, transactions, building and security, averaged. Pooling would let building decide
+      the number on its own, because it holds half the suite, and a weak showing on security
+      would vanish into it.
+    </p>
+  </div>
+  <div class="rule">
+    <h3>Asked more than once</h3>
+    <p>
+      One answer is a sample, not a census. A run reports how far its own score moves across
+      identical attempts, and a difference smaller than that is not a difference.
+    </p>
+  </div>
+  <div class="rule">
+    <h3>Every expectation cites a page</h3>
+    <p>
+      If nobody can point at documentation for it, it is asking about Sui trivia rather than
+      about whether Sui is documented, and it gets rewritten or removed.
+    </p>
+  </div>
+</div>
+
+<h2>The evals</h2>
+<p class="note" id="eval-count"></p>
+<p class="note" id="kind-key" style="margin-top:8px"></p>
+<div id="catalog"></div>
+
+<footer>
+  <p>
+    Evals and results live in <a href="https://github.com/MystenLabs/skills">MystenLabs/skills</a>.
+    Add an eval, submit a card, or argue with an expectation there.
+  </p>
+  <p>Built by the Sui Builder Education team. The format owes a debt to <a href="https://ethevals.com/">ETHEVALS</a>.</p>
+</footer>
+
+</div>
+<script>
+const PC = { objects: 'var(--s1)', transactions: 'var(--s2)', building: 'var(--s3)', security: 'var(--s4)' };
+const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
+// Absolute, so the page works at /suievals and /suievals/ alike. A relative
+// path under the bare form resolves to /evals/index.json and the app shell
+// answers with HTML, which is what "Unexpected token '<'" was.
+const BASE = '/suievals';
+async function load(path) {
+  const url = `${BASE}/${path}`;
+  const r = await fetch(url, { cache: 'no-cache' });
+  const body = await r.text();
+  if (!r.ok) throw new Error(`${url} returned ${r.status}`);
+  try { return JSON.parse(body); }
+  catch {
+    // Distinguish a wrong path or a login wall from malformed data: both come
+    // back as HTML, and "invalid JSON" alone sends you looking in the wrong place.
+    const looksHtml = body.trimStart().startsWith('<');
+    throw new Error(looksHtml
+      ? `${url} served HTML, not JSON. The file is not being served at that path (a sign-in wall does this too)`
+      : `${url} is not valid JSON`);
+  }
+}
+
+// A board without dates invites comparing a run from three weeks ago with one
+// from this morning as if they were the same measurement.
+function runDate(iso) {
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return '';
+  return d.toISOString().slice(0, 10);
+}
+
+/**
+ * A run's score: the mean of its four area scores, not its pooled pass rate.
+ *
+ * Pooling lets the biggest pillar decide the number. Building holds 82 of the 158
+ * evals and Security 16, so a model strong at shipping and weak at security scored
+ * well, and the suite said the opposite of what it means to say. Averaging the
+ * pillars makes each worth a quarter however many evals it holds.
+ *
+ * The cost is worth stating plainly: a Security eval is now worth about five
+ * Building evals, so the thin pillars move the total more. That is the point --
+ * the alternative is a score that quietly ignores them.
+ */
+const PILLAR_KEYS = ['objects', 'transactions', 'building', 'security'];
+function scoreOf(r) {
+  const rates = PILLAR_KEYS
+    .map((k) => r.pillars && r.pillars[k])
+    .filter((p) => p && p.total)
+    .map((p) => p.pass / p.total);
+  if (!rates.length) return r.total && r.total.total ? r.total.pass / r.total.total : 0;
+  return rates.reduce((a, b) => a + b, 0) / rates.length;
+}
+const pctOf = (r) => Math.round(100 * scoreOf(r));
+
+/**
+ * Keep one grading regime on the page.
+ *
+ * A run graded by a reader and a run graded by term matching are not the same
+ * measurement, and the reader is stricter. Shown side by side, a judge-scored run
+ * reads as a model being bad at Sui when it was only marked by a different hand.
+ * The majority regime is shown and the rest are named below the board.
+ */
+function sameRegime(res) {
+  const runs = (res.runs || []).filter((r) => r.total && r.total.total);
+  if (runs.length < 2) return { ...res, runs, heldBack: [], regime: runs[0]?.scoring || 'unknown' };
+  const regimeOf = (r) => r.scoring || 'unknown';
+  const counts = runs.reduce((m, r) => (m[regimeOf(r)] = (m[regimeOf(r)] || 0) + 1, m), {});
+  const regime = Object.keys(counts).sort((a, b) => counts[b] - counts[a])[0];
+  return {
+    ...res,
+    runs: runs.filter((r) => regimeOf(r) === regime),
+    heldBack: runs.filter((r) => regimeOf(r) !== regime),
+    regime,
+  };
+}
+
+/** Eval id -> what kind of question it is, from the catalogue. */
+let KIND_OF = new Map();
+const kindOf = (id) => KIND_OF.get(id) ?? null;
+
+function renderBoard(cat, res) {
+  KIND_OF = new Map(cat.evals.map((e) => [e.id, e.kind]));
+  const note = document.getElementById('board-note');
+  const host = document.getElementById('board');
+  const all = (res.runs || []).filter((r) => r.total && r.total.total);
+
+  if (!all.length) {
+    note.textContent = 'No runs recorded yet. Run the suite and open a pull request with the card.';
+    return;
+  }
+
+  // One card per model, every configuration it has been run in inside that card.
+  // A ranked list of runs put claude-haiku-4-5 with the skills six rows above
+  // claude-haiku-4-5 without them, so the comparison this board exists for was
+  // something a reader had to assemble. Side by side, it is just there.
+  // withSkills is the authority on whether the skills were loaded; the layer
+  // name is a label beside it. When the two disagree the label is stale, and
+  // believing it lets a run key itself into another configuration's slot and
+  // overwrite a real result -- which looks like a model's score changing for no
+  // reason, with the card showing a number that belongs to a different run.
+  const SKILLS_LAYERS = new Set(['with-skills', 'with-skills-mcp']);
+  const layerOf = (r) => {
+    const named = r.layer ?? (r.withSkills === false ? 'baseline' : 'with-skills');
+    if (r.withSkills === false && SKILLS_LAYERS.has(named)) return 'baseline';
+    if (r.withSkills !== false && !SKILLS_LAYERS.has(named)) return 'with-skills';
+    return named;
+  };
+  const byModel = new Map();
+  for (const r of all) {
+    if (!byModel.has(r.model)) byModel.set(r.model, {});
+    byModel.get(r.model)[layerOf(r)] = r;
+  }
+  // Two configurations. The MCP server layers were measured and found to do
+  // nothing, so they are reported once in the findings rather than carried as
+  // two permanent rows on every card.
+  const ORDER = [
+    { id: 'with-skills', label: 'Sui skills', pc: 'var(--sui)' },
+    { id: 'baseline', label: 'no skills', pc: 'var(--ink-3)' },
+  ];
+  const LAYER_LABEL = Object.fromEntries(ORDER.map((l) => [l.id, l.label]));
+  const best = (layers) => {
+    const w = layers['with-skills'] ?? layers['with-skills-mcp'];
+    return w ? pctOf(w) : Math.max(...Object.values(layers).map(pctOf));
+  };
+  const models = [...byModel.entries()].sort((a, b) => best(b[1]) - best(a[1]));
+
+  const stale = res.manifest !== cat.manifest;
+  const paired = models.filter(([, l]) => l['baseline'] && (l['with-skills'] || l['with-skills-mcp'])).length;
+  note.textContent = `${models.length} model${models.length === 1 ? '' : 's'}, ${all.length} runs. `
+    + (paired
+      ? `${paired} ${paired === 1 ? 'has' : 'have'} been run with and without the skills, so the gap is on the card.`
+      : 'Run a model both ways to see what the skills are worth to it.');
+
+  host.hidden = false;
+  host.innerHTML = '';
+
+  models.forEach(([model, layers], i) => {
+    const card = document.createElement('div');
+    card.className = 'mcard' + (i === 0 ? ' lead' : '');
+
+    const rows = ORDER.map((layer) => {
+      const run = layers[layer.id];
+      if (!run) {
+        return `<div class="mc-row absent"><span class="mc-lab">${layer.label}</span>`
+          + `<div class="mc-track"></div><span class="mc-val">not run</span></div>`;
+      }
+      const v = pctOf(run);
+      return `<div class="mc-row" style="--pc:${layer.pc}">`
+        + `<span class="mc-lab">${layer.label}</span>`
+        + `<div class="mc-track"><u style="width:${v}%"></u></div>`
+        + `<span class="mc-val">${v}%</span></div>`;
+    }).join('');
+
+    const withSkills = layers['with-skills'] ?? layers['with-skills-mcp'];
+    const base = layers['baseline'];
+    const gain = withSkills && base ? pctOf(withSkills) - pctOf(base) : null;
+    // Reliability belongs to a run, not to a model. Taking "any layer that was
+    // sampled" put the no-skills run's repeatability under a headline showing
+    // the with-skills score: claude-opus-5 read "98%" and "right every time on
+    // 18%", which are two different configurations and look like one.
+    const sampledRun = (withSkills ?? Object.values(layers)[0])?.sampling?.k > 1
+      ? (withSkills ?? Object.values(layers)[0])
+      : Object.values(layers).find((r) => r.sampling && r.sampling.k > 1);
+
+    card.innerHTML = `<div class="mc-top">
+        <span class="mc-name">${esc(model)}</span>
+        <span class="mc-best">${withSkills ? pctOf(withSkills) : best(layers)}<i>%</i></span>
+      </div>
+      <div class="mc-rows">${rows}</div>`
+      + (gain !== null
+          ? `<p class="mc-gain">The skills are worth <b>${gain >= 0 ? '+' : ''}${gain} points</b> to this model.</p>`
+          : '')
+      + (stale ? '<p class="mc-gain">Scored against an older eval set.</p>' : '');
+
+    // The detail that was in the drawer, still one click away rather than gone.
+    const detail = document.createElement('div');
+    detail.className = 'mc-detail';
+    const run = withSkills ?? Object.values(layers)[0];
+    const bars = cat.pillars.map((p) => {
+      const sc = run.pillars?.[p.id];
+      if (!sc || !sc.total) return '';
+      const w = Math.round((100 * sc.pass) / sc.total);
+      return `<div class="mc-row" style="--pc:${PC[p.id]}"><span class="mc-lab">${esc(p.name)}</span>`
+        + `<div class="mc-track"><u style="width:${w}%"></u></div><span class="mc-val">${w}%</span></div>`;
+    }).join('');
+    const s = sampledRun?.sampling;
+    const sameRun = sampledRun === run;
+    detail.innerHTML = `<div class="mc-rows">${bars}</div>`
+      + (s && typeof s.passPowK === 'number'
+          ? `<p class="mc-gain">${sameRun ? `Asked ${s.k} times` : `The ${esc(LAYER_LABEL[sampledRun.layer] ?? 'other')} run was asked ${s.k} times`}: `
+            + `right every time on <b>${Math.round(100 * s.passPowK)}%</b> of questions, right at `
+            + `least once on ${Math.round(100 * s.passAtK)}%.</p>`
+          : '')
+      + (run.record
+          ? `<p class="mc-gain"><a href="${BASE}/${esc(run.record)}">Every question and the grader's verdict</a></p>`
+          : '');
+
+    // Open by default. The per-area scores are the part that answers "is this
+    // model good at the thing I am building", which is a better question than
+    // the single number above it, and hiding them behind a click meant most
+    // readers never saw the one figure worth comparing.
+    const more = document.createElement('button');
+    more.className = 'mc-more';
+    more.type = 'button';
+    more.textContent = 'Hide the detail';
+    more.addEventListener('click', () => {
+      detail.hidden = !detail.hidden;
+      more.textContent = detail.hidden ? 'By area, and how repeatable it is' : 'Hide the detail';
+    });
+
+    card.appendChild(more);
+    card.appendChild(detail);
+    host.appendChild(card);
+  });
+
+  const ex = res.incomplete || [];
+  const held = res.heldBack || [];
+  const lines = [];
+  if (ex.length) {
+    lines.push(`${ex.length} run${ex.length === 1 ? '' : 's'} excluded for covering less than the whole suite: ${ex.map((r) => r.model).join(', ')}. A partial run is not a score.`);
+  }
+  if (held.length) {
+    lines.push(`${held.length} run held back for being graded a different way: ${held.map((r) => `${r.model} (${r.scoring || 'unknown'})`).join(', ')}. Two graders produce two numbers.`);
+  }
+  document.getElementById('excluded').textContent = lines.join(' ');
+}
+
+
+/**
+ * The page with its numbers held back.
+ *
+ * Every published figure came from asking each question once, which cannot separate
+ * a real difference from the variation between two runs of the same thing. They are
+ * being re-measured with sampling. Showing them in the meantime would be publishing
+ * numbers already known to be unreliable; showing nothing would read as a page that
+ * is broken.
+ *
+ * So the shape stays and the measurements become dashes. What is not a measurement
+ * stays real: the suite, the skills, the four areas, and how a score is reached are
+ * all true regardless of what any model scored.
+ */
+function renderHold(cat, res) {
+  const models = new Set((res.runs || []).map((r) => r.model)).size;
+  const skills = new Set(cat.evals.map((e) => e.skill)).size;
+
+
+  const why = 'Scores are being re-measured. Every number published so far came from asking '
+    + 'each question once, which cannot tell a real difference from the variation between two '
+    + 'runs of the same thing. The suite is being re-run several times per question so the next '
+    + 'set of numbers carries its own margin. The questions, the skills and the method below are '
+    + 'unchanged.';
+
+  document.getElementById('board-note').textContent = why;
+  document.getElementById('board').hidden = true;
+  document.getElementById('excluded').textContent = '';
+
+}
+
+
+/**
+ * The four configurations, side by side, per model.
+ *
+ * This was a dumbbell between two states, which could only ever say whether the
+ * skills helped. There are four configurations and the interesting question spans
+ * all of them: does live documentation search beat a curated skill, and does having
+ * both beat having either? A two-dot figure cannot ask that, and reading the layers
+ * off four separate board rows is work the figure should do.
+ *
+ * The order is fixed and is the order a reader builds up in: nothing, skills,
+ * search, both. A layer that has not been run reads as a gap rather than a zero,
+ * because "not measured" and "scored nothing" are different facts.
+ */
+
+
+/**
+ * What the labels on each question mean.
+ *
+ * Written from the catalogue rather than hardcoded, so a label that stops being
+ * produced stops being explained. ETHEVALS splits its evals into quiz and goal,
+ * where a goal is a build task with a verified end state; ours are all answered in
+ * writing and graded by reading, so the labels describe the ask, not the harness.
+ */
+function renderKindKey(cat) {
+  const kinds = cat.kinds ?? [];
+  const el = document.getElementById('kind-key');
+  if (!kinds.length || !el) return;
+  el.innerHTML = 'What the labels mean. '
+    + kinds.filter((k) => k.count)
+        .map((k) => `<b class="kind">${esc(k.id)}</b>${esc(k.desc)} <span style="color:var(--ink-3)">(${k.count})</span>`)
+        .join(' &nbsp; ')
+    + ' Every one is answered in writing and graded by reading the answer; nothing here is run.';
+}
+
+/**
+ * Which model to reach for, by what you are building.
+ *
+ * The board answers "which model is best at Sui" and a builder's question is
+ * narrower than that. The two have different answers: gpt-6-astra leads
+ * Transactions at 60.7% while claude-opus-5, which tops the board overall, sits
+ * third in that column at 54.0%. A reader who took the headline would pick the
+ * wrong model for anything PTB-shaped.
+ *
+ * Only with-skills runs are ranked. A baseline is a measurement of what a model
+ * brought from training, not a recommendation for what to use.
+ *
+ * Where the top two are within three points the card says so instead of naming a
+ * winner. These are 158 questions graded by a reader; three points is four or five
+ * expectations and this suite has not earned that resolution.
+ */
+const TOO_CLOSE = 3;
+
+
+/**
+ * The install command, for the starter set.
+ *
+ * This used to be a picker: every skill in the catalogue as a toggle, building
+ * a command from whatever was selected. It was a lot of surface for a decision
+ * most people do not want to make on arrival, and the default it started on was
+ * the answer anyway.
+ */
+function renderInstall(cat) {
+  const box = document.getElementById('install');
+  const note = document.getElementById('install-note');
+  if (!box) return;
+  // One line that installs all of them. Listing a starter set made the command
+  // five lines tall and asked the reader to decide which three of thirty they
+  // wanted before they knew what any of them did.
+  box.textContent = 'npx skills add mystenlabs/skills';
+  // `template` is the scaffold a new skill is copied from, so it is not one.
+  const count = new Set(cat.evals.map((e) => e.skill).filter((sk) => sk !== 'template')).size;
+  if (note) {
+    note.innerHTML = `Installs all ${count} Sui skills. Browse them with `
+      + `<code>npx skills add mystenlabs/skills --list</code>.`;
+  }
+}
+
+function renderCatalog(cat) {
+  document.getElementById('eval-count').textContent =
+    `All ${cat.evals.length} questions, grouped by the area of Sui they belong to. Each one is graded `
+    + `against expectations written down in advance, and the number of them is shown beside it.`;
+  const host = document.getElementById('catalog');
+  cat.pillars.forEach((p) => {
+    const mine = cat.evals.filter((e) => e.pillar === p.id);
+    if (!mine.length) return;
+    const d = document.createElement('details');
+    d.className = 'cat';
+    d.id = 'list-' + p.id;
+    d.style.setProperty('--pc', PC[p.id] || 'var(--sui)');
+    d.innerHTML = `<summary><i></i>${esc(p.name)}: ${mine.length} evals</summary>`
+      + mine.map((e) => {
+        // 111 of 158 evals have a bare ordinal for an id, so the derived title
+        // reads "1", "2", "3" and restarts inside every skill -- numbering that
+        // looks like a ranking and means nothing. The question is the identity;
+        // the reference is skill + ordinal, which at least resolves.
+        const ord = /^\d+$/.test(String(e.title).trim());
+        const ref = ord ? `${e.skill} #${String(e.title).trim()}` : String(e.title);
+        return `<div class="ev"><span class="ev-d">${esc(e.summary)}</span>`
+          + `<span class="ev-s"><b class="kind">${esc(e.kind ?? '')}</b>${esc(ref)} \u00b7 ${e.expectations} expectations</span></div>`;
+      }).join('');
+    host.appendChild(d);
+  });
+}
+
+document.getElementById('theme').addEventListener('click', () => {
+  const light = document.documentElement.getAttribute('data-theme') === 'light';
+  document.documentElement.setAttribute('data-theme', light ? 'dark' : 'light');
+  document.getElementById('theme').textContent = light ? 'Light' : 'Dark';
+  try { localStorage.setItem('suievals-theme', light ? 'dark' : 'light'); } catch {}
+});
+try {
+  const saved = localStorage.getItem('suievals-theme');
+  if (saved) {
+    document.documentElement.setAttribute('data-theme', saved);
+    document.getElementById('theme').textContent = saved === 'light' ? 'Dark' : 'Light';
+  }
+} catch {}
+
+document.querySelectorAll('.copy').forEach((btn) => {
+  btn.addEventListener('click', async () => {
+    const text = document.getElementById(btn.dataset.for).textContent;
+    try { await navigator.clipboard.writeText(text); } catch {
+      const ta = document.createElement('textarea');
+      ta.value = text; document.body.appendChild(ta); ta.select();
+      document.execCommand('copy'); ta.remove();
+    }
+    btn.textContent = 'Copied';
+    setTimeout(() => { btn.textContent = 'Copy'; }, 1400);
+  });
+});
+
+(async () => {
+  try {
+    const [cat, res] = await Promise.all([
+      load('evals/index.json'),
+      load('results/index.json').catch(() => ({ runs: [], incomplete: [] })),
+    ]);
+    const shown = sameRegime(res);
+    // On hold, every measured figure renders as a dash and the sections that exist
+    // only to display numbers say why. The suite, the skills and the method are not
+    // measurements and stay exactly as they are.
+    if (res.hold) { renderHold(cat, shown); renderInstall(cat); renderKindKey(cat); renderCatalog(cat); document.getElementById('manifest').textContent = `Eval set ${cat.manifest} \u00b7 ${cat.evals.length} evals`; return; }
+    renderBoard(cat, shown);
+    renderKindKey(cat);
+    renderInstall(cat);
+    renderCatalog(cat);
+    document.getElementById('manifest').textContent = `Eval set ${cat.manifest} · ${cat.evals.length} evals`;
+  } catch (e) {
+    const n = document.getElementById('board-note');
+    n.className = 'err';
+    n.textContent = e.message;
+  }
+})();
+</script>
+</body>
+</html>
