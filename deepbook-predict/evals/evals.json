@@ -59,7 +59,7 @@
       "expectations": [
         "The response explains that the vault takes the opposite side of every trade",
         "The response explains PLP tokens: initial 1:1 with DUSDC, then proportional to NAV",
-        "The response explains vault NAV as idle_balance + sum of current_nav per expiry",
+        "The response explains that the vault's value reflects both its uncommitted balance and the mark-to-market liability of open positions",
         "The response mentions exposure limits on minting relative to vault value",
         "The response mentions withdrawal constraints: liability coverage and rate limiter"
       ],
