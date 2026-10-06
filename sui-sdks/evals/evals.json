@@ -29,7 +29,7 @@
       "Imports SuiGrpcClient from '@mysten/sui/grpc' (not SuiClient from '@mysten/sui/client')",
       "Passes BOTH network: 'mainnet' AND baseUrl to the constructor",
       "Uses the correct mainnet gRPC URL: https://fullnode.mainnet.sui.io:443",
-      "Explicitly labels SuiJsonRpcClient as legacy / JSON-RPC deprecated with mainnet shutdown date",
+      "Explicitly labels SuiJsonRpcClient as legacy / JSON-RPC deprecated",
       "Does NOT use getFullnodeUrl (v1 helper) — that's for v1 SuiClient which was removed",
       "Does NOT recommend @mysten/sui.js (deprecated package)"
     ]
