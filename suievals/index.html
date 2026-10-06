@@ -259,8 +259,8 @@
   <div>
     <h1>How much does your AI actually know about <em>Sui</em>?</h1>
     <p class="sub">
-      See how well AI models answer 158 real Sui developer questions, with and without the Sui
-      skills.
+      See how well AI models answer <span id="suite-size">158</span> real Sui developer questions,
+      with and without the Sui skills.
     </p>
     <p class="note" id="manifest" style="margin-top:18px"></p>
   </div>
@@ -671,6 +671,13 @@ function renderInstall(cat) {
 }
 
 function renderCatalog(cat) {
+  // The headline count is the catalogue's, not a number typed into the prose.
+  // #106 renamed and re-sourced the suite and it went from 158 to 156, leaving
+  // the hero claiming 158 while the catalogue below it listed 156 -- the page
+  // disagreeing with itself, on its own front page.
+  const sizeEl = document.getElementById('suite-size');
+  if (sizeEl) sizeEl.textContent = String(cat.evals.length);
+
   document.getElementById('eval-count').textContent =
     `All ${cat.evals.length} questions, grouped by the area of Sui they belong to. Each one is graded `
     + `against expectations written down in advance, and the number of them is shown beside it.`;

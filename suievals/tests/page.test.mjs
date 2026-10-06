@@ -102,8 +102,15 @@ async function render(res) {
     [...cardHtml.matchAll(/mc-name">([^<]+)<[\s\S]*?mc-best">(\d+)</g)].map((m) => [m[1], Number(m[2])]),
   );
   const figures = cards;
+  // `tk` is a stat strip the page no longer has; kept as an empty list so the
+  // shape of this object does not change under the assertions below.
   const strip = [...(nodes.get("tk")?.innerHTML ?? "").matchAll(/<b>([^<]*)<\/b>/g)].map((m) => m[1]);
-  return { figures, cards, scores, strip, delta: nodes.get("delta-note")?.textContent ?? "", board: nodes.get("board-note")?.textContent ?? "" };
+  return {
+    figures, cards, scores, strip,
+    suiteSize: nodes.get("suite-size")?.textContent ?? "",
+    delta: nodes.get("delta-note")?.textContent ?? "",
+    board: nodes.get("board-note")?.textContent ?? "",
+  };
 }
 
 // The published results may be on hold, which renders every measurement as a dash.
@@ -117,10 +124,22 @@ const live = { ...results, hold: undefined };
 // than failing on figures that cannot exist.
 if (!live.runs.length) {
   const empty = await render(live);
-  assert.equal(empty.figures.length, 1,
-    "with no runs the hero shows the suite size and nothing it cannot know");
+  // What the empty state owes a reader: say there is nothing yet, show no model
+  // cards, and still state the size of the suite -- which is knowable without a
+  // single run.
+  //
+  // This used to assert one *figure*, reading `figures`, which is the list of
+  // model cards on the board. With no runs there are none, so it asserted that
+  // an empty board renders one model card and failed on every build after the
+  // cards went stale. It also read a `tk` stat strip that the page no longer
+  // has, so `strip` was always empty and the assertion that used it could only
+  // ever have passed vacuously.
+  assert.equal(empty.cards.length, 0,
+    "an empty board renders no model cards");
   assert.match(empty.board, /No runs recorded yet|re-measured/i,
-    "and the board says so rather than rendering an empty table");
+    "and says so rather than rendering an empty table");
+  assert.equal(empty.suiteSize, String(cat.evals.length),
+    "the suite size is knowable with no runs, so the hero still states it");
   console.log("page: no runs recorded, empty state renders and the rest is not asserted");
   process.exit(0);
 }

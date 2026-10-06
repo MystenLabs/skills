@@ -22,7 +22,12 @@ const named = process.argv.slice(2).filter((a) => !a.startsWith("--"));
 const files = named.length
   ? named
   : existsSync(dir)
-    ? readdirSync(dir).filter((f) => f.endsWith(".json")).map((f) => join(dir, f))
+    // index.json is the built board index, not a submission. build.js already
+    // skips it ("not a card"); this did not, so every run of the validator
+    // reported six phantom problems against a generated file and exited 1.
+    ? readdirSync(dir)
+        .filter((f) => f.endsWith(".json") && f !== "index.json")
+        .map((f) => join(dir, f))
     : [];
 
 if (!files.length) {
