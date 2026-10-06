@@ -1,0 +1,59 @@
+{
+  "suievals_card": 1,
+  "source": "ci",
+  "model": "claude-sonnet-5",
+  "skills": "sui-skills",
+  "layer": "with-skills",
+  "grader": "judge",
+  "tools": [
+    "read",
+    "grep",
+    "ls"
+  ],
+  "samples": 10,
+  "empty_answers": 0,
+  "recorded_at": "2026-10-02T20:54:23.448Z",
+  "eval_set": null,
+  "evals": [
+    {
+      "id": "frontend-apps/frontend-apps-react-setup",
+      "pass": 12,
+      "of": 12
+    },
+    {
+      "id": "frontend-apps/frontend-apps-transaction-flow",
+      "pass": 10,
+      "of": 11
+    },
+    {
+      "id": "frontend-apps/frontend-apps-owned-nfts-paginated",
+      "pass": 9,
+      "of": 9
+    },
+    {
+      "id": "frontend-apps/frontend-apps-deprecated-package-check",
+      "pass": 6,
+      "of": 7
+    },
+    {
+      "id": "frontend-apps/frontend-apps-sponsored-sign-only",
+      "pass": 7,
+      "of": 7
+    },
+    {
+      "id": "frontend-apps/frontend-apps-vue-setup",
+      "pass": 8,
+      "of": 8
+    },
+    {
+      "id": "frontend-apps/frontend-apps-avoid-bad-pattern",
+      "pass": 5,
+      "of": 11
+    },
+    {
+      "id": "frontend-apps/frontend-apps-ssr-nextjs",
+      "pass": 6,
+      "of": 6
+    }
+  ]
+}

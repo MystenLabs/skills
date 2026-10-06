@@ -1,0 +1,60 @@
+{
+ "generated": "2026-10-05T18:16:35.544Z",
+ "manifest": "143c0d0525d3",
+ "run": {
+  "name": "gemini-3.8-flash +sui-skills",
+  "model": "gemini-3.8-flash",
+  "harness": "self-report",
+  "skill": "sui-skills",
+  "withSkills": true,
+  "scoring": "unknown",
+  "judge": null,
+  "submitted": false,
+  "submittedBy": null,
+  "staleManifest": true,
+  "recordedAt": "2026-10-04T07:20:15.451Z",
+  "pillars": {
+   "objects": {
+    "pass": 0,
+    "total": 0
+   },
+   "transactions": {
+    "pass": 0,
+    "total": 0
+   },
+   "building": {
+    "pass": 6,
+    "total": 10
+   },
+   "security": {
+    "pass": 0,
+    "total": 0
+   }
+  },
+  "total": {
+   "pass": 6,
+   "total": 10
+  },
+  "missed": [
+   {
+    "id": "composable-move-functions/composable-amm",
+    "pillar": "building",
+    "skill": "composable-move-functions",
+    "passed": 0,
+    "of": 4
+   }
+  ]
+ },
+ "missed": [
+  {
+   "id": "composable-move-functions/composable-amm",
+   "pillar": "building",
+   "skill": "composable-move-functions",
+   "passed": 0,
+   "of": 4,
+   "kind": "build",
+   "prompt": "Help me set up a standard AMM style smart contract with move. It should support: creating a liquidity pool for two coin types, adding and removing liquidity (minting/burning LP tokens), swapping between the two coins using the constant prod",
+   "sources": []
+  }
+ ]
+}

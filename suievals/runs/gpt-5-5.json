@@ -1,0 +1,2655 @@
+{
+ "generated": "2026-10-06T13:26:28.706Z",
+ "manifest": "143c0d0525d3",
+ "run": {
+  "name": "gpt-5.5",
+  "model": "gpt-5.5",
+  "harness": "self-report",
+  "skill": "none",
+  "withSkills": false,
+  "scoring": "unknown",
+  "judge": null,
+  "submitted": false,
+  "submittedBy": null,
+  "staleManifest": true,
+  "recordedAt": "2026-10-05T16:29:41.946Z",
+  "pillars": {
+   "objects": {
+    "pass": 109,
+    "total": 174
+   },
+   "transactions": {
+    "pass": 66,
+    "total": 163
+   },
+   "building": {
+    "pass": 218,
+    "total": 459
+   },
+   "security": {
+    "pass": 54,
+    "total": 96
+   }
+  },
+  "total": {
+   "pass": 447,
+   "total": 892
+  },
+  "missed": [
+   {
+    "id": "accessing-data/accessing-data-no-json-rpc",
+    "pillar": "transactions",
+    "skill": "accessing-data",
+    "passed": 0,
+    "of": 7
+   },
+   {
+    "id": "accessing-data/accessing-data-use-case-mapping",
+    "pillar": "transactions",
+    "skill": "accessing-data",
+    "passed": 4,
+    "of": 6
+   },
+   {
+    "id": "accessing-data/accessing-data-custom-indexer-gate",
+    "pillar": "transactions",
+    "skill": "accessing-data",
+    "passed": 1,
+    "of": 7
+   },
+   {
+    "id": "accessing-data/accessing-data-walrus-blob",
+    "pillar": "transactions",
+    "skill": "accessing-data",
+    "passed": 1,
+    "of": 7
+   },
+   {
+    "id": "accessing-data/accessing-data-migrate-json-rpc",
+    "pillar": "transactions",
+    "skill": "accessing-data",
+    "passed": 0,
+    "of": 11
+   },
+   {
+    "id": "accessing-data/accessing-data-archival-historical",
+    "pillar": "transactions",
+    "skill": "accessing-data",
+    "passed": 0,
+    "of": 6
+   },
+   {
+    "id": "accessing-data/accessing-data-streaming-events",
+    "pillar": "transactions",
+    "skill": "accessing-data",
+    "passed": 4,
+    "of": 6
+   },
+   {
+    "id": "accessing-data/accessing-data-storage-fund-clarification",
+    "pillar": "transactions",
+    "skill": "accessing-data",
+    "passed": 5,
+    "of": 6
+   },
+   {
+    "id": "composable-move-functions/composable-amm",
+    "pillar": "building",
+    "skill": "composable-move-functions",
+    "passed": 1,
+    "of": 4
+   },
+   {
+    "id": "composable-move-functions/composable-nft-game",
+    "pillar": "building",
+    "skill": "composable-move-functions",
+    "passed": 0,
+    "of": 4
+   },
+   {
+    "id": "composable-move-functions/composable-coin",
+    "pillar": "building",
+    "skill": "composable-move-functions",
+    "passed": 1,
+    "of": 3
+   },
+   {
+    "id": "deepbook-margin/4",
+    "pillar": "building",
+    "skill": "deepbook-margin",
+    "passed": 1,
+    "of": 6
+   },
+   {
+    "id": "deepbook-margin/5",
+    "pillar": "building",
+    "skill": "deepbook-margin",
+    "passed": 2,
+    "of": 5
+   },
+   {
+    "id": "deepbook-move/1",
+    "pillar": "building",
+    "skill": "deepbook-move",
+    "passed": 2,
+    "of": 6
+   },
+   {
+    "id": "deepbook-move/2",
+    "pillar": "building",
+    "skill": "deepbook-move",
+    "passed": 2,
+    "of": 6
+   },
+   {
+    "id": "deepbook-move/3",
+    "pillar": "building",
+    "skill": "deepbook-move",
+    "passed": 2,
+    "of": 6
+   },
+   {
+    "id": "deepbook-move/4",
+    "pillar": "building",
+    "skill": "deepbook-move",
+    "passed": 0,
+    "of": 5
+   },
+   {
+    "id": "deepbook-move/5",
+    "pillar": "building",
+    "skill": "deepbook-move",
+    "passed": 1,
+    "of": 5
+   },
+   {
+    "id": "deepbook-overview/1",
+    "pillar": "building",
+    "skill": "deepbook-overview",
+    "passed": 3,
+    "of": 5
+   },
+   {
+    "id": "deepbook-overview/2",
+    "pillar": "building",
+    "skill": "deepbook-overview",
+    "passed": 4,
+    "of": 5
+   },
+   {
+    "id": "deepbook-overview/3",
+    "pillar": "building",
+    "skill": "deepbook-overview",
+    "passed": 2,
+    "of": 6
+   },
+   {
+    "id": "deepbook-overview/4",
+    "pillar": "building",
+    "skill": "deepbook-overview",
+    "passed": 0,
+    "of": 5
+   },
+   {
+    "id": "deepbook-overview/5",
+    "pillar": "building",
+    "skill": "deepbook-overview",
+    "passed": 1,
+    "of": 3
+   },
+   {
+    "id": "deepbook-predict/2",
+    "pillar": "building",
+    "skill": "deepbook-predict",
+    "passed": 4,
+    "of": 6
+   },
+   {
+    "id": "deepbook-sdk/1",
+    "pillar": "building",
+    "skill": "deepbook-sdk",
+    "passed": 2,
+    "of": 6
+   },
+   {
+    "id": "deepbook-sdk/2",
+    "pillar": "building",
+    "skill": "deepbook-sdk",
+    "passed": 3,
+    "of": 6
+   },
+   {
+    "id": "deepbook-sdk/3",
+    "pillar": "building",
+    "skill": "deepbook-sdk",
+    "passed": 1,
+    "of": 6
+   },
+   {
+    "id": "deepbook-sdk/4",
+    "pillar": "building",
+    "skill": "deepbook-sdk",
+    "passed": 1,
+    "of": 5
+   },
+   {
+    "id": "deepbook-sdk/5",
+    "pillar": "building",
+    "skill": "deepbook-sdk",
+    "passed": 0,
+    "of": 5
+   },
+   {
+    "id": "frontend-apps/frontend-apps-react-setup",
+    "pillar": "building",
+    "skill": "frontend-apps",
+    "passed": 2,
+    "of": 12
+   },
+   {
+    "id": "frontend-apps/frontend-apps-transaction-flow",
+    "pillar": "building",
+    "skill": "frontend-apps",
+    "passed": 8,
+    "of": 11
+   },
+   {
+    "id": "frontend-apps/frontend-apps-owned-nfts-paginated",
+    "pillar": "building",
+    "skill": "frontend-apps",
+    "passed": 0,
+    "of": 9
+   },
+   {
+    "id": "frontend-apps/frontend-apps-deprecated-package-check",
+    "pillar": "building",
+    "skill": "frontend-apps",
+    "passed": 0,
+    "of": 7
+   },
+   {
+    "id": "frontend-apps/frontend-apps-sponsored-sign-only",
+    "pillar": "building",
+    "skill": "frontend-apps",
+    "passed": 5,
+    "of": 7
+   },
+   {
+    "id": "frontend-apps/frontend-apps-avoid-bad-pattern",
+    "pillar": "building",
+    "skill": "frontend-apps",
+    "passed": 5,
+    "of": 11
+   },
+   {
+    "id": "frontend-apps/frontend-apps-ssr-nextjs",
+    "pillar": "building",
+    "skill": "frontend-apps",
+    "passed": 5,
+    "of": 6
+   },
+   {
+    "id": "kiosk/1",
+    "pillar": "security",
+    "skill": "kiosk",
+    "passed": 5,
+    "of": 6
+   },
+   {
+    "id": "kiosk/2",
+    "pillar": "security",
+    "skill": "kiosk",
+    "passed": 2,
+    "of": 6
+   },
+   {
+    "id": "kiosk/3",
+    "pillar": "security",
+    "skill": "kiosk",
+    "passed": 4,
+    "of": 5
+   },
+   {
+    "id": "kiosk/4",
+    "pillar": "security",
+    "skill": "kiosk",
+    "passed": 2,
+    "of": 5
+   },
+   {
+    "id": "modern-move-syntax/syntax-amm",
+    "pillar": "building",
+    "skill": "modern-move-syntax",
+    "passed": 0,
+    "of": 4
+   },
+   {
+    "id": "modern-move-syntax/syntax-nft-game",
+    "pillar": "building",
+    "skill": "modern-move-syntax",
+    "passed": 1,
+    "of": 3
+   },
+   {
+    "id": "modern-move-syntax/syntax-access-control",
+    "pillar": "building",
+    "skill": "modern-move-syntax",
+    "passed": 0,
+    "of": 3
+   },
+   {
+    "id": "move-security/security-review-shared-object",
+    "pillar": "security",
+    "skill": "move-security",
+    "passed": 3,
+    "of": 5
+   },
+   {
+    "id": "move-security/access-control-pattern-choice",
+    "pillar": "security",
+    "skill": "move-security",
+    "passed": 3,
+    "of": 6
+   },
+   {
+    "id": "move-security/capability-safety-and-revocation",
+    "pillar": "security",
+    "skill": "move-security",
+    "passed": 2,
+    "of": 6
+   },
+   {
+    "id": "move-security/randomness-security-review",
+    "pillar": "security",
+    "skill": "move-security",
+    "passed": 3,
+    "of": 6
+   },
+   {
+    "id": "move-unit-testing/amm-unit-tests",
+    "pillar": "building",
+    "skill": "move-unit-testing",
+    "passed": 0,
+    "of": 6
+   },
+   {
+    "id": "naming-conventions/naming-amm",
+    "pillar": "building",
+    "skill": "naming-conventions",
+    "passed": 1,
+    "of": 3
+   },
+   {
+    "id": "naming-conventions/naming-nft-game",
+    "pillar": "building",
+    "skill": "naming-conventions",
+    "passed": 3,
+    "of": 5
+   },
+   {
+    "id": "naming-conventions/naming-access-control",
+    "pillar": "building",
+    "skill": "naming-conventions",
+    "passed": 2,
+    "of": 4
+   },
+   {
+    "id": "object-model/1",
+    "pillar": "objects",
+    "skill": "object-model",
+    "passed": 4,
+    "of": 6
+   },
+   {
+    "id": "object-model/2",
+    "pillar": "objects",
+    "skill": "object-model",
+    "passed": 4,
+    "of": 7
+   },
+   {
+    "id": "object-model/3",
+    "pillar": "objects",
+    "skill": "object-model",
+    "passed": 3,
+    "of": 6
+   },
+   {
+    "id": "object-model/4",
+    "pillar": "objects",
+    "skill": "object-model",
+    "passed": 5,
+    "of": 6
+   },
+   {
+    "id": "object-model/5",
+    "pillar": "objects",
+    "skill": "object-model",
+    "passed": 3,
+    "of": 6
+   },
+   {
+    "id": "object-model/6",
+    "pillar": "objects",
+    "skill": "object-model",
+    "passed": 4,
+    "of": 6
+   },
+   {
+    "id": "object-model/7",
+    "pillar": "objects",
+    "skill": "object-model",
+    "passed": 4,
+    "of": 5
+   },
+   {
+    "id": "object-model/8",
+    "pillar": "objects",
+    "skill": "object-model",
+    "passed": 4,
+    "of": 6
+   },
+   {
+    "id": "object-model/10",
+    "pillar": "objects",
+    "skill": "object-model",
+    "passed": 3,
+    "of": 5
+   },
+   {
+    "id": "object-model/11",
+    "pillar": "objects",
+    "skill": "object-model",
+    "passed": 4,
+    "of": 6
+   },
+   {
+    "id": "object-model/12",
+    "pillar": "objects",
+    "skill": "object-model",
+    "passed": 4,
+    "of": 5
+   },
+   {
+    "id": "object-model/13",
+    "pillar": "objects",
+    "skill": "object-model",
+    "passed": 3,
+    "of": 5
+   },
+   {
+    "id": "object-model/14",
+    "pillar": "objects",
+    "skill": "object-model",
+    "passed": 2,
+    "of": 5
+   },
+   {
+    "id": "object-model/15",
+    "pillar": "objects",
+    "skill": "object-model",
+    "passed": 1,
+    "of": 5
+   },
+   {
+    "id": "object-model/16",
+    "pillar": "objects",
+    "skill": "object-model",
+    "passed": 4,
+    "of": 6
+   },
+   {
+    "id": "object-model/17",
+    "pillar": "objects",
+    "skill": "object-model",
+    "passed": 1,
+    "of": 5
+   },
+   {
+    "id": "object-model/18",
+    "pillar": "objects",
+    "skill": "object-model",
+    "passed": 3,
+    "of": 6
+   },
+   {
+    "id": "object-model/19",
+    "pillar": "objects",
+    "skill": "object-model",
+    "passed": 3,
+    "of": 5
+   },
+   {
+    "id": "object-model/20",
+    "pillar": "objects",
+    "skill": "object-model",
+    "passed": 4,
+    "of": 6
+   },
+   {
+    "id": "onchain-randomness/1",
+    "pillar": "security",
+    "skill": "onchain-randomness",
+    "passed": 5,
+    "of": 6
+   },
+   {
+    "id": "onchain-randomness/2",
+    "pillar": "security",
+    "skill": "onchain-randomness",
+    "passed": 1,
+    "of": 6
+   },
+   {
+    "id": "onchain-randomness/3",
+    "pillar": "security",
+    "skill": "onchain-randomness",
+    "passed": 3,
+    "of": 6
+   },
+   {
+    "id": "ptbs/ptbs-basic-transfer",
+    "pillar": "transactions",
+    "skill": "ptbs",
+    "passed": 3,
+    "of": 6
+   },
+   {
+    "id": "ptbs/ptbs-batch-airdrop",
+    "pillar": "transactions",
+    "skill": "ptbs",
+    "passed": 3,
+    "of": 5
+   },
+   {
+    "id": "ptbs/ptbs-chained-move-calls",
+    "pillar": "transactions",
+    "skill": "ptbs",
+    "passed": 0,
+    "of": 5
+   },
+   {
+    "id": "ptbs/ptbs-sponsored-transaction-flow",
+    "pillar": "transactions",
+    "skill": "ptbs",
+    "passed": 4,
+    "of": 5
+   },
+   {
+    "id": "ptbs/ptbs-shared-object-rules",
+    "pillar": "transactions",
+    "skill": "ptbs",
+    "passed": 3,
+    "of": 5
+   },
+   {
+    "id": "sui-build-test/1",
+    "pillar": "transactions",
+    "skill": "sui-build-test",
+    "passed": 3,
+    "of": 6
+   },
+   {
+    "id": "sui-build-test/2",
+    "pillar": "transactions",
+    "skill": "sui-build-test",
+    "passed": 2,
+    "of": 4
+   },
+   {
+    "id": "sui-client/1",
+    "pillar": "transactions",
+    "skill": "sui-client",
+    "passed": 2,
+    "of": 6
+   },
+   {
+    "id": "sui-client/2",
+    "pillar": "transactions",
+    "skill": "sui-client",
+    "passed": 0,
+    "of": 6
+   },
+   {
+    "id": "sui-client/3",
+    "pillar": "transactions",
+    "skill": "sui-client",
+    "passed": 3,
+    "of": 5
+   },
+   {
+    "id": "sui-client/4",
+    "pillar": "transactions",
+    "skill": "sui-client",
+    "passed": 0,
+    "of": 4
+   },
+   {
+    "id": "sui-for-ethereum/1",
+    "pillar": "objects",
+    "skill": "sui-for-ethereum",
+    "passed": 4,
+    "of": 5
+   },
+   {
+    "id": "sui-for-ethereum/2",
+    "pillar": "objects",
+    "skill": "sui-for-ethereum",
+    "passed": 1,
+    "of": 4
+   },
+   {
+    "id": "sui-for-ethereum/4",
+    "pillar": "objects",
+    "skill": "sui-for-ethereum",
+    "passed": 3,
+    "of": 5
+   },
+   {
+    "id": "sui-install/1",
+    "pillar": "transactions",
+    "skill": "sui-install",
+    "passed": 1,
+    "of": 8
+   },
+   {
+    "id": "sui-install/2",
+    "pillar": "transactions",
+    "skill": "sui-install",
+    "passed": 2,
+    "of": 7
+   },
+   {
+    "id": "sui-install/3",
+    "pillar": "transactions",
+    "skill": "sui-install",
+    "passed": 0,
+    "of": 5
+   },
+   {
+    "id": "sui-install/4",
+    "pillar": "transactions",
+    "skill": "sui-install",
+    "passed": 3,
+    "of": 4
+   },
+   {
+    "id": "sui-install/5",
+    "pillar": "transactions",
+    "skill": "sui-install",
+    "passed": 0,
+    "of": 4
+   },
+   {
+    "id": "sui-move/1",
+    "pillar": "building",
+    "skill": "sui-move",
+    "passed": 7,
+    "of": 8
+   },
+   {
+    "id": "sui-move/2",
+    "pillar": "building",
+    "skill": "sui-move",
+    "passed": 2,
+    "of": 6
+   },
+   {
+    "id": "sui-move/3",
+    "pillar": "building",
+    "skill": "sui-move",
+    "passed": 5,
+    "of": 6
+   },
+   {
+    "id": "sui-move/4",
+    "pillar": "building",
+    "skill": "sui-move",
+    "passed": 4,
+    "of": 6
+   },
+   {
+    "id": "sui-move/5",
+    "pillar": "building",
+    "skill": "sui-move",
+    "passed": 5,
+    "of": 6
+   },
+   {
+    "id": "sui-move/6",
+    "pillar": "building",
+    "skill": "sui-move",
+    "passed": 5,
+    "of": 7
+   },
+   {
+    "id": "sui-move/7",
+    "pillar": "building",
+    "skill": "sui-move",
+    "passed": 4,
+    "of": 6
+   },
+   {
+    "id": "sui-move-project/1",
+    "pillar": "building",
+    "skill": "sui-move-project",
+    "passed": 0,
+    "of": 5
+   },
+   {
+    "id": "sui-move-project/3",
+    "pillar": "building",
+    "skill": "sui-move-project",
+    "passed": 3,
+    "of": 4
+   },
+   {
+    "id": "sui-move-project/4",
+    "pillar": "building",
+    "skill": "sui-move-project",
+    "passed": 1,
+    "of": 6
+   },
+   {
+    "id": "sui-move-project/5",
+    "pillar": "building",
+    "skill": "sui-move-project",
+    "passed": 0,
+    "of": 5
+   },
+   {
+    "id": "sui-move-project/6",
+    "pillar": "building",
+    "skill": "sui-move-project",
+    "passed": 0,
+    "of": 3
+   },
+   {
+    "id": "sui-move-project/7",
+    "pillar": "building",
+    "skill": "sui-move-project",
+    "passed": 0,
+    "of": 3
+   },
+   {
+    "id": "sui-move-project/8",
+    "pillar": "building",
+    "skill": "sui-move-project",
+    "passed": 1,
+    "of": 3
+   },
+   {
+    "id": "sui-move-project/9",
+    "pillar": "building",
+    "skill": "sui-move-project",
+    "passed": 3,
+    "of": 6
+   },
+   {
+    "id": "sui-move-project/10",
+    "pillar": "building",
+    "skill": "sui-move-project",
+    "passed": 2,
+    "of": 5
+   },
+   {
+    "id": "sui-networks-gas/1",
+    "pillar": "objects",
+    "skill": "sui-networks-gas",
+    "passed": 6,
+    "of": 7
+   },
+   {
+    "id": "sui-networks-gas/2",
+    "pillar": "objects",
+    "skill": "sui-networks-gas",
+    "passed": 3,
+    "of": 5
+   },
+   {
+    "id": "sui-overview/1",
+    "pillar": "objects",
+    "skill": "sui-overview",
+    "passed": 4,
+    "of": 7
+   },
+   {
+    "id": "sui-overview/3",
+    "pillar": "objects",
+    "skill": "sui-overview",
+    "passed": 4,
+    "of": 6
+   },
+   {
+    "id": "sui-overview/4",
+    "pillar": "objects",
+    "skill": "sui-overview",
+    "passed": 0,
+    "of": 6
+   },
+   {
+    "id": "sui-overview/5",
+    "pillar": "objects",
+    "skill": "sui-overview",
+    "passed": 5,
+    "of": 6
+   },
+   {
+    "id": "sui-publish/1",
+    "pillar": "building",
+    "skill": "sui-publish",
+    "passed": 2,
+    "of": 6
+   },
+   {
+    "id": "sui-publish/2",
+    "pillar": "building",
+    "skill": "sui-publish",
+    "passed": 3,
+    "of": 5
+   },
+   {
+    "id": "sui-publish/3",
+    "pillar": "building",
+    "skill": "sui-publish",
+    "passed": 4,
+    "of": 6
+   },
+   {
+    "id": "sui-publish/4",
+    "pillar": "building",
+    "skill": "sui-publish",
+    "passed": 4,
+    "of": 5
+   },
+   {
+    "id": "sui-publish/5",
+    "pillar": "building",
+    "skill": "sui-publish",
+    "passed": 4,
+    "of": 5
+   },
+   {
+    "id": "sui-publish/6",
+    "pillar": "building",
+    "skill": "sui-publish",
+    "passed": 1,
+    "of": 4
+   },
+   {
+    "id": "sui-publish/7",
+    "pillar": "building",
+    "skill": "sui-publish",
+    "passed": 0,
+    "of": 4
+   },
+   {
+    "id": "sui-sdks/sui-sdks-choose-sdk",
+    "pillar": "building",
+    "skill": "sui-sdks",
+    "passed": 2,
+    "of": 6
+   },
+   {
+    "id": "sui-sdks/sui-sdks-ts-client-choice",
+    "pillar": "building",
+    "skill": "sui-sdks",
+    "passed": 1,
+    "of": 6
+   },
+   {
+    "id": "sui-sdks/sui-sdks-bundled-llm-docs",
+    "pillar": "building",
+    "skill": "sui-sdks",
+    "passed": 1,
+    "of": 6
+   },
+   {
+    "id": "sui-sdks/sui-sdks-v1-to-v2-migration",
+    "pillar": "building",
+    "skill": "sui-sdks",
+    "passed": 6,
+    "of": 12
+   },
+   {
+    "id": "sui-sdks/sui-sdks-community-caveat",
+    "pillar": "building",
+    "skill": "sui-sdks",
+    "passed": 2,
+    "of": 6
+   },
+   {
+    "id": "sui-sdks/sui-sdks-frontend-boundary",
+    "pillar": "building",
+    "skill": "sui-sdks",
+    "passed": 5,
+    "of": 8
+   },
+   {
+    "id": "sui-ts-sdk-backend/1",
+    "pillar": "building",
+    "skill": "sui-ts-sdk-backend",
+    "passed": 2,
+    "of": 5
+   },
+   {
+    "id": "sui-ts-sdk-backend/2",
+    "pillar": "building",
+    "skill": "sui-ts-sdk-backend",
+    "passed": 1,
+    "of": 5
+   },
+   {
+    "id": "sui-ts-sdk-backend/3",
+    "pillar": "building",
+    "skill": "sui-ts-sdk-backend",
+    "passed": 1,
+    "of": 6
+   },
+   {
+    "id": "sui-ts-sdk-backend/4",
+    "pillar": "building",
+    "skill": "sui-ts-sdk-backend",
+    "passed": 0,
+    "of": 5
+   },
+   {
+    "id": "sui-ts-sdk-backend/5",
+    "pillar": "building",
+    "skill": "sui-ts-sdk-backend",
+    "passed": 2,
+    "of": 5
+   },
+   {
+    "id": "zklogin/1",
+    "pillar": "security",
+    "skill": "zklogin",
+    "passed": 5,
+    "of": 7
+   },
+   {
+    "id": "zklogin/2",
+    "pillar": "security",
+    "skill": "zklogin",
+    "passed": 3,
+    "of": 7
+   },
+   {
+    "id": "zklogin/3",
+    "pillar": "security",
+    "skill": "zklogin",
+    "passed": 1,
+    "of": 7
+   }
+  ]
+ },
+ "missed": [
+  {
+   "id": "accessing-data/accessing-data-no-json-rpc",
+   "pillar": "transactions",
+   "skill": "accessing-data",
+   "passed": 0,
+   "of": 7,
+   "kind": "build",
+   "prompt": "I want to build a Node.js backend that reads a user's SUI balance and lists their owned NFTs. Which API should I use and how do I set up the client?",
+   "sources": [
+    "https://docs.sui.io/concepts/data-access/data-serving",
+    "https://sdk.mystenlabs.com/sui"
+   ]
+  },
+  {
+   "id": "accessing-data/accessing-data-use-case-mapping",
+   "pillar": "transactions",
+   "skill": "accessing-data",
+   "passed": 4,
+   "of": 6,
+   "kind": "design",
+   "prompt": "I'm building a wallet UI that needs to show: a balance for each coin type, recent transactions (with effects), owned NFTs filtered by type, and a dashboard combining all three. Which API should I use and why?",
+   "sources": [
+    "https://docs.sui.io/concepts/data-access/data-serving",
+    "https://docs.sui.io/concepts/data-access/graphql-rpc"
+   ]
+  },
+  {
+   "id": "accessing-data/accessing-data-custom-indexer-gate",
+   "pillar": "transactions",
+   "skill": "accessing-data",
+   "passed": 1,
+   "of": 7,
+   "kind": "design",
+   "prompt": "I need to show a leaderboard of the top 100 users by total trade volume on my marketplace over the last 30 days. What's the right approach?",
+   "sources": [
+    "https://docs.sui.io/guides/operator/indexer-stack-setup",
+    "https://docs.sui.io/concepts/data-access/graphql-rpc"
+   ]
+  },
+  {
+   "id": "accessing-data/accessing-data-walrus-blob",
+   "pillar": "transactions",
+   "skill": "accessing-data",
+   "passed": 1,
+   "of": 7,
+   "kind": "design",
+   "prompt": "I'm minting NFTs where each NFT has a 2 MB image. Where should I store the image?",
+   "sources": [
+    "https://docs.wal.app",
+    "https://docs.sui.io/concepts/data-access/data-serving"
+   ]
+  },
+  {
+   "id": "accessing-data/accessing-data-migrate-json-rpc",
+   "pillar": "transactions",
+   "skill": "accessing-data",
+   "passed": 0,
+   "of": 11,
+   "kind": "review",
+   "prompt": "Here's some of my code. What's wrong and how do I update it? ```ts import { SuiClient, getFullnodeUrl } from '@mysten/sui/client'; const client = new SuiClient({ url: getFullnodeUrl('mainnet') }); const balance = await client.getBalance({ o",
+   "sources": [
+    "https://docs.sui.io/concepts/data-access/data-serving",
+    "https://sdk.mystenlabs.com/sui"
+   ]
+  },
+  {
+   "id": "accessing-data/accessing-data-archival-historical",
+   "pillar": "transactions",
+   "skill": "accessing-data",
+   "passed": 0,
+   "of": 6,
+   "kind": "design",
+   "prompt": "I need to read the state of an object as it was 6 months ago. The object has been updated many times since. My gRPC call returns the current version — how do I get the historical version?",
+   "sources": [
+    "https://docs.sui.io/concepts/data-access/archival-store",
+    "https://docs.sui.io/concepts/data-access/graphql-rpc"
+   ]
+  },
+  {
+   "id": "accessing-data/accessing-data-streaming-events",
+   "pillar": "transactions",
+   "skill": "accessing-data",
+   "passed": 4,
+   "of": 6,
+   "kind": "design",
+   "prompt": "I need to watch for new transactions that mint a specific NFT type and react in real time (<1s). What's the right approach?",
+   "sources": [
+    "https://docs.sui.io/concepts/data-access/data-serving"
+   ]
+  },
+  {
+   "id": "accessing-data/accessing-data-storage-fund-clarification",
+   "pillar": "transactions",
+   "skill": "accessing-data",
+   "passed": 5,
+   "of": 6,
+   "kind": "explain",
+   "prompt": "What's the 'storage fund' in Sui? Can I use it to store my application data?",
+   "sources": [
+    "https://docs.sui.io/concepts/tokenomics",
+    "https://docs.sui.io/concepts/data-access/data-serving"
+   ]
+  },
+  {
+   "id": "composable-move-functions/composable-amm",
+   "pillar": "building",
+   "skill": "composable-move-functions",
+   "passed": 1,
+   "of": 4,
+   "kind": "build",
+   "prompt": "Help me set up a standard AMM style smart contract with move. It should support: creating a liquidity pool for two coin types, adding and removing liquidity (minting/burning LP tokens), swapping between the two coins using the constant prod",
+   "sources": []
+  },
+  {
+   "id": "composable-move-functions/composable-nft-game",
+   "pillar": "building",
+   "skill": "composable-move-functions",
+   "passed": 0,
+   "of": 4,
+   "kind": "build",
+   "prompt": "I'm building a video game on Sui. I need a smart contract for player profiles as NFTs. Each player has a username, an XP counter, and a level. Players also need an inventory — use dynamic object fields so it can hold any arbitrary Sui objec",
+   "sources": []
+  },
+  {
+   "id": "composable-move-functions/composable-coin",
+   "pillar": "building",
+   "skill": "composable-move-functions",
+   "passed": 1,
+   "of": 3,
+   "kind": "build",
+   "prompt": "I want to create a new token on Sui. It should have a fixed name and symbol, an icon URL, and I want to be able to mint new tokens and also have the ability to burn the treasury cap to make it so no one can ever mint more. Can you set up th",
+   "sources": []
+  },
+  {
+   "id": "deepbook-margin/4",
+   "pillar": "building",
+   "skill": "deepbook-margin",
+   "passed": 1,
+   "of": 6,
+   "kind": "explain",
+   "prompt": "What are the key differences between spot and margin trading on DeepBook?",
+   "sources": [
+    "https://docs.sui.io/onchain-finance/deepbook/deepbook-margin/margin-integration"
+   ]
+  },
+  {
+   "id": "deepbook-margin/5",
+   "pillar": "building",
+   "skill": "deepbook-margin",
+   "passed": 2,
+   "of": 5,
+   "kind": "explain",
+   "prompt": "What are the risks of margin trading on DeepBook and how can I mitigate them?",
+   "sources": [
+    "https://docs.sui.io/onchain-finance/deepbook/deepbook-margin/margin-risks"
+   ]
+  },
+  {
+   "id": "deepbook-move/1",
+   "pillar": "building",
+   "skill": "deepbook-move",
+   "passed": 2,
+   "of": 6,
+   "kind": "explain",
+   "prompt": "How do I add DeepBook V3 as a dependency in my Move project and place a limit order from my smart contract?",
+   "sources": [
+    "https://docs.sui.io/onchain-finance/deepbook/deepbookv3/contract-information",
+    "https://github.com/MystenLabs/deepbookv3/blob/main/packages/deepbook/sources/pool.move"
+   ]
+  },
+  {
+   "id": "deepbook-move/2",
+   "pillar": "building",
+   "skill": "deepbook-move",
+   "passed": 2,
+   "of": 6,
+   "kind": "explain",
+   "prompt": "How do flash loans work in DeepBook V3? Can I borrow and trade in the same pool?",
+   "sources": [
+    "https://docs.sui.io/onchain-finance/deepbook/deepbookv3/contract-information/flash-loans"
+   ]
+  },
+  {
+   "id": "deepbook-move/3",
+   "pillar": "building",
+   "skill": "deepbook-move",
+   "passed": 2,
+   "of": 6,
+   "kind": "explain",
+   "prompt": "What is a BalanceManager in DeepBook V3 and how does the TradeCap delegation model work?",
+   "sources": [
+    "https://docs.sui.io/onchain-finance/deepbook/deepbookv3/contract-information/balance-manager",
+    "https://github.com/MystenLabs/deepbookv3/blob/main/packages/deepbook/sources/balance_manager.move"
+   ]
+  },
+  {
+   "id": "deepbook-move/4",
+   "pillar": "building",
+   "skill": "deepbook-move",
+   "passed": 0,
+   "of": 5,
+   "kind": "explain",
+   "prompt": "How do I execute a swap in DeepBook V3 from Move code without a BalanceManager?",
+   "sources": [
+    "https://docs.sui.io/onchain-finance/deepbook/deepbookv3/contract-information/swaps",
+    "https://github.com/MystenLabs/deepbookv3/blob/main/packages/deepbook/sources/pool.move"
+   ]
+  },
+  {
+   "id": "deepbook-move/5",
+   "pillar": "building",
+   "skill": "deepbook-move",
+   "passed": 1,
+   "of": 5,
+   "kind": "explain",
+   "prompt": "What are the common mistakes when integrating DeepBook V3 from Move code?",
+   "sources": [
+    "https://docs.sui.io/onchain-finance/deepbook/deepbookv3/contract-information",
+    "https://docs.sui.io/onchain-finance/deepbook/deepbookv3/contract-information/flash-loans",
+    "https://github.com/MystenLabs/deepbookv3/blob/main/packages/deepbook/sources/balance_manager.move"
+   ]
+  },
+  {
+   "id": "deepbook-overview/1",
+   "pillar": "building",
+   "skill": "deepbook-overview",
+   "passed": 3,
+   "of": 5,
+   "kind": "explain",
+   "prompt": "What is DeepBook V3 and how does it differ from an AMM like Uniswap?",
+   "sources": [
+    "https://docs.sui.io/onchain-finance/deepbook/deepbookv3/deepbook",
+    "https://github.com/MystenLabs/deepbookv3/blob/main/README.md"
+   ]
+  },
+  {
+   "id": "deepbook-overview/2",
+   "pillar": "building",
+   "skill": "deepbook-overview",
+   "passed": 4,
+   "of": 5,
+   "kind": "explain",
+   "prompt": "Explain the internal architecture of a DeepBook V3 Pool. What are the three main components?",
+   "sources": [
+    "https://docs.sui.io/onchain-finance/deepbook/deepbookv3/deepbook/design"
+   ]
+  },
+  {
+   "id": "deepbook-overview/3",
+   "pillar": "building",
+   "skill": "deepbook-overview",
+   "passed": 2,
+   "of": 6,
+   "kind": "choose",
+   "prompt": "What are the three integration models for DeepBook V3 and when should I use each one?",
+   "sources": [
+    "https://docs.sui.io/onchain-finance/deepbook/deepbookv3/deepbook"
+   ]
+  },
+  {
+   "id": "deepbook-overview/4",
+   "pillar": "building",
+   "skill": "deepbook-overview",
+   "passed": 0,
+   "of": 5,
+   "kind": "explain",
+   "prompt": "What is the role of the DEEP token in DeepBook V3?",
+   "sources": [
+    "https://docs.sui.io/onchain-finance/deepbook/deepbookv3/deepbook",
+    "https://docs.sui.io/onchain-finance/deepbook/deepbookv3/deepbook/fees-and-funding"
+   ]
+  },
+  {
+   "id": "deepbook-overview/5",
+   "pillar": "building",
+   "skill": "deepbook-overview",
+   "passed": 1,
+   "of": 3,
+   "kind": "explain",
+   "prompt": "What is the current DeepBook V3 mainnet package ID and what is the SUI/USDC pool ID?",
+   "sources": [
+    "https://docs.sui.io/onchain-finance/deepbook/deepbookv3/deepbook/contract-information"
+   ]
+  },
+  {
+   "id": "deepbook-predict/2",
+   "pillar": "building",
+   "skill": "deepbook-predict",
+   "passed": 4,
+   "of": 6,
+   "kind": "explain",
+   "prompt": "How do I mint a binary position on DeepBook Predict using TypeScript?",
+   "sources": [
+    "https://docs.sui.io/onchain-finance/deepbook/deepbook-predict",
+    "https://docs.sui.io/onchain-finance/deepbook/deepbook-predict/tutorial"
+   ]
+  },
+  {
+   "id": "deepbook-sdk/1",
+   "pillar": "building",
+   "skill": "deepbook-sdk",
+   "passed": 2,
+   "of": 6,
+   "kind": "build",
+   "prompt": "How do I set up a DeepBook V3 client in TypeScript and create a BalanceManager?",
+   "sources": [
+    "https://docs.sui.io/onchain-finance/deepbook/deepbookv3-sdk",
+    "https://docs.sui.io/onchain-finance/deepbook/deepbookv3/spot-workflow",
+    "https://github.com/MystenLabs/deepbook-sandbox/blob/main/examples/sandbox/setup.ts"
+   ]
+  },
+  {
+   "id": "deepbook-sdk/2",
+   "pillar": "building",
+   "skill": "deepbook-sdk",
+   "passed": 3,
+   "of": 6,
+   "kind": "explain",
+   "prompt": "How do I place a limit order on DeepBook using the TypeScript SDK? What are the different order types?",
+   "sources": [
+    "https://docs.sui.io/onchain-finance/deepbook/deepbookv3/spot-workflow",
+    "https://github.com/MystenLabs/deepbook-sandbox/blob/main/examples/sandbox/place-limit-order.ts"
+   ]
+  },
+  {
+   "id": "deepbook-sdk/3",
+   "pillar": "building",
+   "skill": "deepbook-sdk",
+   "passed": 1,
+   "of": 6,
+   "kind": "explain",
+   "prompt": "How do I swap tokens on DeepBook without a BalanceManager?",
+   "sources": [
+    "https://docs.sui.io/onchain-finance/deepbook/deepbookv3/contract-information/swaps",
+    "https://github.com/MystenLabs/deepbook-sandbox/blob/main/examples/sandbox/swap-tokens.ts"
+   ]
+  },
+  {
+   "id": "deepbook-sdk/4",
+   "pillar": "building",
+   "skill": "deepbook-sdk",
+   "passed": 1,
+   "of": 5,
+   "kind": "explain",
+   "prompt": "How do I query open orders and cancel them using the DeepBook SDK?",
+   "sources": [
+    "https://docs.sui.io/onchain-finance/deepbook/deepbookv3/spot-workflow",
+    "https://github.com/MystenLabs/deepbook-sandbox/blob/main/examples/sandbox/query-user-orders.ts"
+   ]
+  },
+  {
+   "id": "deepbook-sdk/5",
+   "pillar": "building",
+   "skill": "deepbook-sdk",
+   "passed": 0,
+   "of": 5,
+   "kind": "explain",
+   "prompt": "What are the common mistakes when using the DeepBook SDK? My order keeps failing silently.",
+   "sources": [
+    "https://docs.sui.io/onchain-finance/deepbook/deepbookv3/spot-workflow",
+    "https://github.com/MystenLabs/deepbook-sandbox/blob/main/examples/sandbox/README.md"
+   ]
+  },
+  {
+   "id": "frontend-apps/frontend-apps-react-setup",
+   "pillar": "building",
+   "skill": "frontend-apps",
+   "passed": 2,
+   "of": 12,
+   "kind": "build",
+   "prompt": "Help me set up a new Vite + React app to integrate with Sui. I want users to connect a wallet and see their SUI balance. Give me the complete setup code: package installs, dapp-kit.ts instance, provider wrapping, and a simple Balance compon",
+   "sources": [
+    "https://sdk.mystenlabs.com/dapp-kit/getting-started/react",
+    "https://sdk.mystenlabs.com/sui/clients"
+   ]
+  },
+  {
+   "id": "frontend-apps/frontend-apps-transaction-flow",
+   "pillar": "building",
+   "skill": "frontend-apps",
+   "passed": 8,
+   "of": 11,
+   "kind": "build",
+   "prompt": "Write a React button that transfers 0.5 SUI to a hardcoded recipient when the user clicks it. Show the full transaction flow including error handling, waiting for indexing, and refreshing the balance query afterward.",
+   "sources": [
+    "https://sdk.mystenlabs.com/dapp-kit/getting-started/react",
+    "https://sdk.mystenlabs.com/sui"
+   ]
+  },
+  {
+   "id": "frontend-apps/frontend-apps-owned-nfts-paginated",
+   "pillar": "building",
+   "skill": "frontend-apps",
+   "passed": 0,
+   "of": 9,
+   "kind": "explain",
+   "prompt": "Show me how to list all NFTs of type 0xPKG::nft::NFT owned by the connected user, with a 'Load more' button for pagination.",
+   "sources": [
+    "https://sdk.mystenlabs.com/dapp-kit/getting-started/react",
+    "https://sdk.mystenlabs.com/sui"
+   ]
+  },
+  {
+   "id": "frontend-apps/frontend-apps-deprecated-package-check",
+   "pillar": "building",
+   "skill": "frontend-apps",
+   "passed": 0,
+   "of": 7,
+   "kind": "explain",
+   "prompt": "I found a tutorial that says to `npm install @mysten/dapp-kit` and shows SuiClientProvider, WalletProvider, QueryClientProvider nested together plus a useSuiClientQuery hook. Is this current?",
+   "sources": [
+    "https://sdk.mystenlabs.com/dapp-kit"
+   ]
+  },
+  {
+   "id": "frontend-apps/frontend-apps-sponsored-sign-only",
+   "pillar": "building",
+   "skill": "frontend-apps",
+   "passed": 5,
+   "of": 7,
+   "kind": "design",
+   "prompt": "I want the wallet to sign a transaction but have my backend sponsor the gas and submit it. Show the frontend React code that signs without executing, then POSTs the signed bytes and signature to /api/sponsor.",
+   "sources": [
+    "https://sdk.mystenlabs.com/dapp-kit/getting-started/react"
+   ]
+  },
+  {
+   "id": "frontend-apps/frontend-apps-avoid-bad-pattern",
+   "pillar": "building",
+   "skill": "frontend-apps",
+   "passed": 5,
+   "of": 11,
+   "kind": "review",
+   "prompt": "Review this code for problems: ```tsx import { SuiClient, getFullnodeUrl } from '@mysten/sui/client'; import { useSuiClientQuery, useSignAndExecuteTransaction } from '@mysten/dapp-kit'; import { TransactionBlock } from '@mysten/sui.js/trans",
+   "sources": [
+    "https://sdk.mystenlabs.com/dapp-kit",
+    "https://sdk.mystenlabs.com/sui"
+   ]
+  },
+  {
+   "id": "frontend-apps/frontend-apps-ssr-nextjs",
+   "pillar": "building",
+   "skill": "frontend-apps",
+   "passed": 5,
+   "of": 6,
+   "kind": "design",
+   "prompt": "I'm using Next.js App Router. Where do I put the DAppKitProvider? Do I need 'use client'?",
+   "sources": [
+    "https://sdk.mystenlabs.com/dapp-kit/getting-started/next-js"
+   ]
+  },
+  {
+   "id": "kiosk/1",
+   "pillar": "security",
+   "skill": "kiosk",
+   "passed": 5,
+   "of": 6,
+   "kind": "build",
+   "prompt": "How do I create a Kiosk on Sui, list an NFT for sale, and what happens when a buyer purchases it?",
+   "sources": [
+    "https://docs.sui.io/standards/kiosk"
+   ]
+  },
+  {
+   "id": "kiosk/2",
+   "pillar": "security",
+   "skill": "kiosk",
+   "passed": 2,
+   "of": 6,
+   "kind": "explain",
+   "prompt": "What are the different asset states in a Sui Kiosk and what operations are available in each state?",
+   "sources": [
+    "https://docs.sui.io/standards/kiosk"
+   ]
+  },
+  {
+   "id": "kiosk/3",
+   "pillar": "security",
+   "skill": "kiosk",
+   "passed": 4,
+   "of": 5,
+   "kind": "build",
+   "prompt": "How do I build a permissioned Kiosk extension using the kiosk_extension module? What permissions are available?",
+   "sources": [
+    "https://docs.sui.io/standards/kiosk"
+   ]
+  },
+  {
+   "id": "kiosk/4",
+   "pillar": "security",
+   "skill": "kiosk",
+   "passed": 2,
+   "of": 5,
+   "kind": "design",
+   "prompt": "I want to borrow an NFT from my Kiosk to read its fields in a PTB. Which borrowing pattern should I use and what are the constraints?",
+   "sources": [
+    "https://docs.sui.io/standards/kiosk"
+   ]
+  },
+  {
+   "id": "modern-move-syntax/syntax-amm",
+   "pillar": "building",
+   "skill": "modern-move-syntax",
+   "passed": 0,
+   "of": 4,
+   "kind": "build",
+   "prompt": "Help me set up a standard AMM style smart contract with move. It should support: creating a liquidity pool for two coin types, adding and removing liquidity (minting/burning LP tokens), swapping between the two coins using the constant prod",
+   "sources": []
+  },
+  {
+   "id": "modern-move-syntax/syntax-nft-game",
+   "pillar": "building",
+   "skill": "modern-move-syntax",
+   "passed": 1,
+   "of": 3,
+   "kind": "build",
+   "prompt": "I'm building a video game on Sui. I need a smart contract for player profiles as NFTs. Each player has a username, an XP counter, and a level. Players also need an inventory — use dynamic object fields so it can hold any arbitrary Sui objec",
+   "sources": []
+  },
+  {
+   "id": "modern-move-syntax/syntax-access-control",
+   "pillar": "building",
+   "skill": "modern-move-syntax",
+   "passed": 0,
+   "of": 3,
+   "kind": "build",
+   "prompt": "I want to build a reusable access control package on Sui that other developers can import into their projects. It should support role-based access control — like defining roles (admin, moderator, minter, etc), granting and revoking roles to",
+   "sources": []
+  },
+  {
+   "id": "move-security/security-review-shared-object",
+   "pillar": "security",
+   "skill": "move-security",
+   "passed": 3,
+   "of": 5,
+   "kind": "review",
+   "prompt": "Review this Move module for security issues: ```move module example::vault { use sui::coin::{Self, Coin}; use sui::sui::SUI; use sui::balance::{Self, Balance}; public struct Vault has key { id: UID, balance: Balance<SUI>, admin: address, } ",
+   "sources": []
+  },
+  {
+   "id": "move-security/access-control-pattern-choice",
+   "pillar": "security",
+   "skill": "move-security",
+   "passed": 3,
+   "of": 6,
+   "kind": "design",
+   "prompt": "I'm building a Move module on Sui where certain users should be authorized to perform minting operations. I'm considering two approaches: (1) storing a list of authorized addresses in a shared object and checking tx_context::sender() agains",
+   "sources": []
+  },
+  {
+   "id": "move-security/capability-safety-and-revocation",
+   "pillar": "security",
+   "skill": "move-security",
+   "passed": 2,
+   "of": 6,
+   "kind": "explain",
+   "prompt": "I have an AdminCap in my Move module that controls treasury operations. Right now it's held by a single address. What security improvements should I make? Also, what happens if the AdminCap is leaked or stolen?",
+   "sources": []
+  },
+  {
+   "id": "move-security/randomness-security-review",
+   "pillar": "security",
+   "skill": "move-security",
+   "passed": 3,
+   "of": 6,
+   "kind": "design",
+   "prompt": "I'm writing a lottery contract on Sui that uses onchain randomness. Here's my function signature: ```move public fun draw_winner(lottery: &mut Lottery, rng: &mut RandomGenerator, ctx: &mut TxContext) { ... } ``` Is this safe?",
+   "sources": []
+  },
+  {
+   "id": "move-unit-testing/amm-unit-tests",
+   "pillar": "building",
+   "skill": "move-unit-testing",
+   "passed": 0,
+   "of": 6,
+   "kind": "build",
+   "prompt": "I have an AMM smart contract (see provided files). Write comprehensive unit tests for it. Cover pool creation, adding/removing liquidity, swaps, edge cases, and error conditions.",
+   "sources": []
+  },
+  {
+   "id": "naming-conventions/naming-amm",
+   "pillar": "building",
+   "skill": "naming-conventions",
+   "passed": 1,
+   "of": 3,
+   "kind": "build",
+   "prompt": "Help me set up a standard AMM style smart contract with move. It should support: creating a liquidity pool for two coin types, adding and removing liquidity (minting/burning LP tokens), swapping between the two coins using the constant prod",
+   "sources": []
+  },
+  {
+   "id": "naming-conventions/naming-nft-game",
+   "pillar": "building",
+   "skill": "naming-conventions",
+   "passed": 3,
+   "of": 5,
+   "kind": "build",
+   "prompt": "I'm building a video game on Sui. I need a smart contract for player profiles as NFTs. Each player has a username, an XP counter, and a level. Players also need an inventory — use dynamic object fields so it can hold any arbitrary Sui objec",
+   "sources": []
+  },
+  {
+   "id": "naming-conventions/naming-access-control",
+   "pillar": "building",
+   "skill": "naming-conventions",
+   "passed": 2,
+   "of": 4,
+   "kind": "build",
+   "prompt": "I want to build a reusable access control package on Sui that other developers can import into their projects. It should support role-based access control — like defining roles (admin, moderator, minter, etc), granting and revoking roles to",
+   "sources": []
+  },
+  {
+   "id": "object-model/1",
+   "pillar": "objects",
+   "skill": "object-model",
+   "passed": 4,
+   "of": 6,
+   "kind": "explain",
+   "prompt": "What is the Sui Object Model and how do objects work on Sui?",
+   "sources": [
+    "https://docs.sui.io/develop/sui-architecture/object-model",
+    "https://docs.sui.io/develop/objects/"
+   ]
+  },
+  {
+   "id": "object-model/2",
+   "pillar": "objects",
+   "skill": "object-model",
+   "passed": 4,
+   "of": 7,
+   "kind": "choose",
+   "prompt": "What are the different types of object ownership on Sui? When should I use a shared object vs an owned object?",
+   "sources": [
+    "https://docs.sui.io/develop/objects/object-ownership/",
+    "https://docs.sui.io/develop/sui-architecture/consensus"
+   ]
+  },
+  {
+   "id": "object-model/3",
+   "pillar": "objects",
+   "skill": "object-model",
+   "passed": 3,
+   "of": 6,
+   "kind": "explain",
+   "prompt": "How do I share an object on Sui? Can I access a shared object from the frontend just by knowing its object ID?",
+   "sources": [
+    "https://docs.sui.io/develop/objects/object-ownership/",
+    "https://docs.sui.io/develop/objects/transfers/"
+   ]
+  },
+  {
+   "id": "object-model/4",
+   "pillar": "objects",
+   "skill": "object-model",
+   "passed": 5,
+   "of": 6,
+   "kind": "explain",
+   "prompt": "What do the key, store, copy, and drop abilities do in Sui Move? What happens if my object has key but not store?",
+   "sources": [
+    "https://move-book.com/move-basics/abilities-introduction.html",
+    "https://docs.sui.io/develop/objects/transfers/custom-rules"
+   ]
+  },
+  {
+   "id": "object-model/5",
+   "pillar": "objects",
+   "skill": "object-model",
+   "passed": 3,
+   "of": 6,
+   "kind": "choose",
+   "prompt": "What is the difference between dynamic fields and dynamic object fields? When should I use each?",
+   "sources": [
+    "https://docs.sui.io/develop/objects/dynamic-fields",
+    "https://move-book.com/programmability/dynamic-fields.html",
+    "https://move-book.com/programmability/dynamic-object-fields.html"
+   ]
+  },
+  {
+   "id": "object-model/6",
+   "pillar": "objects",
+   "skill": "object-model",
+   "passed": 4,
+   "of": 6,
+   "kind": "design",
+   "prompt": "My player NFT needs an inventory that can hold any arbitrary Sui object — Swords, Shields, Potions, anything. How should I model this?",
+   "sources": [
+    "https://docs.sui.io/develop/objects/dynamic-fields",
+    "https://move-book.com/programmability/collections.html"
+   ]
+  },
+  {
+   "id": "object-model/7",
+   "pillar": "objects",
+   "skill": "object-model",
+   "passed": 4,
+   "of": 5,
+   "kind": "choose",
+   "prompt": "When should I use Table vs VecMap vs Bag in Sui Move? What are the performance tradeoffs?",
+   "sources": [
+    "https://docs.sui.io/develop/objects/dynamic-fields",
+    "https://move-book.com/programmability/collections.html"
+   ]
+  },
+  {
+   "id": "object-model/8",
+   "pillar": "objects",
+   "skill": "object-model",
+   "passed": 4,
+   "of": 6,
+   "kind": "explain",
+   "prompt": "How do I destroy an object in Sui Move? What if it doesn't have the drop ability?",
+   "sources": [
+    "https://move-book.com/storage/uid-and-id.html",
+    "https://move-book.com/move-basics/struct.html"
+   ]
+  },
+  {
+   "id": "object-model/10",
+   "pillar": "objects",
+   "skill": "object-model",
+   "passed": 3,
+   "of": 5,
+   "kind": "choose",
+   "prompt": "How does transfer work on Sui? What is the difference between transfer::transfer and transfer::public_transfer?",
+   "sources": [
+    "https://docs.sui.io/develop/objects/transfers/custom-rules",
+    "https://move-book.com/storage/storage-functions"
+   ]
+  },
+  {
+   "id": "object-model/11",
+   "pillar": "objects",
+   "skill": "object-model",
+   "passed": 4,
+   "of": 6,
+   "kind": "explain",
+   "prompt": "How do I transfer an object to another object on Sui? What is Receiving<T>?",
+   "sources": [
+    "https://docs.sui.io/develop/objects/transfers/transfer-to-object"
+   ]
+  },
+  {
+   "id": "object-model/12",
+   "pillar": "objects",
+   "skill": "object-model",
+   "passed": 4,
+   "of": 5,
+   "kind": "design",
+   "prompt": "I want to make an NFT that cannot be transferred by the holder. How do I make a soulbound object on Sui?",
+   "sources": [
+    "https://docs.sui.io/develop/objects/transfers/custom-rules",
+    "https://docs.sui.io/develop/objects/transfers/transfer-to-object"
+   ]
+  },
+  {
+   "id": "object-model/13",
+   "pillar": "objects",
+   "skill": "object-model",
+   "passed": 3,
+   "of": 5,
+   "kind": "explain",
+   "prompt": "What is the capability pattern in Sui Move? How do AdminCap and TreasuryCap work?",
+   "sources": [
+    "https://move-book.com/programmability/capability.html",
+    "https://docs.sui.io/develop/objects/transfers/custom-rules"
+   ]
+  },
+  {
+   "id": "object-model/14",
+   "pillar": "objects",
+   "skill": "object-model",
+   "passed": 2,
+   "of": 5,
+   "kind": "explain",
+   "prompt": "I have a cap stored inside an object. How can I temporarily give it to a caller to use in a PTB and make sure they return it?",
+   "sources": [
+    "https://docs.sui.io/develop/objects/transfers/simulating-refs",
+    "https://move-book.com/programmability/hot-potato-pattern.html"
+   ]
+  },
+  {
+   "id": "object-model/15",
+   "pillar": "objects",
+   "skill": "object-model",
+   "passed": 1,
+   "of": 5,
+   "kind": "explain",
+   "prompt": "How does object versioning work on Sui? What happens to the version when I modify a shared object?",
+   "sources": [
+    "https://docs.sui.io/develop/objects/versioning"
+   ]
+  },
+  {
+   "id": "object-model/16",
+   "pillar": "objects",
+   "skill": "object-model",
+   "passed": 4,
+   "of": 6,
+   "kind": "explain",
+   "prompt": "What are wrapped objects on Sui? If I wrap an object that has a UID, can I still access it directly by its ID?",
+   "sources": [
+    "https://docs.sui.io/develop/objects/object-ownership/",
+    "https://docs.sui.io/develop/objects/versioning"
+   ]
+  },
+  {
+   "id": "object-model/17",
+   "pillar": "objects",
+   "skill": "object-model",
+   "passed": 1,
+   "of": 5,
+   "kind": "explain",
+   "prompt": "How does parallel execution work on Sui? Why do owned objects skip consensus but shared objects don't?",
+   "sources": [
+    "https://docs.sui.io/develop/sui-architecture/consensus",
+    "https://docs.sui.io/develop/objects/versioning"
+   ]
+  },
+  {
+   "id": "object-model/18",
+   "pillar": "objects",
+   "skill": "object-model",
+   "passed": 3,
+   "of": 6,
+   "kind": "explain",
+   "prompt": "What are derived objects in Sui? How are they different from dynamic fields?",
+   "sources": [
+    "https://docs.sui.io/develop/objects/derived-objects"
+   ]
+  },
+  {
+   "id": "object-model/19",
+   "pillar": "objects",
+   "skill": "object-model",
+   "passed": 3,
+   "of": 5,
+   "kind": "build",
+   "prompt": "What is Object Display in Sui? How do I set up display templates so wallets and explorers show my NFT correctly?",
+   "sources": [
+    "https://docs.sui.io/develop/objects/display/",
+    "https://move-book.com/programmability/display.html"
+   ]
+  },
+  {
+   "id": "object-model/20",
+   "pillar": "objects",
+   "skill": "object-model",
+   "passed": 4,
+   "of": 6,
+   "kind": "design",
+   "prompt": "I'm building a governance system where users can vote. The registry of votes needs to support up to 100,000 voters. Should I use Table, VecMap, or something else? What are the scalability limits?",
+   "sources": [
+    "https://docs.sui.io/develop/objects/dynamic-fields",
+    "https://move-book.com/programmability/collections.html"
+   ]
+  },
+  {
+   "id": "onchain-randomness/1",
+   "pillar": "security",
+   "skill": "onchain-randomness",
+   "passed": 5,
+   "of": 6,
+   "kind": "explain",
+   "prompt": "How do I generate a random number in a Sui Move smart contract? Show me a basic example of rolling a dice.",
+   "sources": [
+    "https://docs.sui.io/sui-stack/on-chain-primitives/randomness-onchain"
+   ]
+  },
+  {
+   "id": "onchain-randomness/2",
+   "pillar": "security",
+   "skill": "onchain-randomness",
+   "passed": 1,
+   "of": 6,
+   "kind": "explain",
+   "prompt": "I wrote a public Move function that takes Random as a parameter for my lottery game. Why won't it compile, and how do I fix it?",
+   "sources": [
+    "https://docs.sui.io/sui-stack/on-chain-primitives/randomness-onchain"
+   ]
+  },
+  {
+   "id": "onchain-randomness/3",
+   "pillar": "security",
+   "skill": "onchain-randomness",
+   "passed": 3,
+   "of": 6,
+   "kind": "build",
+   "prompt": "I need to implement a secure NFT airdrop where users receive a random rarity tier (gold, silver, or bronze). How should I structure this to prevent manipulation?",
+   "sources": [
+    "https://docs.sui.io/sui-stack/on-chain-primitives/randomness-onchain"
+   ]
+  },
+  {
+   "id": "ptbs/ptbs-basic-transfer",
+   "pillar": "transactions",
+   "skill": "ptbs",
+   "passed": 3,
+   "of": 6,
+   "kind": "build",
+   "prompt": "Using the Sui TypeScript SDK, write a function that transfers 100 MIST to the address 0xabc... from the connected wallet in a single transaction. Show me the code.",
+   "sources": [
+    "https://docs.sui.io/develop/transactions/ptbs/building-ptb",
+    "https://sdk.mystenlabs.com/sui/transactions/basics"
+   ]
+  },
+  {
+   "id": "ptbs/ptbs-batch-airdrop",
+   "pillar": "transactions",
+   "skill": "ptbs",
+   "passed": 3,
+   "of": 5,
+   "kind": "design",
+   "prompt": "I need to airdrop variable amounts of SUI to 400 recipients. What's the best way to do this on Sui?",
+   "sources": [
+    "https://docs.sui.io/concepts/transactions/prog-txn-blocks",
+    "https://docs.sui.io/develop/transactions/ptbs/building-ptb",
+    "https://docs.sui.io/concepts/sui-architecture/epochs"
+   ]
+  },
+  {
+   "id": "ptbs/ptbs-chained-move-calls",
+   "pillar": "transactions",
+   "skill": "ptbs",
+   "passed": 0,
+   "of": 5,
+   "kind": "build",
+   "prompt": "I have a Move function mint_hero that returns a Hero, and another function new_sword(power: u64) that returns a Sword, and a third function equip_sword(hero: Hero, sword: Sword) that returns a Hero. I want to mint a hero, mint a sword with ",
+   "sources": [
+    "https://docs.sui.io/concepts/transactions/prog-txn-blocks",
+    "https://docs.sui.io/develop/transactions/ptbs/inputs-and-results"
+   ]
+  },
+  {
+   "id": "ptbs/ptbs-sponsored-transaction-flow",
+   "pillar": "transactions",
+   "skill": "ptbs",
+   "passed": 4,
+   "of": 5,
+   "kind": "build",
+   "prompt": "Explain how to build a sponsored transaction where my app constructs the PTB, a sponsor service pays the gas, and the user signs as sender. Show the code on all three sides.",
+   "sources": [
+    "https://docs.sui.io/develop/transaction-payment/sponsor-txn",
+    "https://sdk.mystenlabs.com/sui/transactions/signing-and-execution",
+    "https://docs.sui.io/develop/transactions/ptbs/building-ptb"
+   ]
+  },
+  {
+   "id": "ptbs/ptbs-shared-object-rules",
+   "pillar": "transactions",
+   "skill": "ptbs",
+   "passed": 3,
+   "of": 5,
+   "kind": "explain",
+   "prompt": "I have a shared object representing a liquidity pool. I want a PTB that reads some state from the pool, does a swap, and then deletes the pool object. Is this possible? What are the constraints on shared objects in PTBs?",
+   "sources": [
+    "https://docs.sui.io/concepts/transactions/prog-txn-blocks",
+    "https://docs.sui.io/develop/transactions/ptbs/inputs-and-results"
+   ]
+  },
+  {
+   "id": "sui-build-test/1",
+   "pillar": "transactions",
+   "skill": "sui-build-test",
+   "passed": 3,
+   "of": 6,
+   "kind": "build",
+   "prompt": "How do I write and run tests for a Sui Move module? What testing tools are available?",
+   "sources": [
+    "https://docs.sui.io/getting-started/dev-cheat-sheet",
+    "https://move-book.com/testing/"
+   ]
+  },
+  {
+   "id": "sui-build-test/2",
+   "pillar": "transactions",
+   "skill": "sui-build-test",
+   "passed": 2,
+   "of": 4,
+   "kind": "choose",
+   "prompt": "How do I install and set up Move Analyzer for VS Code?",
+   "sources": [
+    "https://docs.sui.io/getting-started/tooling"
+   ]
+  },
+  {
+   "id": "sui-client/1",
+   "pillar": "transactions",
+   "skill": "sui-client",
+   "passed": 2,
+   "of": 6,
+   "kind": "explain",
+   "prompt": "How do I get SUI tokens for testing? Where is the faucet?",
+   "sources": [
+    "https://docs.sui.io/getting-started/onboarding/get-coins"
+   ]
+  },
+  {
+   "id": "sui-client/2",
+   "pillar": "transactions",
+   "skill": "sui-client",
+   "passed": 0,
+   "of": 6,
+   "kind": "build",
+   "prompt": "How do I create a wallet and fund it with the devnet faucet using only the CLI?",
+   "sources": [
+    "https://docs.sui.io/getting-started/onboarding/configure-sui-client",
+    "https://docs.sui.io/getting-started/onboarding/get-coins"
+   ]
+  },
+  {
+   "id": "sui-client/3",
+   "pillar": "transactions",
+   "skill": "sui-client",
+   "passed": 3,
+   "of": 5,
+   "kind": "explain",
+   "prompt": "I get 'Cannot find gas coin for signer address' when trying to execute a transaction. What's wrong?",
+   "sources": [
+    "https://docs.sui.io/getting-started/onboarding/get-coins"
+   ]
+  },
+  {
+   "id": "sui-client/4",
+   "pillar": "transactions",
+   "skill": "sui-client",
+   "passed": 0,
+   "of": 4,
+   "kind": "explain",
+   "prompt": "How do I merge coins and transfer SUI from the CLI?",
+   "sources": [
+    "https://docs.sui.io/references/cli/client"
+   ]
+  },
+  {
+   "id": "sui-for-ethereum/1",
+   "pillar": "objects",
+   "skill": "sui-for-ethereum",
+   "passed": 4,
+   "of": 5,
+   "kind": "design",
+   "prompt": "I'm an Ethereum developer. How does access control work on Sui compared to Solidity's Ownable and AccessControl patterns?",
+   "sources": [
+    "https://docs.sui.io/getting-started/sui-for-ethereum"
+   ]
+  },
+  {
+   "id": "sui-for-ethereum/2",
+   "pillar": "objects",
+   "skill": "sui-for-ethereum",
+   "passed": 1,
+   "of": 4,
+   "kind": "explain",
+   "prompt": "How do Ethereum token standards (ERC-20, ERC-721, ERC-1155) map to Sui? What are the equivalents?",
+   "sources": [
+    "https://docs.sui.io/getting-started/sui-for-ethereum"
+   ]
+  },
+  {
+   "id": "sui-for-ethereum/4",
+   "pillar": "objects",
+   "skill": "sui-for-ethereum",
+   "passed": 3,
+   "of": 5,
+   "kind": "choose",
+   "prompt": "How does transaction composability on Sui compare to Ethereum? On Ethereum I need multiple transactions for a multi-step workflow. What does Sui offer?",
+   "sources": [
+    "https://docs.sui.io/getting-started/sui-for-ethereum"
+   ]
+  },
+  {
+   "id": "sui-install/1",
+   "pillar": "transactions",
+   "skill": "sui-install",
+   "passed": 1,
+   "of": 8,
+   "kind": "explain",
+   "prompt": "How can I install Sui?",
+   "sources": [
+    "https://docs.sui.io/getting-started/onboarding/sui-install"
+   ]
+  },
+  {
+   "id": "sui-install/2",
+   "pillar": "transactions",
+   "skill": "sui-install",
+   "passed": 2,
+   "of": 7,
+   "kind": "design",
+   "prompt": "My sui --version shows 1.67.3 but the latest is 1.69. I installed via suiup. How do I update?",
+   "sources": [
+    "https://docs.sui.io/getting-started/onboarding/sui-install"
+   ]
+  },
+  {
+   "id": "sui-install/3",
+   "pillar": "transactions",
+   "skill": "sui-install",
+   "passed": 0,
+   "of": 5,
+   "kind": "explain",
+   "prompt": "I ran suiup update sui@testnet and it says it downloaded v1.70.2, but sui --version still shows v1.62.0. What's going on?",
+   "sources": [
+    "https://docs.sui.io/getting-started/onboarding/sui-install"
+   ]
+  },
+  {
+   "id": "sui-install/4",
+   "pillar": "transactions",
+   "skill": "sui-install",
+   "passed": 3,
+   "of": 4,
+   "kind": "explain",
+   "prompt": "I get a 'client/server api version mismatch' warning when running sui client commands. Client is 1.62.0 and server is 1.70.2. How do I fix this?",
+   "sources": [
+    "https://docs.sui.io/getting-started/onboarding/sui-install"
+   ]
+  },
+  {
+   "id": "sui-install/5",
+   "pillar": "transactions",
+   "skill": "sui-install",
+   "passed": 0,
+   "of": 4,
+   "kind": "explain",
+   "prompt": "I installed move-analyzer with suiup but the 'move-analyzer' command isn't found. What do I need to do?",
+   "sources": [
+    "https://docs.sui.io/getting-started/tooling"
+   ]
+  },
+  {
+   "id": "sui-move/1",
+   "pillar": "building",
+   "skill": "sui-move",
+   "passed": 7,
+   "of": 8,
+   "kind": "choose",
+   "prompt": "Can you explain what the key, store, copy, and drop abilities do in Sui Move? When should I use each one?",
+   "sources": [
+    "https://move-book.com/move-basics/abilities-introduction.html",
+    "https://docs.sui.io/concepts/sui-move-concepts"
+   ]
+  },
+  {
+   "id": "sui-move/2",
+   "pillar": "building",
+   "skill": "sui-move",
+   "passed": 2,
+   "of": 6,
+   "kind": "explain",
+   "prompt": "How do I upgrade a published Move package on Sui? What is the UpgradeCap?",
+   "sources": [
+    "https://docs.sui.io/develop/publish-upgrade-packages/upgrade"
+   ]
+  },
+  {
+   "id": "sui-move/3",
+   "pillar": "building",
+   "skill": "sui-move",
+   "passed": 5,
+   "of": 6,
+   "kind": "explain",
+   "prompt": "What is the init function in Sui Move? Why would I use a One-Time Witness for currency creation?",
+   "sources": [
+    "https://move-book.com/programmability/module-initializer",
+    "https://move-book.com/programmability/one-time-witness",
+    "https://move-book.com/programmability/one-time-witness.html"
+   ]
+  },
+  {
+   "id": "sui-move/4",
+   "pillar": "building",
+   "skill": "sui-move",
+   "passed": 4,
+   "of": 6,
+   "kind": "choose",
+   "prompt": "How to get the current epoch in Sui Move using TxContext? What does ctx.epoch() return? What's the difference between ctx.epoch_timestamp_ms() and the Clock object?",
+   "sources": [
+    "https://docs.sui.io/sui-stack/on-chain-primitives/access-time",
+    "https://move-book.com/programmability/epoch-and-time.html"
+   ]
+  },
+  {
+   "id": "sui-move/5",
+   "pillar": "building",
+   "skill": "sui-move",
+   "passed": 5,
+   "of": 6,
+   "kind": "explain",
+   "prompt": "What are Sui Move events and how do I emit events in smart contracts? How do I subscribe to them offchain?",
+   "sources": [
+    "https://docs.sui.io/develop/accessing-data/using-events",
+    "https://move-book.com/programmability/events.html"
+   ]
+  },
+  {
+   "id": "sui-move/6",
+   "pillar": "building",
+   "skill": "sui-move",
+   "passed": 5,
+   "of": 7,
+   "kind": "build",
+   "prompt": "How do I create a new fungible token (currency) on Sui? What are the key coin operations like mint, burn, split, and merge?",
+   "sources": [
+    "https://docs.sui.io/standards/coin",
+    "https://docs.sui.io/references/framework/sui/coin"
+   ]
+  },
+  {
+   "id": "sui-move/7",
+   "pillar": "building",
+   "skill": "sui-move",
+   "passed": 4,
+   "of": 6,
+   "kind": "explain",
+   "prompt": "How do I destroy an object in Sui Move that doesn't have the drop ability?",
+   "sources": [
+    "https://move-book.com/storage/uid-and-id.html",
+    "https://move-book.com/move-basics/struct.html",
+    "https://move-book.com/storage/storage-functions.html"
+   ]
+  },
+  {
+   "id": "sui-move-project/1",
+   "pillar": "building",
+   "skill": "sui-move-project",
+   "passed": 0,
+   "of": 5,
+   "kind": "explain",
+   "prompt": "I get this error when building: '[NOTE] Updating dependencies for testnet environment because Move.toml has been changed. Packages with old dependencies found.' What's wrong?",
+   "sources": [
+    "https://docs.sui.io/develop/publish-upgrade-packages/"
+   ]
+  },
+  {
+   "id": "sui-move-project/3",
+   "pillar": "building",
+   "skill": "sui-move-project",
+   "passed": 3,
+   "of": 4,
+   "kind": "explain",
+   "prompt": "I get 'error[E13001]: feature is not supported in specified edition' when I use 'public struct'. How do I fix this?",
+   "sources": [
+    "https://move-book.com/guides/2024-migration-guide.html"
+   ]
+  },
+  {
+   "id": "sui-move-project/4",
+   "pillar": "building",
+   "skill": "sui-move-project",
+   "passed": 1,
+   "of": 6,
+   "kind": "choose",
+   "prompt": "What's the correct Move.toml format? I'm confused about [addresses] vs [environments] and Sui dependencies. I keep getting build errors.",
+   "sources": [
+    "https://docs.sui.io/develop/publish-upgrade-packages/"
+   ]
+  },
+  {
+   "id": "sui-move-project/5",
+   "pillar": "building",
+   "skill": "sui-move-project",
+   "passed": 0,
+   "of": 5,
+   "kind": "build",
+   "prompt": "I get 'Dependency Sui is a legacy system name and cannot be used' when I run sui move build. My Move.toml has Sui = { git = \"https://github.com/MystenLabs/sui.git\", subdir = \"crates/sui-framework/packages/sui-framework\", rev = \"framework/te",
+   "sources": [
+    "https://docs.sui.io/guides/developer/sui-101/move-package-management"
+   ]
+  },
+  {
+   "id": "sui-move-project/6",
+   "pillar": "building",
+   "skill": "sui-move-project",
+   "passed": 0,
+   "of": 3,
+   "kind": "build",
+   "prompt": "Help me set up a standard AMM style smart contract with move. It should support: creating a liquidity pool for two coin types, adding and removing liquidity (minting/burning LP tokens), swapping between the two coins using the constant prod",
+   "sources": [
+    "https://move-book.com/guides/code-quality-checklist"
+   ]
+  },
+  {
+   "id": "sui-move-project/7",
+   "pillar": "building",
+   "skill": "sui-move-project",
+   "passed": 0,
+   "of": 3,
+   "kind": "build",
+   "prompt": "I'm building a video game on Sui. I need a smart contract for player profiles as NFTs. Each player has a username, an XP counter, and a level. Players also need an inventory — use dynamic object fields so it can hold any arbitrary Sui objec",
+   "sources": [
+    "https://move-book.com/guides/code-quality-checklist"
+   ]
+  },
+  {
+   "id": "sui-move-project/8",
+   "pillar": "building",
+   "skill": "sui-move-project",
+   "passed": 1,
+   "of": 3,
+   "kind": "build",
+   "prompt": "I want to create a new token on Sui. It should have a fixed name and symbol, an icon URL, and I want to be able to mint new tokens and also have the ability to burn the treasury cap to make it so no one can ever mint more. Can you set up th",
+   "sources": [
+    "https://move-book.com/guides/code-quality-checklist"
+   ]
+  },
+  {
+   "id": "sui-move-project/9",
+   "pillar": "building",
+   "skill": "sui-move-project",
+   "passed": 3,
+   "of": 6,
+   "kind": "build",
+   "prompt": "Create a simple Move smart contract on Sui that implements a counter. Show me the complete Move.toml and the module file.",
+   "sources": [
+    "https://docs.sui.io/develop/publish-upgrade-packages/"
+   ]
+  },
+  {
+   "id": "sui-move-project/10",
+   "pillar": "building",
+   "skill": "sui-move-project",
+   "passed": 2,
+   "of": 5,
+   "kind": "build",
+   "prompt": "I want to build a DeFi lending protocol on Sui. Set up the Move project structure with Move.toml for me. I'll be deploying to testnet first, then mainnet.",
+   "sources": [
+    "https://docs.sui.io/develop/publish-upgrade-packages/"
+   ]
+  },
+  {
+   "id": "sui-networks-gas/1",
+   "pillar": "objects",
+   "skill": "sui-networks-gas",
+   "passed": 6,
+   "of": 7,
+   "kind": "explain",
+   "prompt": "How is gas cost calculated on Sui? What is the storage rebate?",
+   "sources": [
+    "https://docs.sui.io/concepts/tokenomics/gas-in-sui"
+   ]
+  },
+  {
+   "id": "sui-networks-gas/2",
+   "pillar": "objects",
+   "skill": "sui-networks-gas",
+   "passed": 3,
+   "of": 5,
+   "kind": "explain",
+   "prompt": "What is a Sui epoch? How long is one epoch on Mainnet? What happens at the epoch boundary?",
+   "sources": [
+    "https://docs.sui.io/concepts/tokenomics/gas-in-sui",
+    "https://move-book.com/programmability/epoch-and-time.html"
+   ]
+  },
+  {
+   "id": "sui-overview/1",
+   "pillar": "objects",
+   "skill": "sui-overview",
+   "passed": 4,
+   "of": 7,
+   "kind": "explain",
+   "prompt": "What is the Sui Object Model and how do objects work on Sui?",
+   "sources": [
+    "https://docs.sui.io/concepts/object-model",
+    "https://docs.sui.io/develop/objects/object-ownership"
+   ]
+  },
+  {
+   "id": "sui-overview/3",
+   "pillar": "objects",
+   "skill": "sui-overview",
+   "passed": 4,
+   "of": 6,
+   "kind": "design",
+   "prompt": "I'm coming from Ethereum. Explain how Sui's object model is different from Ethereum's account model. What do I need to unlearn?",
+   "sources": [
+    "https://docs.sui.io/concepts/object-model",
+    "https://docs.sui.io/concepts/sui-move-concepts"
+   ]
+  },
+  {
+   "id": "sui-overview/4",
+   "pillar": "objects",
+   "skill": "sui-overview",
+   "passed": 0,
+   "of": 6,
+   "kind": "explain",
+   "prompt": "What are the main components of the Sui Stack and how do they work together for building a complete app?",
+   "sources": [
+    "https://docs.sui.io/sui-stack",
+    "https://docs.wal.app"
+   ]
+  },
+  {
+   "id": "sui-overview/5",
+   "pillar": "objects",
+   "skill": "sui-overview",
+   "passed": 5,
+   "of": 6,
+   "kind": "build",
+   "prompt": "I want to build an NFT collection where the artwork is hidden until purchase. Buyers should only be able to see the art after they own the NFT. Which Sui Stack components do I need?",
+   "sources": [
+    "https://docs.sui.io/sui-stack",
+    "https://docs.wal.app"
+   ]
+  },
+  {
+   "id": "sui-publish/1",
+   "pillar": "building",
+   "skill": "sui-publish",
+   "passed": 2,
+   "of": 6,
+   "kind": "explain",
+   "prompt": "How do I publish a Move package for the first time? What do I get back?",
+   "sources": [
+    "https://docs.sui.io/getting-started/onboarding/hello-world"
+   ]
+  },
+  {
+   "id": "sui-publish/2",
+   "pillar": "building",
+   "skill": "sui-publish",
+   "passed": 3,
+   "of": 5,
+   "kind": "explain",
+   "prompt": "I published to Testnet but now I want to publish a fresh copy to Devnet for development. How do I publish it again to another package ID?",
+   "sources": [
+    "https://docs.sui.io/getting-started/onboarding/hello-world",
+    "https://docs.sui.io/develop/publish-upgrade-packages/"
+   ]
+  },
+  {
+   "id": "sui-publish/3",
+   "pillar": "building",
+   "skill": "sui-publish",
+   "passed": 4,
+   "of": 6,
+   "kind": "explain",
+   "prompt": "How do I upgrade a published Move contract on Sui? What's the process?",
+   "sources": [
+    "https://docs.sui.io/develop/publish-upgrade-packages/upgrade"
+   ]
+  },
+  {
+   "id": "sui-publish/4",
+   "pillar": "building",
+   "skill": "sui-publish",
+   "passed": 4,
+   "of": 5,
+   "kind": "design",
+   "prompt": "My dry run is failing on a transaction. What should I check to debug it?",
+   "sources": [
+    "https://docs.sui.io/getting-started/dev-cheat-sheet"
+   ]
+  },
+  {
+   "id": "sui-publish/5",
+   "pillar": "building",
+   "skill": "sui-publish",
+   "passed": 4,
+   "of": 5,
+   "kind": "explain",
+   "prompt": "How do I start and use a local Sui network for development?",
+   "sources": [
+    "https://docs.sui.io/getting-started/onboarding/"
+   ]
+  },
+  {
+   "id": "sui-publish/6",
+   "pillar": "building",
+   "skill": "sui-publish",
+   "passed": 1,
+   "of": 4,
+   "kind": "explain",
+   "prompt": "I published my package and got objects back. How do I find the package ID and the objects created by init functions?",
+   "sources": [
+    "https://docs.sui.io/getting-started/onboarding/hello-world"
+   ]
+  },
+  {
+   "id": "sui-publish/7",
+   "pillar": "building",
+   "skill": "sui-publish",
+   "passed": 0,
+   "of": 4,
+   "kind": "explain",
+   "prompt": "How do I serialize a transaction to send to another party for signing, like for a multisig upgrade?",
+   "sources": [
+    "https://docs.sui.io/getting-started/dev-cheat-sheet"
+   ]
+  },
+  {
+   "id": "sui-sdks/sui-sdks-choose-sdk",
+   "pillar": "building",
+   "skill": "sui-sdks",
+   "passed": 2,
+   "of": 6,
+   "kind": "design",
+   "prompt": "I'm building a high-throughput indexer service that reads Sui transactions in near-real-time and writes them into a Postgres database. My team uses Go. What SDK should I use?",
+   "sources": [
+    "https://docs.sui.io/references/sui-sdks",
+    "https://github.com/MystenLabs/sui-rust-sdk",
+    "https://github.com/block-vision/sui-go-sdk"
+   ]
+  },
+  {
+   "id": "sui-sdks/sui-sdks-ts-client-choice",
+   "pillar": "building",
+   "skill": "sui-sdks",
+   "passed": 1,
+   "of": 6,
+   "kind": "design",
+   "prompt": "I'm starting a new Node.js backend that submits transactions and queries state on Sui mainnet. Which TypeScript client class should I use and how do I instantiate it?",
+   "sources": [
+    "https://sdk.mystenlabs.com/sui/clients",
+    "https://sdk.mystenlabs.com/sui"
+   ]
+  },
+  {
+   "id": "sui-sdks/sui-sdks-bundled-llm-docs",
+   "pillar": "building",
+   "skill": "sui-sdks",
+   "passed": 1,
+   "of": 6,
+   "kind": "build",
+   "prompt": "I'm about to write some code against @mysten/sui in my project. Before I do, is there a way to make sure I'm using the exact API for the version I have installed, not a newer or older version?",
+   "sources": [
+    "https://sdk.mystenlabs.com/sui/llm-docs"
+   ]
+  },
+  {
+   "id": "sui-sdks/sui-sdks-v1-to-v2-migration",
+   "pillar": "building",
+   "skill": "sui-sdks",
+   "passed": 6,
+   "of": 12,
+   "kind": "explain",
+   "prompt": "Migrate this legacy TS code to the current @mysten/sui v2: ```ts import { SuiClient, getFullnodeUrl } from '@mysten/sui.js/client'; import { TransactionBlock } from '@mysten/sui.js/transactions'; const client = new SuiClient({ url: getFulln",
+   "sources": [
+    "https://sdk.mystenlabs.com/sui/migrations/sui-2.0/llms.txt",
+    "https://sdk.mystenlabs.com/sui"
+   ]
+  },
+  {
+   "id": "sui-sdks/sui-sdks-community-caveat",
+   "pillar": "building",
+   "skill": "sui-sdks",
+   "passed": 2,
+   "of": 6,
+   "kind": "explain",
+   "prompt": "Can I use the Python SDK for Sui? How do I install it?",
+   "sources": [
+    "https://docs.sui.io/references/sui-sdks",
+    "https://github.com/FrankC01/pysui"
+   ]
+  },
+  {
+   "id": "sui-sdks/sui-sdks-frontend-boundary",
+   "pillar": "building",
+   "skill": "sui-sdks",
+   "passed": 5,
+   "of": 8,
+   "kind": "design",
+   "prompt": "I'm building a React frontend that lets users connect their wallet and submit a transaction. Should I use @mysten/sui, @mysten/dapp-kit-react, or both?",
+   "sources": [
+    "https://sdk.mystenlabs.com/dapp-kit",
+    "https://sdk.mystenlabs.com/sui"
+   ]
+  },
+  {
+   "id": "sui-ts-sdk-backend/1",
+   "pillar": "building",
+   "skill": "sui-ts-sdk-backend",
+   "passed": 2,
+   "of": 5,
+   "kind": "build",
+   "prompt": "I'm building a backend service that needs to interact with Sui. I can't use the CLI. How do I create a keypair, get testnet SUI, and connect to the network — all from TypeScript?",
+   "sources": [
+    "https://sdk.mystenlabs.com/sui/cryptography/keypairs",
+    "https://sdk.mystenlabs.com/sui"
+   ]
+  },
+  {
+   "id": "sui-ts-sdk-backend/2",
+   "pillar": "building",
+   "skill": "sui-ts-sdk-backend",
+   "passed": 1,
+   "of": 5,
+   "kind": "build",
+   "prompt": "How do I build a transaction that sends 1 SUI to another address, sign it with a keypair, and execute it from a backend? Show me the proper way to access coins and check the result.",
+   "sources": [
+    "https://sdk.mystenlabs.com/sui/transactions/coins-and-balances",
+    "https://sdk.mystenlabs.com/sui/transactions/signing-and-execution"
+   ]
+  },
+  {
+   "id": "sui-ts-sdk-backend/3",
+   "pillar": "building",
+   "skill": "sui-ts-sdk-backend",
+   "passed": 1,
+   "of": 6,
+   "kind": "design",
+   "prompt": "I need to sponsor transactions for my users so they don't need SUI for gas. What's the recommended flow and what SDK should I use?",
+   "sources": [
+    "https://sdk.mystenlabs.com/sponsor/basic-usage",
+    "https://sdk.mystenlabs.com/sponsor/best-practices"
+   ]
+  },
+  {
+   "id": "sui-ts-sdk-backend/4",
+   "pillar": "building",
+   "skill": "sui-ts-sdk-backend",
+   "passed": 0,
+   "of": 5,
+   "kind": "design",
+   "prompt": "I need to run hundreds of transactions from one address as fast as possible for an airdrop. How do I avoid gas management issues?",
+   "sources": [
+    "https://sdk.mystenlabs.com/sui/executors"
+   ]
+  },
+  {
+   "id": "sui-ts-sdk-backend/5",
+   "pillar": "building",
+   "skill": "sui-ts-sdk-backend",
+   "passed": 2,
+   "of": 5,
+   "kind": "build",
+   "prompt": "For our production backend, we don't want to store raw private keys. What are our options for signing Sui transactions securely, and how do we set up a 2-of-3 multisig?",
+   "sources": [
+    "https://sdk.mystenlabs.com/sui/cryptography/signers",
+    "https://sdk.mystenlabs.com/sui/cryptography/signers/multisig"
+   ]
+  },
+  {
+   "id": "zklogin/1",
+   "pillar": "security",
+   "skill": "zklogin",
+   "passed": 5,
+   "of": 7,
+   "kind": "explain",
+   "prompt": "How does the zkLogin protocol flow work? Walk me through the steps from user login to transaction submission.",
+   "sources": [
+    "https://docs.sui.io/concepts/cryptography/zklogin"
+   ]
+  },
+  {
+   "id": "zklogin/2",
+   "pillar": "security",
+   "skill": "zklogin",
+   "passed": 3,
+   "of": 7,
+   "kind": "explain",
+   "prompt": "How is a zkLogin address derived on Sui? Is it permanent, and what happens if I use a different OAuth provider or application?",
+   "sources": [
+    "https://docs.sui.io/concepts/cryptography/zklogin"
+   ]
+  },
+  {
+   "id": "zklogin/3",
+   "pillar": "security",
+   "skill": "zklogin",
+   "passed": 1,
+   "of": 7,
+   "kind": "explain",
+   "prompt": "What are the security implications if a user's JWT is leaked? What about if their salt is leaked? Can an attacker steal funds in either case?",
+   "sources": [
+    "https://docs.sui.io/concepts/cryptography/zklogin"
+   ]
+  }
+ ]
+}

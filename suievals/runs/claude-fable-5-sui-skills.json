@@ -1,0 +1,449 @@
+{
+ "generated": "2026-10-06T13:26:28.706Z",
+ "manifest": "143c0d0525d3",
+ "run": {
+  "name": "claude-fable-5 +sui-skills",
+  "model": "claude-fable-5",
+  "harness": "self-report",
+  "skill": "sui-skills",
+  "withSkills": true,
+  "scoring": "unknown",
+  "judge": null,
+  "submitted": false,
+  "submittedBy": null,
+  "staleManifest": true,
+  "recordedAt": "2026-10-04T07:33:16.147Z",
+  "pillars": {
+   "objects": {
+    "pass": 172,
+    "total": 174
+   },
+   "transactions": {
+    "pass": 159,
+    "total": 163
+   },
+   "building": {
+    "pass": 450,
+    "total": 463
+   },
+   "security": {
+    "pass": 93,
+    "total": 96
+   }
+  },
+  "total": {
+   "pass": 874,
+   "total": 896
+  },
+  "missed": [
+   {
+    "id": "accessing-data/accessing-data-use-case-mapping",
+    "pillar": "transactions",
+    "skill": "accessing-data",
+    "passed": 5,
+    "of": 6
+   },
+   {
+    "id": "accessing-data/accessing-data-walrus-blob",
+    "pillar": "transactions",
+    "skill": "accessing-data",
+    "passed": 6,
+    "of": 7
+   },
+   {
+    "id": "accessing-data/accessing-data-archival-historical",
+    "pillar": "transactions",
+    "skill": "accessing-data",
+    "passed": 5,
+    "of": 6
+   },
+   {
+    "id": "deepbook-margin/1",
+    "pillar": "building",
+    "skill": "deepbook-margin",
+    "passed": 4,
+    "of": 5
+   },
+   {
+    "id": "deepbook-margin/3",
+    "pillar": "building",
+    "skill": "deepbook-margin",
+    "passed": 6,
+    "of": 7
+   },
+   {
+    "id": "deepbook-move/4",
+    "pillar": "building",
+    "skill": "deepbook-move",
+    "passed": 4,
+    "of": 5
+   },
+   {
+    "id": "deepbook-predict/3",
+    "pillar": "building",
+    "skill": "deepbook-predict",
+    "passed": 5,
+    "of": 6
+   },
+   {
+    "id": "deepbook-predict/4",
+    "pillar": "building",
+    "skill": "deepbook-predict",
+    "passed": 4,
+    "of": 5
+   },
+   {
+    "id": "deepbook-sdk/5",
+    "pillar": "building",
+    "skill": "deepbook-sdk",
+    "passed": 4,
+    "of": 5
+   },
+   {
+    "id": "kiosk/3",
+    "pillar": "security",
+    "skill": "kiosk",
+    "passed": 4,
+    "of": 5
+   },
+   {
+    "id": "move-security/capability-safety-and-revocation",
+    "pillar": "security",
+    "skill": "move-security",
+    "passed": 5,
+    "of": 6
+   },
+   {
+    "id": "object-model/1",
+    "pillar": "objects",
+    "skill": "object-model",
+    "passed": 5,
+    "of": 6
+   },
+   {
+    "id": "onchain-randomness/2",
+    "pillar": "security",
+    "skill": "onchain-randomness",
+    "passed": 5,
+    "of": 6
+   },
+   {
+    "id": "ptbs/ptbs-basic-transfer",
+    "pillar": "transactions",
+    "skill": "ptbs",
+    "passed": 5,
+    "of": 6
+   },
+   {
+    "id": "sui-for-ethereum/2",
+    "pillar": "objects",
+    "skill": "sui-for-ethereum",
+    "passed": 3,
+    "of": 4
+   },
+   {
+    "id": "sui-move/5",
+    "pillar": "building",
+    "skill": "sui-move",
+    "passed": 5,
+    "of": 6
+   },
+   {
+    "id": "sui-move-project/4",
+    "pillar": "building",
+    "skill": "sui-move-project",
+    "passed": 5,
+    "of": 6
+   },
+   {
+    "id": "sui-move-project/5",
+    "pillar": "building",
+    "skill": "sui-move-project",
+    "passed": 4,
+    "of": 5
+   },
+   {
+    "id": "sui-move-project/9",
+    "pillar": "building",
+    "skill": "sui-move-project",
+    "passed": 5,
+    "of": 6
+   },
+   {
+    "id": "sui-sdks/sui-sdks-ts-client-choice",
+    "pillar": "building",
+    "skill": "sui-sdks",
+    "passed": 5,
+    "of": 6
+   },
+   {
+    "id": "template/your-skill-edge-case",
+    "pillar": "building",
+    "skill": "template",
+    "passed": 0,
+    "of": 2
+   }
+  ]
+ },
+ "missed": [
+  {
+   "id": "accessing-data/accessing-data-use-case-mapping",
+   "pillar": "transactions",
+   "skill": "accessing-data",
+   "passed": 5,
+   "of": 6,
+   "kind": "design",
+   "prompt": "I'm building a wallet UI that needs to show: a balance for each coin type, recent transactions (with effects), owned NFTs filtered by type, and a dashboard combining all three. Which API should I use and why?",
+   "sources": [
+    "https://docs.sui.io/concepts/data-access/data-serving",
+    "https://docs.sui.io/concepts/data-access/graphql-rpc"
+   ]
+  },
+  {
+   "id": "accessing-data/accessing-data-walrus-blob",
+   "pillar": "transactions",
+   "skill": "accessing-data",
+   "passed": 6,
+   "of": 7,
+   "kind": "design",
+   "prompt": "I'm minting NFTs where each NFT has a 2 MB image. Where should I store the image?",
+   "sources": [
+    "https://docs.wal.app",
+    "https://docs.sui.io/concepts/data-access/data-serving"
+   ]
+  },
+  {
+   "id": "accessing-data/accessing-data-archival-historical",
+   "pillar": "transactions",
+   "skill": "accessing-data",
+   "passed": 5,
+   "of": 6,
+   "kind": "design",
+   "prompt": "I need to read the state of an object as it was 6 months ago. The object has been updated many times since. My gRPC call returns the current version — how do I get the historical version?",
+   "sources": [
+    "https://docs.sui.io/concepts/data-access/archival-store",
+    "https://docs.sui.io/concepts/data-access/graphql-rpc"
+   ]
+  },
+  {
+   "id": "deepbook-margin/1",
+   "pillar": "building",
+   "skill": "deepbook-margin",
+   "passed": 4,
+   "of": 5,
+   "kind": "explain",
+   "prompt": "How does the risk ratio work in DeepBook Margin? What happens at each threshold?",
+   "sources": [
+    "https://docs.sui.io/onchain-finance/deepbook/deepbook-margin/contract-information/risk-ratio",
+    "https://docs.sui.io/onchain-finance/deepbook/deepbook-margin"
+   ]
+  },
+  {
+   "id": "deepbook-margin/3",
+   "pillar": "building",
+   "skill": "deepbook-margin",
+   "passed": 6,
+   "of": 7,
+   "kind": "explain",
+   "prompt": "How do I open a leveraged long position on SUI/USDC using the DeepBook Margin SDK?",
+   "sources": [
+    "https://docs.sui.io/onchain-finance/deepbook/deepbook-margin/leveraged-workflow"
+   ]
+  },
+  {
+   "id": "deepbook-move/4",
+   "pillar": "building",
+   "skill": "deepbook-move",
+   "passed": 4,
+   "of": 5,
+   "kind": "explain",
+   "prompt": "How do I execute a swap in DeepBook V3 from Move code without a BalanceManager?",
+   "sources": [
+    "https://docs.sui.io/onchain-finance/deepbook/deepbookv3/contract-information/swaps",
+    "https://github.com/MystenLabs/deepbookv3/blob/main/packages/deepbook/sources/pool.move"
+   ]
+  },
+  {
+   "id": "deepbook-predict/3",
+   "pillar": "building",
+   "skill": "deepbook-predict",
+   "passed": 5,
+   "of": 6,
+   "kind": "explain",
+   "prompt": "What are the oracle states in DeepBook Predict and how does settlement work?",
+   "sources": [
+    "https://docs.sui.io/onchain-finance/deepbook/deepbook-predict/design"
+   ]
+  },
+  {
+   "id": "deepbook-predict/4",
+   "pillar": "building",
+   "skill": "deepbook-predict",
+   "passed": 4,
+   "of": 5,
+   "kind": "explain",
+   "prompt": "How does the vault and PLP liquidity model work in DeepBook Predict?",
+   "sources": [
+    "https://docs.sui.io/onchain-finance/deepbook/deepbook-predict/design",
+    "https://docs.sui.io/onchain-finance/deepbook/deepbook-predict/tutorial"
+   ]
+  },
+  {
+   "id": "deepbook-sdk/5",
+   "pillar": "building",
+   "skill": "deepbook-sdk",
+   "passed": 4,
+   "of": 5,
+   "kind": "explain",
+   "prompt": "What are the common mistakes when using the DeepBook SDK? My order keeps failing silently.",
+   "sources": [
+    "https://docs.sui.io/onchain-finance/deepbook/deepbookv3/spot-workflow",
+    "https://github.com/MystenLabs/deepbook-sandbox/blob/main/examples/sandbox/README.md"
+   ]
+  },
+  {
+   "id": "kiosk/3",
+   "pillar": "security",
+   "skill": "kiosk",
+   "passed": 4,
+   "of": 5,
+   "kind": "build",
+   "prompt": "How do I build a permissioned Kiosk extension using the kiosk_extension module? What permissions are available?",
+   "sources": [
+    "https://docs.sui.io/standards/kiosk"
+   ]
+  },
+  {
+   "id": "move-security/capability-safety-and-revocation",
+   "pillar": "security",
+   "skill": "move-security",
+   "passed": 5,
+   "of": 6,
+   "kind": "explain",
+   "prompt": "I have an AdminCap in my Move module that controls treasury operations. Right now it's held by a single address. What security improvements should I make? Also, what happens if the AdminCap is leaked or stolen?",
+   "sources": []
+  },
+  {
+   "id": "object-model/1",
+   "pillar": "objects",
+   "skill": "object-model",
+   "passed": 5,
+   "of": 6,
+   "kind": "explain",
+   "prompt": "What is the Sui Object Model and how do objects work on Sui?",
+   "sources": [
+    "https://docs.sui.io/develop/sui-architecture/object-model",
+    "https://docs.sui.io/develop/objects/"
+   ]
+  },
+  {
+   "id": "onchain-randomness/2",
+   "pillar": "security",
+   "skill": "onchain-randomness",
+   "passed": 5,
+   "of": 6,
+   "kind": "explain",
+   "prompt": "I wrote a public Move function that takes Random as a parameter for my lottery game. Why won't it compile, and how do I fix it?",
+   "sources": [
+    "https://docs.sui.io/sui-stack/on-chain-primitives/randomness-onchain"
+   ]
+  },
+  {
+   "id": "ptbs/ptbs-basic-transfer",
+   "pillar": "transactions",
+   "skill": "ptbs",
+   "passed": 5,
+   "of": 6,
+   "kind": "build",
+   "prompt": "Using the Sui TypeScript SDK, write a function that transfers 100 MIST to the address 0xabc... from the connected wallet in a single transaction. Show me the code.",
+   "sources": [
+    "https://docs.sui.io/develop/transactions/ptbs/building-ptb",
+    "https://sdk.mystenlabs.com/sui/transactions/basics"
+   ]
+  },
+  {
+   "id": "sui-for-ethereum/2",
+   "pillar": "objects",
+   "skill": "sui-for-ethereum",
+   "passed": 3,
+   "of": 4,
+   "kind": "explain",
+   "prompt": "How do Ethereum token standards (ERC-20, ERC-721, ERC-1155) map to Sui? What are the equivalents?",
+   "sources": [
+    "https://docs.sui.io/getting-started/sui-for-ethereum"
+   ]
+  },
+  {
+   "id": "sui-move/5",
+   "pillar": "building",
+   "skill": "sui-move",
+   "passed": 5,
+   "of": 6,
+   "kind": "explain",
+   "prompt": "What are Sui Move events and how do I emit events in smart contracts? How do I subscribe to them offchain?",
+   "sources": [
+    "https://docs.sui.io/develop/accessing-data/using-events",
+    "https://move-book.com/programmability/events.html"
+   ]
+  },
+  {
+   "id": "sui-move-project/4",
+   "pillar": "building",
+   "skill": "sui-move-project",
+   "passed": 5,
+   "of": 6,
+   "kind": "choose",
+   "prompt": "What's the correct Move.toml format? I'm confused about [addresses] vs [environments] and Sui dependencies. I keep getting build errors.",
+   "sources": [
+    "https://docs.sui.io/develop/publish-upgrade-packages/"
+   ]
+  },
+  {
+   "id": "sui-move-project/5",
+   "pillar": "building",
+   "skill": "sui-move-project",
+   "passed": 4,
+   "of": 5,
+   "kind": "build",
+   "prompt": "I get 'Dependency Sui is a legacy system name and cannot be used' when I run sui move build. My Move.toml has Sui = { git = \"https://github.com/MystenLabs/sui.git\", subdir = \"crates/sui-framework/packages/sui-framework\", rev = \"framework/te",
+   "sources": [
+    "https://docs.sui.io/guides/developer/sui-101/move-package-management"
+   ]
+  },
+  {
+   "id": "sui-move-project/9",
+   "pillar": "building",
+   "skill": "sui-move-project",
+   "passed": 5,
+   "of": 6,
+   "kind": "build",
+   "prompt": "Create a simple Move smart contract on Sui that implements a counter. Show me the complete Move.toml and the module file.",
+   "sources": [
+    "https://docs.sui.io/develop/publish-upgrade-packages/"
+   ]
+  },
+  {
+   "id": "sui-sdks/sui-sdks-ts-client-choice",
+   "pillar": "building",
+   "skill": "sui-sdks",
+   "passed": 5,
+   "of": 6,
+   "kind": "design",
+   "prompt": "I'm starting a new Node.js backend that submits transactions and queries state on Sui mainnet. Which TypeScript client class should I use and how do I instantiate it?",
+   "sources": [
+    "https://sdk.mystenlabs.com/sui/clients",
+    "https://sdk.mystenlabs.com/sui"
+   ]
+  },
+  {
+   "id": "template/your-skill-edge-case",
+   "pillar": "building",
+   "skill": "template",
+   "passed": 0,
+   "of": 2,
+   "kind": "explain",
+   "prompt": "A prompt that targets a common pitfall or edge case in this domain",
+   "sources": []
+  }
+ ]
+}
