@@ -60,6 +60,7 @@
     "id": "sui-sdks-rust-ptb-minimal",
     "prompt": "Show me a minimal Rust example that builds a PTB transferring 1 SUI from the gas coin to a recipient address, using the new sui-rust-sdk crates (not the legacy monorepo sui-sdk crate). Just the build — no execution.",
     "sources": [
+      "https://docs.sui.io/references/rust-sdk",
       "https://github.com/MystenLabs/sui-rust-sdk",
       "https://docs.rs/sui-transaction-builder"
     ],
@@ -138,6 +139,7 @@
     "id": "sui-sdks-cross-sdk-port",
     "prompt": "I have this TypeScript code that splits a coin and transfers it. Port it to Rust using the new sui-rust-sdk crates.\n\n```ts\nconst tx = new Transaction();\nconst [coin] = tx.splitCoins(tx.gas, [tx.pure.u64(1_000_000n)]);\ntx.transferObjects([coin], tx.pure.address('0xabc'));\n```",
     "sources": [
+      "https://docs.sui.io/references/rust-sdk",
       "https://docs.rs/sui-transaction-builder",
       "https://github.com/MystenLabs/sui-rust-sdk"
     ],
