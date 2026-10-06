@@ -1,9 +1,14 @@
 [
   {
     "id": "amm-unit-tests",
-    "prompt": "I have an AMM smart contract (see provided files). Write comprehensive unit tests for it. Cover pool creation, adding/removing liquidity, swaps, edge cases, and error conditions.",
-    "files": ["sui-smart-contracts/evals/fixtures/amm/"],
-    "expected_output": "A test module with comprehensive tests following Sui Move testing best practices.",
+    "prompt": "I have an AMM smart contract. Write comprehensive unit tests for it. Cover pool creation, adding/removing liquidity, swaps, edge cases, and error conditions.\n\n```move\nmodule amm::pool;\n\nuse sui::balance::{Self, Balance};\nuse sui::coin::{Self, Coin};\n\nconst EInsufficientLiquidity: u64 = 0;\nconst EZeroAmount: u64 = 1;\n\npublic struct Pool<phantom A, phantom B> has key {\n    id: UID,\n    reserve_a: Balance<A>,\n    reserve_b: Balance<B>,\n    lp_supply: u64,\n}\n\npublic fun create<A, B>(a: Coin<A>, b: Coin<B>, ctx: &mut TxContext): Pool<A, B> {\n    assert!(a.value() > 0 && b.value() > 0, EZeroAmount);\n    let lp_supply = a.value();\n    Pool {\n        id: object::new(ctx),\n        reserve_a: a.into_balance(),\n        reserve_b: b.into_balance(),\n        lp_supply,\n    }\n}\n\npublic fun add_liquidity<A, B>(pool: &mut Pool<A, B>, a: Coin<A>, b: Coin<B>): u64 {\n    assert!(a.value() > 0 && b.value() > 0, EZeroAmount);\n    let minted = a.value();\n    pool.reserve_a.join(a.into_balance());\n    pool.reserve_b.join(b.into_balance());\n    pool.lp_supply = pool.lp_supply + minted;\n    minted\n}\n\npublic fun remove_liquidity<A, B>(\n    pool: &mut Pool<A, B>, lp_amount: u64, ctx: &mut TxContext,\n): (Coin<A>, Coin<B>) {\n    assert!(lp_amount > 0 && lp_amount <= pool.lp_supply, EInsufficientLiquidity);\n    let share_a = pool.reserve_a.value() * lp_amount / pool.lp_supply;\n    let share_b = pool.reserve_b.value() * lp_amount / pool.lp_supply;\n    pool.lp_supply = pool.lp_supply - lp_amount;\n    (\n        coin::from_balance(pool.reserve_a.split(share_a), ctx),\n        coin::from_balance(pool.reserve_b.split(share_b), ctx),\n    )\n}\n\npublic fun swap_a_for_b<A, B>(\n    pool: &mut Pool<A, B>, a: Coin<A>, ctx: &mut TxContext,\n): Coin<B> {\n    let amount_in = a.value();\n    assert!(amount_in > 0, EZeroAmount);\n    let out = pool.reserve_b.value() * amount_in / (pool.reserve_a.value() + amount_in);\n    assert!(out > 0 && out < pool.reserve_b.value(), EInsufficientLiquidity);\n    pool.reserve_a.join(a.into_balance());\n    coin::from_balance(pool.reserve_b.split(out), ctx)\n}\n\npublic fun reserves<A, B>(pool: &Pool<A, B>): (u64, u64) {\n    (pool.reserve_a.value(), pool.reserve_b.value())\n}\n\npublic fun lp_supply<A, B>(pool: &Pool<A, B>): u64 { pool.lp_supply }\n```",
+    "sources": [
+      "https://docs.sui.io/develop/testing-debugging/testing"
+    ],
+    "files": [
+      "sui-smart-contracts/evals/fixtures/amm/"
+    ],
+    "expected_output": "A Move test module for the given AMM covering pool creation, add and remove liquidity, a swap, and the EZeroAmount / EInsufficientLiquidity abort paths, written in the suite's test style: names without a test_ prefix, assert_eq! for equality, #[test, expected_failure(...)] on one line, no abort codes passed to assert!, and standard cleanup helpers rather than bespoke destroy functions.",
     "expectations": [
       "Test functions do NOT use test_ prefix (e.g. create_pool_succeeds, not test_create_pool)",
       "Uses assert_eq! for equality comparisons instead of assert!(x == y) or assert!(x == y, 0)",

@@ -3,7 +3,7 @@
   "source_constraint": "All facts in these evals must be verifiable against docs.sui.io/onchain-finance/deepbook/deepbook-margin or github.com/MystenLabs/deepbookv3. No third-party blogs, tutorials, or unofficial documentation.",
   "evals": [
     {
-      "id": 1,
+      "id": "deepbook-margin-risk-ratio-thresholds",
       "prompt": "How does the risk ratio work in DeepBook Margin? What happens at each threshold?",
       "expected_output": "An explanation of risk_ratio = total_assets / total_debt, the four thresholds (min withdraw, min borrow, target liquidation, liquidation), and what each controls.",
       "expectations": [
@@ -19,7 +19,7 @@
       ]
     },
     {
-      "id": 2,
+      "id": "deepbook-margin-kinked-interest-rates",
       "prompt": "How do interest rates work on DeepBook Margin? What is the kinked model?",
       "expected_output": "An explanation of the kinked utilization model with the two-tier borrow rate formula, the sharp rate increase above optimal utilization, and per-pool parameters.",
       "expectations": [
@@ -35,7 +35,7 @@
       ]
     },
     {
-      "id": 3,
+      "id": "deepbook-margin-open-leveraged-long",
       "prompt": "How do I open a leveraged long position on SUI/USDC using the DeepBook Margin SDK?",
       "expected_output": "A step-by-step workflow: create/find MarginManager, read risk params, check liquidity, deposit collateral, borrow, place margin order.",
       "expectations": [
@@ -52,7 +52,7 @@
       ]
     },
     {
-      "id": 4,
+      "id": "deepbook-margin-spot-vs-margin",
       "prompt": "What are the key differences between spot and margin trading on DeepBook?",
       "expected_output": "A comparison covering object model changes, isolated pools, order routing, oracle dependency, and liquidation.",
       "expectations": [
@@ -68,7 +68,7 @@
       ]
     },
     {
-      "id": 5,
+      "id": "deepbook-margin-risks-and-mitigations",
       "prompt": "What are the risks of margin trading on DeepBook and how can I mitigate them?",
       "expected_output": "A comprehensive risk overview covering liquidation, interest rates, leverage amplification, and oracle risks, plus mitigation strategies.",
       "expectations": [
