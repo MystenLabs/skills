@@ -1,0 +1,256 @@
+name: "Sui Evals measure"
+
+# Runs the suite against models and opens a pull request with the cards.
+#
+# This lived in a private repository until now, which meant the board could be
+# read but not reproduced: the suite and the page were here, the thing that
+# produced the numbers was not. It also meant a card had to cross a repository
+# boundary on a personal access token, and that token had no write access here,
+# so every publish attempt returned 403 and the eval runs went red on a
+# publishing failure rather than a measurement one.
+#
+# It opens a pull request rather than committing, because main requires a review
+# and allows no bypass. Adding this workflow's actor to the branch protection
+# bypass list is what would make it direct; until then the pull request is the
+# approval step, and auto-merge means it needs one click rather than any work.
+
+on:
+  workflow_dispatch:
+    inputs:
+      tier:
+        description: "core = the three cheapest frontier models; full = every frontier model; open = the open-weight models on Cloudflare AI Gateway"
+        required: false
+        type: choice
+        default: core
+        options: [core, full, open]
+      layers:
+        description: "Comma-separated: baseline, with-skills"
+        required: false
+        type: string
+        default: "baseline,with-skills"
+      samples:
+        description: "Attempts per question. One is a sample, not a census."
+        required: false
+        type: choice
+        default: "3"
+        options: ["1", "3", "5"]
+      model:
+        description: "Measure one model instead of the tier"
+        required: false
+        type: string
+      skill:
+        description: "Measure one skill instead of the suite"
+        required: false
+        type: string
+      open_pr:
+        description: "Open a pull request with the cards. Off runs the measurement and uploads them as an artifact only."
+        required: false
+        type: boolean
+        default: true
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: suievals-measure
+  cancel-in-progress: false
+
+jobs:
+  # The cross product of models and layers, because matrix syntax cannot express
+  # one and composing a base dimension with `include` silently collapses the
+  # other. Retired models are not on this list.
+  plan:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.plan.outputs.matrix }}
+      count: ${{ steps.plan.outputs.count }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Resolve the models and layers
+        id: plan
+        env:
+          TIER: ${{ inputs.tier }}
+          LAYERS: ${{ inputs.layers }}
+          ONLY: ${{ inputs.model }}
+        run: |
+          set -euo pipefail
+          MODELS='[{"model":"anthropic/claude-sonnet-5","label":"sonnet-5","tier":"core"},{"model":"anthropic/claude-haiku-4-5-20251001","label":"haiku-4-5","tier":"core"},{"model":"openai/gpt-5.5","label":"gpt-5-5","tier":"core"},{"model":"anthropic/claude-opus-5","label":"opus-5","tier":"full"},{"model":"anthropic/claude-fable-5","label":"fable-5","tier":"full"},{"model":"openai/gpt-6-astra","label":"gpt-6-astra","tier":"full"},{"model":"openai/gpt-5.6-luna","label":"gpt-5-6-luna","tier":"full"},{"model":"google/gemini-3.1-pro-preview","label":"gemini-3-1-pro","tier":"full"},{"model":"google/gemini-3.8-flash","label":"gemini-3-8-flash","tier":"full"},{"model":"google/gemini-flash-latest","label":"gemini-flash-latest","tier":"full"},{"model":"cloudflare-ai-gateway/workers-ai/@cf/meta/llama-4-scout-17b-16e-instruct","label":"llama-4-scout","tier":"open"},{"model":"cloudflare-ai-gateway/workers-ai/@cf/meta/llama-3.3-70b-instruct-fp8-fast","label":"llama-3-3-70b","tier":"open"},{"model":"cloudflare-ai-gateway/workers-ai/@cf/deepseek-ai/deepseek-v4-pro-0813","label":"deepseek-v4-pro","tier":"open"},{"model":"cloudflare-ai-gateway/workers-ai/@cf/deepseek-ai/deepseek-v4-flash-0731","label":"deepseek-v4-flash","tier":"open"},{"model":"cloudflare-ai-gateway/workers-ai/@cf/qwen/qwen3.8-27b","label":"qwen3-8-27b","tier":"open"},{"model":"cloudflare-ai-gateway/workers-ai/@cf/qwen/qwen3-30b-a3b-fp8","label":"qwen3-30b","tier":"open"},{"model":"cloudflare-ai-gateway/workers-ai/@cf/zai-org/glm-5.3","label":"glm-5-3","tier":"open"},{"model":"cloudflare-ai-gateway/workers-ai/@cf/zai-org/glm-5.2","label":"glm-5-2","tier":"open"},{"model":"cloudflare-ai-gateway/workers-ai/@cf/moonshotai/kimi-k2.6","label":"kimi-k2-6","tier":"open"},{"model":"cloudflare-ai-gateway/workers-ai/@cf/openai/gpt-oss-120b","label":"gpt-oss-120b","tier":"open"},{"model":"cloudflare-ai-gateway/workers-ai/@cf/openai/gpt-oss-20b","label":"gpt-oss-20b","tier":"open"},{"model":"cloudflare-ai-gateway/workers-ai/@cf/nvidia/nemotron-3-120b-a12b","label":"nemotron-3-120b","tier":"open"},{"model":"cloudflare-ai-gateway/workers-ai/@cf/google/gemma-4-26b-a4b-it","label":"gemma-4-26b","tier":"open"},{"model":"cloudflare-ai-gateway/workers-ai/@cf/mistralai/mistral-small-3.1-24b-instruct","label":"mistral-small-3-1","tier":"open"}]'
+          MATRIX=$(printf '%s' "$MODELS" | node -e '
+            let s = "";
+            process.stdin.on("data", (d) => (s += d)).on("end", () => {
+              const models = JSON.parse(s);
+              const tier = (process.env.TIER || "core").trim();
+              const only = (process.env.ONLY || "").trim();
+              const layers = (process.env.LAYERS || "baseline,with-skills")
+                .split(",").map((x) => x.trim()).filter(Boolean);
+
+              const valid = new Set(["baseline", "with-skills"]);
+              for (const l of layers) {
+                if (!valid.has(l)) {
+                  // with-skills-mcp and mcp-only are refused rather than run
+                  // empty: both exist only to put MCP retrieval in front of a
+                  // model, retrieval is off, and a layer with no context in it
+                  // reported as a measurement is worse than no layer at all.
+                  console.error(`::error::Unknown layer "${l}". One of: baseline, with-skills`);
+                  process.exit(1);
+                }
+              }
+
+              // open is its own sweep: the open-weight models are not comparable
+              // with the frontier ones on size or cost, and a core or full run
+              // should not silently grow by fourteen jobs.
+              const inTier = (m) =>
+                tier === "open" ? m.tier === "open"
+                : m.tier === "open" ? false
+                : tier === "core" ? m.tier === "core"
+                : true;
+
+              const kept = models.filter((m) =>
+                only ? (m.model === only || m.label === only) : inTier(m));
+              if (!kept.length) {
+                console.error(`::error::No model matched tier "${tier}"${only ? ` and model "${only}"` : ""}`);
+                process.exit(1);
+              }
+              const out = [];
+              for (const m of kept) for (const layer of layers) out.push({ ...m, layer });
+              process.stdout.write(JSON.stringify(out));
+            });
+          ')
+          echo "matrix=$MATRIX" >> "$GITHUB_OUTPUT"
+          echo "count=$(printf '%s' "$MATRIX" | node -e 'let s="";process.stdin.on("data",d=>s+=d).on("end",()=>console.log(JSON.parse(s).length))')" >> "$GITHUB_OUTPUT"
+          printf '%s' "$MATRIX" | node -e 'let s="";process.stdin.on("data",d=>s+=d).on("end",()=>{for(const m of JSON.parse(s))console.log(`  ${m.label}  ${m.layer}`)})'
+
+  measure:
+    needs: plan
+    runs-on: ubuntu-latest
+    timeout-minutes: 330
+    strategy:
+      fail-fast: false
+      # One model per job at a time would make a layer comparison trustworthy and
+      # a full sweep take all day. Twelve is the compromise the private pipeline
+      # settled on; a provider that throttles shows up as empty answers, which
+      # the runner fails on rather than scoring.
+      max-parallel: 12
+      matrix:
+        leg: ${{ fromJSON(needs.plan.outputs.matrix) }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install the runner
+        run: npm install --prefix tools/suievals
+
+      - name: Check the runner before spending on a model
+        run: cd tools/suievals && for f in tests/*.test.ts; do npx tsx "$f" || exit 1; done
+
+      - name: "Measure ${{ matrix.leg.label }} (${{ matrix.leg.layer }})"
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          # Read from ambient env by pi's cloudflare-ai-gateway provider. These
+          # models are billed by Cloudflare, so they still run when the provider
+          # credit is out -- which is what stopped a sweep on 5 October.
+          CLOUDFLARE_API_KEY: ${{ secrets.CLOUDFLARE_API_KEY }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          CLOUDFLARE_GATEWAY_ID: ${{ secrets.CLOUDFLARE_GATEWAY_ID }}
+          # Off. Measuring a model does not need doc retrieval, and an uncapped
+          # retrieval loop is what produced a $15,000 overage on 3 October.
+          MCP_ENABLED: "0"
+          # The suite is assembled from the evals beside each skill, so the
+          # repository root is the skills directory.
+          SKILLS_DIR: ${{ github.workspace }}
+          REPORTS_DIR: ${{ runner.temp }}/reports
+          EVAL_MODEL: ${{ matrix.leg.model }}
+          EVAL_LAYER: ${{ matrix.leg.layer }}
+        run: |
+          cd tools/suievals
+          npx tsx src/run-skills-eval.ts \
+            --samples "${{ inputs.samples }}" \
+            ${{ inputs.skill && format('--skill {0}', inputs.skill) || '' }}
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: reports-${{ matrix.leg.label }}-${{ matrix.leg.layer }}
+          path: ${{ runner.temp }}/reports
+          retention-days: 14
+          if-no-files-found: ignore
+
+  publish:
+    needs: measure
+    if: always() && !cancelled()
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - uses: actions/download-artifact@v4
+        with:
+          path: ${{ runner.temp }}/all
+          pattern: reports-*
+          merge-multiple: true
+
+      - name: Emit the cards
+        run: |
+          ls -la "$RUNNER_TEMP/all" || { echo "::error::No reports were produced."; exit 1; }
+          node tools/suievals/emit-cards.js \
+            --reports "$RUNNER_TEMP/all" --skills . --out suievals/results
+
+      - name: The cards must satisfy the validator
+        # Here rather than in a pull request against a repository we do not own
+        # -- which is where it used to be discovered.
+        run: node suievals/validate.js
+
+      - name: Rebuild the board and check it
+        run: |
+          node suievals/build.js --skills . --out suievals
+          node suievals/tests/build.test.js
+          node suievals/tests/kind.test.js
+          node suievals/tests/page.test.mjs
+
+      - name: What this run measured
+        if: always()
+        run: |
+          { echo '## Measured'; echo '```'; node -e '
+            const fs = require("fs");
+            try {
+              const r = JSON.parse(fs.readFileSync("suievals/results/index.json", "utf8"));
+              console.log(`${(r.runs ?? []).length} ranked, ${(r.incomplete ?? []).length} marked`);
+              for (const x of r.runs ?? []) {
+                console.log(`  ${x.name.padEnd(46)} ${(100 * x.total.pass / x.total.total).toFixed(1)}%  cov ${x.coverage}%`);
+              }
+            } catch { console.log("(no board built)"); }
+          '; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Open a pull request with the cards
+        if: inputs.open_pr
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -uo pipefail
+          if [ -z "$(git status --porcelain suievals/results)" ]; then
+            echo "No card changed."
+            exit 0
+          fi
+          BRANCH="suievals/cards-$(date -u +%Y%m%d-%H%M)"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -b "$BRANCH"
+          git add suievals/results
+          git commit -q -m "suievals: cards from the ${{ inputs.tier }} tier"
+          git push -q origin "$BRANCH"
+          gh pr create --base main --head "$BRANCH" \
+            --title "suievals: cards from the ${{ inputs.tier }} tier" \
+            --body "Measured by \`suievals-measure\` run ${{ github.run_id }}. Each card records the model, the configuration, and how many expectations it met per question. The board ranks a card covering at least 90% of the suite and marks the rest." \
+            || { echo "::warning::Cards are pushed on $BRANCH but no pull request was opened."; exit 0; }
+          gh pr merge --auto --squash "$BRANCH" \
+            || echo "::notice::Auto-merge is off for this repository, so the pull request needs merging by hand."

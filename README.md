@@ -113,8 +113,9 @@ because neither has a `SKILL.md`:
 
 | | |
 |---|---|
-| `scripts/` | The eval runners and the staleness check |
+| `scripts/` | The per-skill eval runner and the staleness check |
 | `suievals/` | The public Sui Evals board — the suite, its build, and the published results |
+| `tools/` | The measurement pipeline behind the board: it runs the suite against a model and emits a card |
 
 ## Sui Evals
 

@@ -1,0 +1,16 @@
+{
+  "name": "@sui/suievals-runner",
+  "private": true,
+  "type": "module",
+  "description": "Measures models against the suievals suite and emits the cards the board reads.",
+  "scripts": {
+    "test": "for f in tests/*.test.ts; do npx tsx \"$f\" || exit 1; done",
+    "measure": "npx tsx src/run-skills-eval.ts"
+  },
+  "dependencies": {
+    "@earendil-works/pi-coding-agent": "latest",
+    "@earendil-works/pi-ai": "latest",
+    "gray-matter": "^4.0.3",
+    "@anthropic-ai/sdk": "^0.128.0"
+  }
+}
