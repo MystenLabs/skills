@@ -300,54 +300,60 @@ Report a score per pillar and list the evals you missed.</pre>
 
 <h2>How this is scored</h2>
 <p class="prose">
-  Two things surprise people most: expectations are counted one by one rather than per question,
-  and a score is the mean of four areas rather than a pooled total.
+  Two things catch people out: a question is not pass-or-fail, and a score is the mean of four
+  areas rather than one pooled total.
 </p>
 <div class="rules">
   <div class="rule">
     <h3>The questions are real</h3>
     <p>
-      Every prompt is one a developer would type. &ldquo;How do flash loans work in DeepBook V3?
-      Can I borrow and trade in the same pool?&rdquo; rather than a puzzle with a one-token answer.
-      Answers come back as prose and code, the length and shape of a real reply.
+      Every prompt is one a developer would actually type. &ldquo;How do flash loans work in
+      DeepBook V3? Can I borrow and trade in the same pool?&rdquo; &mdash; not a puzzle with a
+      one-token answer. Replies come back as prose and code, the length and shape of a real one.
     </p>
   </div>
   <div class="rule">
-    <h3>Graded on specifics</h3>
+    <h3>Each question lists what a good answer contains</h3>
     <p>
-      Each question carries written expectations: the import to use, the call to make, the mistake
-      to avoid. One naming something exact, like a function or a documented limit, is matched
-      literally and never reaches a judge. The rest are prose, so a separate model reads them.
+      The import to use, the call to make, the mistake to avoid: 885 of them across 156 questions.
+      Most are prose &mdash; &ldquo;warns that each transfer grants full privileges&rdquo; &mdash;
+      and a second model reads the answer to judge them. Where an expectation names something
+      exact, a pattern can be written down instead and checked literally; 26 are written that way
+      so far, and those never reach a judge.
     </p>
   </div>
   <div class="rule">
-    <h3>Expectations count, not questions</h3>
+    <h3>Expectations are counted, not questions</h3>
     <p>
-      Requiring all six of a question&rsquo;s expectations put four models at 0 of 158 and said
-      nothing about which came closer. Counting them separately spreads the same models from
-      13% to 62%.
+      A model that gets five of a question&rsquo;s six expectations right has not failed it the way
+      a model that gets none has. Scored pass-or-fail, the four weakest models here land between
+      0% and 7% and the ranking says nothing about which is closer. Counting expectations spreads
+      the same four from 8% to 24%.
     </p>
   </div>
   <div class="rule">
     <h3>Four areas, equally weighted</h3>
     <p>
-      Objects, transactions, building and security, averaged. Pooling would let building decide
-      the number on its own, because it holds half the suite, and a weak showing on security
-      would vanish into it.
+      Objects, transactions, building and security, averaged. Building holds 80 of the 156
+      questions, so a pooled total would let it set the score on its own and a weak showing on
+      security &mdash; 16 questions &mdash; would disappear into it.
     </p>
   </div>
   <div class="rule">
-    <h3>Asked more than once</h3>
+    <h3>Asked more than once, where it can be</h3>
     <p>
-      One answer is a sample, not a census. A run reports how far its own score moves across
-      identical attempts, and a difference smaller than that is not a difference.
+      One answer is a sample, not a census: the same model asked the same question twice does not
+      always give the same answer. Most runs here ask each question three times and score the
+      average. A card records how many attempts it used, because a run of one is a weaker claim
+      than a run of three and the board does not hide the difference.
     </p>
   </div>
   <div class="rule">
-    <h3>Every expectation cites a page</h3>
+    <h3>Every question points at a page</h3>
     <p>
-      If nobody can point at documentation for it, it is asking about Sui trivia rather than
-      about whether Sui is documented, and it gets rewritten or removed.
+      A question is about whether Sui is documented, not whether a model has memorised Sui trivia,
+      so each one cites the documentation a correct answer comes from. 155 of the 156 do; the
+      remaining one is a defect in the suite, not a hidden rule.
     </p>
   </div>
 </div>
