@@ -1,0 +1,320 @@
+{
+  "suievals_card": 1,
+  "source": "ci",
+  "model": "deepseek-v4-pro-0813",
+  "skills": "sui-skills",
+  "layer": "with-skills",
+  "graded_by": "judge:claude-haiku-4-5-20251001",
+  "grader": "judge",
+  "tools": [
+    "read",
+    "grep",
+    "ls"
+  ],
+  "samples": 3,
+  "empty_answers": 304,
+  "recorded_at": "2026-10-07T00:13:22.818Z",
+  "manifest": "f0b70209ffb6",
+  "eval_set": "f0b70209ffb6",
+  "pillars": {
+    "objects": {
+      "pass": 69,
+      "total": 73
+    },
+    "transactions": {
+      "pass": 69,
+      "total": 75
+    },
+    "building": {
+      "pass": 105,
+      "total": 117
+    },
+    "security": {
+      "pass": 39,
+      "total": 41
+    }
+  },
+  "partial": true,
+  "evals": [
+    {
+      "id": "accessing-data/accessing-data-use-case-mapping",
+      "pass": 5,
+      "of": 6
+    },
+    {
+      "id": "accessing-data/accessing-data-custom-indexer-gate",
+      "pass": 7,
+      "of": 7
+    },
+    {
+      "id": "deepbook-margin/deepbook-margin-kinked-interest-rates",
+      "pass": 6,
+      "of": 6
+    },
+    {
+      "id": "deepbook-move/deepbook-move-balance-manager-and-tradecap",
+      "pass": 6,
+      "of": 6
+    },
+    {
+      "id": "deepbook-move/deepbook-move-integration-mistakes",
+      "pass": 5,
+      "of": 5
+    },
+    {
+      "id": "deepbook-overview/deepbook-overview-pool-architecture",
+      "pass": 4,
+      "of": 5
+    },
+    {
+      "id": "deepbook-overview/deepbook-overview-deep-token-role",
+      "pass": 5,
+      "of": 5
+    },
+    {
+      "id": "deepbook-predict/deepbook-predict-integration-mistakes",
+      "pass": 1,
+      "of": 4
+    },
+    {
+      "id": "deepbook-sdk/deepbook-sdk-limit-order-types",
+      "pass": 6,
+      "of": 6
+    },
+    {
+      "id": "frontend-apps/frontend-apps-deprecated-package-check",
+      "pass": 7,
+      "of": 7
+    },
+    {
+      "id": "frontend-apps/frontend-apps-sponsored-sign-only",
+      "pass": 7,
+      "of": 7
+    },
+    {
+      "id": "kiosk/kiosk-create-list-and-purchase",
+      "pass": 6,
+      "of": 6
+    },
+    {
+      "id": "kiosk/kiosk-asset-states",
+      "pass": 6,
+      "of": 6
+    },
+    {
+      "id": "kiosk/kiosk-permissioned-extension",
+      "pass": 4,
+      "of": 5
+    },
+    {
+      "id": "move-security/access-control-pattern-choice",
+      "pass": 6,
+      "of": 6
+    },
+    {
+      "id": "move-security/capability-safety-and-revocation",
+      "pass": 5,
+      "of": 6
+    },
+    {
+      "id": "object-model/object-model-ownership-types",
+      "pass": 7,
+      "of": 7
+    },
+    {
+      "id": "object-model/object-model-destroy-object",
+      "pass": 6,
+      "of": 6
+    },
+    {
+      "id": "object-model/object-model-transfer-vs-public-transfer",
+      "pass": 5,
+      "of": 5
+    },
+    {
+      "id": "object-model/object-model-soulbound",
+      "pass": 5,
+      "of": 5
+    },
+    {
+      "id": "object-model/object-model-versioning",
+      "pass": 4,
+      "of": 5
+    },
+    {
+      "id": "object-model/object-model-wrapped-objects",
+      "pass": 5,
+      "of": 6
+    },
+    {
+      "id": "object-model/object-model-parallel-execution",
+      "pass": 3,
+      "of": 5
+    },
+    {
+      "id": "onchain-randomness/onchain-randomness-random-rarity-airdrop",
+      "pass": 6,
+      "of": 6
+    },
+    {
+      "id": "ptbs/ptbs-chained-move-calls",
+      "pass": 5,
+      "of": 5
+    },
+    {
+      "id": "ptbs/ptbs-gas-coin-misuse",
+      "pass": 4,
+      "of": 4
+    },
+    {
+      "id": "ptbs/ptbs-unused-value-error",
+      "pass": 4,
+      "of": 4
+    },
+    {
+      "id": "ptbs/ptbs-shared-object-rules",
+      "pass": 5,
+      "of": 5
+    },
+    {
+      "id": "sui-bridge/sui-bridge-assets-and-limits",
+      "pass": 3,
+      "of": 3
+    },
+    {
+      "id": "sui-bridge/sui-bridge-governance-and-finality",
+      "pass": 5,
+      "of": 5
+    },
+    {
+      "id": "sui-bridge/sui-bridge-contract-ids",
+      "pass": 6,
+      "of": 6
+    },
+    {
+      "id": "sui-client/sui-client-no-gas-coin-error",
+      "pass": 5,
+      "of": 5
+    },
+    {
+      "id": "sui-client/sui-client-merge-coins-and-transfer",
+      "pass": 0,
+      "of": 4
+    },
+    {
+      "id": "sui-for-ethereum/sui-for-ethereum-inheritance-and-generics",
+      "pass": 4,
+      "of": 4
+    },
+    {
+      "id": "sui-for-ethereum/sui-for-ethereum-composability",
+      "pass": 5,
+      "of": 5
+    },
+    {
+      "id": "sui-install/sui-install-install",
+      "pass": 8,
+      "of": 8
+    },
+    {
+      "id": "sui-install/sui-install-update-not-taking-effect",
+      "pass": 5,
+      "of": 5
+    },
+    {
+      "id": "sui-install/sui-install-api-version-mismatch",
+      "pass": 4,
+      "of": 4
+    },
+    {
+      "id": "sui-install/sui-install-move-analyzer-not-found",
+      "pass": 3,
+      "of": 4
+    },
+    {
+      "id": "sui-move/sui-move-abilities",
+      "pass": 8,
+      "of": 8
+    },
+    {
+      "id": "sui-move/sui-move-epoch-from-txcontext",
+      "pass": 6,
+      "of": 6
+    },
+    {
+      "id": "sui-move-project/sui-move-project-move-toml-format",
+      "pass": 6,
+      "of": 6
+    },
+    {
+      "id": "sui-move-project/sui-move-project-legacy-system-name",
+      "pass": 5,
+      "of": 5
+    },
+    {
+      "id": "sui-move-project/sui-move-project-amm",
+      "pass": 0,
+      "of": 3
+    },
+    {
+      "id": "sui-move-project/sui-move-project-lending-protocol",
+      "pass": 0,
+      "of": 5
+    },
+    {
+      "id": "sui-networks-gas/sui-networks-gas-cost-and-storage-rebate",
+      "pass": 7,
+      "of": 7
+    },
+    {
+      "id": "sui-networks-gas/sui-networks-gas-epoch-length-and-boundary",
+      "pass": 5,
+      "of": 5
+    },
+    {
+      "id": "sui-overview/sui-overview-object-model",
+      "pass": 7,
+      "of": 7
+    },
+    {
+      "id": "sui-overview/sui-overview-hidden-artwork-nft",
+      "pass": 6,
+      "of": 6
+    },
+    {
+      "id": "sui-publish/sui-publish-first-publish",
+      "pass": 6,
+      "of": 6
+    },
+    {
+      "id": "sui-publish/sui-publish-local-network",
+      "pass": 5,
+      "of": 5
+    },
+    {
+      "id": "sui-publish/sui-publish-find-package-and-created-objects",
+      "pass": 4,
+      "of": 4
+    },
+    {
+      "id": "sui-publish/sui-publish-serialize-for-multisig",
+      "pass": 4,
+      "of": 4
+    },
+    {
+      "id": "sui-sdks/sui-sdks-rust-ptb-minimal",
+      "pass": 9,
+      "of": 9
+    },
+    {
+      "id": "sui-ts-sdk-backend/sui-ts-sdk-backend-key-custody",
+      "pass": 5,
+      "of": 5
+    },
+    {
+      "id": "zklogin/zklogin-providers-and-integration",
+      "pass": 6,
+      "of": 6
+    }
+  ]
+}

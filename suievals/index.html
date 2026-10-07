@@ -577,7 +577,19 @@ function renderBoard(cat, res) {
   const held = res.heldBack || [];
   const lines = [];
   if (ex.length) {
-    lines.push(`${ex.length} run${ex.length === 1 ? '' : 's'} excluded for covering less than the whole suite: ${ex.map((r) => r.model).join(', ')}. A partial run is not a score.`);
+    // Named with what each one actually answered. A bare list of models read as
+    // a verdict on those models; the number says it is a verdict on the run,
+    // and lets a reader see the difference between a run that missed a tenth of
+    // the suite and one that missed three quarters of it.
+    const worst = [...ex].sort((a, b) => (a.coverage ?? 0) - (b.coverage ?? 0));
+    const named = worst
+      .map((r) => `${r.model}${r.skills === 'none' ? '' : ' +sui-skills'}${r.coverage != null ? ` (${r.coverage}%)` : ''}`)
+      .join(', ');
+    lines.push(
+      `${ex.length} run${ex.length === 1 ? '' : 's'} answered too little of the suite to be scored, `
+      + `and are listed with how much they did answer: ${named}. `
+      + `A score over part of the suite is not comparable with one over all of it.`,
+    );
   }
   if (held.length) {
     lines.push(`${held.length} run held back for being graded a different way: ${held.map((r) => `${r.model} (${r.scoring || 'unknown'})`).join(', ')}. Two graders produce two numbers.`);

@@ -445,6 +445,11 @@ function readCards(byId, incomplete, ciJudge) {
     // refused, because a score over a third of the questions is not a score.
     if (!total || covered < COVERAGE) {
       incomplete.push({ model: card.model, pass, total, of: card.evals.length,
+        // The number as well as the sentence: a reader deciding whether to
+        // trust a marked run wants to know whether it answered half the suite
+        // or a tenth of it.
+        coverage: Math.round(100 * covered),
+        skills: card.skills,
         reason: !total ? "no eval in the card is in the suite"
           : `covers ${Math.round(100 * covered)}% of the suite, under the ${Math.round(100 * COVERAGE)}% a ranked card needs` });
       continue;
