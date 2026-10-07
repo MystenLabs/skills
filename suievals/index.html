@@ -642,8 +642,19 @@ function renderBoard(cat, res) {
     );
   }
   if (held.length) {
-    const who = held.map((r) => `${esc(r.model)} (${esc(r.scoring || 'grader unrecorded')})`).join(', ');
-    parts.push(`<p class="note">Graded by term matching rather than the judge, so not comparable: ${who}.</p>`);
+    // The regime, not a guess at it. This said "graded by term matching", which
+    // was true of the one run being held back at the time and will not be true
+    // of the next: build.js folds tool access into the regime too, so a run made
+    // without the file-reading tools is held back as "judge, no tools". Naming
+    // the wrong reason is worse than naming none.
+    const who = held
+      .map((r) => `${esc(r.model)} (${esc(r.scoring || 'regime unrecorded')})`)
+      .join(', ');
+    parts.push(
+      `<p class="note">Measured a different way, so not ranked beside the rest: ${who}. `
+      + `A run graded by term matching, or made without the tools that let a model open a `
+      + `reference file, is not the same measurement as the runs above.</p>`,
+    );
   }
   noteEl.innerHTML = parts.join('');
 }
