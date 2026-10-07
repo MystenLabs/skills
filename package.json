@@ -12,7 +12,8 @@
     "test:gate": "node scripts/lib/gate.test.js",
     "eval:gate": "node scripts/run-evals.js --changed-only --repeat 3 --baseline /tmp/baseline.json",
     "test:graders": "node scripts/lib/graders.test.js",
-    "test": "node scripts/lib/gate.test.js && node scripts/lib/graders.test.js"
+    "test": "node scripts/lib/gate.test.js && node scripts/lib/graders.test.js && node scripts/lib/readme.test.js",
+    "test:readme": "node scripts/lib/readme.test.js"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.52.0",
