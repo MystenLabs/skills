@@ -106,11 +106,9 @@ Supporting files (anything that isn't `SKILL.md`) are bundled with the skill but
 ### Quick start
 
 ```bash
-# Copy the template
-cp -r template/ your-skill-name/
-
-# Edit the skill definition
-$EDITOR your-skill-name/SKILL.md
+# Create the skill
+mkdir -p your-skill-name
+$EDITOR your-skill-name/SKILL.md   # frontmatter is described under Steps below
 
 # Add supporting reference files
 touch your-skill-name/setup.md
