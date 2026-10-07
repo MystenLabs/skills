@@ -150,12 +150,32 @@ export function validateCard(card, { evals, manifest: suite, pillarIds }) {
     }
   }
 
+  return problems;
+}
+
+/**
+ * Things worth saying about a card that do not make it invalid.
+ *
+ * A manifest mismatch used to be a problem, and the message it printed offered
+ * submission as an option -- "Re-run, or submit it knowing the board will mark
+ * it as an older eval set" -- while the validator that printed it exited 1 and
+ * blocked the pull request. Three parts of this system treat a stale card as
+ * something to label: build.js sets staleManifest, the page says "Scored against
+ * an older eval set", and this message says so too. Only the exit code
+ * disagreed, and the result was that every pull request touching suievals/ was
+ * red because of 24 cards measured before #106 renamed the suite.
+ *
+ * A stale card is still not ranked -- build.js refuses it on coverage, because
+ * its ids no longer join. That is the protection. Failing CI as well protected
+ * nothing and hid real failures behind a permanent one.
+ */
+export function cardWarnings(card, { manifest: suite }) {
+  const warnings = [];
   if (card.manifest !== suite) {
-    problems.push(
-      `This card was scored against suite "${card.manifest}" and the suite is now "${suite}". `
-      + `The evals changed after the run. Re-run, or submit it knowing the board will mark it as an older eval set.`,
+    warnings.push(
+      `Scored against suite "${card.manifest}"; the suite is now "${suite}". The board will mark `
+      + `this as an older eval set and will not rank it. Re-run to have it scored against the current suite.`,
     );
   }
-
-  return problems;
+  return warnings;
 }

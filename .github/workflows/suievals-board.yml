@@ -41,15 +41,30 @@ jobs:
           node suievals/tests/kind.test.js
           node suievals/tests/page.test.mjs
 
-      # A pull request proves the build runs and the page renders; it must not
-      # commit, because the branch it would commit to is not this one.
-      - name: Commit the rebuilt board
-        if: github.event_name != 'pull_request'
+      # Nothing is committed. This job used to rebuild the two index.json files
+      # and push them to main, and it could not: main is protected, so every run
+      # built correctly, passed the checks above, and then failed with
+      #
+      #   remote: error: GH006: Protected branch update failed for refs/heads/main.
+      #   remote: - Changes must be made through a pull request.
+      #
+      # So the files it was keeping fresh went stale and stayed stale, and the
+      # job was red on every run -- which is worse than not having it, because a
+      # permanently failing check is one nobody reads.
+      #
+      # They are generated files now, ignored by git, and built before anything
+      # reads them: here, and by the Vercel build before it serves the page.
+      # This job's remaining job is to prove the board still builds and that its
+      # page still renders, which is what a check should do.
+      - name: What the board would publish
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add suievals/evals/index.json suievals/results/index.json
-          git diff --staged --quiet || {
-            git commit -m "suievals: rebuild the board"
-            git push
-          }
+          node -e '
+            const r = JSON.parse(require("fs").readFileSync("suievals/results/index.json", "utf8"));
+            const e = JSON.parse(require("fs").readFileSync("suievals/evals/index.json", "utf8"));
+            console.log(`suite ${e.manifest}: ${e.evals.length} evals`);
+            console.log(`${(r.runs ?? []).length} run(s) ranked, ${(r.incomplete ?? []).length} marked`);
+            for (const x of r.runs ?? []) {
+              const pct = (100 * x.total.pass / x.total.total).toFixed(1);
+              console.log(`  ${x.name.padEnd(48)} ${pct}%`);
+            }
+          ' >> "$GITHUB_STEP_SUMMARY"

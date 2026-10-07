@@ -21,7 +21,7 @@ const OUT = resolve(HERE, "..");
 const need = [join(OUT, "evals", "index.json"), join(OUT, "results", "index.json")];
 for (const f of need) {
   if (!existsSync(f)) {
-    console.error(`${f} missing. Run: node suievals/build.js --skills .`);
+    console.error(`${f} is missing. It is generated, not committed:\n\n  node suievals/build.js --skills . --out suievals\n`);
     process.exit(1);
   }
 }
