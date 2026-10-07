@@ -21,6 +21,7 @@ import { join, resolve, dirname } from "path";
 import { fileURLToPath } from "url";
 import { createHash } from "crypto";
 import { PILLARS, PILLAR_OF, PILLAR_IDS } from "./pillars.js";
+import { sourceOf } from "./lib/card.js";
 import { kindOf, KINDS } from "./kind.js";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -421,9 +422,14 @@ function readCards(byId, incomplete, ciJudge) {
       .reduce((n, e) => n + (typeof e.expectations === "number" ? e.expectations : 0), 0);
     const covered = suiteExpectations ? total / suiteExpectations : 0;
 
-    const submitted = card.source !== "ci";
+    const submitted = sourceOf(card) === "community";
+    // The handle is part of the name for a community card, and that is what keeps
+    // two cards apart. The slug is built from this name, and before provenance was
+    // in it a contributor re-running a model the pipeline had already measured
+    // produced a second row with an identical name whose record page overwrote
+    // the first. Two measurements, one file, no way to tell which survived.
     const label = `${card.model}${card.skills === "none" ? "" : " +sui-skills"}`
-      + (submitted ? " (submitted)" : "");
+      + (submitted ? ` (submitted by ${card.submitted_by})` : "");
     if (!total || card.partial || covered < COVERAGE) {
       incomplete.push({ model: card.model, pass, total, of: card.evals.length,
         reason: card.partial ? "submitted as a partial run"
@@ -449,6 +455,7 @@ function readCards(byId, incomplete, ciJudge) {
       scoring: regimeOf(card.graded_by, ciJudge),
       judge: null,
       submitted,
+      source: sourceOf(card),
       submittedBy: card.submitted_by ?? null,
       staleManifest: card.manifest !== manifest,
       recordedAt: card.recorded_at ?? null,
