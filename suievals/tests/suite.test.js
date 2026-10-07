@@ -11,7 +11,7 @@
 
 import assert from "node:assert/strict";
 import { discover, loadPillars, manifest, score, tally } from "../lib/suite.js";
-import { validateCard, validateAnswers } from "../lib/card.js";
+import { validateCard, cardWarnings, validateAnswers } from "../lib/card.js";
 
 const { evals, skills, nested } = discover();
 const { ids, pillarOf } = loadPillars();
@@ -95,7 +95,24 @@ breaks((c) => { c.evals[0].pass = c.evals[0].of + 1; }, "not a count");
 breaks((c) => { c.evals = c.evals.slice(0, 10); }, "partial run is not a score");
 breaks((c) => { c.skills = "maybe"; }, '"skills" must be one of');
 breaks((c) => { c.graded_by = null; }, '"graded_by" is required');
-breaks((c) => { c.manifest = "deadbeefcafe"; }, "older eval set");
+// A stale manifest is a warning, not a problem, and the distinction is the
+// point. The message validateCard used to print offered submission as an option
+// -- "or submit it knowing the board will mark it as an older eval set" -- while
+// the validator that printed it exited 1 and blocked the pull request. build.js
+// already refuses to rank such a card on coverage, which is the real protection;
+// failing CI as well protected nothing and kept every suievals pull request red.
+{
+  const stale = structuredClone(good);
+  stale.manifest = "deadbeefcafe";
+  assert.deepEqual(validateCard(stale, { evals, manifest: suite, pillarIds: ids }), [],
+    "a stale card is still a valid card");
+  const warnings = cardWarnings(stale, { manifest: suite });
+  assert.equal(warnings.length, 1, `expected one warning, got: ${JSON.stringify(warnings)}`);
+  assert.match(warnings[0], /older eval set/, "and it says the board will mark it");
+  assert.match(warnings[0], /deadbeefcafe/, "naming the suite it was scored against");
+  // A current card warns about nothing.
+  assert.deepEqual(cardWarnings(good, { manifest: suite }), []);
+}
 breaks((c) => { c.evals.push(c.evals[0]); }, "appears twice");
 
 // A partial run is publishable when it says so.

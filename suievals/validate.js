@@ -11,7 +11,7 @@
 import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 import { REPO, discover, loadPillars, manifest, score } from "./lib/suite.js";
-import { validateCard, validateAnswers } from "./lib/card.js";
+import { validateCard, validateAnswers, cardWarnings } from "./lib/card.js";
 
 const { evals } = discover();
 const { ids } = loadPillars();
@@ -36,6 +36,7 @@ if (!files.length) {
 }
 
 let bad = 0;
+let warned = 0;
 for (const file of files) {
   let card;
   try { card = JSON.parse(readFileSync(file, "utf8")); }
@@ -64,10 +65,17 @@ for (const file of files) {
   }
   const s = (100 * score(card.pillars, ids)).toFixed(1);
   console.log(`✓ ${file}  ${card.model} · ${card.skills} · graded by ${card.graded_by} · ${s}%`);
+  for (const w of cardWarnings(card, { manifest: suite })) {
+    warned += 1;
+    console.log(`    note: ${w}`);
+  }
 }
 
 if (bad) {
   console.error(`\n${bad} of ${files.length} card(s) are not valid.`);
   process.exit(1);
 }
-console.log(`\n${files.length} card(s) valid against suite ${suite}.`);
+console.log(
+  `\n${files.length} card(s) valid against suite ${suite}`
+  + (warned ? `, ${warned} of them scored against an older one and marked rather than ranked.` : "."),
+);

@@ -21,7 +21,7 @@
  */
 
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -30,8 +30,22 @@ const PUB = resolve(HERE, "..");
 const html = readFileSync(join(PUB, "index.html"), "utf8");
 const pageScript = html.slice(html.indexOf("<script>") + 8, html.lastIndexOf("</script>"));
 
-const cat = JSON.parse(readFileSync(join(PUB, "evals", "index.json"), "utf8"));
-const results = JSON.parse(readFileSync(join(PUB, "results", "index.json"), "utf8"));
+/**
+ * The two index files are generated and not committed, so a fresh clone has to
+ * build before it can test. Said plainly here, because the alternative is an
+ * ENOENT on a path that looks like it should exist.
+ */
+function builtOrExplain(path) {
+  if (existsSync(path)) return readFileSync(path, "utf8");
+  console.error(
+    `${path} is missing. It is generated, not committed -- build the board first:\n\n`
+    + `  node suievals/build.js --skills . --out suievals\n`,
+  );
+  process.exit(1);
+}
+
+const cat = JSON.parse(builtOrExplain(join(PUB, "evals", "index.json")));
+const results = JSON.parse(builtOrExplain(join(PUB, "results", "index.json")));
 
 /** A baseline card: the same model with nothing in context, so it scores lower. */
 function asBaseline(run, factor) {

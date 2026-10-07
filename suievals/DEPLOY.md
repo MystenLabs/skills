@@ -40,6 +40,20 @@ the CDN; without the header a merged card could be invisible for as long as the
 edge held the old copy. The per-run record pages under `runs/` are immutable
 once written and carry a short cache.
 
+## Locally
+
+`evals/index.json` and `results/index.json` are generated and not committed, so a
+fresh clone has nothing to serve until it builds:
+
+```sh
+node suievals/build.js --skills . --out suievals
+```
+
+The tests say so themselves if you forget. They were committed once, went stale,
+and stayed stale -- `evals/index.json` claimed 158 evals and manifest
+`143c0d0525d3` while the suite was 156 and `f0b70209ffb6` -- because the job that
+refreshed them pushed to a protected branch and could never land.
+
 ## What a deploy does not do
 
 It does not run evals, score anything, or call a model. The numbers come from
