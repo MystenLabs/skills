@@ -1,0 +1,23 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": null,
+  "installCommand": "echo \"no install: the board builds from the standard library\"",
+  "buildCommand": "node suievals/build.js --skills . --out suievals && node suievals/tests/build.test.js && node suievals/tests/kind.test.js && node suievals/tests/page.test.mjs",
+  "outputDirectory": "suievals",
+  "cleanUrls": true,
+  "trailingSlash": false,
+  "headers": [
+    {
+      "source": "/(evals|results)/index.json",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=0, must-revalidate" }
+      ]
+    },
+    {
+      "source": "/runs/(.*)",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=300" }
+      ]
+    }
+  ]
+}
