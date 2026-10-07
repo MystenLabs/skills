@@ -118,11 +118,18 @@
   /* One card per model, its configurations stacked inside it.
      A single ranked list put a model's four runs wherever their scores fell, so
      the comparison the board exists for had to be reassembled by the reader. */
-  .rules { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); }
+  /* Three columns, so six cards fill two rows exactly. auto-fit gave five at a
+     wide viewport and left the sixth alone on a row of its own, and the narrow
+     columns it produced broke a heading across two lines while the shortest
+     card ran a third as deep as the tallest. */
+  .rules { display: grid; gap: 14px; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  @media (max-width: 1000px) { .rules { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 640px) { .rules { grid-template-columns: 1fr; } }
   .rule { background: var(--ocean-850); border: 1px solid var(--line-soft); border-radius: 12px;
           padding: 15px 17px 14px; }
-  .rule h3 { margin: 0 0 7px; font-size: 13.5px; font-weight: 650; color: var(--ink); letter-spacing: -0.01em; }
-  .rule p { margin: 0; font-size: 13px; line-height: 1.6; color: var(--ink-2); }
+  .rule h3 { margin: 0 0 7px; font-size: 13.5px; font-weight: 650; color: var(--ink);
+             letter-spacing: -0.01em; text-wrap: balance; }
+  .rule p { margin: 0; font-size: 13px; line-height: 1.6; color: var(--ink-2); text-wrap: pretty; }
   .cards { display: grid; gap: 14px; grid-template-columns: repeat(auto-fill, minmax(330px, 1fr)); }
   .mcard { background: var(--ocean-850); border: 1px solid var(--line-soft); border-radius: 12px;
     padding: 16px 18px 14px; display: flex; flex-direction: column; gap: 12px; }
@@ -300,60 +307,53 @@ Report a score per pillar and list the evals you missed.</pre>
 
 <h2>How this is scored</h2>
 <p class="prose">
-  Two aspects of the method are worth stating plainly: a question is not scored pass-or-fail, and a
-  model&rsquo;s score is the mean of four areas rather than a single pooled total.
+  A question is not scored pass-or-fail, and a model&rsquo;s score is the mean of four areas rather
+  than one pooled total.
 </p>
 <div class="rules">
   <div class="rule">
     <h3>The questions are real</h3>
     <p>
-      Every prompt is one a developer would actually type. &ldquo;How do flash loans work in
-      DeepBook V3? Can I borrow and trade in the same pool?&rdquo; &mdash; not a puzzle with a
-      one-token answer. Replies come back as prose and code, the length and shape of a real one.
+      Every prompt is one a developer would type: &ldquo;How do flash loans work in DeepBook V3?
+      Can I borrow and trade in the same pool?&rdquo; Answers come back as prose and code, the
+      length of a real reply.
     </p>
   </div>
   <div class="rule">
-    <h3>Each question lists what a good answer contains</h3>
+    <h3>Expectations, written in advance</h3>
     <p>
-      The import to use, the call to make, the mistake to avoid: 885 of them across 156 questions.
-      Most are prose &mdash; &ldquo;warns that each transfer grants full privileges&rdquo; &mdash;
-      and a second model reads the answer to judge them. Where an expectation names something
-      exact, a pattern can be written down instead and checked literally; 26 are written that way
-      so far, and those never reach a judge.
+      885 expectations across 156 questions: the import to use, the call to make, the mistake to
+      avoid. Most are prose, so a second model reads the answer to judge them. 26 name something
+      exact enough to check literally.
     </p>
   </div>
   <div class="rule">
     <h3>Expectations are counted, not questions</h3>
     <p>
-      A model that gets five of a question&rsquo;s six expectations right has not failed it the way
-      a model that gets none has. Scored pass-or-fail, the four weakest models here land between
-      0% and 7% and the ranking says nothing about which is closer. Counting expectations spreads
-      the same four from 8% to 24%.
+      Five of six expectations right is not the same as none. Scored pass-or-fail, the four weakest
+      models all land between 0% and 7%. Counting expectations spreads them from 8% to 24%.
     </p>
   </div>
   <div class="rule">
     <h3>Four areas, equally weighted</h3>
     <p>
       Objects, transactions, building and security, averaged. Building holds 80 of the 156
-      questions, so a pooled total would let it set the score on its own and a weak showing on
-      security &mdash; 16 questions &mdash; would disappear into it.
+      questions, so a pooled total would let it set the score and bury security&rsquo;s 16.
     </p>
   </div>
   <div class="rule">
-    <h3>Asked more than once, where it can be</h3>
+    <h3>Asked more than once</h3>
     <p>
-      One answer is a sample, not a census: the same model asked the same question twice does not
-      always give the same answer. Most runs here ask each question three times and score the
-      average. A card records how many attempts it used, because a run of one is a weaker claim
-      than a run of three and the board does not hide the difference.
+      The same model asked the same question twice does not always answer the same way. Most runs
+      ask three times and score the average. Each card records how many attempts it used.
     </p>
   </div>
   <div class="rule">
     <h3>Every question points at a page</h3>
     <p>
-      A question is about whether Sui is documented, not whether a model has memorised Sui trivia,
-      so each one cites the documentation a correct answer comes from. 155 of the 156 do; the
-      remaining one is a defect in the suite, not a hidden rule.
+      Each question cites the documentation a correct answer comes from, so the suite measures
+      whether Sui is documented rather than what a model memorised. 155 of 156 do; the one that
+      does not is a defect in the suite.
     </p>
   </div>
 </div>
