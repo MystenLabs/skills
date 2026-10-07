@@ -383,8 +383,12 @@ const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<
 // trailing slash it resolves to /evals/index.json and the app shell answers with
 // HTML, which is what "Unexpected token '<'" was. So the prefix is kept only
 // when the page is actually being served from a /suievals path.
+// `location` is optional because page.test.mjs evaluates this script in Node to
+// render the page against stubbed data, and a test harness that has to supply a
+// URL just to read a figure is a harness testing the wrong thing.
 const BASE = (() => {
-  const p = location.pathname.replace(/\/index\.html?$/, '').replace(/\/$/, '');
+  const here = typeof location === 'undefined' ? '' : location.pathname;
+  const p = here.replace(/\/index\.html?$/, '').replace(/\/$/, '');
   return p === '/suievals' || p.endsWith('/suievals') ? p : '';
 })();
 async function load(path) {
