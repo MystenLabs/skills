@@ -18,7 +18,7 @@ npx skills add mystenlabs/skills --skill sui-overview --skill sui-move --skill s
 npx skills add mystenlabs/skills --all
 ```
 
-> **New to Sui?** Start with the three-skill starter set above (`sui-overview`, `sui-move`, `sui-move-project`). Installing all 26 skills adds real context overhead and can cause trigger collisions. Add more as you need them.
+> **New to Sui?** Start with the three-skill starter set above (`sui-overview`, `sui-move`, `sui-move-project`). Installing all 31 skills adds real context overhead and can cause trigger collisions. Add more as you need them.
 
 ## Skills
 
@@ -40,13 +40,16 @@ npx skills add mystenlabs/skills --all
 | [move-unit-testing](move-unit-testing/) | Writing unit tests for Move smart contracts |
 | [object-model](object-model/) | Ownership types, dynamic fields, collections, transfer patterns |
 | [sui-build-test](sui-build-test/) | Building Move code with `sui move build` |
+| [move-security](move-security/) | Reviewing Move for vulnerabilities — access control, capabilities, invariants |
+| [onchain-randomness](onchain-randomness/) | The Random object (0x8), RandomGenerator, and composition attacks |
+| [kiosk](kiosk/) | Kiosk and NFT trading — listing, TransferPolicy, Kiosk Apps |
 
 ### Tooling and deployment
 
 | Skill | Description |
 |-------|-------------|
 | [sui-install](sui-install/) | Installing and managing Sui CLI versions with suiup |
-| [sui-cli](sui-cli/) | Sui networks, gas costs, epochs, and network operations |
+| [sui-networks-gas](sui-networks-gas/) | Mainnet/Testnet/Devnet differences, gas costs, epochs |
 | [sui-client](sui-client/) | CLI client configuration, address management, and faucet tokens |
 | [sui-publish](sui-publish/) | Publishing, upgrading, and deploying Move packages |
 
@@ -58,6 +61,7 @@ npx skills add mystenlabs/skills --all
 | [ptbs](ptbs/) | Programmable Transaction Blocks — composing atomic transactions |
 | [frontend-apps](frontend-apps/) | dApp development with @mysten/dapp-kit (React, Vue, vanilla JS) |
 | [accessing-data](accessing-data/) | Reading on-chain state — gRPC, GraphQL, indexers, Walrus blobs |
+| [sui-ts-sdk-backend](sui-ts-sdk-backend/) | The TypeScript SDK for backends and agents — keypairs, signing, no CLI |
 
 ### DeepBook
 
@@ -80,6 +84,9 @@ npx skills add mystenlabs/skills --all
 | Skill | Description |
 |-------|-------------|
 | [generate-sui-agent-config](generate-sui-agent-config/) | Generate CLAUDE.md or AGENT.md for Sui projects |
+| [sui-for-ethereum](sui-for-ethereum/) | Coming from Solidity — EVM patterns and their Move equivalents |
+| [zklogin](zklogin/) | zkLogin — protocol flow, OpenID providers, address derivation |
+| [sui-bridge](sui-bridge/) | Sui Bridge — supported assets, contract addresses, the global limiter |
 
 ## Repo Structure
 
@@ -100,6 +107,36 @@ Each skill is a directory at the repo root containing a `SKILL.md` and supportin
 ```
 
 Supporting files (anything that isn't `SKILL.md`) are bundled with the skill but only loaded by the agent when needed — they don't consume context upfront.
+
+Two directories at the root are not skills, and the `skills` CLI ignores them
+because neither has a `SKILL.md`:
+
+| | |
+|---|---|
+| `scripts/` | The eval runners and the staleness check |
+| `suievals/` | The public Sui Evals board — the suite, its build, and the published results |
+
+## Sui Evals
+
+How well do AI coding agents answer real Sui questions, with and without these
+skills loaded? `suievals/` holds the answer and everything needed to reproduce
+it: the suite, the build, and the published results.
+
+| | |
+|---|---|
+| [suievals/RUN.md](suievals/RUN.md) | Run the suite against your own model and submit the result |
+| [suievals/results/](suievals/results/) | The published cards, one per run |
+| [suievals/DEPLOY.md](suievals/DEPLOY.md) | How the page is served |
+
+The suite is assembled from the `evals/evals.json` files that live beside each
+skill, so adding evals to a skill adds questions to the board. It carries a
+version fingerprint, and a card scored against an older one is marked rather
+than ranked beside current results.
+
+Anyone can submit. Each card records who measured it — `official` for runs
+published by this repository's pipeline, `community` otherwise — and how it was
+graded, and a self-graded card is published without being ranked against a
+judge-graded one.
 
 ## Contributing
 
