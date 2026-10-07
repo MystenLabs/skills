@@ -370,10 +370,23 @@ Report a score per pillar and list the evals you missed.</pre>
 const PC = { objects: 'var(--s1)', transactions: 'var(--s2)', building: 'var(--s3)', security: 'var(--s4)' };
 const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 
-// Absolute, so the page works at /suievals and /suievals/ alike. A relative
-// path under the bare form resolves to /evals/index.json and the app shell
-// answers with HTML, which is what "Unexpected token '<'" was.
-const BASE = '/suievals';
+// Where this page's data sits, which depends on how the page is served.
+//
+// Hardcoding '/suievals' was right while the only home was the dashboard, which
+// publishes this under that path. Deployed on its own, suievals/ *is* the web
+// root -- outputDirectory in vercel.json -- so the data sits beside index.html
+// and the prefix turned every fetch into a 404:
+//
+//   /suievals/evals/index.json returned 404
+//
+// A bare relative path is not the answer either: under /suievals with no
+// trailing slash it resolves to /evals/index.json and the app shell answers with
+// HTML, which is what "Unexpected token '<'" was. So the prefix is kept only
+// when the page is actually being served from a /suievals path.
+const BASE = (() => {
+  const p = location.pathname.replace(/\/index\.html?$/, '').replace(/\/$/, '');
+  return p === '/suievals' || p.endsWith('/suievals') ? p : '';
+})();
 async function load(path) {
   const url = `${BASE}/${path}`;
   const r = await fetch(url, { cache: 'no-cache' });
