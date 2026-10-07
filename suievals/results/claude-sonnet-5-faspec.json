@@ -4,6 +4,7 @@
   "model": "claude-sonnet-5",
   "skills": "sui-skills",
   "layer": "with-skills",
+  "graded_by": "judge:claude-haiku-4-5-20251001",
   "grader": "judge",
   "tools": [
     "read",
@@ -13,7 +14,27 @@
   "samples": 10,
   "empty_answers": 0,
   "recorded_at": "2026-10-02T20:54:23.448Z",
-  "eval_set": null,
+  "manifest": "f0b70209ffb6",
+  "eval_set": "f0b70209ffb6",
+  "pillars": {
+    "objects": {
+      "pass": 0,
+      "total": 0
+    },
+    "transactions": {
+      "pass": 0,
+      "total": 0
+    },
+    "building": {
+      "pass": 63,
+      "total": 71
+    },
+    "security": {
+      "pass": 0,
+      "total": 0
+    }
+  },
+  "partial": true,
   "evals": [
     {
       "id": "frontend-apps/frontend-apps-react-setup",
