@@ -19,6 +19,29 @@
 export const SKILL_MODES = ["sui-skills", "none"];
 
 /**
+ * Who measured a card.
+ *
+ * "ci" is the repository's own pipeline; anything submitted by a person is
+ * "community". The board labels them differently and keys them separately, so a
+ * contributor re-running a model the pipeline already measured adds a row rather
+ * than overwriting one.
+ *
+ * Absent means community. The default has to be the one that claims less: a card
+ * that forgets the field is far more likely to be a first-time submission than a
+ * pipeline run, and the pipeline sets it explicitly.
+ *
+ * This is a label, not a permission. Nothing in a JSON file can stop it saying
+ * "ci" -- what stops that is the fork check in .github/workflows/suievals.yml
+ * and a reviewer reading the diff.
+ */
+export const SOURCES = ["ci", "community"];
+
+/** Normalised provenance, for callers that would otherwise each pick a default. */
+export function sourceOf(card) {
+  return card?.source === "ci" ? "ci" : "community";
+}
+
+/**
  * An answers file: what the model said, before anyone has graded it.
  *
  * This is the shape worth submitting. A self-graded card is published and then
@@ -80,6 +103,12 @@ export function validateCard(card, { evals, manifest: suite, pillarIds }) {
   }
   if (!card.recorded_at || Number.isNaN(Date.parse(card.recorded_at))) {
     problems.push('"recorded_at" must be an ISO timestamp.');
+  }
+  if (card.source !== undefined && !SOURCES.includes(card.source)) {
+    problems.push(
+      `"source" must be ${SOURCES.map((s) => `"${s}"`).join(" or ")} — "ci" is reserved for `
+      + `runs published by this repository's pipeline. Leave it out and the card counts as community.`,
+    );
   }
 
   const rows = Array.isArray(card.evals) ? card.evals : null;

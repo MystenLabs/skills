@@ -39,6 +39,35 @@ jobs:
       - name: Submitted cards are valid
         run: node suievals/validate.js
 
+      - name: Provenance is what the card claims
+        run: node suievals/tests/provenance.test.js
+
+      # "source": "ci" is a label, and a label in a JSON file cannot defend
+      # itself. This is what does: a pull request from a fork may not add or
+      # change a card that claims the repository measured it. Reviewers see the
+      # diff either way, but a check that fails is not something anyone has to
+      # remember to look for.
+      - name: A fork may not publish an official card
+        if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.fork
+        env:
+          BASE: ${{ github.event.pull_request.base.sha }}
+          HEAD: ${{ github.event.pull_request.head.sha }}
+        run: |
+          set -uo pipefail
+          git fetch -q --depth=1 origin "$BASE" 2>/dev/null || true
+          CHANGED=$(git diff --name-only --diff-filter=d "$BASE" "$HEAD" -- suievals/results || true)
+          bad=0
+          for f in $CHANGED; do
+            [ -f "$f" ] || continue
+            case "$f" in */index.json) continue ;; esac
+            if node -e 'process.exit(JSON.parse(require("fs").readFileSync(process.argv[1],"utf8")).source === "ci" ? 0 : 1)' "$f"; then
+              echo "::error file=$f::This card claims \"source\": \"ci\", which is reserved for runs published by this repository's pipeline. Remove the field, or set it to \"community\", and add \"submitted_by\"."
+              bad=1
+            fi
+          done
+          [ "$bad" = "0" ] || exit 1
+          echo "No forked card claims to be official."
+
       - name: Suite summary
         run: |
           {
