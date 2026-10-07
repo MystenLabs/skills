@@ -430,17 +430,34 @@ function readCards(byId, incomplete, ciJudge) {
     // the first. Two measurements, one file, no way to tell which survived.
     const label = `${card.model}${card.skills === "none" ? "" : " +sui-skills"}`
       + (submitted ? ` (submitted by ${card.submitted_by})` : "");
-    if (!total || card.partial || covered < COVERAGE) {
+    // Coverage decides whether a card ranks. `partial` does not.
+    //
+    // Both used to, and the two together excluded almost everything. `partial`
+    // is set by the emitter whenever a run misses even one eval, and a run
+    // always misses one: an eval whose every sample came back empty has no
+    // grades, so it is not in the card. The frontier models sit at 151 of 156
+    // after their pre-#106 ids are recovered -- 97%, well past this threshold --
+    // and were being marked rather than ranked because of the flag rather than
+    // the number.
+    //
+    // So `partial` is now what it says it is, a statement that the run did not
+    // cover the whole suite, and COVERAGE is the line. A card under it is still
+    // refused, because a score over a third of the questions is not a score.
+    if (!total || covered < COVERAGE) {
       incomplete.push({ model: card.model, pass, total, of: card.evals.length,
-        reason: card.partial ? "submitted as a partial run"
-          : !total ? "no eval in the card is in the suite"
-          : `covers ${Math.round(100 * covered)}% of the suite` });
+        reason: !total ? "no eval in the card is in the suite"
+          : `covers ${Math.round(100 * covered)}% of the suite, under the ${Math.round(100 * COVERAGE)}% a ranked card needs` });
       continue;
     }
 
     runs.push({
       name: label,
       model: card.model,
+      // What the run actually answered, so a reader can weigh a 97% card
+      // against a 100% one rather than taking both as equivalent.
+      coverage: Math.round(100 * covered),
+      partial: Boolean(card.partial),
+      recoveredIds: card.recovered_ids ?? 0,
       harness: card.harness ?? "self-report",
       skill: card.skills ?? "sui-skills",
       withSkills: card.skills !== "none",

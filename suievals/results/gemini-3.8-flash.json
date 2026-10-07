@@ -4,6 +4,7 @@
   "model": "gemini-3.8-flash",
   "skills": "sui-skills",
   "layer": "with-skills",
+  "graded_by": "judge:claude-haiku-4-5-20251001",
   "grader": "judge",
   "tools": [
     "read",
@@ -13,7 +14,28 @@
   "samples": 1,
   "empty_answers": 156,
   "recorded_at": "2026-10-04T07:20:15.451Z",
-  "eval_set": null,
+  "manifest": "f0b70209ffb6",
+  "eval_set": "f0b70209ffb6",
+  "pillars": {
+    "objects": {
+      "pass": 0,
+      "total": 0
+    },
+    "transactions": {
+      "pass": 0,
+      "total": 0
+    },
+    "building": {
+      "pass": 6,
+      "total": 10
+    },
+    "security": {
+      "pass": 0,
+      "total": 0
+    }
+  },
+  "partial": true,
+  "recovered_ids": 1,
   "evals": [
     {
       "id": "composable-move-functions/composable-amm",
@@ -21,7 +43,7 @@
       "of": 4
     },
     {
-      "id": "deepbook-margin/4",
+      "id": "deepbook-margin/deepbook-margin-spot-vs-margin",
       "pass": 6,
       "of": 6
     }
