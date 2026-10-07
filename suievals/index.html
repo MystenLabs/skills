@@ -596,45 +596,21 @@ function renderBoard(cat, res) {
     host.appendChild(card);
   });
 
-  const ex = res.incomplete || [];
-  const held = res.heldBack || [];
-  const lines = [];
-  if (ex.length) {
-    // Named with what each one actually answered. A bare list of models read as
-    // a verdict on those models; the number says it is a verdict on the run,
-    // and lets a reader see the difference between a run that missed a tenth of
-    // the suite and one that missed three quarters of it.
-    // A bare percentage beside a model name reads as that model's score, which
-    // is the opposite of what it is. These runs have no score at all; the figure
-    // is how much of the suite each one got through. Every word here exists to
-    // keep those two readings apart.
-    const worst = [...ex].sort((a, b) => (a.coverage ?? 0) - (b.coverage ?? 0));
-    const named = worst
-      .map((r) => {
-        const cfg = r.skills === 'none' ? 'without the skills' : 'with the skills';
-        const got = r.coverage != null ? `answered ${r.coverage}%` : 'coverage unknown';
-        return `${r.model} ${cfg} (${got})`;
-      })
-      .join(', ');
-    lines.push(
-      `${ex.length} run${ex.length === 1 ? '' : 's'} did not get through enough of the suite to be scored. `
-      + `These are not low scores: they have no score. A run that answered a third of the questions `
-      + `cannot be placed beside one that answered all ${cat.evals.length}, so the board names it and `
-      + `stops there. The figure is the share of the suite each run answered, not a result — `
-      + `${named}.`,
-    );
-  }
-  if (held.length) {
-    // "Two graders produce two numbers" assumed the reader knew there were two.
-    const who = held.map((r) => `${r.model} (${r.scoring || 'grader unrecorded'})`).join(', ');
-    lines.push(
-      `${held.length} run${held.length === 1 ? ' is' : 's are'} not shown above because `
-      + `${held.length === 1 ? 'it was' : 'they were'} graded by term matching rather than by the `
-      + `model that reads every other run here. The two methods do not produce comparable numbers, `
-      + `so ranking them together would invent a difference that is really a change of grader — ${who}.`,
-    );
-  }
-  document.getElementById('excluded').textContent = lines.join(' ');
+  // The incomplete and held-back runs are not listed here.
+  //
+  // They were, with the share of the suite each one answered, and it read as a
+  // table of very low scores: "gemini-3.8-flash +sui-skills (1%)" beside a board
+  // where claude-sonnet-5 scores 96%. The figure was coverage, not a result, and
+  // no amount of wording in front of a list fixed a number that looks like a
+  // score sitting next to a model name. claude-sonnet-5 appeared in both places
+  // at once -- 96% above, "8%" below -- which reads as the page contradicting
+  // itself.
+  //
+  // A run that did not get through the suite has nothing to say to a reader
+  // deciding which model to use, which is the only question this page answers.
+  // It is still in results/index.json and still shown on the internal board,
+  // where the question is which runs need re-running.
+  document.getElementById('excluded').textContent = '';
 }
 
 
