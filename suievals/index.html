@@ -620,20 +620,29 @@ function renderBoard(cat, res) {
 
   const parts = [];
   if (ex.length) {
+    // Group the bare and with-skills runs of one model into one row, and only
+    // those. A model can also have one-off configurations -- an experiment, a
+    // retired layer -- and collapsing those under the bare model name is how
+    // "claude-sonnet-5 answered 8% with them" came to sit here while that
+    // model's three real runs cover 97%. The canonical pair is `<model>` and
+    // `<model>-baseline`; anything else is its own run and says its own name.
+    const canonical = (r) => !r.run || r.run === r.model || r.run === `${r.model}-baseline`;
     const byModel = new Map();
     for (const r of ex) {
-      const k = r.model;
-      if (!byModel.has(k)) byModel.set(k, {});
+      const k = canonical(r) ? r.model : (r.run || r.model);
+      if (!byModel.has(k)) byModel.set(k, { label: k, variant: !canonical(r) });
       byModel.get(k)[r.skills === 'none' ? 'bare' : 'skills'] = r.coverage;
     }
     const best = (v) => Math.max(v.bare ?? 0, v.skills ?? 0);
     const rows = [...byModel.entries()]
       .sort((a, b) => best(b[1]) - best(a[1]))
-      .map(([model, v]) => {
+      .map(([key, v]) => {
         const bits = [];
         if (v.bare != null) bits.push(`${v.bare}% without the skills`);
         if (v.skills != null) bits.push(`${v.skills}% with them`);
-        return `<li><b>${esc(model)}</b> answered ${bits.join(', ')}</li>`;
+        // A variant is named as a run, so it is not read as the model's score.
+        const suffix = v.variant ? ' <span class="sub">(a one-off run, not this model\u2019s scored result)</span>' : '';
+        return `<li><b>${esc(key)}</b> answered ${bits.join(', ')}${suffix}</li>`;
       })
       .join('');
     parts.push(
