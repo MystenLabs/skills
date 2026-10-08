@@ -385,6 +385,14 @@ function readCards(byId, incomplete, ciJudge) {
     let card;
     try { card = JSON.parse(readFileSync(join(dir, file), "utf8")); }
     catch (err) { console.error(`  skipped card ${file}: ${err.message}`); continue; }
+    // The file stem is the only thing that tells two cards of one model apart.
+    // `metadata.model` is "claude-sonnet-5" for claude-sonnet-5.json and for
+    // claude-sonnet-5-faspec.json alike, so a one-off experimental card that
+    // covered 8 evals was listed on the board as "claude-sonnet-5 answered 8%"
+    // beside that model's three real runs at 97%. A reader concludes something
+    // false about the model, which is the opposite of what the section is for.
+    const variant = file.replace(/\.json$/, "");
+    card.variant = variant;
     if (card.suievals_card !== 1 || !Array.isArray(card.evals) || !card.model) {
       console.error(`  skipped card ${file}: not a card`);
       continue;
@@ -444,7 +452,11 @@ function readCards(byId, incomplete, ciJudge) {
     // cover the whole suite, and COVERAGE is the line. A card under it is still
     // refused, because a score over a third of the questions is not a score.
     if (!total || covered < COVERAGE) {
-      incomplete.push({ model: card.model, pass, total, of: card.evals.length,
+      incomplete.push({ model: card.model,
+        // The run, not just the model it used. Two cards for one model differ
+        // only by this.
+        run: variant,
+        pass, total, of: card.evals.length,
         // The number as well as the sentence: a reader deciding whether to
         // trust a marked run wants to know whether it answered half the suite
         // or a tenth of it.
@@ -457,6 +469,7 @@ function readCards(byId, incomplete, ciJudge) {
 
     runs.push({
       name: label,
+      run: variant,
       model: card.model,
       // What the run actually answered, so a reader can weigh a 97% card
       // against a 100% one rather than taking both as equivalent.

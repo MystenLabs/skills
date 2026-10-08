@@ -307,7 +307,6 @@ Report a score per pillar and list the evals you missed.</pre>
 <h2>How each model scores</h2>
 <p class="note" id="board-note">Loading&hellip;</p>
 <div class="cards" id="board" hidden></div>
-<p class="note" id="excluded" style="margin-top:12px"></p>
 
 <h2>How this is scored</h2>
 <p class="prose">
@@ -454,7 +453,10 @@ const pctOf = (r) => Math.round(100 * scoreOf(r));
  * A run graded by a reader and a run graded by term matching are not the same
  * measurement, and the reader is stricter. Shown side by side, a judge-scored run
  * reads as a model being bad at Sui when it was only marked by a different hand.
- * The majority regime is shown and the rest are named below the board.
+ * The majority regime is shown and the rest are filtered out. They used to be
+ * named below the board; that note, and the list of partial runs beside it,
+ * told a reader which models did badly at being measured, which is not
+ * something a reader of this board has any use for.
  */
 function sameRegime(res) {
   const runs = (res.runs || []).filter((r) => r.total && r.total.total);
@@ -600,52 +602,6 @@ function renderBoard(cat, res) {
     host.appendChild(card);
   });
 
-  // The runs that answered too little of the suite to be scored.
-  //
-  // Listed, because a model absent from the board reads as a model nobody tried,
-  // and these were run. Not ranked, because a score over part of the suite is
-  // not the same measurement as one over all of it.
-  //
-  // A list rather than a sentence. As prose it ran to 81 words and read as a
-  // paragraph of very low scores; one row per model, with the word "answered"
-  // on the figure, is the same information in a form that can be skimmed. The
-  // number is coverage, which is why it is never printed bare: a lone "(8%)"
-  // beside claude-sonnet-5 sat under a board where it scores 96%.
-  const ex = res.incomplete || [];
-  const held = res.heldBack || [];
-  // Not `host`: that is the board container, declared above in this function.
-  const noteEl = document.getElementById('excluded');
-  noteEl.innerHTML = '';
-  if (!ex.length && !held.length) return;
-
-  const parts = [];
-  if (ex.length) {
-    const byModel = new Map();
-    for (const r of ex) {
-      const k = r.model;
-      if (!byModel.has(k)) byModel.set(k, {});
-      byModel.get(k)[r.skills === 'none' ? 'bare' : 'skills'] = r.coverage;
-    }
-    const best = (v) => Math.max(v.bare ?? 0, v.skills ?? 0);
-    const rows = [...byModel.entries()]
-      .sort((a, b) => best(b[1]) - best(a[1]))
-      .map(([model, v]) => {
-        const bits = [];
-        if (v.bare != null) bits.push(`${v.bare}% without the skills`);
-        if (v.skills != null) bits.push(`${v.skills}% with them`);
-        return `<li><b>${esc(model)}</b> answered ${bits.join(', ')}</li>`;
-      })
-      .join('');
-    parts.push(
-      `<p class="note">Run but not scored. These answered under 90% of the suite, so there is no `
-      + `score to compare.</p><ul class="unscored">${rows}</ul>`,
-    );
-  }
-  if (held.length) {
-    const who = held.map((r) => `${esc(r.model)} (${esc(r.scoring || 'grader unrecorded')})`).join(', ');
-    parts.push(`<p class="note">Graded by term matching rather than the judge, so not comparable: ${who}.</p>`);
-  }
-  noteEl.innerHTML = parts.join('');
 }
 
 
@@ -675,7 +631,6 @@ function renderHold(cat, res) {
 
   document.getElementById('board-note').textContent = why;
   document.getElementById('board').hidden = true;
-  document.getElementById('excluded').textContent = '';
 
 }
 
