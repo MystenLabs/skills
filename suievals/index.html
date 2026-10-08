@@ -637,22 +637,39 @@ function renderBoard(cat, res) {
     const rows = [...byModel.entries()]
       .sort((a, b) => best(b[1]) - best(a[1]))
       .map(([key, v]) => {
+        // Stated as questions left unanswered, not as a percentage "answered".
+        // "answered 34% of the suite" was read as a low score, and a section
+        // that withholds low scores is a section nobody should trust. The
+        // number is how often the model returned nothing at all.
         const bits = [];
-        if (v.bare != null) bits.push(`${v.bare}% without the skills`);
-        if (v.skills != null) bits.push(`${v.skills}% with them`);
+        if (v.bare != null) bits.push(`${100 - v.bare}% of the questions without the skills`);
+        if (v.skills != null) bits.push(`${100 - v.skills}% with them`);
         // A variant is named as a run, so it is not read as the model's score.
         const suffix = v.variant ? ' <span class="sub">(a one-off run, not this model\u2019s scored result)</span>' : '';
-        return `<li><b>${esc(key)}</b> answered ${bits.join(', ')}${suffix}</li>`;
+        return `<li><b>${esc(key)}</b> gave no answer to ${bits.join(', ')}${suffix}</li>`;
       })
       .join('');
     parts.push(
-      `<p class="note">Run but not scored. These answered under 90% of the suite, so there is no `
-      + `score to compare.</p><ul class="unscored">${rows}</ul>`,
+      `<p class="note"><b>Ran, but could not be scored.</b> These models returned an empty reply `
+      + `to many of the questions, so those questions have no grade. A score on this board is the `
+      + `mean of the four area pass rates across the whole suite; computing one from only the `
+      + `questions a model happened to answer would measure it on a smaller and different set of `
+      + `questions than every other model, which is not a number anyone can compare. `
+      + `<b>Nothing is held back for scoring badly</b> \u2014 every model that answered the suite is `
+      + `on the board above at whatever it scored, lowest included. An empty reply is not a refusal `
+      + `and not a rejected request: the provider returns a success with no content in it, which is `
+      + `a fault in how that model is being served rather than an answer to the question.`
+      + `</p><ul class="unscored">${rows}</ul>`,
     );
   }
   if (held.length) {
-    const who = held.map((r) => `${esc(r.model)} (${esc(r.scoring || 'grader unrecorded')})`).join(', ');
-    parts.push(`<p class="note">Graded by term matching rather than the judge, so not comparable: ${who}.</p>`);
+    const who = held.map((r) => esc(r.model)).join(', ');
+    parts.push(
+      `<p class="note"><b>Graded a different way, so not on the board.</b> ${who}: this run was `
+      + `marked by looking for expected words in the answer, instead of by the judge model that `
+      + `marked every other run. The two methods do not agree closely enough to sit in one column, `
+      + `so the run is kept and listed here rather than mixed in.</p>`,
+    );
   }
   noteEl.innerHTML = parts.join('');
 }
