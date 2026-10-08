@@ -307,7 +307,6 @@ Report a score per pillar and list the evals you missed.</pre>
 <h2>How each model scores</h2>
 <p class="note" id="board-note">Loading&hellip;</p>
 <div class="cards" id="board" hidden></div>
-<p class="note" id="excluded" style="margin-top:12px"></p>
 
 <h2>How this is scored</h2>
 <p class="prose">
@@ -454,7 +453,10 @@ const pctOf = (r) => Math.round(100 * scoreOf(r));
  * A run graded by a reader and a run graded by term matching are not the same
  * measurement, and the reader is stricter. Shown side by side, a judge-scored run
  * reads as a model being bad at Sui when it was only marked by a different hand.
- * The majority regime is shown and the rest are named below the board.
+ * The majority regime is shown and the rest are filtered out. They used to be
+ * named below the board; that note, and the list of partial runs beside it,
+ * told a reader which models did badly at being measured, which is not
+ * something a reader of this board has any use for.
  */
 function sameRegime(res) {
   const runs = (res.runs || []).filter((r) => r.total && r.total.total);
@@ -600,78 +602,6 @@ function renderBoard(cat, res) {
     host.appendChild(card);
   });
 
-  // The runs that answered too little of the suite to be scored.
-  //
-  // Listed, because a model absent from the board reads as a model nobody tried,
-  // and these were run. Not ranked, because a score over part of the suite is
-  // not the same measurement as one over all of it.
-  //
-  // A list rather than a sentence. As prose it ran to 81 words and read as a
-  // paragraph of very low scores; one row per model, with the word "answered"
-  // on the figure, is the same information in a form that can be skimmed. The
-  // number is coverage, which is why it is never printed bare: a lone "(8%)"
-  // beside claude-sonnet-5 sat under a board where it scores 96%.
-  const ex = res.incomplete || [];
-  const held = res.heldBack || [];
-  // Not `host`: that is the board container, declared above in this function.
-  const noteEl = document.getElementById('excluded');
-  noteEl.innerHTML = '';
-  if (!ex.length && !held.length) return;
-
-  const parts = [];
-  if (ex.length) {
-    // Group the bare and with-skills runs of one model into one row, and only
-    // those. A model can also have one-off configurations -- an experiment, a
-    // retired layer -- and collapsing those under the bare model name is how
-    // "claude-sonnet-5 answered 8% with them" came to sit here while that
-    // model's three real runs cover 97%. The canonical pair is `<model>` and
-    // `<model>-baseline`; anything else is its own run and says its own name.
-    const canonical = (r) => !r.run || r.run === r.model || r.run === `${r.model}-baseline`;
-    const byModel = new Map();
-    for (const r of ex) {
-      const k = canonical(r) ? r.model : (r.run || r.model);
-      if (!byModel.has(k)) byModel.set(k, { label: k, variant: !canonical(r) });
-      byModel.get(k)[r.skills === 'none' ? 'bare' : 'skills'] = r.coverage;
-    }
-    const best = (v) => Math.max(v.bare ?? 0, v.skills ?? 0);
-    const rows = [...byModel.entries()]
-      .sort((a, b) => best(b[1]) - best(a[1]))
-      .map(([key, v]) => {
-        // Stated as questions left unanswered, not as a percentage "answered".
-        // "answered 34% of the suite" was read as a low score, and a section
-        // that withholds low scores is a section nobody should trust. The
-        // number is how often the model returned nothing at all.
-        const bits = [];
-        if (v.bare != null) bits.push(`${100 - v.bare}% of the questions without the skills`);
-        if (v.skills != null) bits.push(`${100 - v.skills}% with them`);
-        // A variant is named as a run, so it is not read as the model's score.
-        const suffix = v.variant ? ' <span class="sub">(a one-off run, not this model\u2019s scored result)</span>' : '';
-        return `<li><b>${esc(key)}</b> gave no answer to ${bits.join(', ')}${suffix}</li>`;
-      })
-      .join('');
-    parts.push(
-      `<p class="note"><b>Ran, but could not be scored.</b> These models returned an empty reply `
-      + `to many of the questions, so those questions have no grade. A score on this board is the `
-      + `mean of the four area pass rates across the whole suite; computing one from only the `
-      + `questions a model happened to answer would measure it on a smaller and different set of `
-      + `questions than every other model, which is not a number anyone can compare. `
-      + `<b>Nothing is held back for scoring badly</b> \u2014 every model that answered the suite is `
-      + `on the board above at whatever it scored, lowest included. An empty reply is not a refusal `
-      + `and not a rejected request: the provider returns a success with no content in it, which is `
-      + `a fault in how that model is being served rather than an answer to the question.`
-      + `</p><ul class="unscored">${rows}</ul>`,
-    );
-  }
-  if (held.length) {
-    const who = held.map((r) => esc(r.model)).join(', ');
-    parts.push(
-      `<p class="note"><b>Graded a different way, so not on the board.</b> ${who}: this run was `
-      + `marked by looking for expected words in the answer, instead of by the judge model that `
-      + `marked every other run. The two methods do not agree closely enough to sit in one column, `
-      + `so the run is kept and listed here rather than mixed in.</p>`,
-    );
-  }
-  noteEl.innerHTML = parts.join('');
 }
 
 
@@ -701,7 +631,6 @@ function renderHold(cat, res) {
 
   document.getElementById('board-note').textContent = why;
   document.getElementById('board').hidden = true;
-  document.getElementById('excluded').textContent = '';
 
 }
 
