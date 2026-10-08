@@ -144,7 +144,6 @@
      status and must not read as one. Solid background, no tiny type. */
   .mc-src { display: inline-block; margin-left: 8px; padding: 2px 7px; border-radius: 6px;
             font-size: 11.5px; font-weight: 600; letter-spacing: 0; vertical-align: 2px; }
-  .mc-src.official { background: var(--ocean-850); color: var(--ink-2); }
   .mc-src.community { background: var(--card); color: var(--ink-2); border: 1px solid var(--line); }
   .mc-best { font-size: 26px; font-weight: 700; color: var(--ink); font-variant-numeric: tabular-nums;
     line-height: 1; letter-spacing: -0.03em; }
@@ -487,11 +486,16 @@ const kindOf = (id) => KIND_OF.get(id) ?? null;
 function srcBadge(layers) {
   const runs = Object.values(layers).filter(Boolean);
   if (!runs.length) return '';
-  const who = [...new Set(runs.map((r) => (r.source === 'ci' ? 'official' : 'community')))];
-  if (who.length > 1) return '<span class="mc-src community">mixed</span>';
-  if (who[0] === 'official') return '<span class="mc-src official">official</span>';
-  const by = [...new Set(runs.map((r) => r.submittedBy).filter(Boolean))];
-  return `<span class="mc-src community">community${by.length === 1 ? ' · ' + esc(by[0]) : ''}</span>`;
+  // Only a community run is tagged. Nearly every card on this board is measured
+  // by the pipeline, so "official" was on nearly every card -- a label that
+  // appears everywhere distinguishes nothing, and it read as a claim about the
+  // result rather than a note on who produced it. The unlabelled case is the
+  // pipeline; a card that came from outside it says so.
+  const community = runs.filter((r) => r.source !== 'ci');
+  if (!community.length) return '';
+  const by = [...new Set(community.map((r) => r.submittedBy).filter(Boolean))];
+  const label = community.length < runs.length ? 'community run' : 'community';
+  return `<span class="mc-src community">${label}${by.length === 1 ? ' \u00b7 ' + esc(by[0]) : ''}</span>`;
 }
 
 function renderBoard(cat, res) {
