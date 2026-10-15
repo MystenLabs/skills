@@ -594,7 +594,7 @@ function renderBoard(cat, res) {
     // the skill files the agent read, the tool calls); an estimate counts the
     // skill body alone. The two are not one ranking, so they are two groups.
     const groups = [
-      { label: 'Measured: every token each answer carried, with the skills against without', rows: rows.filter((r) => r.c.kind === 'measured') },
+      { label: 'Measured: every token the model processed for an answer, tool calls included, with the skills against without', rows: rows.filter((r) => r.c.kind === 'measured') },
       { label: 'Estimated from the skill files: the skill body alone, until the run records what it spent', rows: rows.filter((r) => r.c.kind === 'estimated') },
     ].filter((g) => g.rows.length);
     const noteEl = document.getElementById('cost-note');
