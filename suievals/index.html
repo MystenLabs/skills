@@ -590,6 +590,13 @@ function renderBoard(cat, res) {
       const c = costOf(w, b, gain);
       return c ? { model, without: pctOf(b), withSkills: pctOf(w), gain, c } : null;
     }).filter(Boolean).sort((a, b) => (b.c.per10k ?? -1) - (a.c.per10k ?? -1));
+    // A measured row counts every token the answer carried (the system prompt,
+    // the skill files the agent read, the tool calls); an estimate counts the
+    // skill body alone. The two are not one ranking, so they are two groups.
+    const groups = [
+      { label: 'Measured: every token each answer carried, with the skills against without', rows: rows.filter((r) => r.c.kind === 'measured') },
+      { label: 'Estimated from the skill files: the skill body alone, until the run records what it spent', rows: rows.filter((r) => r.c.kind === 'estimated') },
+    ].filter((g) => g.rows.length);
     const noteEl = document.getElementById('cost-note');
     const hostEl = document.getElementById('cost');
     if (!rows.length) { noteEl.textContent = 'No run has recorded what it cost yet.'; return; }
@@ -598,8 +605,9 @@ function renderBoard(cat, res) {
       ? 'Points the skills won, divided by the extra tokens each answer cost with them. Measured from the runs that recorded tokens; the rest are estimated from the skill files.'
       : 'Points the skills won, divided by the tokens of skill context each answer carried. Estimated from the skill files until the runs record what they spent; a bigger gain for the same context is a better trade.';
     hostEl.hidden = false;
-    hostEl.innerHTML = `<table class="board"><thead><tr><th>Model</th><th class="num">Without</th><th class="num">With skills</th><th class="num">Points won</th><th class="num">Tokens per answer</th><th class="num">Points per 10k tokens</th></tr></thead><tbody>`
-      + rows.map((r) => `<tr><td>${esc(r.model)}</td><td class="num">${r.without}%</td><td class="num">${r.withSkills}%</td><td class="num">${r.gain >= 0 ? '+' : ''}${r.gain}</td><td class="num">${fmtK(r.c.tokens)}${r.c.kind === 'estimated' ? ' <span class="of">est.</span>' : ''}</td><td class="num"><b>${r.c.per10k === null ? '—' : r.c.per10k}</b></td></tr>`).join('')
+    const row = (r) => `<tr><td>${esc(r.model)}</td><td class="num">${r.without}%</td><td class="num">${r.withSkills}%</td><td class="num">${r.gain >= 0 ? '+' : ''}${r.gain}</td><td class="num">${fmtK(r.c.tokens)}${r.c.kind === 'estimated' ? ' <span class="of">est.</span>' : ''}</td><td class="num"><b>${r.c.per10k === null ? '—' : r.c.per10k}</b></td></tr>`;
+    hostEl.innerHTML = `<table class="board"><thead><tr><th>Model</th><th class="num">Without</th><th class="num">With skills</th><th class="num">Points won</th><th class="num">${measured ? 'Extra tokens per answer' : 'Tokens per answer'}</th><th class="num">Points per 10k tokens</th></tr></thead><tbody>`
+      + groups.map((g) => `<tr><td colspan="6" class="of" style="padding-top:16px">${g.label}</td></tr>` + g.rows.map(row).join('')).join('')
       + `</tbody></table>`;
   };
   costSection(models);
