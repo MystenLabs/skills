@@ -572,7 +572,9 @@ function renderBoard(cat, res) {
     const c = costOf(withSkills, base, gain);
     if (!c) return '';
     if (c.kind === 'measured') {
-      return `<p class="mc-gain">Each answer cost about ${fmtK(c.inW)} tokens in and ${fmtK(c.outW)} out with the skills, against ${fmtK(c.inB)} in and ${fmtK(c.outB)} out without`
+      const cached = (withSkills.usage?.cached_per_answer ?? 0) > 0
+        ? ` (${fmtK(withSkills.usage.cached_per_answer)} of the input served from the prompt cache)` : '';
+      return `<p class="mc-gain">Each answer cost about ${fmtK(c.inW)} tokens in and ${fmtK(c.outW)} out with the skills, against ${fmtK(c.inB)} in and ${fmtK(c.outB)} out without${cached}`
         + (c.per10k !== null ? `: <b>${c.per10k} points per 10k extra tokens</b>.` : '.') + `</p>`;
     }
     return `<p class="mc-gain">The skills add about ${fmtK(c.tokens)} tokens of context to each answer (estimated from the skill files): <b>${c.per10k} points per 10k tokens</b>.</p>`;
