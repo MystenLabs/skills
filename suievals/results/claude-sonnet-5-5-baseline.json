@@ -13,27 +13,37 @@
   ],
   "samples": 3,
   "empty_answers": 0,
-  "recorded_at": "2026-10-08T20:36:33.032Z",
+  "recorded_at": "2026-10-15T20:39:58.409Z",
   "manifest": "f0b70209ffb6",
   "eval_set": "f0b70209ffb6",
   "pillars": {
     "objects": {
-      "pass": 130,
+      "pass": 132,
       "total": 174
     },
     "transactions": {
-      "pass": 83,
+      "pass": 88,
       "total": 163
     },
     "building": {
-      "pass": 272,
+      "pass": 276,
       "total": 452
     },
     "security": {
-      "pass": 65,
+      "pass": 66,
       "total": 96
     }
   },
+  "usage": {
+    "answers": 468,
+    "input_tokens": 1285725,
+    "cached_tokens": 1283589,
+    "output_tokens": 546795,
+    "input_per_answer": 2747,
+    "cached_per_answer": 2743,
+    "output_per_answer": 1168
+  },
+  "context_tokens_estimate": 0,
   "evals": [
     {
       "id": "accessing-data/accessing-data-no-json-rpc",
@@ -67,7 +77,7 @@
     },
     {
       "id": "accessing-data/accessing-data-streaming-events",
-      "pass": 2,
+      "pass": 5,
       "of": 6
     },
     {
@@ -77,7 +87,7 @@
     },
     {
       "id": "composable-move-functions/composable-amm",
-      "pass": 4,
+      "pass": 3,
       "of": 4
     },
     {
@@ -92,37 +102,37 @@
     },
     {
       "id": "deepbook-margin/deepbook-margin-risk-ratio-thresholds",
-      "pass": 2,
+      "pass": 3,
       "of": 5
     },
     {
       "id": "deepbook-margin/deepbook-margin-kinked-interest-rates",
-      "pass": 4,
+      "pass": 2,
       "of": 6
     },
     {
       "id": "deepbook-margin/deepbook-margin-open-leveraged-long",
-      "pass": 4,
+      "pass": 3,
       "of": 7
     },
     {
       "id": "deepbook-margin/deepbook-margin-spot-vs-margin",
-      "pass": 3,
+      "pass": 4,
       "of": 6
     },
     {
       "id": "deepbook-margin/deepbook-margin-risks-and-mitigations",
-      "pass": 2,
+      "pass": 4,
       "of": 5
     },
     {
       "id": "deepbook-move/deepbook-move-dependency-and-limit-order",
-      "pass": 2,
+      "pass": 3,
       "of": 6
     },
     {
       "id": "deepbook-move/deepbook-move-flash-loans",
-      "pass": 4,
+      "pass": 3,
       "of": 6
     },
     {
@@ -132,12 +142,12 @@
     },
     {
       "id": "deepbook-move/deepbook-move-swap-without-balance-manager",
-      "pass": 2,
+      "pass": 4,
       "of": 5
     },
     {
       "id": "deepbook-move/deepbook-move-integration-mistakes",
-      "pass": 1,
+      "pass": 2,
       "of": 5
     },
     {
@@ -147,12 +157,12 @@
     },
     {
       "id": "deepbook-overview/deepbook-overview-pool-architecture",
-      "pass": 1,
+      "pass": 3,
       "of": 5
     },
     {
       "id": "deepbook-overview/deepbook-overview-integration-models",
-      "pass": 4,
+      "pass": 0,
       "of": 6
     },
     {
@@ -162,7 +172,7 @@
     },
     {
       "id": "deepbook-overview/deepbook-overview-mainnet-ids",
-      "pass": 2,
+      "pass": 0,
       "of": 3
     },
     {
@@ -177,17 +187,17 @@
     },
     {
       "id": "deepbook-predict/deepbook-predict-oracle-states-and-settlement",
-      "pass": 0,
+      "pass": 1,
       "of": 4
     },
     {
       "id": "deepbook-predict/deepbook-predict-vault-and-plp",
-      "pass": 0,
+      "pass": 1,
       "of": 4
     },
     {
       "id": "deepbook-predict/deepbook-predict-integration-mistakes",
-      "pass": 0,
+      "pass": 1,
       "of": 4
     },
     {
@@ -197,12 +207,12 @@
     },
     {
       "id": "deepbook-sdk/deepbook-sdk-limit-order-types",
-      "pass": 4,
+      "pass": 3,
       "of": 6
     },
     {
       "id": "deepbook-sdk/deepbook-sdk-swap-without-balance-manager",
-      "pass": 5,
+      "pass": 6,
       "of": 6
     },
     {
@@ -217,12 +227,12 @@
     },
     {
       "id": "frontend-apps/frontend-apps-react-setup",
-      "pass": 11,
+      "pass": 8,
       "of": 12
     },
     {
       "id": "frontend-apps/frontend-apps-transaction-flow",
-      "pass": 6,
+      "pass": 8,
       "of": 11
     },
     {
@@ -252,17 +262,17 @@
     },
     {
       "id": "frontend-apps/frontend-apps-ssr-nextjs",
-      "pass": 5,
+      "pass": 6,
       "of": 6
     },
     {
       "id": "kiosk/kiosk-create-list-and-purchase",
-      "pass": 4,
+      "pass": 6,
       "of": 6
     },
     {
       "id": "kiosk/kiosk-asset-states",
-      "pass": 6,
+      "pass": 5,
       "of": 6
     },
     {
@@ -272,7 +282,7 @@
     },
     {
       "id": "kiosk/kiosk-borrow-nft-in-ptb",
-      "pass": 3,
+      "pass": 2,
       "of": 5
     },
     {
@@ -292,7 +302,7 @@
     },
     {
       "id": "move-security/security-review-shared-object",
-      "pass": 4,
+      "pass": 5,
       "of": 5
     },
     {
@@ -307,7 +317,7 @@
     },
     {
       "id": "move-security/randomness-security-review",
-      "pass": 5,
+      "pass": 4,
       "of": 6
     },
     {
@@ -327,7 +337,7 @@
     },
     {
       "id": "naming-conventions/naming-access-control",
-      "pass": 3,
+      "pass": 4,
       "of": 4
     },
     {
@@ -367,7 +377,7 @@
     },
     {
       "id": "object-model/object-model-destroy-object",
-      "pass": 4,
+      "pass": 5,
       "of": 6
     },
     {
@@ -382,7 +392,7 @@
     },
     {
       "id": "object-model/object-model-transfer-to-object",
-      "pass": 3,
+      "pass": 4,
       "of": 6
     },
     {
@@ -397,12 +407,12 @@
     },
     {
       "id": "object-model/object-model-lend-cap-temporarily",
-      "pass": 3,
+      "pass": 2,
       "of": 5
     },
     {
       "id": "object-model/object-model-versioning",
-      "pass": 4,
+      "pass": 3,
       "of": 5
     },
     {
@@ -437,17 +447,17 @@
     },
     {
       "id": "onchain-randomness/onchain-randomness-public-function-rejected",
-      "pass": 5,
+      "pass": 4,
       "of": 6
     },
     {
       "id": "onchain-randomness/onchain-randomness-random-rarity-airdrop",
-      "pass": 2,
+      "pass": 4,
       "of": 6
     },
     {
       "id": "onchain-randomness/onchain-randomness-attack-vectors",
-      "pass": 3,
+      "pass": 4,
       "of": 6
     },
     {
@@ -457,7 +467,7 @@
     },
     {
       "id": "ptbs/ptbs-batch-airdrop",
-      "pass": 4,
+      "pass": 5,
       "of": 5
     },
     {
@@ -467,7 +477,7 @@
     },
     {
       "id": "ptbs/ptbs-sponsored-transaction-flow",
-      "pass": 3,
+      "pass": 4,
       "of": 5
     },
     {
@@ -487,12 +497,12 @@
     },
     {
       "id": "sui-bridge/sui-bridge-assets-and-limits",
-      "pass": 1,
+      "pass": 0,
       "of": 3
     },
     {
       "id": "sui-bridge/sui-bridge-governance-and-finality",
-      "pass": 3,
+      "pass": 4,
       "of": 5
     },
     {
@@ -507,7 +517,7 @@
     },
     {
       "id": "sui-build-test/sui-build-test-move-analyzer-setup",
-      "pass": 3,
+      "pass": 1,
       "of": 4
     },
     {
@@ -517,7 +527,7 @@
     },
     {
       "id": "sui-client/sui-client-create-and-fund-wallet",
-      "pass": 0,
+      "pass": 2,
       "of": 6
     },
     {
@@ -527,7 +537,7 @@
     },
     {
       "id": "sui-client/sui-client-merge-coins-and-transfer",
-      "pass": 1,
+      "pass": 0,
       "of": 4
     },
     {
@@ -537,7 +547,7 @@
     },
     {
       "id": "sui-for-ethereum/sui-for-ethereum-token-standards-mapping",
-      "pass": 0,
+      "pass": 2,
       "of": 4
     },
     {
@@ -557,7 +567,7 @@
     },
     {
       "id": "sui-install/sui-install-version-behind-after-suiup",
-      "pass": 2,
+      "pass": 3,
       "of": 7
     },
     {
@@ -602,7 +612,7 @@
     },
     {
       "id": "sui-move/sui-move-create-currency",
-      "pass": 6,
+      "pass": 7,
       "of": 7
     },
     {
@@ -637,7 +647,7 @@
     },
     {
       "id": "sui-move-project/sui-move-project-amm",
-      "pass": 0,
+      "pass": 1,
       "of": 3
     },
     {
@@ -677,7 +687,7 @@
     },
     {
       "id": "sui-overview/sui-overview-parallel-execution-mysticeti",
-      "pass": 5,
+      "pass": 4,
       "of": 6
     },
     {
@@ -692,12 +702,12 @@
     },
     {
       "id": "sui-overview/sui-overview-hidden-artwork-nft",
-      "pass": 5,
+      "pass": 6,
       "of": 6
     },
     {
       "id": "sui-publish/sui-publish-first-publish",
-      "pass": 6,
+      "pass": 5,
       "of": 6
     },
     {
@@ -712,17 +722,17 @@
     },
     {
       "id": "sui-publish/sui-publish-debug-failing-dry-run",
-      "pass": 4,
+      "pass": 2,
       "of": 5
     },
     {
       "id": "sui-publish/sui-publish-local-network",
-      "pass": 3,
+      "pass": 5,
       "of": 5
     },
     {
       "id": "sui-publish/sui-publish-find-package-and-created-objects",
-      "pass": 4,
+      "pass": 2,
       "of": 4
     },
     {
@@ -737,7 +747,7 @@
     },
     {
       "id": "sui-sdks/sui-sdks-ts-client-choice",
-      "pass": 4,
+      "pass": 6,
       "of": 6
     },
     {
@@ -747,7 +757,7 @@
     },
     {
       "id": "sui-sdks/sui-sdks-rust-ptb-minimal",
-      "pass": 7,
+      "pass": 6,
       "of": 9
     },
     {
@@ -772,7 +782,7 @@
     },
     {
       "id": "sui-ts-sdk-backend/sui-ts-sdk-backend-client-setup",
-      "pass": 3,
+      "pass": 4,
       "of": 5
     },
     {
@@ -797,12 +807,12 @@
     },
     {
       "id": "zklogin/zklogin-protocol-flow",
-      "pass": 4,
+      "pass": 5,
       "of": 7
     },
     {
       "id": "zklogin/zklogin-address-derivation",
-      "pass": 6,
+      "pass": 4,
       "of": 7
     },
     {
@@ -815,6 +825,5 @@
       "pass": 1,
       "of": 6
     }
-  ],
-  "context_tokens_estimate": 0
+  ]
 }

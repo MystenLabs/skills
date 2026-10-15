@@ -34,6 +34,7 @@
       "total": 96
     }
   },
+  "context_tokens_estimate": 0,
   "evals": [
     {
       "id": "accessing-data/accessing-data-no-json-rpc",
@@ -815,6 +816,5 @@
       "pass": 1,
       "of": 6
     }
-  ],
-  "context_tokens_estimate": 0
+  ]
 }
