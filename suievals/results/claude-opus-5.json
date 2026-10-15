@@ -11,14 +11,14 @@
     "grep",
     "ls"
   ],
-  "samples": 1,
+  "samples": 3,
   "empty_answers": 0,
-  "recorded_at": "2026-10-04T07:38:34.374Z",
+  "recorded_at": "2026-10-11T05:44:54.497Z",
   "manifest": "f0b70209ffb6",
   "eval_set": "f0b70209ffb6",
   "pillars": {
     "objects": {
-      "pass": 172,
+      "pass": 171,
       "total": 174
     },
     "transactions": {
@@ -26,16 +26,14 @@
       "total": 163
     },
     "building": {
-      "pass": 417,
-      "total": 424
+      "pass": 424,
+      "total": 452
     },
     "security": {
-      "pass": 95,
+      "pass": 92,
       "total": 96
     }
   },
-  "partial": true,
-  "recovered_ids": 106,
   "evals": [
     {
       "id": "accessing-data/accessing-data-no-json-rpc",
@@ -44,7 +42,7 @@
     },
     {
       "id": "accessing-data/accessing-data-use-case-mapping",
-      "pass": 6,
+      "pass": 5,
       "of": 6
     },
     {
@@ -54,17 +52,17 @@
     },
     {
       "id": "accessing-data/accessing-data-walrus-blob",
-      "pass": 6,
+      "pass": 7,
       "of": 7
     },
     {
       "id": "accessing-data/accessing-data-migrate-json-rpc",
-      "pass": 8,
+      "pass": 11,
       "of": 11
     },
     {
       "id": "accessing-data/accessing-data-archival-historical",
-      "pass": 6,
+      "pass": 5,
       "of": 6
     },
     {
@@ -94,7 +92,7 @@
     },
     {
       "id": "deepbook-margin/deepbook-margin-risk-ratio-thresholds",
-      "pass": 4,
+      "pass": 5,
       "of": 5
     },
     {
@@ -168,6 +166,31 @@
       "of": 3
     },
     {
+      "id": "deepbook-predict/deepbook-predict-position-types",
+      "pass": 4,
+      "of": 5
+    },
+    {
+      "id": "deepbook-predict/deepbook-predict-mint-binary-position",
+      "pass": 0,
+      "of": 4
+    },
+    {
+      "id": "deepbook-predict/deepbook-predict-oracle-states-and-settlement",
+      "pass": 0,
+      "of": 4
+    },
+    {
+      "id": "deepbook-predict/deepbook-predict-vault-and-plp",
+      "pass": 4,
+      "of": 4
+    },
+    {
+      "id": "deepbook-predict/deepbook-predict-integration-mistakes",
+      "pass": 1,
+      "of": 4
+    },
+    {
       "id": "deepbook-sdk/deepbook-sdk-client-and-balance-manager",
       "pass": 6,
       "of": 6
@@ -189,7 +212,7 @@
     },
     {
       "id": "deepbook-sdk/deepbook-sdk-silent-order-failures",
-      "pass": 5,
+      "pass": 4,
       "of": 5
     },
     {
@@ -224,7 +247,7 @@
     },
     {
       "id": "frontend-apps/frontend-apps-avoid-bad-pattern",
-      "pass": 11,
+      "pass": 5,
       "of": 11
     },
     {
@@ -244,7 +267,7 @@
     },
     {
       "id": "kiosk/kiosk-permissioned-extension",
-      "pass": 5,
+      "pass": 4,
       "of": 5
     },
     {
@@ -263,8 +286,13 @@
       "of": 3
     },
     {
+      "id": "modern-move-syntax/syntax-access-control",
+      "pass": 3,
+      "of": 3
+    },
+    {
       "id": "move-security/security-review-shared-object",
-      "pass": 4,
+      "pass": 5,
       "of": 5
     },
     {
@@ -284,7 +312,7 @@
     },
     {
       "id": "move-unit-testing/amm-unit-tests",
-      "pass": 6,
+      "pass": 4,
       "of": 6
     },
     {
@@ -298,8 +326,13 @@
       "of": 5
     },
     {
+      "id": "naming-conventions/naming-access-control",
+      "pass": 4,
+      "of": 4
+    },
+    {
       "id": "object-model/object-model-basics",
-      "pass": 6,
+      "pass": 5,
       "of": 6
     },
     {
@@ -314,12 +347,12 @@
     },
     {
       "id": "object-model/object-model-abilities",
-      "pass": 6,
+      "pass": 5,
       "of": 6
     },
     {
       "id": "object-model/object-model-dynamic-fields-vs-object-fields",
-      "pass": 4,
+      "pass": 6,
       "of": 6
     },
     {
@@ -404,7 +437,7 @@
     },
     {
       "id": "onchain-randomness/onchain-randomness-public-function-rejected",
-      "pass": 6,
+      "pass": 5,
       "of": 6
     },
     {
@@ -419,7 +452,7 @@
     },
     {
       "id": "ptbs/ptbs-basic-transfer",
-      "pass": 4,
+      "pass": 3,
       "of": 6
     },
     {
@@ -479,7 +512,7 @@
     },
     {
       "id": "sui-client/sui-client-faucet",
-      "pass": 6,
+      "pass": 5,
       "of": 6
     },
     {
@@ -504,7 +537,7 @@
     },
     {
       "id": "sui-for-ethereum/sui-for-ethereum-token-standards-mapping",
-      "pass": 4,
+      "pass": 3,
       "of": 4
     },
     {
@@ -544,7 +577,7 @@
     },
     {
       "id": "sui-move/sui-move-abilities",
-      "pass": 8,
+      "pass": 7,
       "of": 8
     },
     {
@@ -574,7 +607,7 @@
     },
     {
       "id": "sui-move/sui-move-destroy-without-drop",
-      "pass": 6,
+      "pass": 4,
       "of": 6
     },
     {
@@ -674,7 +707,7 @@
     },
     {
       "id": "sui-publish/sui-publish-upgrade-contract",
-      "pass": 6,
+      "pass": 5,
       "of": 6
     },
     {
@@ -689,7 +722,7 @@
     },
     {
       "id": "sui-publish/sui-publish-find-package-and-created-objects",
-      "pass": 3,
+      "pass": 4,
       "of": 4
     },
     {
@@ -704,7 +737,7 @@
     },
     {
       "id": "sui-sdks/sui-sdks-ts-client-choice",
-      "pass": 5,
+      "pass": 6,
       "of": 6
     },
     {
@@ -719,7 +752,7 @@
     },
     {
       "id": "sui-sdks/sui-sdks-v1-to-v2-migration",
-      "pass": 11,
+      "pass": 12,
       "of": 12
     },
     {
@@ -769,7 +802,7 @@
     },
     {
       "id": "zklogin/zklogin-address-derivation",
-      "pass": 7,
+      "pass": 5,
       "of": 7
     },
     {

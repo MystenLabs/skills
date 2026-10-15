@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Sui Evals: how much does your AI know about Sui?</title>
+<title>Sui Evals: How much does your AI know about Sui?</title>
 <meta name="description" content="An open scoreboard for how well AI models understand Sui, and how much the Sui skills add. 158 evals across objects, transactions, building and security. Evals live in MystenLabs/skills.">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><path d='M16 3C11 10 7 14 7 19a9 9 0 0 0 18 0c0-5-4-9-9-16z' fill='%234da2ff'/></svg>">
 <style>
@@ -539,7 +539,13 @@ function renderBoard(cat, res) {
     const w = layers['with-skills'] ?? layers['with-skills-mcp'];
     return w ? pctOf(w) : Math.max(...Object.values(layers).map(pctOf));
   };
-  const models = [...byModel.entries()].sort((a, b) => best(b[1]) - best(a[1]));
+  // A card is a comparison: with the skills and without. A model with no
+  // ranked baseline cannot show what the skills are worth to it, so it has
+  // no card, rather than a card with one bar. It comes back the moment a
+  // full baseline run lands.
+  const models = [...byModel.entries()]
+    .filter(([, layers]) => layers['baseline'] && (layers['with-skills'] ?? layers['with-skills-mcp']))
+    .sort((a, b) => best(b[1]) - best(a[1]));
 
   const stale = res.manifest !== cat.manifest;
   // No summary line. It counted models, runs and pairs, which are facts about
@@ -556,10 +562,10 @@ function renderBoard(cat, res) {
 
     const rows = ORDER.map((layer) => {
       const run = layers[layer.id];
-      if (!run) {
-        return `<div class="mc-row absent"><span class="mc-lab">${layer.label}</span>`
-          + `<div class="mc-track"></div><span class="mc-val">not run</span></div>`;
-      }
+      // A configuration with no ranked run has no row: a baseline that covered
+      // too little of the suite to rank, or one never measured, is left out
+      // rather than shown as "not run" or as a dimmed partial number.
+      if (!run) return '';
       const v = pctOf(run);
       return `<div class="mc-row" style="--pc:${layer.pc}">`
         + `<span class="mc-lab">${layer.label}</span>`
