@@ -558,8 +558,11 @@ function renderBoard(cat, res) {
   const fmtK = (n) => n >= 10000 ? `${Math.round(n / 1000)}k` : n.toLocaleString();
   const costOf = (withSkills, base, gain) => {
     if (!withSkills || gain === null) return null;
-    const mu = withSkills.usage, bu = base?.usage;
-    if (mu && bu && typeof mu.input_per_answer === 'number' && typeof bu.input_per_answer === 'number') {
+    // Under 100 input tokens an answer is not a recorded prompt (the cached
+    // part was dropped); such a run is treated as unrecorded.
+    const plausible = (u) => u && typeof u.input_per_answer === 'number' && u.input_per_answer >= 100;
+    const mu = plausible(withSkills.usage) ? withSkills.usage : null, bu = plausible(base?.usage) ? base.usage : null;
+    if (mu && bu) {
       const extra = mu.input_per_answer - bu.input_per_answer;
       return { kind: 'measured', tokens: extra, inW: mu.input_per_answer, outW: mu.output_per_answer, inB: bu.input_per_answer, outB: bu.output_per_answer,
                per10k: extra > 0 ? Math.round((10 * gain / (extra / 1000)) ) / 10 : null };
