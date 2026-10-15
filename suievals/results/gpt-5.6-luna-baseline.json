@@ -787,5 +787,6 @@
       "pass": 1,
       "of": 6
     }
-  ]
+  ],
+  "context_tokens_estimate": 0
 }

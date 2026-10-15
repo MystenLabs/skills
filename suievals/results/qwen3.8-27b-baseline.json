@@ -551,5 +551,6 @@
       "pass": 0,
       "of": 6
     }
-  ]
+  ],
+  "context_tokens_estimate": 0
 }

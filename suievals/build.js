@@ -333,6 +333,9 @@ function readRuns(byId, incomplete) {
       interval: d.aggregate?.interval ?? null,
       judge: d.metadata?.judge_model ?? null,
       recordedAt: d.metadata?.timestamp ?? null,
+      // Tokens per answer when the run recorded them; the board divides points won by tokens spent.
+      usage: d.aggregate?.usage ?? null,
+      contextTokens: null,
       pillars,
       total: { pass, total },
       missed,
@@ -494,6 +497,8 @@ function readCards(byId, incomplete, ciJudge) {
       submittedBy: card.submitted_by ?? null,
       staleManifest: card.manifest !== manifest,
       recordedAt: card.recorded_at ?? null,
+      usage: card.usage ?? null,
+      contextTokens: typeof card.context_tokens_estimate === "number" ? card.context_tokens_estimate : null,
       pillars,
       total: { pass, total },
       missed,
