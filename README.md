@@ -188,6 +188,9 @@ description: What this skill does and when to use it. Be specific — this is wh
 
 Every new skill must include evals. Evals verify that the skill produces correct, reliable output and prevent regressions as the skill evolves. PRs without evals will not be merged.
 
+For compiler-backed Move and TypeScript/TSX checks, including offline regression tests,
+see [Executable code evals](scripts/CODE-EVALS.md).
+
 Place an `evals/evals.json` file in your skill directory:
 
 ```json
