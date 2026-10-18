@@ -1,0 +1,30 @@
+name: Code eval runner regression tests
+
+on:
+  pull_request:
+    paths:
+      - "**/evals/code-evals.json"
+      - "scripts/run-code-evals.js"
+      - "scripts/lib/**"
+      - "scripts/typescript/**"
+      - "scripts/fixtures/**"
+      - "package*.json"
+      - ".github/workflows/code-evals.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  offline-code-checks:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - run: npm ci --ignore-scripts
+      - run: npm ci --prefix scripts/typescript --ignore-scripts
+      - run: npm test
+      - run: npm run test:code-evals
