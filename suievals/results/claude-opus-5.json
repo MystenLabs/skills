@@ -13,16 +13,16 @@
   ],
   "samples": 3,
   "empty_answers": 0,
-  "recorded_at": "2026-10-15T20:27:08.739Z",
+  "recorded_at": "2026-10-18T05:42:01.178Z",
   "manifest": "f0b70209ffb6",
   "eval_set": "f0b70209ffb6",
   "pillars": {
     "objects": {
-      "pass": 172,
+      "pass": 170,
       "total": 174
     },
     "transactions": {
-      "pass": 159,
+      "pass": 161,
       "total": 163
     },
     "building": {
@@ -30,18 +30,18 @@
       "total": 452
     },
     "security": {
-      "pass": 93,
+      "pass": 94,
       "total": 96
     }
   },
   "usage": {
     "answers": 468,
-    "input_tokens": 22869399,
-    "cached_tokens": 22865325,
-    "output_tokens": 742403,
-    "input_per_answer": 48866,
-    "cached_per_answer": 48858,
-    "output_per_answer": 1586
+    "input_tokens": 21165077,
+    "cached_tokens": 21161087,
+    "output_tokens": 728845,
+    "input_per_answer": 45225,
+    "cached_per_answer": 45216,
+    "output_per_answer": 1557
   },
   "context_tokens_estimate": 2296,
   "evals": [
@@ -62,7 +62,7 @@
     },
     {
       "id": "accessing-data/accessing-data-walrus-blob",
-      "pass": 5,
+      "pass": 7,
       "of": 7
     },
     {
@@ -122,17 +122,17 @@
     },
     {
       "id": "deepbook-margin/deepbook-margin-risks-and-mitigations",
-      "pass": 4,
+      "pass": 5,
       "of": 5
     },
     {
       "id": "deepbook-move/deepbook-move-dependency-and-limit-order",
-      "pass": 5,
+      "pass": 6,
       "of": 6
     },
     {
       "id": "deepbook-move/deepbook-move-flash-loans",
-      "pass": 4,
+      "pass": 6,
       "of": 6
     },
     {
@@ -177,7 +177,7 @@
     },
     {
       "id": "deepbook-predict/deepbook-predict-position-types",
-      "pass": 3,
+      "pass": 4,
       "of": 5
     },
     {
@@ -192,7 +192,7 @@
     },
     {
       "id": "deepbook-predict/deepbook-predict-vault-and-plp",
-      "pass": 3,
+      "pass": 2,
       "of": 4
     },
     {
@@ -232,7 +232,7 @@
     },
     {
       "id": "frontend-apps/frontend-apps-transaction-flow",
-      "pass": 10,
+      "pass": 9,
       "of": 11
     },
     {
@@ -257,7 +257,7 @@
     },
     {
       "id": "frontend-apps/frontend-apps-avoid-bad-pattern",
-      "pass": 10,
+      "pass": 6,
       "of": 11
     },
     {
@@ -322,7 +322,7 @@
     },
     {
       "id": "move-unit-testing/amm-unit-tests",
-      "pass": 5,
+      "pass": 6,
       "of": 6
     },
     {
@@ -372,7 +372,7 @@
     },
     {
       "id": "object-model/object-model-table-vs-vecmap-vs-bag",
-      "pass": 5,
+      "pass": 4,
       "of": 5
     },
     {
@@ -422,7 +422,7 @@
     },
     {
       "id": "object-model/object-model-parallel-execution",
-      "pass": 5,
+      "pass": 3,
       "of": 5
     },
     {
@@ -512,7 +512,7 @@
     },
     {
       "id": "sui-build-test/sui-build-test-write-and-run-tests",
-      "pass": 5,
+      "pass": 6,
       "of": 6
     },
     {
@@ -522,7 +522,7 @@
     },
     {
       "id": "sui-client/sui-client-faucet",
-      "pass": 6,
+      "pass": 5,
       "of": 6
     },
     {
@@ -617,12 +617,12 @@
     },
     {
       "id": "sui-move/sui-move-destroy-without-drop",
-      "pass": 4,
+      "pass": 5,
       "of": 6
     },
     {
       "id": "sui-move-project/sui-move-project-dependency-env-note",
-      "pass": 5,
+      "pass": 4,
       "of": 5
     },
     {
@@ -687,7 +687,7 @@
     },
     {
       "id": "sui-overview/sui-overview-parallel-execution-mysticeti",
-      "pass": 5,
+      "pass": 6,
       "of": 6
     },
     {
@@ -812,7 +812,7 @@
     },
     {
       "id": "zklogin/zklogin-address-derivation",
-      "pass": 5,
+      "pass": 6,
       "of": 7
     },
     {

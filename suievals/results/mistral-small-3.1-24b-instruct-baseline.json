@@ -13,7 +13,7 @@
   ],
   "samples": 3,
   "empty_answers": 0,
-  "recorded_at": "2026-10-07T00:54:06.504Z",
+  "recorded_at": "2026-10-20T18:35:22.118Z",
   "manifest": "f0b70209ffb6",
   "eval_set": "f0b70209ffb6",
   "pillars": {
@@ -22,19 +22,28 @@
       "total": 174
     },
     "transactions": {
-      "pass": 18,
+      "pass": 17,
       "total": 163
     },
     "building": {
-      "pass": 50,
-      "total": 443
+      "pass": 52,
+      "total": 452
     },
     "security": {
       "pass": 5,
       "total": 96
     }
   },
-  "partial": true,
+  "usage": {
+    "answers": 464,
+    "input_tokens": 620215,
+    "cached_tokens": 0,
+    "output_tokens": 219666,
+    "input_per_answer": 1337,
+    "cached_per_answer": 0,
+    "output_per_answer": 473
+  },
+  "context_tokens_estimate": 0,
   "evals": [
     {
       "id": "accessing-data/accessing-data-no-json-rpc",
@@ -78,7 +87,7 @@
     },
     {
       "id": "composable-move-functions/composable-amm",
-      "pass": 1,
+      "pass": 3,
       "of": 4
     },
     {
@@ -108,7 +117,7 @@
     },
     {
       "id": "deepbook-margin/deepbook-margin-spot-vs-margin",
-      "pass": 1,
+      "pass": 0,
       "of": 6
     },
     {
@@ -238,7 +247,7 @@
     },
     {
       "id": "frontend-apps/frontend-apps-sponsored-sign-only",
-      "pass": 1,
+      "pass": 2,
       "of": 7
     },
     {
@@ -328,7 +337,7 @@
     },
     {
       "id": "naming-conventions/naming-access-control",
-      "pass": 2,
+      "pass": 3,
       "of": 4
     },
     {
@@ -343,7 +352,7 @@
     },
     {
       "id": "object-model/object-model-share-object-and-frontend-access",
-      "pass": 2,
+      "pass": 1,
       "of": 6
     },
     {
@@ -393,7 +402,7 @@
     },
     {
       "id": "object-model/object-model-capability-pattern",
-      "pass": 2,
+      "pass": 1,
       "of": 5
     },
     {
@@ -408,7 +417,7 @@
     },
     {
       "id": "object-model/object-model-wrapped-objects",
-      "pass": 2,
+      "pass": 3,
       "of": 6
     },
     {
@@ -478,12 +487,12 @@
     },
     {
       "id": "ptbs/ptbs-unused-value-error",
-      "pass": 2,
+      "pass": 0,
       "of": 4
     },
     {
       "id": "ptbs/ptbs-shared-object-rules",
-      "pass": 1,
+      "pass": 0,
       "of": 5
     },
     {
@@ -503,7 +512,7 @@
     },
     {
       "id": "sui-build-test/sui-build-test-write-and-run-tests",
-      "pass": 1,
+      "pass": 2,
       "of": 6
     },
     {
@@ -513,7 +522,7 @@
     },
     {
       "id": "sui-client/sui-client-faucet",
-      "pass": 0,
+      "pass": 1,
       "of": 6
     },
     {
@@ -523,7 +532,7 @@
     },
     {
       "id": "sui-client/sui-client-no-gas-coin-error",
-      "pass": 1,
+      "pass": 2,
       "of": 5
     },
     {
@@ -538,22 +547,22 @@
     },
     {
       "id": "sui-for-ethereum/sui-for-ethereum-token-standards-mapping",
-      "pass": 0,
+      "pass": 1,
       "of": 4
     },
     {
       "id": "sui-for-ethereum/sui-for-ethereum-inheritance-and-generics",
-      "pass": 2,
+      "pass": 3,
       "of": 4
     },
     {
       "id": "sui-for-ethereum/sui-for-ethereum-composability",
-      "pass": 3,
+      "pass": 2,
       "of": 5
     },
     {
       "id": "sui-install/sui-install-install",
-      "pass": 0,
+      "pass": 1,
       "of": 8
     },
     {
@@ -563,12 +572,12 @@
     },
     {
       "id": "sui-install/sui-install-update-not-taking-effect",
-      "pass": 1,
+      "pass": 0,
       "of": 5
     },
     {
       "id": "sui-install/sui-install-api-version-mismatch",
-      "pass": 2,
+      "pass": 1,
       "of": 4
     },
     {
@@ -588,7 +597,7 @@
     },
     {
       "id": "sui-move/sui-move-init-and-one-time-witness",
-      "pass": 2,
+      "pass": 1,
       "of": 6
     },
     {
@@ -598,7 +607,7 @@
     },
     {
       "id": "sui-move/sui-move-events",
-      "pass": 2,
+      "pass": 3,
       "of": 6
     },
     {
@@ -653,7 +662,7 @@
     },
     {
       "id": "sui-move-project/sui-move-project-counter",
-      "pass": 1,
+      "pass": 0,
       "of": 6
     },
     {
@@ -663,7 +672,7 @@
     },
     {
       "id": "sui-networks-gas/sui-networks-gas-cost-and-storage-rebate",
-      "pass": 1,
+      "pass": 2,
       "of": 7
     },
     {
@@ -673,7 +682,7 @@
     },
     {
       "id": "sui-overview/sui-overview-object-model",
-      "pass": 2,
+      "pass": 1,
       "of": 7
     },
     {
@@ -708,12 +717,12 @@
     },
     {
       "id": "sui-publish/sui-publish-upgrade-contract",
-      "pass": 1,
+      "pass": 0,
       "of": 6
     },
     {
       "id": "sui-publish/sui-publish-debug-failing-dry-run",
-      "pass": 0,
+      "pass": 1,
       "of": 5
     },
     {
@@ -747,6 +756,11 @@
       "of": 6
     },
     {
+      "id": "sui-sdks/sui-sdks-rust-ptb-minimal",
+      "pass": 0,
+      "of": 9
+    },
+    {
       "id": "sui-sdks/sui-sdks-v1-to-v2-migration",
       "pass": 0,
       "of": 12
@@ -763,12 +777,12 @@
     },
     {
       "id": "sui-sdks/sui-sdks-frontend-boundary",
-      "pass": 6,
+      "pass": 5,
       "of": 8
     },
     {
       "id": "sui-ts-sdk-backend/sui-ts-sdk-backend-client-setup",
-      "pass": 1,
+      "pass": 2,
       "of": 5
     },
     {
@@ -811,6 +825,5 @@
       "pass": 0,
       "of": 6
     }
-  ],
-  "context_tokens_estimate": 0
+  ]
 }

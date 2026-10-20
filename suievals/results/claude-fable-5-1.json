@@ -13,12 +13,12 @@
   ],
   "samples": 3,
   "empty_answers": 0,
-  "recorded_at": "2026-10-15T20:48:28.336Z",
+  "recorded_at": "2026-10-18T05:43:22.731Z",
   "manifest": "f0b70209ffb6",
   "eval_set": "f0b70209ffb6",
   "pillars": {
     "objects": {
-      "pass": 173,
+      "pass": 172,
       "total": 174
     },
     "transactions": {
@@ -26,22 +26,22 @@
       "total": 163
     },
     "building": {
-      "pass": 433,
+      "pass": 437,
       "total": 452
     },
     "security": {
-      "pass": 94,
+      "pass": 92,
       "total": 96
     }
   },
   "usage": {
     "answers": 468,
-    "input_tokens": 19360685,
-    "cached_tokens": 19356791,
-    "output_tokens": 716170,
-    "input_per_answer": 41369,
-    "cached_per_answer": 41361,
-    "output_per_answer": 1530
+    "input_tokens": 19133770,
+    "cached_tokens": 19129924,
+    "output_tokens": 732081,
+    "input_per_answer": 40884,
+    "cached_per_answer": 40876,
+    "output_per_answer": 1564
   },
   "context_tokens_estimate": 2296,
   "evals": [
@@ -72,7 +72,7 @@
     },
     {
       "id": "accessing-data/accessing-data-archival-historical",
-      "pass": 6,
+      "pass": 5,
       "of": 6
     },
     {
@@ -147,7 +147,7 @@
     },
     {
       "id": "deepbook-move/deepbook-move-integration-mistakes",
-      "pass": 5,
+      "pass": 4,
       "of": 5
     },
     {
@@ -187,7 +187,7 @@
     },
     {
       "id": "deepbook-predict/deepbook-predict-oracle-states-and-settlement",
-      "pass": 0,
+      "pass": 4,
       "of": 4
     },
     {
@@ -232,7 +232,7 @@
     },
     {
       "id": "frontend-apps/frontend-apps-transaction-flow",
-      "pass": 11,
+      "pass": 10,
       "of": 11
     },
     {
@@ -257,7 +257,7 @@
     },
     {
       "id": "frontend-apps/frontend-apps-avoid-bad-pattern",
-      "pass": 8,
+      "pass": 10,
       "of": 11
     },
     {
@@ -302,7 +302,7 @@
     },
     {
       "id": "move-security/security-review-shared-object",
-      "pass": 4,
+      "pass": 5,
       "of": 5
     },
     {
@@ -452,7 +452,7 @@
     },
     {
       "id": "onchain-randomness/onchain-randomness-random-rarity-airdrop",
-      "pass": 6,
+      "pass": 5,
       "of": 6
     },
     {
@@ -522,12 +522,12 @@
     },
     {
       "id": "sui-client/sui-client-faucet",
-      "pass": 6,
+      "pass": 5,
       "of": 6
     },
     {
       "id": "sui-client/sui-client-create-and-fund-wallet",
-      "pass": 4,
+      "pass": 5,
       "of": 6
     },
     {
@@ -562,7 +562,7 @@
     },
     {
       "id": "sui-install/sui-install-install",
-      "pass": 7,
+      "pass": 8,
       "of": 8
     },
     {
@@ -587,7 +587,7 @@
     },
     {
       "id": "sui-move/sui-move-abilities",
-      "pass": 8,
+      "pass": 7,
       "of": 8
     },
     {
@@ -687,7 +687,7 @@
     },
     {
       "id": "sui-overview/sui-overview-parallel-execution-mysticeti",
-      "pass": 6,
+      "pass": 5,
       "of": 6
     },
     {
@@ -717,7 +717,7 @@
     },
     {
       "id": "sui-publish/sui-publish-upgrade-contract",
-      "pass": 4,
+      "pass": 5,
       "of": 6
     },
     {
@@ -812,7 +812,7 @@
     },
     {
       "id": "zklogin/zklogin-address-derivation",
-      "pass": 7,
+      "pass": 5,
       "of": 7
     },
     {

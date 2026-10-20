@@ -12,29 +12,39 @@
     "ls"
   ],
   "samples": 3,
-  "empty_answers": 157,
-  "recorded_at": "2026-10-07T00:41:20.025Z",
+  "empty_answers": 2,
+  "recorded_at": "2026-10-19T23:16:26.893Z",
   "manifest": "f0b70209ffb6",
   "eval_set": "f0b70209ffb6",
   "pillars": {
     "objects": {
-      "pass": 80,
-      "total": 138
+      "pass": 103,
+      "total": 168
     },
     "transactions": {
-      "pass": 49,
-      "total": 126
+      "pass": 53,
+      "total": 163
     },
     "building": {
-      "pass": 117,
-      "total": 233
+      "pass": 140,
+      "total": 401
     },
     "security": {
-      "pass": 29,
-      "total": 62
+      "pass": 35,
+      "total": 84
     }
   },
   "partial": true,
+  "usage": {
+    "answers": 423,
+    "input_tokens": 2179194,
+    "cached_tokens": 1700608,
+    "output_tokens": 1790264,
+    "input_per_answer": 5152,
+    "cached_per_answer": 4020,
+    "output_per_answer": 4232
+  },
+  "context_tokens_estimate": 0,
   "evals": [
     {
       "id": "accessing-data/accessing-data-no-json-rpc",
@@ -43,7 +53,7 @@
     },
     {
       "id": "accessing-data/accessing-data-use-case-mapping",
-      "pass": 2,
+      "pass": 1,
       "of": 6
     },
     {
@@ -57,13 +67,18 @@
       "of": 7
     },
     {
+      "id": "accessing-data/accessing-data-migrate-json-rpc",
+      "pass": 1,
+      "of": 11
+    },
+    {
       "id": "accessing-data/accessing-data-archival-historical",
       "pass": 0,
       "of": 6
     },
     {
       "id": "accessing-data/accessing-data-streaming-events",
-      "pass": 1,
+      "pass": 4,
       "of": 6
     },
     {
@@ -72,8 +87,53 @@
       "of": 6
     },
     {
+      "id": "deepbook-margin/deepbook-margin-risk-ratio-thresholds",
+      "pass": 2,
+      "of": 5
+    },
+    {
+      "id": "deepbook-margin/deepbook-margin-kinked-interest-rates",
+      "pass": 3,
+      "of": 6
+    },
+    {
+      "id": "deepbook-margin/deepbook-margin-open-leveraged-long",
+      "pass": 0,
+      "of": 7
+    },
+    {
+      "id": "deepbook-margin/deepbook-margin-spot-vs-margin",
+      "pass": 2,
+      "of": 6
+    },
+    {
       "id": "deepbook-margin/deepbook-margin-risks-and-mitigations",
-      "pass": 5,
+      "pass": 4,
+      "of": 5
+    },
+    {
+      "id": "deepbook-move/deepbook-move-dependency-and-limit-order",
+      "pass": 1,
+      "of": 6
+    },
+    {
+      "id": "deepbook-move/deepbook-move-flash-loans",
+      "pass": 1,
+      "of": 6
+    },
+    {
+      "id": "deepbook-move/deepbook-move-balance-manager-and-tradecap",
+      "pass": 1,
+      "of": 6
+    },
+    {
+      "id": "deepbook-move/deepbook-move-swap-without-balance-manager",
+      "pass": 0,
+      "of": 5
+    },
+    {
+      "id": "deepbook-move/deepbook-move-integration-mistakes",
+      "pass": 1,
       "of": 5
     },
     {
@@ -88,12 +148,67 @@
     },
     {
       "id": "deepbook-overview/deepbook-overview-integration-models",
+      "pass": 2,
+      "of": 6
+    },
+    {
+      "id": "deepbook-overview/deepbook-overview-deep-token-role",
+      "pass": 2,
+      "of": 5
+    },
+    {
+      "id": "deepbook-overview/deepbook-overview-mainnet-ids",
       "pass": 0,
+      "of": 3
+    },
+    {
+      "id": "deepbook-predict/deepbook-predict-position-types",
+      "pass": 0,
+      "of": 5
+    },
+    {
+      "id": "deepbook-predict/deepbook-predict-mint-binary-position",
+      "pass": 0,
+      "of": 4
+    },
+    {
+      "id": "deepbook-predict/deepbook-predict-oracle-states-and-settlement",
+      "pass": 0,
+      "of": 4
+    },
+    {
+      "id": "deepbook-predict/deepbook-predict-vault-and-plp",
+      "pass": 0,
+      "of": 4
+    },
+    {
+      "id": "deepbook-predict/deepbook-predict-integration-mistakes",
+      "pass": 0,
+      "of": 4
+    },
+    {
+      "id": "deepbook-sdk/deepbook-sdk-client-and-balance-manager",
+      "pass": 1,
+      "of": 6
+    },
+    {
+      "id": "deepbook-sdk/deepbook-sdk-limit-order-types",
+      "pass": 3,
+      "of": 6
+    },
+    {
+      "id": "deepbook-sdk/deepbook-sdk-swap-without-balance-manager",
+      "pass": 1,
       "of": 6
     },
     {
       "id": "deepbook-sdk/deepbook-sdk-query-and-cancel-orders",
       "pass": 2,
+      "of": 5
+    },
+    {
+      "id": "deepbook-sdk/deepbook-sdk-silent-order-failures",
+      "pass": 0,
       "of": 5
     },
     {
@@ -103,7 +218,7 @@
     },
     {
       "id": "frontend-apps/frontend-apps-transaction-flow",
-      "pass": 6,
+      "pass": 5,
       "of": 11
     },
     {
@@ -114,6 +229,11 @@
     {
       "id": "frontend-apps/frontend-apps-deprecated-package-check",
       "pass": 1,
+      "of": 7
+    },
+    {
+      "id": "frontend-apps/frontend-apps-sponsored-sign-only",
+      "pass": 2,
       "of": 7
     },
     {
@@ -132,6 +252,16 @@
       "of": 6
     },
     {
+      "id": "kiosk/kiosk-asset-states",
+      "pass": 3,
+      "of": 6
+    },
+    {
+      "id": "kiosk/kiosk-borrow-nft-in-ptb",
+      "pass": 3,
+      "of": 5
+    },
+    {
       "id": "move-security/security-review-shared-object",
       "pass": 2,
       "of": 5
@@ -143,13 +273,28 @@
     },
     {
       "id": "move-security/capability-safety-and-revocation",
-      "pass": 5,
+      "pass": 3,
       "of": 6
     },
     {
-      "id": "naming-conventions/naming-access-control",
+      "id": "move-security/randomness-security-review",
       "pass": 1,
-      "of": 4
+      "of": 6
+    },
+    {
+      "id": "move-unit-testing/amm-unit-tests",
+      "pass": 2,
+      "of": 6
+    },
+    {
+      "id": "object-model/object-model-basics",
+      "pass": 3,
+      "of": 6
+    },
+    {
+      "id": "object-model/object-model-ownership-types",
+      "pass": 4,
+      "of": 7
     },
     {
       "id": "object-model/object-model-share-object-and-frontend-access",
@@ -167,13 +312,18 @@
       "of": 6
     },
     {
+      "id": "object-model/object-model-heterogeneous-inventory",
+      "pass": 4,
+      "of": 6
+    },
+    {
       "id": "object-model/object-model-table-vs-vecmap-vs-bag",
       "pass": 5,
       "of": 5
     },
     {
       "id": "object-model/object-model-destroy-object",
-      "pass": 4,
+      "pass": 3,
       "of": 6
     },
     {
@@ -183,13 +333,8 @@
     },
     {
       "id": "object-model/object-model-transfer-vs-public-transfer",
-      "pass": 1,
-      "of": 5
-    },
-    {
-      "id": "object-model/object-model-transfer-to-object",
       "pass": 4,
-      "of": 6
+      "of": 5
     },
     {
       "id": "object-model/object-model-soulbound",
@@ -198,7 +343,7 @@
     },
     {
       "id": "object-model/object-model-capability-pattern",
-      "pass": 3,
+      "pass": 4,
       "of": 5
     },
     {
@@ -208,7 +353,7 @@
     },
     {
       "id": "object-model/object-model-versioning",
-      "pass": 2,
+      "pass": 1,
       "of": 5
     },
     {
@@ -218,13 +363,28 @@
     },
     {
       "id": "object-model/object-model-parallel-execution",
-      "pass": 1,
+      "pass": 3,
       "of": 5
+    },
+    {
+      "id": "object-model/object-model-derived-objects",
+      "pass": 1,
+      "of": 6
     },
     {
       "id": "object-model/object-model-display",
       "pass": 3,
       "of": 5
+    },
+    {
+      "id": "object-model/object-model-vote-registry-collection",
+      "pass": 2,
+      "of": 6
+    },
+    {
+      "id": "onchain-randomness/onchain-randomness-basic-random-number",
+      "pass": 4,
+      "of": 6
     },
     {
       "id": "onchain-randomness/onchain-randomness-public-function-rejected",
@@ -247,8 +407,18 @@
       "of": 6
     },
     {
+      "id": "ptbs/ptbs-batch-airdrop",
+      "pass": 3,
+      "of": 5
+    },
+    {
       "id": "ptbs/ptbs-chained-move-calls",
-      "pass": 5,
+      "pass": 0,
+      "of": 5
+    },
+    {
+      "id": "ptbs/ptbs-sponsored-transaction-flow",
+      "pass": 4,
       "of": 5
     },
     {
@@ -262,28 +432,38 @@
       "of": 4
     },
     {
+      "id": "ptbs/ptbs-shared-object-rules",
+      "pass": 2,
+      "of": 5
+    },
+    {
       "id": "sui-bridge/sui-bridge-assets-and-limits",
       "pass": 0,
       "of": 3
     },
     {
       "id": "sui-bridge/sui-bridge-governance-and-finality",
-      "pass": 3,
+      "pass": 2,
       "of": 5
     },
     {
       "id": "sui-bridge/sui-bridge-contract-ids",
-      "pass": 6,
+      "pass": 0,
+      "of": 6
+    },
+    {
+      "id": "sui-build-test/sui-build-test-write-and-run-tests",
+      "pass": 5,
       "of": 6
     },
     {
       "id": "sui-build-test/sui-build-test-move-analyzer-setup",
-      "pass": 3,
+      "pass": 1,
       "of": 4
     },
     {
       "id": "sui-client/sui-client-faucet",
-      "pass": 3,
+      "pass": 2,
       "of": 6
     },
     {
@@ -292,9 +472,19 @@
       "of": 6
     },
     {
+      "id": "sui-client/sui-client-no-gas-coin-error",
+      "pass": 4,
+      "of": 5
+    },
+    {
       "id": "sui-client/sui-client-merge-coins-and-transfer",
       "pass": 0,
       "of": 4
+    },
+    {
+      "id": "sui-for-ethereum/sui-for-ethereum-access-control-vs-ownable",
+      "pass": 5,
+      "of": 5
     },
     {
       "id": "sui-for-ethereum/sui-for-ethereum-token-standards-mapping",
@@ -313,42 +503,47 @@
     },
     {
       "id": "sui-install/sui-install-install",
-      "pass": 2,
+      "pass": 1,
       "of": 8
     },
     {
       "id": "sui-install/sui-install-version-behind-after-suiup",
-      "pass": 3,
+      "pass": 1,
       "of": 7
     },
     {
       "id": "sui-install/sui-install-update-not-taking-effect",
-      "pass": 2,
+      "pass": 1,
       "of": 5
     },
     {
       "id": "sui-install/sui-install-api-version-mismatch",
-      "pass": 2,
+      "pass": 3,
       "of": 4
     },
     {
       "id": "sui-install/sui-install-move-analyzer-not-found",
-      "pass": 0,
+      "pass": 1,
       "of": 4
     },
     {
       "id": "sui-move/sui-move-abilities",
-      "pass": 6,
+      "pass": 5,
       "of": 8
     },
     {
+      "id": "sui-move/sui-move-package-upgrade-and-upgradecap",
+      "pass": 2,
+      "of": 6
+    },
+    {
       "id": "sui-move/sui-move-init-and-one-time-witness",
-      "pass": 6,
+      "pass": 5,
       "of": 6
     },
     {
       "id": "sui-move/sui-move-epoch-from-txcontext",
-      "pass": 6,
+      "pass": 5,
       "of": 6
     },
     {
@@ -368,12 +563,17 @@
     },
     {
       "id": "sui-move-project/sui-move-project-dependency-env-note",
-      "pass": 0,
+      "pass": 1,
+      "of": 5
+    },
+    {
+      "id": "sui-move-project/sui-move-project-upgrade-without-published-id",
+      "pass": 1,
       "of": 5
     },
     {
       "id": "sui-move-project/sui-move-project-edition-feature-unsupported",
-      "pass": 1,
+      "pass": 0,
       "of": 4
     },
     {
@@ -382,28 +582,43 @@
       "of": 6
     },
     {
+      "id": "sui-move-project/sui-move-project-legacy-system-name",
+      "pass": 4,
+      "of": 5
+    },
+    {
+      "id": "sui-move-project/sui-move-project-coin",
+      "pass": 0,
+      "of": 3
+    },
+    {
       "id": "sui-move-project/sui-move-project-counter",
-      "pass": 2,
+      "pass": 3,
       "of": 6
     },
     {
+      "id": "sui-move-project/sui-move-project-lending-protocol",
+      "pass": 1,
+      "of": 5
+    },
+    {
       "id": "sui-networks-gas/sui-networks-gas-cost-and-storage-rebate",
-      "pass": 6,
+      "pass": 7,
       "of": 7
     },
     {
       "id": "sui-networks-gas/sui-networks-gas-epoch-length-and-boundary",
-      "pass": 3,
+      "pass": 4,
       "of": 5
     },
     {
       "id": "sui-overview/sui-overview-object-model",
-      "pass": 4,
+      "pass": 5,
       "of": 7
     },
     {
       "id": "sui-overview/sui-overview-parallel-execution-mysticeti",
-      "pass": 5,
+      "pass": 6,
       "of": 6
     },
     {
@@ -413,17 +628,17 @@
     },
     {
       "id": "sui-overview/sui-overview-sui-stack-components",
-      "pass": 1,
+      "pass": 2,
       "of": 6
     },
     {
       "id": "sui-overview/sui-overview-hidden-artwork-nft",
-      "pass": 4,
+      "pass": 3,
       "of": 6
     },
     {
       "id": "sui-publish/sui-publish-first-publish",
-      "pass": 4,
+      "pass": 3,
       "of": 6
     },
     {
@@ -433,17 +648,17 @@
     },
     {
       "id": "sui-publish/sui-publish-upgrade-contract",
-      "pass": 4,
+      "pass": 3,
       "of": 6
     },
     {
       "id": "sui-publish/sui-publish-debug-failing-dry-run",
-      "pass": 3,
+      "pass": 1,
       "of": 5
     },
     {
       "id": "sui-publish/sui-publish-local-network",
-      "pass": 4,
+      "pass": 5,
       "of": 5
     },
     {
@@ -453,12 +668,12 @@
     },
     {
       "id": "sui-sdks/sui-sdks-choose-sdk",
-      "pass": 4,
+      "pass": 3,
       "of": 6
     },
     {
       "id": "sui-sdks/sui-sdks-ts-client-choice",
-      "pass": 1,
+      "pass": 0,
       "of": 6
     },
     {
@@ -468,17 +683,27 @@
     },
     {
       "id": "sui-sdks/sui-sdks-rust-ptb-minimal",
-      "pass": 9,
+      "pass": 1,
       "of": 9
     },
     {
+      "id": "sui-sdks/sui-sdks-v1-to-v2-migration",
+      "pass": 7,
+      "of": 12
+    },
+    {
+      "id": "sui-sdks/sui-sdks-cross-sdk-port",
+      "pass": 1,
+      "of": 8
+    },
+    {
       "id": "sui-sdks/sui-sdks-community-caveat",
-      "pass": 5,
+      "pass": 4,
       "of": 6
     },
     {
       "id": "sui-sdks/sui-sdks-frontend-boundary",
-      "pass": 7,
+      "pass": 6,
       "of": 8
     },
     {
@@ -492,17 +717,22 @@
       "of": 5
     },
     {
+      "id": "sui-ts-sdk-backend/sui-ts-sdk-backend-sponsored-transactions",
+      "pass": 0,
+      "of": 6
+    },
+    {
       "id": "sui-ts-sdk-backend/sui-ts-sdk-backend-high-throughput-airdrop",
       "pass": 0,
       "of": 5
     },
     {
-      "id": "zklogin/zklogin-protocol-flow",
-      "pass": 4,
-      "of": 7
+      "id": "sui-ts-sdk-backend/sui-ts-sdk-backend-key-custody",
+      "pass": 3,
+      "of": 5
     },
     {
-      "id": "zklogin/zklogin-address-derivation",
+      "id": "zklogin/zklogin-protocol-flow",
       "pass": 3,
       "of": 7
     },
@@ -510,7 +740,11 @@
       "id": "zklogin/zklogin-jwt-and-salt-leak",
       "pass": 1,
       "of": 7
+    },
+    {
+      "id": "zklogin/zklogin-providers-and-integration",
+      "pass": 1,
+      "of": 6
     }
-  ],
-  "context_tokens_estimate": 0
+  ]
 }
