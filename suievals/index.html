@@ -303,6 +303,10 @@ Report a score per pillar and list the evals you missed.</pre>
 <p class="note" id="board-note">Loading&hellip;</p>
 <div class="cards" id="board" hidden></div>
 
+<h2>What the skills cost</h2>
+<p class="note" id="cost-note"></p>
+<div class="prose" id="cost" hidden></div>
+
 <h2>How this is scored</h2>
 <p class="prose">
   A question is not scored pass-or-fail, and a model&rsquo;s score is the mean of four areas rather
@@ -547,6 +551,67 @@ function renderBoard(cat, res) {
     .filter(([, layers]) => layers['baseline'] && (layers['with-skills'] ?? layers['with-skills-mcp']))
     .sort((a, b) => best(b[1]) - best(a[1]));
 
+  // What the skills cost, from the two rows of a card. Measured when both runs
+  // recorded tokens (the extra input tokens the skills added to each answer);
+  // otherwise the skills' context estimated from the skill files. The number
+  // the reader can act on is points won per 10,000 tokens spent.
+  const fmtK = (n) => n >= 10000 ? `${Math.round(n / 1000)}k` : n.toLocaleString();
+  const costOf = (withSkills, base, gain) => {
+    if (!withSkills || gain === null) return null;
+    // Under 100 input tokens an answer is not a recorded prompt (the cached
+    // part was dropped); such a run is treated as unrecorded.
+    const plausible = (u) => u && typeof u.input_per_answer === 'number' && u.input_per_answer >= 100;
+    const mu = plausible(withSkills.usage) ? withSkills.usage : null, bu = plausible(base?.usage) ? base.usage : null;
+    if (mu && bu) {
+      const extra = mu.input_per_answer - bu.input_per_answer;
+      return { kind: 'measured', tokens: extra, inW: mu.input_per_answer, outW: mu.output_per_answer, inB: bu.input_per_answer, outB: bu.output_per_answer,
+               per10k: extra > 0 ? Math.round((10 * gain / (extra / 1000)) ) / 10 : null };
+    }
+    const ctx = typeof withSkills.contextTokens === 'number' ? withSkills.contextTokens : null;
+    if (!ctx) return null;
+    return { kind: 'estimated', tokens: ctx, per10k: Math.round(10 * gain / (ctx / 10000)) / 10 };
+  };
+  const costLine = (withSkills, base, gain) => {
+    const c = costOf(withSkills, base, gain);
+    if (!c) return '';
+    if (c.kind === 'measured') {
+      const cached = (withSkills.usage?.cached_per_answer ?? 0) > 0
+        ? ` (${fmtK(withSkills.usage.cached_per_answer)} of the input served from the prompt cache)` : '';
+      return `<p class="mc-gain">Each answer cost about ${fmtK(c.inW)} tokens in and ${fmtK(c.outW)} out with the skills, against ${fmtK(c.inB)} in and ${fmtK(c.outB)} out without${cached}`
+        + (c.per10k !== null ? `: <b>${c.per10k} points per 10k extra tokens</b>.` : '.') + `</p>`;
+    }
+    return `<p class="mc-gain">The skills add about ${fmtK(c.tokens)} tokens of context to each answer (estimated from the skill files): <b>${c.per10k} points per 10k tokens</b>.</p>`;
+  };
+  const costSection = (models) => {
+    const rows = models.map(([model, layers]) => {
+      const w = layers['with-skills'] ?? layers['with-skills-mcp'];
+      const b = layers['baseline'];
+      const gain = w && b ? pctOf(w) - pctOf(b) : null;
+      const c = costOf(w, b, gain);
+      return c ? { model, without: pctOf(b), withSkills: pctOf(w), gain, c } : null;
+    }).filter(Boolean).sort((a, b) => (b.c.per10k ?? -1) - (a.c.per10k ?? -1));
+    // A measured row counts every token the answer carried (the system prompt,
+    // the skill files the agent read, the tool calls); an estimate counts the
+    // skill body alone. The two are not one ranking, so they are two groups.
+    const groups = [
+      { label: 'Measured: every token the model processed for an answer, tool calls included, with the skills against without', rows: rows.filter((r) => r.c.kind === 'measured') },
+      { label: 'Estimated from the skill files: the skill body alone, until the run records what it spent', rows: rows.filter((r) => r.c.kind === 'estimated') },
+    ].filter((g) => g.rows.length);
+    const noteEl = document.getElementById('cost-note');
+    const hostEl = document.getElementById('cost');
+    if (!rows.length) { noteEl.textContent = 'No run has recorded what it cost yet.'; return; }
+    const measured = rows.some((r) => r.c.kind === 'measured');
+    noteEl.textContent = measured
+      ? 'Points the skills won, divided by the extra tokens each answer cost with them. Measured from the runs that recorded tokens; the rest are estimated from the skill files.'
+      : 'Points the skills won, divided by the tokens of skill context each answer carried. Estimated from the skill files until the runs record what they spent; a bigger gain for the same context is a better trade.';
+    hostEl.hidden = false;
+    const row = (r) => `<tr><td>${esc(r.model)}</td><td class="num">${r.without}%</td><td class="num">${r.withSkills}%</td><td class="num">${r.gain >= 0 ? '+' : ''}${r.gain}</td><td class="num">${fmtK(r.c.tokens)}${r.c.kind === 'estimated' ? ' <span class="of">est.</span>' : ''}</td><td class="num"><b>${r.c.per10k === null ? '—' : r.c.per10k}</b></td></tr>`;
+    hostEl.innerHTML = `<table class="board"><thead><tr><th>Model</th><th class="num">Without</th><th class="num">With skills</th><th class="num">Points won</th><th class="num">${measured ? 'Extra tokens per answer' : 'Tokens per answer'}</th><th class="num">Points per 10k tokens</th></tr></thead><tbody>`
+      + groups.map((g) => `<tr><td colspan="6" class="of" style="padding-top:16px">${g.label}</td></tr>` + g.rows.map(row).join('')).join('')
+      + `</tbody></table>`;
+  };
+  costSection(models);
+
   const stale = res.manifest !== cat.manifest;
   // No summary line. It counted models, runs and pairs, which are facts about
   // the page rather than about the models, and every card below already says
@@ -585,6 +650,7 @@ function renderBoard(cat, res) {
       + (gain !== null
           ? `<p class="mc-gain">The skills are worth <b>${gain >= 0 ? '+' : ''}${gain} points</b> to this model.</p>`
           : '')
+      + costLine(withSkills, base, gain)
       + (stale ? '<p class="mc-gain">Scored against an older eval set.</p>' : '');
 
     // The detail that was in the drawer, still one click away rather than gone.
