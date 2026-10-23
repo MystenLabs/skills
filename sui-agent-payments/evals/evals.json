@@ -1,0 +1,81 @@
+[
+  {
+    "id": "sui-agent-payments-buy-flow",
+    "prompt": "I want my agent to buy paid APIs per call on Sui with USDC. Does my agent need SUI for gas, how does a payment actually settle, and what can I show my owner afterwards?",
+    "sources": [
+      "https://www.sui.io/agentpayments",
+      "https://docs.tentaclepay.com/x402/facilitator"
+    ],
+    "expected_output": "A correct buyer-side walkthrough of the 402 loop on Sui: no SUI needed (free stablecoin transfers and/or facilitator gas sponsorship), 402 terms, signed exact USDC payment, facilitator verify+settle, receipt digest verifiable on Suiscan.",
+    "expectations": [
+      "States the agent pays only the service price in USDC, and explains why gas is covered (facilitator sponsorship with buyer as sender and facilitator as gas owner, or Sui's native free stablecoin transfers)",
+      "Describes the 402 flow: request, machine-readable terms, sign exact payment, retry, 200 with receipt",
+      "Mentions on-chain spend grants (allowed services, total budget, per-payment cap, expiry, revocable) and GRANT_DENIED behaviour for out-of-grant requests"
+    ]
+  },
+  {
+    "id": "sui-agent-payments-facilitator-choice",
+    "prompt": "Which facilitator can settle an x402 exact payment in USDC on Sui mainnet right now, and what are the trade-offs versus self-hosting?",
+    "sources": [
+      "https://docs.tentaclepay.com/x402/facilitator",
+      "https://forums.sui.io/t/the-first-live-x402-facilitator-on-sui-agents-pay-usdc-per-api-call-verified-humans-read-free/49391",
+      "https://github.com/DrVelvetFog/x402-sui-stack/blob/main/SUBMISSION.md"
+    ],
+    "expected_output": "Names a Sui-native hosted facilitator (Tentacle Pay, sui:mainnet + sui:testnet, free, gas-sponsoring) and the community option with its Apache-2.0 self-host path; warns that EVM/Solana facilitators like CDP do not settle Sui; recommends verifying current spec coverage and community mainnet claims from live digests.",
+    "expectations": [
+      "Identifies sui:mainnet and sui:testnet as the network ids and at least one live Sui facilitator",
+      "Warns that mainstream EVM/Solana facilitators did not implement the Sui exact scheme and that this needs a live re-check",
+      "Notes the non-custodial property: the facilitator relays the payer's own signed transaction and cannot redirect funds"
+    ]
+  },
+  {
+    "id": "sui-agent-payments-sell-flow",
+    "prompt": "I run an existing HTTP API with no payment code. How do I make it pay-per-call for agents paying in USDC on Sui?",
+    "sources": [
+      "https://www.sui.io/agentpayments",
+      "https://www.sui.io/agentpayments/directory"
+    ],
+    "expected_output": "Presents both paths: front-door listing on the rail (endpoint + price + description; verify the live listing status — it was invite-only/testnet-only as of 2026-10-23) versus self-hosted 402 middleware pointed at a Sui facilitator, which keeps receipts and analytics with the seller.",
+    "expectations": [
+      "Describes the front-door path without requiring the seller to modify their service",
+      "Describes the self-hosted 402 path including the facilitator wiring and receipt attachment",
+      "Carries the dated status caveat and tells the seller to re-check the live rail pages before committing"
+    ]
+  },
+  {
+    "id": "sui-agent-payments-replay-pitfall",
+    "prompt": "A Sui payment I already settled passes my verify step again. How is that possible and how do developers prevent replays?",
+    "sources": [
+      "https://forums.sui.io/t/the-first-live-x402-facilitator-on-sui-agents-pay-usdc-per-api-call-verified-humans-read-free/49391"
+    ],
+    "expected_output": "Explains that dryRunTransactionBlock simulates against latest object versions so an already-executed payment still simulates cleanly, and replay protection requires local digest computation plus a getTransactionBlock lookup.",
+    "expectations": [
+      "Names dryRunTransactionBlock as insufficient for replay detection and why",
+      "Gives the concrete fix: compute digest from payment bytes (e.g. TransactionDataBuilder.getDigestFromBytes) and check with getTransactionBlock"
+    ]
+  },
+  {
+    "id": "sui-agent-payments-read-state",
+    "prompt": "My Sui integration just started failing with -32601 on every state read. What happened and how do I fix it?",
+    "sources": [
+      "https://forums.sui.io/t/the-first-live-x402-facilitator-on-sui-agents-pay-usdc-per-api-call-verified-humans-read-free/49391"
+    ],
+    "expected_output": "Identifies the retired public Sui JSON-RPC as the cause and migrates reads to GraphQL or gRPC, mentioning real-world breakage this caused (demo route 500 after settlement; verified-human free-read door silently failing).",
+    "expectations": [
+      "States the public JSON-RPC is retired and -32601 is its failure mode",
+      "Recommends GraphQL or gRPC as the replacement read path"
+    ]
+  },
+  {
+    "id": "sui-agent-payments-failure-reconciliation",
+    "prompt": "An agent paid USDC on Sui for one of my API calls but the call failed after settlement. What should the agent and I each do?",
+    "sources": [
+      "https://www.sui.io/agentpayments"
+    ],
+    "expected_output": "Explains settlement and delivery are separate outcomes: the receipt is immutable evidence of payment; reconcile against chain state rather than re-paying; refunds only flow through refundable offers (RefundVault, decision window); ordinary immediate payments are final.",
+    "expectations": [
+      "Refuses the naive advice to just call the API again and pay again",
+      "Explains the RefundVault decision-window semantics for refundable offers"
+    ]
+  }
+]
