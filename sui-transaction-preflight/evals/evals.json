@@ -1,0 +1,129 @@
+[
+  {
+    "id": "preflight-mocked-funding",
+    "prompt": "Review this unsigned Sui transfer only; do not execute it. It splits 5 SUI from GasCoin and transfers it to the requested recipient. Simulation says success, checksEnabled=true, gasPaymentMocked=true, and the recipient delta is +5 SUI. We have no real payer balance data. Can our agent say the transfer is funded?",
+    "sources": [
+      "https://sdk.mystenlabs.com/sui/clients/executing",
+      "https://docs.sui.io/develop/transactions/ptbs/prog-txn-blocks"
+    ],
+    "expected_output": "Explain why mocked GasCoin spending is not proof of real affordability and identify the next read-only check.",
+    "expectations": [
+      "Does not claim the transfer is funded; marks real affordability unknown.",
+      "Explains that mocked gas can fund the amount split from GasCoin, not just the transaction fee.",
+      "Proposes checking or simulating real payer funding without signing or submitting."
+    ]
+  },
+  {
+    "id": "preflight-minimum-output",
+    "prompt": "Our unsigned swap simulation succeeds with real funding and returns 12.4 units of the exact output coin to the sender. The user requires at least 12.0. Inspection of the deployed swap implementation confirms the PTB has no minimum-output argument or equivalent assertion. The pool may change before execution. Give the preflight verdict.",
+    "sources": [
+      "https://sdk.mystenlabs.com/sui/clients/executing",
+      "https://docs.sui.io/develop/transactions/ptbs/prog-txn-blocks"
+    ],
+    "expected_output": "Separate the passing simulated output from the absent on-chain protection.",
+    "expectations": [
+      "States the simulated 12.4 output exceeds the requested 12.0 minimum.",
+      "States the minimum is not enforced for future execution; simulation is not a guarantee.",
+      "Suggests a supported minimum-output guard or rebuilding the transaction, without lowering the minimum or executing."
+    ]
+  },
+  {
+    "id": "preflight-gas-units-and-cap",
+    "prompt": "Assess the gas check only. The full unsigned transaction sets gas price to 1,000 MIST/unit and budget to 100,000,000 MIST. Real-funded simulation reports computationCost=8,000,000, storageCost=1,000,000, storageRebate=7,000,000 MIST. The user caps the signed gas budget at 20,000,000 MIST. Is it within the cap because the estimated fee is small?",
+    "sources": [
+      "https://docs.sui.io/develop/transaction-payment/gas-in-sui",
+      "https://sdk.mystenlabs.com/sui/transactions/offline"
+    ],
+    "expected_output": "Compute the 2,000,000 MIST net estimate but reject the 100,000,000 MIST signed budget against the 20,000,000 cap.",
+    "expectations": [
+      "Computes estimated net fee as 2,000,000 MIST.",
+      "Reports the signed maximum budget of 100,000,000 MIST violates the 20,000,000 MIST cap.",
+      "Does not multiply the monetary gas budget by the gas price.",
+      "Does not use the net estimate alone as proof that a smaller budget is sufficient."
+    ]
+  },
+  {
+    "id": "preflight-gross-versus-net",
+    "prompt": "The user permits at most 100 USDC gross outgoing in this PTB. Verified commands send 200 USDC to a router and return 180 USDC to the sender; its net delta is -20 USDC. All amounts refer to the exact requested coin type, and gas is paid separately in SUI. Does the spending check pass?",
+    "sources": [
+      "https://docs.sui.io/develop/transactions/ptbs/prog-txn-blocks",
+      "https://sdk.mystenlabs.com/sui/clients/executing"
+    ],
+    "expected_output": "Apply the stated gross cap rather than substituting a net-debit cap.",
+    "expectations": [
+      "Reports a violation because gross outgoing is 200 USDC, greater than 100.",
+      "Distinguishes the 20 USDC net debit from the 200 USDC gross outgoing.",
+      "Does not silently redefine the user limit or increase it."
+    ]
+  },
+  {
+    "id": "preflight-coin-identity",
+    "prompt": "A swap simulation returns 1,000,000 base units of coin B (6 decimals), symbol USDC, to the intended recipient. The user requires at least 1 USDC of coin A, a different fully qualified Move coin type. The simulation has complete balance changes and gives the recipient zero coin A. Both assets use the symbol USDC. Assess the output check.",
+    "sources": [
+      "https://docs.sui.io/develop/transactions/ptbs/prog-txn-blocks",
+      "https://sdk.mystenlabs.com/sui/clients/querying"
+    ],
+    "expected_output": "Treat the exact types as different assets and fail the requested output check.",
+    "expectations": [
+      "Reports the requested coin A minimum is violated.",
+      "Does not equate coin types by their matching symbol or decimals.",
+      "Converts 1,000,000 base units of coin B to 1 coin B without calling it the requested asset."
+    ]
+  },
+  {
+    "id": "preflight-changed-state",
+    "prompt": "A preflight passed an unsigned swap using owned input coin version 42. The coin is now version 43, and the shared pool price has moved. The only checkpoint number saved is from a separate latest-checkpoint query made after the simulation. Can we label this a checkpoint-pinned successful transaction and reuse it without changes?",
+    "sources": [
+      "https://sdk.mystenlabs.com/sui/transactions/offline",
+      "https://sdk.mystenlabs.com/sui/clients/executing"
+    ],
+    "expected_output": "Reject the unsupported snapshot claim and distinguish exact owned references from changed shared-state economics.",
+    "expectations": [
+      "Does not call the separate checkpoint query proof of the simulation snapshot.",
+      "Identifies the obsolete owned-object reference and proposes refreshing/rebuilding affected inputs.",
+      "Reassesses the output/economic claim against changed pool state; does not claim unchanged commands guarantee the old result."
+    ]
+  },
+  {
+    "id": "preflight-abort-is-not-gas",
+    "prompt": "A read-only simulation of a flash-funded swap fails at zero-based command index 4 with MoveAbort in 0x2::balance::split, code 2. A captured trace proves that command is flash repayment: it needs 101 units and its input balance has 100. There is no gas-exhaustion error. Should I double the gas budget? Explain the failure without submitting anything.",
+    "sources": [
+      "https://docs.sui.io/develop/testing-debugging/common-errors",
+      "https://docs.sui.io/develop/transactions/ptbs/prog-txn-blocks"
+    ],
+    "expected_output": "Locate the fifth command and the repayment shortfall; increasing the gas budget does not repair this balance.",
+    "expectations": [
+      "Identifies command index 4 as the fifth command and the repayment shortfall as 1 unit.",
+      "Rejects a larger gas budget as a fix for this demonstrated token-balance shortage.",
+      "Does not claim flash loan or swap proceeds were earned after the PTB aborted, and does not submit a retry."
+    ]
+  },
+  {
+    "id": "preflight-partial-preflight",
+    "prompt": "We only have TransactionKind bytes for a sponsored transaction. No final sender, gas owner, price, budget, or expiration has been supplied. A debug simulation with checksEnabled=false succeeds. Can we approve it for the user to sign and state a maximum gas charge?",
+    "sources": [
+      "https://sdk.mystenlabs.com/sui/transactions/offline",
+      "https://sdk.mystenlabs.com/sui/clients/executing"
+    ],
+    "expected_output": "Report the unresolved full-transaction fields and the limits of debug simulation.",
+    "expectations": [
+      "Explains kind-only bytes omit the final sender, gas data, and expiration.",
+      "Does not infer a maximum fee or assert full transaction eligibility.",
+      "Requires assessment of the resolved full data with transaction checks enabled before making those claims."
+    ]
+  },
+  {
+    "id": "preflight-borrowed-funds",
+    "prompt": "An unsigned DeFi PTB simulates successfully. The sender gets +100 USDC, but the decoded lending call also creates 100 USDC of debt secured by collateral. Another command transfers a control capability to a different address. The user asked only whether this makes 100 USDC profit. Explain what the simulation establishes.",
+    "sources": [
+      "https://docs.sui.io/develop/transactions/ptbs/prog-txn-blocks",
+      "https://sdk.mystenlabs.com/sui/clients/executing"
+    ],
+    "expected_output": "Describe the borrowing and capability change rather than treating the positive coin delta as profit.",
+    "expectations": [
+      "Does not label the positive 100 USDC balance delta as profit.",
+      "Identifies the debt/collateral obligation alongside the received funds.",
+      "Calls out the capability ownership change as a separate effect that a coin-only view misses."
+    ]
+  }
+]

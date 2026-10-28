@@ -28,6 +28,7 @@ export const PILLARS = [
       "sponsorship, the data-access APIs, and the CLI that drives them.",
     skills: [
       "ptbs",
+      "sui-transaction-preflight",
       "accessing-data",
       "sui-client",
       "sui-install",

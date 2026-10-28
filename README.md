@@ -18,7 +18,7 @@ npx skills add mystenlabs/skills --skill sui-overview --skill sui-move --skill s
 npx skills add mystenlabs/skills --all
 ```
 
-> **New to Sui?** Start with the three-skill starter set above (`sui-overview`, `sui-move`, `sui-move-project`). Installing all 31 skills adds real context overhead and can cause trigger collisions. Add more as you need them.
+> **New to Sui?** Start with the three-skill starter set above (`sui-overview`, `sui-move`, `sui-move-project`). Installing all 32 skills adds real context overhead and can cause trigger collisions. Add more as you need them.
 
 ## Skills
 
@@ -59,6 +59,7 @@ npx skills add mystenlabs/skills --all
 |-------|-------------|
 | [sui-sdks](sui-sdks/) | SDK landscape — TypeScript, Rust, Python, Go, and more |
 | [ptbs](ptbs/) | Programmable Transaction Blocks — composing atomic transactions |
+| [sui-transaction-preflight](sui-transaction-preflight/) | Assess unsigned transaction effects, funding, and gas against user constraints |
 | [frontend-apps](frontend-apps/) | dApp development with @mysten/dapp-kit (React, Vue, vanilla JS) |
 | [accessing-data](accessing-data/) | Reading on-chain state — gRPC, GraphQL, indexers, Walrus blobs |
 | [sui-ts-sdk-backend](sui-ts-sdk-backend/) | The TypeScript SDK for backends and agents — keypairs, signing, no CLI |

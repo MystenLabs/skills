@@ -26,6 +26,7 @@
       "desc": "Composing and reading the chain. Programmable transaction blocks, gas and sponsorship, the data-access APIs, and the CLI that drives them.",
       "skills": [
         "ptbs",
+        "sui-transaction-preflight",
         "accessing-data",
         "sui-client",
         "sui-install",
