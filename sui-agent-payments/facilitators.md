@@ -23,7 +23,7 @@ Hosted, free facilitator at `https://facilitator.tentaclepay.com`, registering t
 
 `https://sui-facilitator.onrender.com` (DrVelvetFog, Apache-2.0, repo: DrVelvetFog/sui-x402-facilitator):
 
-- Spec-conformant x402 v2 facilitator; started on `sui:testnet` with a documented intent to harden before mainnet; the author's Sui Overflow submission reports mainnet settlements since June 2026, with digests in the repo's PROOF.md — treat mainnet readiness as community-reported and verify a fresh digest yourself before relying on it.
+- Spec-conformant x402 v2 facilitator. Its **hosted deployment serves `sui:testnet`** (per its own `GET /supported` — confirm before committing middleware); the author's forum launch post (2026-07-29) describes it as testnet-only. **Mainnet settlements dated 2026-06-12 are on-chain verifiable** — the digests in the repo's `PROOF.md` (`HenUMqpDgdiAo9CsYc4mcoPpZYFMxDH8YVgEnVtAr5B9`, `49z1am7SpkN16XGSGBowBdCAzzPQQK7ffeqekrwandQL`) resolve as real transactions on Sui mainnet (independently re-verified 2026-10-28 via `graphql.mainnet.sui.io`), though the author's PROOF.md does not show whether mainnet traffic flowed through the hosted endpoint or a self-hosted instance. Verify a fresh digest yourself before relying on mainnet readiness.
 - Ships tooling around it: an x402 conformance MCP (`x402-pilot`) that recomputes any settlement from on-chain truth, and a runnable buyer/seller demo (`x402-sui-stack`).
 - Notable extra: the same endpoint can offer a second "door" — a wallet holding a proof-of-real-personhood credential reads free while agents pay per call, using Sui object ownership as the discriminator.
 

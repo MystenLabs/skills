@@ -7,7 +7,7 @@ description: Use when an agent needs to pay per call for APIs on Sui (USDC micro
 
 Pay-per-call agent payments on Sui follow the 402 pattern: the client requests a resource, receives HTTP `402 Payment Required` with machine-readable terms, signs an exact USDC payment, a facilitator settles it on Sui, and the resource returns `200` with an on-chain receipt digest. Sui's own rail ("Sui Agentic Payments") packages discovery, settlement, receipts, and on-chain spend allowances; independent x402-on-Sui facilitators let you run the same flow with your own gateway.
 
-**Live state (verified 2026-10-23 — always re-check before building):** the main rail at <https://www.sui.io/agentpayments> is **testnet-only, paid calls invite-only**, with directory, docs, API listing, and llms.txt marked "coming soon". Independent facilitators are live today (see facilitators.md). This space moves weekly — check the live pages at the start of each session.
+**Rail status — always re-check, link is the source of truth:** the official rail's live state (which networks it serves, directory, docs, API listing, llms.txt) is published at <https://www.sui.io/agentpayments>. This skill's permanent content is what does not change with rollout phase: the 402 payment loop, gas sponsorship, refund vault semantics, receipt verification and facilitator custody model. Check the live pages at the start of each session before building. Independent facilitators are live (see facilitators.md).
 
 ## Reference files
 

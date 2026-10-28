@@ -4,7 +4,7 @@
 
 The Sui rail's listing model (per its FAQ): send the endpoint, a price per call, and a short description. You keep serving the endpoint you already run; the gateway handles the 402 and the settlement, and returns a receipt with every paid call.
 
-- Status check first: the rail's listing flow was **invite-only, testnet-only** as of 2026-10-23 with "submit an API" and the directory marked "coming soon". Verify the live pages (sui.io/agentpayments and /agentpayments/directory) before you promise anything to a customer.
+- Status check first: the official rail's current state (networks served, invite/submit flow) lives at sui.io/agentpayments and /agentpayments/directory — verify the live pages before you promise anything to a customer; this skill does not snapshot rollout phase.
 - Machine-readable discovery: the directory ships as a SKILL.md and a JSON endpoint (llms.txt), so agents can read it, compare prices per call, and buy without human approval per call.
 
 ## Path B — self-hosted 402 (you stay the operator)
