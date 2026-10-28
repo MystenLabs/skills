@@ -58,6 +58,7 @@ export const PILLARS = [
       "deepbook-move",
       "deepbook-margin",
       "deepbook-predict",
+      "sui-agent-payments",
     ],
   },
   {
