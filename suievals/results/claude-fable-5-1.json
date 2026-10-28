@@ -13,27 +13,37 @@
   ],
   "samples": 3,
   "empty_answers": 0,
-  "recorded_at": "2026-10-11T05:44:22.633Z",
+  "recorded_at": "2026-10-18T05:43:22.731Z",
   "manifest": "f0b70209ffb6",
   "eval_set": "f0b70209ffb6",
   "pillars": {
     "objects": {
-      "pass": 171,
+      "pass": 172,
       "total": 174
     },
     "transactions": {
-      "pass": 160,
+      "pass": 159,
       "total": 163
     },
     "building": {
-      "pass": 433,
+      "pass": 437,
       "total": 452
     },
     "security": {
-      "pass": 90,
+      "pass": 92,
       "total": 96
     }
   },
+  "usage": {
+    "answers": 468,
+    "input_tokens": 19133770,
+    "cached_tokens": 19129924,
+    "output_tokens": 732081,
+    "input_per_answer": 40884,
+    "cached_per_answer": 40876,
+    "output_per_answer": 1564
+  },
+  "context_tokens_estimate": 2296,
   "evals": [
     {
       "id": "accessing-data/accessing-data-no-json-rpc",
@@ -47,7 +57,7 @@
     },
     {
       "id": "accessing-data/accessing-data-custom-indexer-gate",
-      "pass": 6,
+      "pass": 7,
       "of": 7
     },
     {
@@ -62,7 +72,7 @@
     },
     {
       "id": "accessing-data/accessing-data-archival-historical",
-      "pass": 6,
+      "pass": 5,
       "of": 6
     },
     {
@@ -92,7 +102,7 @@
     },
     {
       "id": "deepbook-margin/deepbook-margin-risk-ratio-thresholds",
-      "pass": 5,
+      "pass": 4,
       "of": 5
     },
     {
@@ -137,7 +147,7 @@
     },
     {
       "id": "deepbook-move/deepbook-move-integration-mistakes",
-      "pass": 5,
+      "pass": 4,
       "of": 5
     },
     {
@@ -177,7 +187,7 @@
     },
     {
       "id": "deepbook-predict/deepbook-predict-oracle-states-and-settlement",
-      "pass": 0,
+      "pass": 4,
       "of": 4
     },
     {
@@ -247,7 +257,7 @@
     },
     {
       "id": "frontend-apps/frontend-apps-avoid-bad-pattern",
-      "pass": 11,
+      "pass": 10,
       "of": 11
     },
     {
@@ -292,7 +302,7 @@
     },
     {
       "id": "move-security/security-review-shared-object",
-      "pass": 4,
+      "pass": 5,
       "of": 5
     },
     {
@@ -302,7 +312,7 @@
     },
     {
       "id": "move-security/capability-safety-and-revocation",
-      "pass": 5,
+      "pass": 6,
       "of": 6
     },
     {
@@ -352,7 +362,7 @@
     },
     {
       "id": "object-model/object-model-dynamic-fields-vs-object-fields",
-      "pass": 5,
+      "pass": 6,
       "of": 6
     },
     {
@@ -437,12 +447,12 @@
     },
     {
       "id": "onchain-randomness/onchain-randomness-public-function-rejected",
-      "pass": 5,
+      "pass": 6,
       "of": 6
     },
     {
       "id": "onchain-randomness/onchain-randomness-random-rarity-airdrop",
-      "pass": 6,
+      "pass": 5,
       "of": 6
     },
     {
@@ -512,7 +522,7 @@
     },
     {
       "id": "sui-client/sui-client-faucet",
-      "pass": 6,
+      "pass": 5,
       "of": 6
     },
     {
@@ -577,7 +587,7 @@
     },
     {
       "id": "sui-move/sui-move-abilities",
-      "pass": 8,
+      "pass": 7,
       "of": 8
     },
     {
@@ -622,7 +632,7 @@
     },
     {
       "id": "sui-move-project/sui-move-project-edition-feature-unsupported",
-      "pass": 3,
+      "pass": 4,
       "of": 4
     },
     {
@@ -707,7 +717,7 @@
     },
     {
       "id": "sui-publish/sui-publish-upgrade-contract",
-      "pass": 4,
+      "pass": 5,
       "of": 6
     },
     {
@@ -722,7 +732,7 @@
     },
     {
       "id": "sui-publish/sui-publish-find-package-and-created-objects",
-      "pass": 3,
+      "pass": 4,
       "of": 4
     },
     {
@@ -782,7 +792,7 @@
     },
     {
       "id": "sui-ts-sdk-backend/sui-ts-sdk-backend-sponsored-transactions",
-      "pass": 5,
+      "pass": 6,
       "of": 6
     },
     {

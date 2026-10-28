@@ -12,29 +12,39 @@
     "ls"
   ],
   "samples": 3,
-  "empty_answers": 0,
-  "recorded_at": "2026-10-07T00:43:12.835Z",
+  "empty_answers": 1,
+  "recorded_at": "2026-10-20T12:27:55.651Z",
   "manifest": "f0b70209ffb6",
   "eval_set": "f0b70209ffb6",
   "pillars": {
     "objects": {
-      "pass": 157,
+      "pass": 151,
       "total": 174
     },
     "transactions": {
-      "pass": 149,
-      "total": 163
+      "pass": 147,
+      "total": 159
     },
     "building": {
-      "pass": 351,
-      "total": 402
+      "pass": 366,
+      "total": 413
     },
     "security": {
-      "pass": 82,
+      "pass": 84,
       "total": 96
     }
   },
   "partial": true,
+  "usage": {
+    "answers": 436,
+    "input_tokens": 14422409,
+    "cached_tokens": 12153088,
+    "output_tokens": 584863,
+    "input_per_answer": 33079,
+    "cached_per_answer": 27874,
+    "output_per_answer": 1341
+  },
+  "context_tokens_estimate": 2334,
   "evals": [
     {
       "id": "accessing-data/accessing-data-no-json-rpc",
@@ -48,17 +58,17 @@
     },
     {
       "id": "accessing-data/accessing-data-custom-indexer-gate",
-      "pass": 7,
+      "pass": 5,
       "of": 7
     },
     {
       "id": "accessing-data/accessing-data-walrus-blob",
-      "pass": 6,
+      "pass": 7,
       "of": 7
     },
     {
       "id": "accessing-data/accessing-data-migrate-json-rpc",
-      "pass": 5,
+      "pass": 11,
       "of": 11
     },
     {
@@ -75,6 +85,11 @@
       "id": "accessing-data/accessing-data-storage-fund-clarification",
       "pass": 5,
       "of": 6
+    },
+    {
+      "id": "composable-move-functions/composable-coin",
+      "pass": 3,
+      "of": 3
     },
     {
       "id": "deepbook-margin/deepbook-margin-risk-ratio-thresholds",
@@ -98,7 +113,7 @@
     },
     {
       "id": "deepbook-margin/deepbook-margin-risks-and-mitigations",
-      "pass": 5,
+      "pass": 4,
       "of": 5
     },
     {
@@ -128,7 +143,7 @@
     },
     {
       "id": "deepbook-overview/deepbook-overview-vs-amm",
-      "pass": 4,
+      "pass": 5,
       "of": 5
     },
     {
@@ -148,12 +163,12 @@
     },
     {
       "id": "deepbook-overview/deepbook-overview-mainnet-ids",
-      "pass": 2,
+      "pass": 3,
       "of": 3
     },
     {
       "id": "deepbook-predict/deepbook-predict-position-types",
-      "pass": 3,
+      "pass": 5,
       "of": 5
     },
     {
@@ -168,7 +183,7 @@
     },
     {
       "id": "deepbook-predict/deepbook-predict-vault-and-plp",
-      "pass": 1,
+      "pass": 2,
       "of": 4
     },
     {
@@ -198,7 +213,7 @@
     },
     {
       "id": "deepbook-sdk/deepbook-sdk-silent-order-failures",
-      "pass": 4,
+      "pass": 5,
       "of": 5
     },
     {
@@ -208,7 +223,7 @@
     },
     {
       "id": "frontend-apps/frontend-apps-transaction-flow",
-      "pass": 10,
+      "pass": 11,
       "of": 11
     },
     {
@@ -218,7 +233,7 @@
     },
     {
       "id": "frontend-apps/frontend-apps-deprecated-package-check",
-      "pass": 6,
+      "pass": 7,
       "of": 7
     },
     {
@@ -233,7 +248,7 @@
     },
     {
       "id": "frontend-apps/frontend-apps-avoid-bad-pattern",
-      "pass": 11,
+      "pass": 5,
       "of": 11
     },
     {
@@ -258,8 +273,13 @@
     },
     {
       "id": "kiosk/kiosk-borrow-nft-in-ptb",
-      "pass": 2,
+      "pass": 5,
       "of": 5
+    },
+    {
+      "id": "modern-move-syntax/syntax-nft-game",
+      "pass": 3,
+      "of": 3
     },
     {
       "id": "move-security/security-review-shared-object",
@@ -268,12 +288,12 @@
     },
     {
       "id": "move-security/access-control-pattern-choice",
-      "pass": 2,
+      "pass": 3,
       "of": 6
     },
     {
       "id": "move-security/capability-safety-and-revocation",
-      "pass": 4,
+      "pass": 5,
       "of": 6
     },
     {
@@ -288,7 +308,7 @@
     },
     {
       "id": "object-model/object-model-ownership-types",
-      "pass": 7,
+      "pass": 6,
       "of": 7
     },
     {
@@ -298,7 +318,7 @@
     },
     {
       "id": "object-model/object-model-abilities",
-      "pass": 2,
+      "pass": 6,
       "of": 6
     },
     {
@@ -308,7 +328,7 @@
     },
     {
       "id": "object-model/object-model-heterogeneous-inventory",
-      "pass": 6,
+      "pass": 5,
       "of": 6
     },
     {
@@ -318,7 +338,7 @@
     },
     {
       "id": "object-model/object-model-destroy-object",
-      "pass": 6,
+      "pass": 5,
       "of": 6
     },
     {
@@ -328,7 +348,7 @@
     },
     {
       "id": "object-model/object-model-transfer-vs-public-transfer",
-      "pass": 3,
+      "pass": 5,
       "of": 5
     },
     {
@@ -363,17 +383,17 @@
     },
     {
       "id": "object-model/object-model-parallel-execution",
-      "pass": 3,
+      "pass": 5,
       "of": 5
     },
     {
       "id": "object-model/object-model-derived-objects",
-      "pass": 6,
+      "pass": 1,
       "of": 6
     },
     {
       "id": "object-model/object-model-display",
-      "pass": 5,
+      "pass": 4,
       "of": 5
     },
     {
@@ -383,7 +403,7 @@
     },
     {
       "id": "onchain-randomness/onchain-randomness-basic-random-number",
-      "pass": 5,
+      "pass": 6,
       "of": 6
     },
     {
@@ -403,7 +423,7 @@
     },
     {
       "id": "ptbs/ptbs-basic-transfer",
-      "pass": 5,
+      "pass": 3,
       "of": 6
     },
     {
@@ -418,13 +438,8 @@
     },
     {
       "id": "ptbs/ptbs-sponsored-transaction-flow",
-      "pass": 5,
+      "pass": 3,
       "of": 5
-    },
-    {
-      "id": "ptbs/ptbs-gas-coin-misuse",
-      "pass": 4,
-      "of": 4
     },
     {
       "id": "ptbs/ptbs-unused-value-error",
@@ -463,7 +478,7 @@
     },
     {
       "id": "sui-client/sui-client-faucet",
-      "pass": 5,
+      "pass": 6,
       "of": 6
     },
     {
@@ -473,7 +488,7 @@
     },
     {
       "id": "sui-client/sui-client-no-gas-coin-error",
-      "pass": 5,
+      "pass": 4,
       "of": 5
     },
     {
@@ -498,12 +513,12 @@
     },
     {
       "id": "sui-for-ethereum/sui-for-ethereum-composability",
-      "pass": 4,
+      "pass": 3,
       "of": 5
     },
     {
       "id": "sui-install/sui-install-install",
-      "pass": 7,
+      "pass": 8,
       "of": 8
     },
     {
@@ -528,7 +543,7 @@
     },
     {
       "id": "sui-move/sui-move-abilities",
-      "pass": 5,
+      "pass": 7,
       "of": 8
     },
     {
@@ -548,7 +563,7 @@
     },
     {
       "id": "sui-move/sui-move-events",
-      "pass": 6,
+      "pass": 5,
       "of": 6
     },
     {
@@ -558,22 +573,22 @@
     },
     {
       "id": "sui-move/sui-move-destroy-without-drop",
-      "pass": 4,
+      "pass": 6,
       "of": 6
     },
     {
       "id": "sui-move-project/sui-move-project-dependency-env-note",
-      "pass": 3,
+      "pass": 4,
       "of": 5
     },
     {
       "id": "sui-move-project/sui-move-project-upgrade-without-published-id",
-      "pass": 4,
+      "pass": 5,
       "of": 5
     },
     {
       "id": "sui-move-project/sui-move-project-edition-feature-unsupported",
-      "pass": 4,
+      "pass": 3,
       "of": 4
     },
     {
@@ -593,17 +608,22 @@
     },
     {
       "id": "sui-move-project/sui-move-project-counter",
-      "pass": 0,
+      "pass": 6,
       "of": 6
     },
     {
+      "id": "sui-move-project/sui-move-project-lending-protocol",
+      "pass": 5,
+      "of": 5
+    },
+    {
       "id": "sui-networks-gas/sui-networks-gas-cost-and-storage-rebate",
-      "pass": 7,
+      "pass": 6,
       "of": 7
     },
     {
       "id": "sui-networks-gas/sui-networks-gas-epoch-length-and-boundary",
-      "pass": 5,
+      "pass": 4,
       "of": 5
     },
     {
@@ -618,12 +638,12 @@
     },
     {
       "id": "sui-overview/sui-overview-vs-ethereum-accounts",
-      "pass": 4,
+      "pass": 5,
       "of": 6
     },
     {
       "id": "sui-overview/sui-overview-sui-stack-components",
-      "pass": 5,
+      "pass": 2,
       "of": 6
     },
     {
@@ -643,7 +663,7 @@
     },
     {
       "id": "sui-publish/sui-publish-upgrade-contract",
-      "pass": 4,
+      "pass": 6,
       "of": 6
     },
     {
@@ -658,12 +678,12 @@
     },
     {
       "id": "sui-publish/sui-publish-find-package-and-created-objects",
-      "pass": 3,
+      "pass": 4,
       "of": 4
     },
     {
       "id": "sui-publish/sui-publish-serialize-for-multisig",
-      "pass": 4,
+      "pass": 3,
       "of": 4
     },
     {
@@ -678,7 +698,7 @@
     },
     {
       "id": "sui-sdks/sui-sdks-bundled-llm-docs",
-      "pass": 6,
+      "pass": 5,
       "of": 6
     },
     {
@@ -688,7 +708,7 @@
     },
     {
       "id": "sui-sdks/sui-sdks-v1-to-v2-migration",
-      "pass": 7,
+      "pass": 4,
       "of": 12
     },
     {
@@ -698,7 +718,7 @@
     },
     {
       "id": "sui-sdks/sui-sdks-community-caveat",
-      "pass": 5,
+      "pass": 6,
       "of": 6
     },
     {
@@ -718,32 +738,32 @@
     },
     {
       "id": "sui-ts-sdk-backend/sui-ts-sdk-backend-sponsored-transactions",
-      "pass": 5,
+      "pass": 4,
       "of": 6
     },
     {
       "id": "sui-ts-sdk-backend/sui-ts-sdk-backend-high-throughput-airdrop",
-      "pass": 4,
+      "pass": 0,
       "of": 5
     },
     {
       "id": "sui-ts-sdk-backend/sui-ts-sdk-backend-key-custody",
-      "pass": 5,
+      "pass": 4,
       "of": 5
     },
     {
       "id": "zklogin/zklogin-protocol-flow",
-      "pass": 7,
+      "pass": 6,
       "of": 7
     },
     {
       "id": "zklogin/zklogin-address-derivation",
-      "pass": 7,
+      "pass": 5,
       "of": 7
     },
     {
       "id": "zklogin/zklogin-jwt-and-salt-leak",
-      "pass": 7,
+      "pass": 6,
       "of": 7
     },
     {

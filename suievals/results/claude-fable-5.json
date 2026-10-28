@@ -13,27 +13,37 @@
   ],
   "samples": 3,
   "empty_answers": 0,
-  "recorded_at": "2026-10-11T05:41:39.667Z",
+  "recorded_at": "2026-10-18T05:40:29.564Z",
   "manifest": "f0b70209ffb6",
   "eval_set": "f0b70209ffb6",
   "pillars": {
     "objects": {
-      "pass": 169,
+      "pass": 168,
       "total": 174
     },
     "transactions": {
-      "pass": 155,
+      "pass": 157,
       "total": 163
     },
     "building": {
-      "pass": 422,
+      "pass": 414,
       "total": 452
     },
     "security": {
-      "pass": 93,
+      "pass": 94,
       "total": 96
     }
   },
+  "usage": {
+    "answers": 468,
+    "input_tokens": 17977243,
+    "cached_tokens": 17974423,
+    "output_tokens": 562331,
+    "input_per_answer": 38413,
+    "cached_per_answer": 38407,
+    "output_per_answer": 1202
+  },
+  "context_tokens_estimate": 2296,
   "evals": [
     {
       "id": "accessing-data/accessing-data-no-json-rpc",
@@ -42,7 +52,7 @@
     },
     {
       "id": "accessing-data/accessing-data-use-case-mapping",
-      "pass": 4,
+      "pass": 5,
       "of": 6
     },
     {
@@ -92,7 +102,7 @@
     },
     {
       "id": "deepbook-margin/deepbook-margin-risk-ratio-thresholds",
-      "pass": 5,
+      "pass": 4,
       "of": 5
     },
     {
@@ -112,7 +122,7 @@
     },
     {
       "id": "deepbook-margin/deepbook-margin-risks-and-mitigations",
-      "pass": 4,
+      "pass": 5,
       "of": 5
     },
     {
@@ -142,7 +152,7 @@
     },
     {
       "id": "deepbook-overview/deepbook-overview-vs-amm",
-      "pass": 4,
+      "pass": 5,
       "of": 5
     },
     {
@@ -167,7 +177,7 @@
     },
     {
       "id": "deepbook-predict/deepbook-predict-position-types",
-      "pass": 4,
+      "pass": 3,
       "of": 5
     },
     {
@@ -222,7 +232,7 @@
     },
     {
       "id": "frontend-apps/frontend-apps-transaction-flow",
-      "pass": 11,
+      "pass": 10,
       "of": 11
     },
     {
@@ -317,7 +327,7 @@
     },
     {
       "id": "naming-conventions/naming-amm",
-      "pass": 3,
+      "pass": 2,
       "of": 3
     },
     {
@@ -342,12 +352,12 @@
     },
     {
       "id": "object-model/object-model-share-object-and-frontend-access",
-      "pass": 5,
+      "pass": 6,
       "of": 6
     },
     {
       "id": "object-model/object-model-abilities",
-      "pass": 5,
+      "pass": 6,
       "of": 6
     },
     {
@@ -357,7 +367,7 @@
     },
     {
       "id": "object-model/object-model-heterogeneous-inventory",
-      "pass": 5,
+      "pass": 6,
       "of": 6
     },
     {
@@ -367,7 +377,7 @@
     },
     {
       "id": "object-model/object-model-destroy-object",
-      "pass": 6,
+      "pass": 4,
       "of": 6
     },
     {
@@ -412,7 +422,7 @@
     },
     {
       "id": "object-model/object-model-parallel-execution",
-      "pass": 5,
+      "pass": 4,
       "of": 5
     },
     {
@@ -437,7 +447,7 @@
     },
     {
       "id": "onchain-randomness/onchain-randomness-public-function-rejected",
-      "pass": 6,
+      "pass": 5,
       "of": 6
     },
     {
@@ -452,7 +462,7 @@
     },
     {
       "id": "ptbs/ptbs-basic-transfer",
-      "pass": 5,
+      "pass": 6,
       "of": 6
     },
     {
@@ -537,7 +547,7 @@
     },
     {
       "id": "sui-for-ethereum/sui-for-ethereum-token-standards-mapping",
-      "pass": 4,
+      "pass": 3,
       "of": 4
     },
     {
@@ -607,7 +617,7 @@
     },
     {
       "id": "sui-move/sui-move-destroy-without-drop",
-      "pass": 5,
+      "pass": 4,
       "of": 6
     },
     {
@@ -632,7 +642,7 @@
     },
     {
       "id": "sui-move-project/sui-move-project-legacy-system-name",
-      "pass": 5,
+      "pass": 4,
       "of": 5
     },
     {
@@ -652,7 +662,7 @@
     },
     {
       "id": "sui-move-project/sui-move-project-counter",
-      "pass": 5,
+      "pass": 2,
       "of": 6
     },
     {
@@ -767,7 +777,7 @@
     },
     {
       "id": "sui-sdks/sui-sdks-frontend-boundary",
-      "pass": 8,
+      "pass": 6,
       "of": 8
     },
     {
@@ -782,7 +792,7 @@
     },
     {
       "id": "sui-ts-sdk-backend/sui-ts-sdk-backend-sponsored-transactions",
-      "pass": 5,
+      "pass": 6,
       "of": 6
     },
     {
@@ -802,7 +812,7 @@
     },
     {
       "id": "zklogin/zklogin-address-derivation",
-      "pass": 5,
+      "pass": 7,
       "of": 7
     },
     {

@@ -35,6 +35,7 @@
     }
   },
   "partial": true,
+  "context_tokens_estimate": 3554,
   "evals": [
     {
       "id": "frontend-apps/frontend-apps-react-setup",
