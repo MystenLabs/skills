@@ -53,7 +53,8 @@
         "deepbook-sdk",
         "deepbook-move",
         "deepbook-margin",
-        "deepbook-predict"
+        "deepbook-predict",
+        "sui-agent-payments"
       ]
     },
     {
