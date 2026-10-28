@@ -18,7 +18,7 @@ npx skills add mystenlabs/skills --skill sui-overview --skill sui-move --skill s
 npx skills add mystenlabs/skills --all
 ```
 
-> **New to Sui?** Start with the three-skill starter set above (`sui-overview`, `sui-move`, `sui-move-project`). Installing all 31 skills adds real context overhead and can cause trigger collisions. Add more as you need them.
+> **New to Sui?** Start with the three-skill starter set above (`sui-overview`, `sui-move`, `sui-move-project`). Installing all 32 skills adds real context overhead and can cause trigger collisions. Add more as you need them.
 
 ## Skills
 
@@ -87,6 +87,7 @@ npx skills add mystenlabs/skills --all
 | [sui-for-ethereum](sui-for-ethereum/) | Coming from Solidity — EVM patterns and their Move equivalents |
 | [zklogin](zklogin/) | zkLogin — protocol flow, OpenID providers, address derivation |
 | [sui-bridge](sui-bridge/) | Sui Bridge — supported assets, contract addresses, the global limiter |
+| [sui-agent-payments](sui-agent-payments/) | Per-call USDC API payments on Sui — the 402 flow, facilitators, receipts |
 
 ## Repo Structure
 

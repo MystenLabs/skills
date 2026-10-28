@@ -18,8 +18,7 @@
     "prompt": "Which facilitator can settle an x402 exact payment in USDC on Sui mainnet right now, and what are the trade-offs versus self-hosting?",
     "sources": [
       "https://docs.tentaclepay.com/x402/facilitator",
-      "https://forums.sui.io/t/the-first-live-x402-facilitator-on-sui-agents-pay-usdc-per-api-call-verified-humans-read-free/49391",
-      "https://github.com/DrVelvetFog/x402-sui-stack/blob/main/SUBMISSION.md"
+      "https://forums.sui.io/t/the-first-live-x402-facilitator-on-sui-agents-pay-usdc-per-api-call-verified-humans-read-free/49391"
     ],
     "expected_output": "Names a Sui-native hosted facilitator (Tentacle Pay, sui:mainnet + sui:testnet, free, gas-sponsoring) and the community option with its Apache-2.0 self-host path; warns that EVM/Solana facilitators like CDP do not settle Sui; recommends verifying current spec coverage and community mainnet claims from live digests.",
     "expectations": [

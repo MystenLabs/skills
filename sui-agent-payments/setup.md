@@ -15,6 +15,6 @@
 
 ## Choosing testnet vs mainnet
 
-- Testnet USDC is free from the Sui faucet; use it to harden the full loop before a mainnet cent moves.
+- Testnet USDC comes from Circle's testnet faucet (the Sui faucet dispenses SUI only); use it to harden the full loop before a mainnet cent moves.
 - The main rail is testnet-only as of 2026-10-23. Independent facilitators (facilitators.md) already register `sui:mainnet`, so self-hosted seller flows can be mainnet-live while the rail itself is still invite-only.
 - Pin network ids explicitly: `sui:testnet` for rehearsal, `sui:mainnet` for real money. Never mix them in one client config.
