@@ -3,9 +3,8 @@
 /**
  * Code Eval Runner
  *
- * Generates Move code via Claude, extracts it from the response,
- * creates temporary Move projects, and runs `sui move build` / `sui move test`
- * to verify the code compiles and tests pass.
+ * Generates code via Claude, then builds/tests Move or strictly typechecks
+ * TypeScript/TSX. TypeScript sources are never executed.
  *
  * Usage:
  *   node scripts/run-code-evals.js                  # run all code evals
@@ -13,24 +12,29 @@
  *   node scripts/run-code-evals.js --skill sui-move  # run code evals for a single skill
  *   node scripts/run-code-evals.js --concurrency 2  # parallel evals (default: 2)
  *   node scripts/run-code-evals.js --timeout 180000 # per-eval timeout in ms (default: 180000)
+ *   node scripts/run-code-evals.js --language tsx   # frontend typechecking only
+ *   node scripts/run-code-evals.js --skill ptbs --responses responses.json # offline
+ *   See scripts/CODE-EVALS.md for dependencies and response file format.
  *
  * Environment:
- *   ANTHROPIC_API_KEY   required
+ *   ANTHROPIC_API_KEY   required unless --responses is supplied
  *   EVAL_MODEL          model for generating code  (default: claude-opus-4-6)
  *   SUI_PATH            path to sui CLI            (default: auto-detect)
  */
 
 import Anthropic from "@anthropic-ai/sdk";
-import { writeFileSync, mkdirSync, mkdtempSync, rmSync } from "fs";
+import { writeFileSync, readFileSync, mkdirSync, mkdtempSync, rmSync } from "fs";
 import { resolve, dirname, basename, join } from "path";
-import { execSync } from "child_process";
+import { execFile, execFileSync } from "child_process";
 import { tmpdir } from "os";
+import { fileURLToPath } from "node:url";
+import { promisify } from "node:util";
+import { assertTypeScriptDependencies, checkTypeScript } from "./lib/typescript-check.js";
 import {
   ROOT,
   getFlag,
   hasFlag,
   Semaphore,
-  withTimeout,
   discoverEvalFiles,
   loadSkillContext,
   parseEvals,
@@ -43,14 +47,30 @@ const concurrencyFlag = getFlag(args, "concurrency");
 const timeoutFlag = getFlag(args, "timeout");
 const suiPathFlag = getFlag(args, "sui-path");
 const changedOnly = hasFlag(args, "changed-only");
+const languageFlag = getFlag(args, "language");
+const responsesFlag = getFlag(args, "responses");
+const outputFlag = getFlag(args, "output");
 
 const EVAL_MODEL = process.env.EVAL_MODEL ?? "claude-opus-4-6";
 const MAX_TOKENS = 8192;
-const CONCURRENCY = parseInt(concurrencyFlag ?? "2", 10);
-const EVAL_TIMEOUT = parseInt(timeoutFlag ?? "180000", 10);
+const CONCURRENCY = Number(concurrencyFlag ?? "2");
+const EVAL_TIMEOUT = Number(timeoutFlag ?? "180000");
 const BUILD_TIMEOUT = 120000; // 2 minutes for sui move build/test
+const execSui = promisify(execFile);
 
-const client = new Anthropic();
+let client;
+let offlineResponses;
+
+export function evalLanguage(ev) {
+  const language = ev.language ?? "move";
+  if (!["move", "typescript", "tsx"].includes(language)) throw new Error(`Unsupported eval language: ${language}`);
+  if (language !== "move" && ev.check !== "build") throw new Error(`${language} supports check: build (typecheck) only`);
+  return language;
+}
+
+function selectedEvals(evalFile) {
+  return parseEvals(evalFile).filter((ev) => !languageFlag || evalLanguage(ev) === languageFlag);
+}
 
 // ── Find sui CLI ─────────────────────────────────────────────────────
 function findSuiCli() {
@@ -61,7 +81,7 @@ function findSuiCli() {
   const candidates = ["sui", join(process.env.HOME ?? "", ".local/bin/sui")];
   for (const candidate of candidates) {
     try {
-      execSync(`${candidate} --version`, { encoding: "utf-8", stdio: "pipe" });
+      execFileSync(candidate, ["--version"], { encoding: "utf-8", stdio: "pipe", timeout: 5000 });
       return candidate;
     } catch { /* try next */ }
   }
@@ -74,7 +94,7 @@ function findSuiCli() {
 
 // ── Version check ────────────────────────────────────────────────────
 function checkSuiVersion(suiPath) {
-  const raw = execSync(`${suiPath} --version`, { encoding: "utf-8" }).trim();
+  const raw = execFileSync(suiPath, ["--version"], { encoding: "utf-8", timeout: 5000 }).trim();
   const match = raw.match(/sui\s+(\d+)\.(\d+)\.(\d+)/);
   if (!match) {
     console.warn(`  Warning: Could not parse sui version from: ${raw}`);
@@ -94,7 +114,7 @@ function checkSuiVersion(suiPath) {
 }
 
 // ── Extract Move code blocks from response ───────────────────────────
-function extractMoveCode(text) {
+export function extractMoveCode(text) {
   const blocks = [];
 
   // Match ```move ... ``` blocks
@@ -135,7 +155,7 @@ function extractMoveCode(text) {
 }
 
 // ── Route modules to source/test files ───────────────────────────────
-function routeModulesToFiles(codeBlocks, packageName) {
+export function routeModulesToFiles(codeBlocks, packageName) {
   const files = [];
   for (const block of codeBlocks) {
     const moduleMatch = block.match(/module\s+(\w+)::(\w+)\s*[;{]/);
@@ -195,26 +215,28 @@ function cleanupTempProject(tmpDir) {
 }
 
 // ── Run sui move command ─────────────────────────────────────────────
-function runSuiCommand(suiPath, command, projectPath) {
+async function runSuiCommand(suiPath, command, projectPath, timeout = BUILD_TIMEOUT) {
   try {
-    const stdout = execSync(`${suiPath} move ${command} --path ${projectPath}`, {
+    const running = execSui(suiPath, ["move", command, "--path", projectPath], {
       encoding: "utf-8",
-      timeout: BUILD_TIMEOUT,
-      stdio: ["pipe", "pipe", "pipe"],
+      timeout,
+      killSignal: "SIGKILL",
     });
+    running.child.stdin.end();
+    const { stdout } = await running;
     return { success: true, stdout, stderr: "" };
   } catch (err) {
     return {
       success: false,
       stdout: err.stdout ?? "",
-      stderr: err.stderr ?? err.message,
-      exitCode: err.status,
+      stderr: err.stderr || err.message,
+      exitCode: typeof err.code === "number" ? err.code : null,
     };
   }
 }
 
 // ── Evaluate build/test results ──────────────────────────────────────
-function evaluateResult(buildResult, testResult, evalConfig) {
+export function evaluateResult(buildResult, testResult, evalConfig) {
   const results = { build: null, test: null, overall: false };
 
   if (evalConfig.expected_result === "pass") {
@@ -255,8 +277,19 @@ function evaluateResult(buildResult, testResult, evalConfig) {
 }
 
 // ── Generate code response ───────────────────────────────────────────
-async function generateCode(skillContext, prompt, packageName) {
-  const systemPrompt = `You are an expert Sui Move developer. Write complete, self-contained Sui Move code that compiles.
+export function codeSystemPrompt(skillContext, packageName, language) {
+  if (language !== "move") {
+    const dependencies = JSON.parse(readFileSync(new URL("./typescript/package.json", import.meta.url), "utf8")).dependencies;
+    return `You are an expert Sui TypeScript developer. Write complete, self-contained ${language === "tsx" ? "React TSX" : "TypeScript"} sources that pass strict tsc --noEmit.
+The validation environment has these exact dependencies: ${JSON.stringify(dependencies)}.
+Use ES2022, ES modules, Bundler module resolution and react-jsx. Include all imports and definitions.
+Put sources in fenced ts/typescript/tsx blocks. For multiple files, name EVERY block with filename=dapp-kit.ts or filename=App.tsx in the opening fence, or a first-line // filename.ts comment. Relative imports must resolve to included files.
+Only .ts/.tsx source files are accepted, with no .d.ts stubs, explicit any types or checking suppressions. Do not provide package.json or tsconfig.json. The harness supplies no placeholder variables or API stubs.
+This is offline typechecking only: no code will be executed, no network/chain behavior is verified. Use dummy addresses and keys in examples.
+
+${skillContext}`;
+  }
+  return `You are an expert Sui Move developer. Write complete, self-contained Sui Move code that compiles.
 
 CRITICAL RULES:
 - Use Move 2024 edition syntax: module declarations end with semicolon (module ${packageName}::name;), no outer braces
@@ -269,13 +302,18 @@ CRITICAL RULES:
 - Do NOT use deprecated syntax: no "friend", no "public(friend)"
 
 ${skillContext}`;
+}
+
+async function generateCode(skillContext, prompt, packageName, language, signal) {
+  const systemPrompt = codeSystemPrompt(skillContext, packageName, language);
+  client ??= new Anthropic();
 
   const response = await client.messages.create({
     model: EVAL_MODEL,
     max_tokens: MAX_TOKENS,
     system: systemPrompt,
     messages: [{ role: "user", content: prompt }],
-  });
+  }, { signal });
 
   return response.content
     .filter((b) => b.type === "text")
@@ -289,20 +327,37 @@ const evalSemaphore = new Semaphore(CONCURRENCY);
 // ── Run all code evals for a single skill ────────────────────────────
 async function runSkillCodeEvals(evalFile, suiPath) {
   const skillDir = basename(resolve(dirname(evalFile), ".."));
-  const evals = parseEvals(evalFile);
+  const evals = selectedEvals(evalFile);
   const skillContext = loadSkillContext(evalFile);
 
   const results = await Promise.all(
     evals.map(async (ev) => {
       const evalId = ev.id ?? `${skillDir}-code-${evals.indexOf(ev)}`;
       const packageName = ev.package_name ?? "test_project";
+      const language = evalLanguage(ev);
 
       await evalSemaphore.acquire();
       let tmpDir = null;
       try {
+        const deadline = Date.now() + EVAL_TIMEOUT;
+        const remaining = () => {
+          const ms = deadline - Date.now();
+          if (ms <= 0) throw new Error(`Eval timed out: ${evalId}`);
+          return Math.min(BUILD_TIMEOUT, ms);
+        };
         const work = async () => {
           // 1. Generate code
-          const response = await generateCode(skillContext, ev.prompt, packageName);
+          const response = offlineResponses
+            ? offlineResponses[evalId]
+            : await generateCode(skillContext, ev.prompt, packageName, language, AbortSignal.timeout(EVAL_TIMEOUT));
+          if (typeof response !== "string") throw new Error(`Missing offline response for ${evalId}`);
+          remaining();
+
+          if (language !== "move") {
+            const { buildResult, moduleCount, validation } = await checkTypeScript(response, language, { timeout: remaining() });
+            const evaluation = evaluateResult(buildResult, null, ev);
+            return { response, status: evaluation.overall ? "PASS" : "FAIL", error: null, buildResult, testResult: null, evaluation, moduleCount, validation };
+          }
 
           // 2. Extract code blocks
           const codeBlocks = extractMoveCode(response);
@@ -325,12 +380,12 @@ async function runSkillCodeEvals(evalFile, suiPath) {
           tmpDir = createTempProject(packageName, moduleFiles, ev.extra_sources);
 
           // 5. Build
-          const buildResult = runSuiCommand(suiPath, "build", tmpDir);
+          const buildResult = await runSuiCommand(suiPath, "build", tmpDir, remaining());
 
           // 6. Test (if requested and build passed)
           let testResult = null;
           if (ev.check === "test" && buildResult.success) {
-            testResult = runSuiCommand(suiPath, "test", tmpDir);
+            testResult = await runSuiCommand(suiPath, "test", tmpDir, remaining());
           }
 
           // 7. Evaluate
@@ -347,7 +402,7 @@ async function runSkillCodeEvals(evalFile, suiPath) {
           };
         };
 
-        const result = await withTimeout(work(), EVAL_TIMEOUT, evalId);
+        const result = await work();
 
         return {
           result: {
@@ -356,12 +411,15 @@ async function runSkillCodeEvals(evalFile, suiPath) {
             status: result.status,
             check: ev.check,
             expected_result: ev.expected_result,
+            language,
+            validation: result.validation ?? { language: "move", mode: ev.check },
             build: result.evaluation?.build ?? null,
             test: result.evaluation?.test ?? null,
             code_extracted: result.moduleCount > 0,
             module_count: result.moduleCount,
             response_excerpt: result.response.slice(0, 200),
             error: result.error,
+            diagnostics: result.buildResult?.success === false ? result.buildResult.stderr.slice(0, 8000) : null,
           },
           pass: result.status === "PASS",
         };
@@ -370,8 +428,12 @@ async function runSkillCodeEvals(evalFile, suiPath) {
           result: {
             skill: skillDir,
             eval_id: evalId,
+            language,
+            check: ev.check,
+            expected_result: ev.expected_result,
+            validation: { language, mode: language === "move" ? ev.check : "typecheck" },
             status: "ERROR",
-            error: err.message.slice(0, 300),
+            error: err.message.slice(0, 2000),
           },
           pass: false,
         };
@@ -394,7 +456,7 @@ async function runSkillCodeEvals(evalFile, suiPath) {
       console.log(`  ${parts.join(" ")}`);
       if (result.status === "FAIL") {
         if (result.build && !result.build.pass) {
-          console.log(`    build: ${result.build.detail.split("\n")[0]}`);
+          console.log(`    build: ${result.build.detail}`);
         }
         if (result.test && !result.test.pass) {
           console.log(`    test: ${result.test.detail.split("\n")[0]}`);
@@ -408,20 +470,34 @@ async function runSkillCodeEvals(evalFile, suiPath) {
 
 // ── Main ──────────────────────────────────────────────────────────────
 async function main() {
-  // 1. Find and check sui CLI
-  const suiPath = findSuiCli();
-  const version = checkSuiVersion(suiPath);
+  for (const [name, value] of [["responses", responsesFlag], ["language", languageFlag], ["output", outputFlag]]) {
+    if (args.some((arg) => arg === `--${name}` || arg.startsWith(`--${name}=`)) && (!value || value.startsWith("--"))) {
+      throw new Error(`--${name} requires a value`);
+    }
+  }
+  if (!Number.isSafeInteger(CONCURRENCY) || CONCURRENCY < 1) throw new Error("--concurrency must be a positive integer");
+  if (!Number.isInteger(EVAL_TIMEOUT) || EVAL_TIMEOUT < 1 || EVAL_TIMEOUT > 2147483647) throw new Error("--timeout must be a positive integer <= 2147483647");
+  if (languageFlag && !["move", "typescript", "tsx"].includes(languageFlag)) throw new Error(`Unsupported language: ${languageFlag}`);
+  if (responsesFlag) {
+    offlineResponses = JSON.parse(readFileSync(resolve(responsesFlag), "utf8"));
+    if (!offlineResponses || Array.isArray(offlineResponses) || typeof offlineResponses !== "object") throw new Error("--responses must contain an object mapping eval IDs to response strings");
+  }
 
   // 2. Discover code eval files
   const evalFiles = discoverEvalFiles("code-evals.json", {
     skillFilter: skillFlag,
     changedOnly,
-  });
+  }).filter((file) => selectedEvals(file).length > 0);
 
   if (evalFiles.length === 0) {
     console.log("No code eval files to run.");
     process.exit(0);
   }
+
+  const needsMove = evalFiles.some((file) => selectedEvals(file).some((ev) => evalLanguage(ev) === "move"));
+  if (evalFiles.some((file) => selectedEvals(file).some((ev) => evalLanguage(ev) !== "move"))) assertTypeScriptDependencies();
+  const suiPath = needsMove ? findSuiCli() : null;
+  const version = needsMove ? checkSuiVersion(suiPath) : { raw: "not required (TypeScript/TSX only)" };
 
   console.log(`\nCode eval runner configuration:`);
   console.log(`  Sui CLI        : ${version.raw}`);
@@ -456,7 +532,7 @@ async function main() {
   console.log(`${"═".repeat(60)}\n`);
 
   // 5. Write results JSON
-  const outPath = join(ROOT, "scripts", "code-eval-results.json");
+  const outPath = outputFlag ? resolve(outputFlag) : join(ROOT, "scripts", "code-eval-results.json");
   writeFileSync(outPath, JSON.stringify(allResults, null, 2));
   console.log(`Full results written to ${outPath}`);
 
@@ -481,7 +557,9 @@ async function main() {
   process.exit(totalFail > 0 ? 1 : 0);
 }
 
-main().catch((err) => {
-  console.error("Fatal error:", err);
-  process.exit(1);
-});
+if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+  main().catch((err) => {
+    console.error("Fatal error:", err);
+    process.exit(1);
+  });
+}

@@ -1,0 +1,16 @@
+{
+  "name": "sui-code-eval-typescript",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "dependencies": {
+    "@mysten/dapp-kit-react": "2.1.40",
+    "@mysten/sui": "2.36.0",
+    "@types/react": "19.2.2",
+    "react": "19.2.0",
+    "typescript": "5.9.3",
+    "@types/node": "22.18.10"
+  }
+}
