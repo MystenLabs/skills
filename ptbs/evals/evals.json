@@ -10,7 +10,7 @@
     "expectations": [
       "Imports from '@mysten/sui/transactions'",
       "Uses a supported 100-MIST SUI transfer: gas split plus transferObjects, tx.coin plus transferObjects, or tx.balance plus balance::send_funds.",
-      "Sends the 100 MIST to the requested recipient using the chosen transferObjects or balance::send_funds path.",
+      "Sends the 100 MIST to the requested recipient. Uses tx.pure.address(recipient) for balance::send_funds; transferObjects accepts that helper or the supported address-string shortcut.",
       "Does NOT call tx.setGasBudget / tx.setGasPrice / tx.setGasPayment for a wallet-signed flow",
       "Does NOT call tx.build() before handing to the wallet (uses tx.serialize() or passes the Transaction instance directly)",
       "Mentions checking the execution result status (e.g., effects.status) or warns that transactions can fail at the Move level even if accepted"
