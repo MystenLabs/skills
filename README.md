@@ -18,6 +18,12 @@ npx skills add mystenlabs/skills --skill sui-overview --skill sui-move --skill s
 npx skills add mystenlabs/skills --all
 ```
 
+For answers from the current Sui docs while you work, also connect the [Sui docs MCP server](https://docs.sui.io/getting-started/sui-mcp-server):
+
+```bash
+claude mcp add --transport http sui-docs https://sui.mcp.kapa.ai
+```
+
 > **New to Sui?** Start with the three-skill starter set above (`sui-overview`, `sui-move`, `sui-move-project`). Installing all 31 skills adds real context overhead and can cause trigger collisions. Add more as you need them.
 
 ## Skills
@@ -59,7 +65,7 @@ npx skills add mystenlabs/skills --all
 |-------|-------------|
 | [sui-sdks](sui-sdks/) | SDK landscape — TypeScript, Rust, Python, Go, and more |
 | [ptbs](ptbs/) | Programmable Transaction Blocks — composing atomic transactions |
-| [frontend-apps](frontend-apps/) | dApp development with @mysten/dapp-kit (React, Vue, vanilla JS) |
+| [frontend-apps](frontend-apps/) | dApp development with dApp Kit — @mysten/dapp-kit-react (React) and @mysten/dapp-kit-core (Vue, vanilla JS) |
 | [accessing-data](accessing-data/) | Reading on-chain state — gRPC, GraphQL, indexers, Walrus blobs |
 | [sui-ts-sdk-backend](sui-ts-sdk-backend/) | The TypeScript SDK for backends and agents — keypairs, signing, no CLI |
 
@@ -78,6 +84,8 @@ npx skills add mystenlabs/skills --all
 | Skill | Description |
 |-------|-------------|
 | [walrus-sites](walrus-sites/) | Decentralized website hosting on Walrus Sites |
+
+The full set of 12 Walrus skills (storage, quilts, the TypeScript SDK, Walrus Memory, and more) lives in [MystenLabs/walrus-skills](https://github.com/MystenLabs/walrus-skills): `npx skills add mystenlabs/walrus-skills --list`.
 
 ### Other
 
