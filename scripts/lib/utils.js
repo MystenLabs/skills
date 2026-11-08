@@ -60,12 +60,11 @@ export class Semaphore {
 
 // ── Timeout wrapper ──────────────────────────────────────────────────
 export function withTimeout(promise, ms, label) {
-  return Promise.race([
-    promise,
-    new Promise((_, reject) =>
-      setTimeout(() => reject(new Error(`Eval timed out after ${ms}ms: ${label}`)), ms)
-    ),
-  ]);
+  let timeout;
+  const deadline = new Promise((_, reject) => {
+    timeout = setTimeout(() => reject(new Error(`Eval timed out after ${ms}ms: ${label}`)), ms);
+  });
+  return Promise.race([promise, deadline]).finally(() => clearTimeout(timeout));
 }
 
 // ── Discover eval files ──────────────────────────────────────────────
