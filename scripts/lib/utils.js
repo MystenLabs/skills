@@ -3,11 +3,12 @@
  */
 
 import { readFileSync, writeFileSync, existsSync } from "fs";
-import { resolve, dirname, basename, join } from "path";
+import { resolve, dirname, basename, join, relative, sep } from "path";
 import { execSync } from "child_process";
+import { fileURLToPath } from "node:url";
 import { glob } from "glob";
 
-export const ROOT = resolve(dirname(new URL(import.meta.url).pathname), "../..");
+export const ROOT = resolve(fileURLToPath(new URL("../../", import.meta.url)));
 
 // ── Load .env file if present (key=value, one per line) ──────────────
 const envPath = join(ROOT, ".env");
@@ -70,11 +71,14 @@ export function withTimeout(promise, ms, label) {
 
 // ── Discover eval files ──────────────────────────────────────────────
 export function discoverEvalFiles(filename = "evals.json", { skillFilter, changedOnly } = {}) {
-  const pattern = join(ROOT, `**/evals/${filename}`);
-  let files = glob.sync(pattern, { ignore: ["**/node_modules/**", "**/template/**"] });
+  let files = glob.sync(`**/evals/${filename}`, {
+    cwd: ROOT,
+    absolute: true,
+    ignore: ["**/node_modules/**", "**/template/**"],
+  });
 
   if (skillFilter) {
-    files = files.filter((f) => f.includes(`/${skillFilter}/`));
+    files = files.filter((f) => relative(ROOT, f).split(sep).slice(0, -1).includes(skillFilter));
     if (files.length === 0) {
       console.error(`No evals found for skill: ${skillFilter}`);
       process.exit(1);
@@ -94,8 +98,7 @@ export function discoverEvalFiles(filename = "evals.json", { skillFilter, change
           .map((f) => f.split("/")[0])
       );
       files = files.filter((f) => {
-        const rel = f.replace(ROOT + "/", "");
-        const skill = rel.split("/")[0];
+        const skill = relative(ROOT, f).split(sep)[0];
         return changedSkills.has(skill);
       });
     } catch {
@@ -110,7 +113,9 @@ export function discoverEvalFiles(filename = "evals.json", { skillFilter, change
 export function loadSkillContext(evalFilePath) {
   const skillDir = resolve(dirname(evalFilePath), "..");
   const skillName = basename(skillDir);
-  const mdFiles = glob.sync(join(skillDir, "*.md"), {
+  const mdFiles = glob.sync("*.md", {
+    cwd: skillDir,
+    absolute: true,
     ignore: ["**/node_modules/**"],
   });
 

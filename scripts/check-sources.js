@@ -24,11 +24,12 @@
 import { readFileSync, writeFileSync, existsSync } from "fs";
 import { resolve, dirname, basename, join } from "path";
 import { createHash } from "crypto";
+import { fileURLToPath } from "node:url";
 import { glob } from "glob";
 
 // ── Load .env file if present (key=value, one per line) ──────────────
-const ROOT_FOR_ENV = resolve(dirname(new URL(import.meta.url).pathname), "..");
-const envPath = join(ROOT_FOR_ENV, ".env");
+const ROOT = fileURLToPath(new URL("../", import.meta.url));
+const envPath = join(ROOT, ".env");
 if (existsSync(envPath)) {
   for (const line of readFileSync(envPath, "utf-8").split("\n")) {
     const trimmed = line.trim();
@@ -41,7 +42,6 @@ if (existsSync(envPath)) {
   }
 }
 
-const ROOT = resolve(dirname(new URL(import.meta.url).pathname), "..");
 const HASHES_FILE = join(ROOT, "scripts", ".source-hashes.json");
 const WATCH_FILE = join(ROOT, "scripts", "sui-monorepo-watch.json");
 
@@ -82,8 +82,11 @@ async function fetchWithTimeout(url, timeoutMs = 15000) {
 
 // ── Parse evals and extract source URLs ──────────────────────────────
 function extractSources() {
-  const pattern = join(ROOT, "**/evals/evals.json");
-  const files = glob.sync(pattern, { ignore: ["**/node_modules/**", "**/template/**"] });
+  const files = glob.sync("**/evals/evals.json", {
+    cwd: ROOT,
+    absolute: true,
+    ignore: ["**/node_modules/**", "**/template/**"],
+  });
   const sourceMap = {}; // url -> Set<skill names>
 
   for (const file of files) {
