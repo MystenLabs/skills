@@ -88,7 +88,7 @@ Agents and CI workflows can request SUI tokens from `https://faucet.sui.io/how-t
 |---|---|
 | Web faucet | Visit `faucet.sui.io`, enter your address, select network, click Request SUI |
 | CLI               | `sui client faucet`
-| TypeScript SDK | `requestSuiFromFaucetV3()` from `@mysten/sui/faucet` |
+| TypeScript SDK | `requestSuiFromFaucetV3()` from `@mysten/sui/faucet`. For local networks, use `requestSuiFromFaucetV2()` |
 | Community faucets | N1Stake faucet, SuiLearn faucet (separate rate limits) |
 
 
