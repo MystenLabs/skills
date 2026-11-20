@@ -52,8 +52,8 @@ test('new CLI flags require values instead of falling through to generation', ()
   }
 });
 
-function isolatedCheckout() {
-  const root = mkdtempSync(join(tmpdir(), 'sui-harness-test-'));
+function isolatedCheckout(prefix = 'sui-harness-test-') {
+  const root = mkdtempSync(join(tmpdir(), prefix));
   try {
     for (const file of ['package.json', 'scripts/run-code-evals.js', 'scripts/lib/utils.js', 'scripts/lib/typescript-check.js', 'scripts/typescript/check.js', 'scripts/typescript/package.json', 'scripts/typescript/package-lock.json', 'scripts/typescript/tsconfig.json', 'ptbs/evals/code-evals.json']) {
       mkdirSync(dirname(join(root, file)), { recursive: true });
@@ -63,6 +63,24 @@ function isolatedCheckout() {
     return root;
   } catch (err) { rmSync(root, { recursive: true, force: true }); throw err; }
 }
+
+test('eval discovery and source checks work under literal checkout paths', () => {
+  const root = isolatedCheckout('sui skills [offline] ');
+  try {
+    const paths = ['scripts/check-sources.js', 'ptbs/SKILL.md'];
+    for (const file of paths) writeFileSync(join(root, file), readFileSync(join(ROOT, file)));
+    writeFileSync(join(root, 'ptbs/evals/evals.json'), JSON.stringify([{ id: 'offline', sources: [] }]));
+    execFileSync(process.execPath, ['--input-type=module', '-e', `
+      import assert from 'node:assert/strict';
+      import { discoverEvalFiles, loadSkillContext } from './scripts/lib/utils.js';
+      const files = discoverEvalFiles('evals.json', { skillFilter: 'ptbs' });
+      assert.equal(files.length, 1);
+      assert.match(loadSkillContext(files[0]), /# ptbs — SKILL.md/);
+    `], { cwd: root, timeout: 10000 });
+    execFileSync(process.execPath, ['scripts/check-sources.js', '--update'], { cwd: root, timeout: 10000 });
+    assert.deepEqual(JSON.parse(readFileSync(join(root, 'scripts/.source-hashes.json'), 'utf8')), {});
+  } finally { rmSync(root, { recursive: true, force: true }); }
+});
 
 test('missing TypeScript dependencies fail before constructing a generation client', () => {
   const root = isolatedCheckout();
