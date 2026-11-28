@@ -75,7 +75,7 @@ sui keytool zk-login-sig-verify \
   --bytes $BYTES \
   --intent-scope 3 \
   --network devnet \
-  --curr-epoch 3
+  --cur-epoch 3
 ```
 
 ### 4. Self-hosted Verifier
